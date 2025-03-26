@@ -1,5 +1,5 @@
 /*
-Define an abstract model with shared fields:
+Define an abstract schema with shared fields:
 Name, Type, Text, and Timestamps
 */
 import mongoose from 'mongoose';

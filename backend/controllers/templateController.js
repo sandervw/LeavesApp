@@ -1,36 +1,65 @@
-import mongoose from "mongoose";
-import elementController from "./elementController.js";
-import {Template} from "../models/models.js";
+import templateService from "../services/templateService.js";
 
-class templateController extends elementController {
+class templateController {
 
     constructor() {
-        super(Template);
-        this.delete = this.delete.bind(this);
+        this.get = this.get.bind(this);
+        this.getById = this.getById.bind(this);
+        this.getChildren = this.getChildren.bind(this);
+        this.post = this.post.bind(this);
+        this.deleteById = this.deleteById.bind(this);
     }
 
-    async delete (req, res){
+    async get(req, res){
         try {
-            const id = req.params.id;
-            if(!id || !mongoose.Types.ObjectId.isValid(id)) res.status(404).json({error: 'Not a valid ID'});
-            // First, need to delete all references to this template from parent templates
-            const allTemplates = await Template.find();
-            allTemplates.forEach(async (object) => {
-                object.children = object.children.filter((child) => (child !== id && child !== null));
-                await Template.updateOne({_id: object._id}, {children: object.children});
-            })
-            // Then, delete template itself
-            const result = await Template.findByIdAndDelete(id);
-            if(!result) res.status(404).json({error: 'No such object found'});
-            else res.status(200).json(result);
+            const templates = await templateService.find(req.query);
+            res.status(200).json(templates);
         } catch (err) {
             console.log(err);
+            res.status(404).json(err);        
+        }
+    }
+
+    async getById(req, res){
+        try {
+            const template = await templateService.findById(req.params.id);
+            return res.status(200).json(template);
+        } catch (err) {
+            console.log(err);
+            res.status(404).json(err);        
+        }
+    }
+    
+    async getChildren(req, res){
+        try {
+            const children = await templateService.findChildren(req.params.id);
+            res.status(200).json(children);
+        } catch (err) {
+            console.error(err);
             res.status(404).json(err);
         }
     }
     
+    async post(req, res){
+        try {
+            const result = await templateService.upsert(req.body);
+            res.status(200).json(result);
+        } catch (err) {
+            console.error(err);
+            res.status(404).json(err);
+        }
+    }
+    
+    async deleteById(req, res){
+        try {
+            const result = await templateService.deleteById(req.params.id);
+            res.status(200).json(result);
+        } catch (err) {
+            console.error(err);
+            res.status(404).json(err);
+        }
+    }  
 
 }
-
 
 export default new templateController();
