@@ -1,21 +1,16 @@
 import express from "express";
-import elementController from "../controllers/elementController.js";
+import templateController from "../controllers/templateController.js";
 
 const router = express.Router();
 
-// Get all storynodes
-router.get('/', elementController.get);
+router.get('/', templateController.get);
 
-// // Get storynode by id
-// router.get('/:id', templateController.findById);
+router.get('/:id', templateController.getById);
 
-// // Get storynode children
-// router.get('/getchildren/:id', templateController.findChildren);
+router.get('/getchildren/:id', templateController.getChildren);
 
-// // Upsert a storynode
-// router.post('/', templateController.post);
+router.post('/', templateController.post);
 
-// // Delete a storynode
-// router.delete('/:id', templateController.delete);
+router.delete('/:id', templateController.deleteById);
 
 export default router;

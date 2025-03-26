@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 // Schema for Templates
 const templateSchema = new Schema({
     children: { type: [String] }, // String array containing the child element IDs
-    wordWeight: { type: Number }, // Used to store the percentage of the word count that this element should take up
+    wordWeight: { type: Number, default: 100 }, // Used to store the percentage of the word count that this element should take up
 });
 
 // Schema for Storynodes
