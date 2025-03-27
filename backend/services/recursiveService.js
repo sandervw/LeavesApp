@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { Element } from "../models/elementModel.js";
 import { Storynode, Template} from "../models/models.js";
 
@@ -30,16 +29,16 @@ const recursiveGet = async (id) => {
     return nodeArr;
 }
 
-// Function to recursively get only the base nodes (blobs) of a story, given a start Id (inclusive)
-const recursiveGetBlobs = async (id) => {
+// Function to recursively get only the base nodes (leaves) of a story, given a start Id (inclusive)
+const recursiveGetLeafs = async (id) => {
     let toGet = await Element.findById(id);
     let blobArr = [];
-    if(toGet && toGet.type == 'blob') blobArr.push(toGet);
+    if(toGet && toGet.type == 'leaf') blobArr.push(toGet);
     if(toGet && toGet.children){
         let childArr = toGet.children;
         for (const child of childArr){
             let childNode = await Element.findById(child);
-            if(childNode.type == 'blob') blobArr.push(childNode);
+            if(childNode.type == 'leaf') blobArr.push(childNode);
             else blobArr = [...blobArr, ...await recursiveGetBlobs(child)];
         };
     }
@@ -91,46 +90,13 @@ const recursiveStorynodeFromTemplate = async (templateId, parentId) => {
 // Function to recursively convert a JSON object to a storynode
 const recursiveStorynodeFromJSON = async (json, parentid) => {
     console.log(json, parentid);
-    let idArr = [];
-    let childArr;
-    if(json.acts){
-        childArr = json.acts;
-        idArr = await Promise.all(childArr.map(async (act, index) => {
-            let actNode = await Storynode.create({name: `Act ${index+1}`, type: 'act', text: `Act ${index+1}`, parent: parentid});
-            let children = await recursiveStorynodeFromJSON(act, actNode._id);
-            await Storynode.findOneAndUpdate({_id: actNode._id}, {children});
-            return actNode._id;
-        }));
-    } else if(json.chapters){
-        childArr = json.chapters;
-        idArr = await Promise.all(childArr.map(async (chapter, index) => {
-            let chapterNode = await Storynode.create({name: `Chapter ${index+1}`, type: 'chapter', text: `Chapter ${index+1}`, parent: parentid});
-            let children = await recursiveStorynodeFromJSON(chapter, chapterNode._id);
-            await Storynode.findOneAndUpdate({_id: chapterNode._id}, {children});
-            return chapterNode._id;
-        }));
-    } else if(json.scenes){
-        childArr = json.scenes;
-        idArr = await Promise.all(childArr.map(async (scene, index) => {
-            let sceneNode = await Storynode.create({name: `Scene ${index+1}`, type: 'scene', text: `Scene ${index+1}`, parent: parentid});
-            let children = await recursiveStorynodeFromJSON(scene, sceneNode._id);
-            await Storynode.findOneAndUpdate({_id: sceneNode._id}, {children});
-            return sceneNode._id;
-        }));
-    } else if(json.blobs){
-        childArr = json.blobs;
-        idArr = await Promise.all(childArr.map(async (blob, index) => {
-            let blobNode = await Storynode.create({name: `Blob ${index+1}`, type: 'blob', content: blob.line, parent: parentid});
-            return blobNode._id;
-        }));
-    }
-    return idArr;
+    // TODO - implement this
 }
 
 export {
     recursiveDelete,
     recursiveGet,
-    recursiveGetBlobs,
+    recursiveGetLeafs,
     recursiveUpdateWordLimits,
     recursiveStorynodeFromTemplate,
     recursiveStorynodeFromJSON

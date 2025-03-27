@@ -4,7 +4,7 @@ import {Storynode} from "../models/models.js";
 import {readTxtAsJSON, writeArrayToFile} from "../services/fileService.js";
 import {
     recursiveDelete,
-    recursiveGetBlobs,
+    recursiveGetLeafs,
     recursiveUpdateWordLimits,
     recursiveStorynodeFromTemplate ,
     recursiveStorynodeFromJSON
@@ -70,7 +70,7 @@ class storynodeService extends elementService {
         const json = await readTxtAsJSON(filename);
         let storynode = await Storynode.create({
             name: filename,
-            type: 'story',
+            type: 'root',
             text: `imported from ${filename}`,
             children: []
         });
@@ -84,8 +84,8 @@ class storynodeService extends elementService {
         if(!id || !mongoose.Types.ObjectId.isValid(id)) throw new Error('Not a valid ID');
         // Recursively retrieve all the nodes
         const storynode = await Storynode.findById(id);
-        let storyBlobs = await recursiveGetBlobs(storynode._id);
-        let result = await writeArrayToFile(storyBlobs.map((blob) => blob.content), `${storynode.name}.txt`);
+        let storyLeafs = await recursiveGetLeafs(storynode._id);
+        let result = await writeArrayToFile(storyLeafs.map((leaf) => leaf.content), `${storynode.name}.txt`);
         res.status(200).json({success: result});
     }
 

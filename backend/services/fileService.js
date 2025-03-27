@@ -3,27 +3,7 @@ import fs from 'fs';
 // Function to build a JSON Storynode object from an array of strings
 const buildJSON = async (arr) => {
     let storynode = {};
-    let currentAct = null;
-    let currentChapter = null;
-    let currentScene = null;
-
-    for (const line of arr){
-        if (line==='story'){
-            storynode = {acts: []};
-        } else if (line==='act'){
-            currentAct = {chapters: []};
-            storynode.acts.push(currentAct);
-        } else if (line==='chapter'){
-            currentChapter = {scenes: []};
-            currentAct.chapters.push(currentChapter);
-        } else if (line==='scene'){
-            currentScene = {blobs: []};
-            currentChapter.scenes.push(currentScene);
-        } else {
-            currentScene.blobs.push({line});
-        }
-    }
-
+    // TODO implement this
     return storynode;
 }
 
