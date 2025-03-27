@@ -31,7 +31,7 @@ class storynodeService extends elementService {
             }
         }
         // Send a new storynode
-        else result = await Storynode.create(req.body);
+        else result = await Storynode.create(data);
         return result;
     }
 
