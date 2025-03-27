@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import {config} from "dotenv";
 import cors from "cors"; // cors (Cross-Origin Resource Sharing: allows api calls from outside of the server domain)
 import templateRoutes from "./routes/templateRoutes.js";
-// import storynodeRoutes from "./routes/storynodeRoutes.js";
+import storynodeRoutes from "./routes/storynodeRoutes.js";
 
 // Create express server
 config();
@@ -23,7 +23,7 @@ server.use((req, res, next) => {
     next();
 });
 server.use("/templates", templateRoutes);
-// server.use("/storynodes", storynodeRoutes);
+server.use("/storynodes", storynodeRoutes);
 
 /*==MAIN REQUESTS==*/
 server.get('/', async (req, res) => {
