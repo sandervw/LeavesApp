@@ -10,9 +10,9 @@ const templateSchema = new Schema({
 });
 
 // Schema for Storynodes
-// Types: Story, Act, Chapter, Scene, Blob
+// Types: root, branch, leaf
 const storynodeSchema = new Schema ({
-    content: { type: String }, // Used in blob nodes; contains actual blob, instead of outline data
+    content: { type: String }, // Used in leaf nodes; contains actual leaf, instead of outline data
     isComplete: { type: Boolean, default: false, required: true }, // Used for rendering a finished vs unfinished element
     parent: { type: String }, // String containing parent node
     children: { type: [String] }, // String array containing the child node IDs
