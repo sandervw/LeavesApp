@@ -1,6 +1,5 @@
 /* Poppins and Baskervville */
 @import url('https://fonts.googleapis.com/css2?family=Baskervville&family=Poppins:wght@200;400;500;600;800&family=VT323&display=swap');
-
 /* The HTML element - used for defining global vars */
 :root {
   --color1: #ffffffde;
@@ -8,21 +7,11 @@
   --color3: #BFA181;
   background-color: #242424;
 }
-
 /* The actual id=root element */
 #root {
   max-width: 1600px;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 *, *::before, *::after {
   /* Arial/sans-serif fallback fonts */
@@ -30,10 +19,12 @@
   color: var(--color1);
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+}
+body {
+  display: flex;
+  place-items: center;
 }
 p, h1, h2, h3, a, ul, li{
-
   text-decoration: none;
   color: var(--color1);
   word-wrap: break-word;
@@ -45,31 +36,9 @@ ul, li {
   margin-left: 1.5rem;          /* Space for bullets */
   text-align: left;            /* Align text properly */
 }
-p {
+/* p {
   text-align: left;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
+} */
 
 button {
   border-radius: 8px;
