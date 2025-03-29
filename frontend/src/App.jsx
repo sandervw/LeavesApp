@@ -1,4 +1,4 @@
-import './App2.css';
+import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -16,9 +16,19 @@ function App() {
       <Router>
         <Navbar />
         <div className="main-container">
-          <div className="sidebar">
-            <button className="create-story-btn">+ Create New Story</button>
-          </div>
+          <aside className="sidebar">
+            <div className="sidebar-content">
+              <h2>Sidebar</h2>
+              <p>Links or other content can go here.</p>
+            </div>
+            <div className="sidebar-content">
+              <h2>Story Lineage</h2>
+              <p>Story Title</p>
+              <p>..Act Title</p>
+              <p>....Chapter Title</p>
+              <p>......Scene Title</p>
+            </div>
+          </aside>
           <div className="content">
             <StorynodesContextProvider>
               <TemplatesContextProvider>
@@ -28,6 +38,9 @@ function App() {
               </TemplatesContextProvider>
             </StorynodesContextProvider>
           </div>
+          <aside className="sidebar">
+            <button className="create-story-btn">+ Create New Story</button>
+          </aside>
         </div>
       </Router>
     </div>
