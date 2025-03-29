@@ -17,29 +17,31 @@
   /* Arial/sans-serif fallback fonts */
   font-family: "poppins", arial, sans-serif;
   color: var(--color1);
-  margin: 0;
-  padding: 0;
-}
-body {
-  display: flex;
-  place-items: center;
-}
-p, h1, h2, h3, a, ul, li{
   text-decoration: none;
-  color: var(--color1);
-  word-wrap: break-word;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-ul, li {
-  list-style-position: outside; /* Bullet points outside */
-  margin-left: 1.5rem;          /* Space for bullets */
-  text-align: left;            /* Align text properly */
 }
 /* p {
   text-align: left;
 } */
 
+/* NAVBAR STYLES */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--color1);
+  text-transform: uppercase;
+}
+.navbar .links {
+  display: flex;
+}
+ul, li {
+  list-style-position: outside; /* Bullet points outside */
+  margin-left: 1.5rem;          /* Space for bullets */
+  text-align: left;            /* Align text properly */
+  list-style-type: none;
+}
+
+/* BUTTON STYLES */
 button {
   border-radius: 8px;
   border: 1px solid transparent;
