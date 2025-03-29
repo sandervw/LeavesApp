@@ -7,7 +7,7 @@ const Navbar = () => {
     const { isAuthenticated, user } = useAuth0();
 
     return (
-        <nav className="navbar">
+        <header className="navbar">
             <div className="site-header">
                 <Link to='/'><h1>Leaves</h1></Link>
             </div>
@@ -28,7 +28,7 @@ const Navbar = () => {
                     </>
                 )}
             </div>
-        </nav>
+        </header>
     );
 };
 

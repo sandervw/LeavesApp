@@ -5,7 +5,9 @@
   --color1: #ffffffde;
   --color2: #178582;
   --color3: #BFA181;
-  background-color: #242424;
+  --bgColor1: #242424;
+  --bgColor2: #353535;
+  background-color: var(--bgColor1);
 }
 /* The actual id=root element */
 #root {
@@ -23,16 +25,36 @@
   text-align: left;
 } */
 
+/* MAIN CONTENT STYLES */
+.main-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  justify-content: space-between;
+}
+
+/* SIDEBAR STYLES */
+.sidebar {
+  background-color: var(--bgColor2);
+  padding: 1rem;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+}
+
+
 /* NAVBAR STYLES */
 .navbar {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  border-bottom: 1px solid var(--color1);
-  text-transform: uppercase;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--bgColor2);
 }
 .navbar .links {
   display: flex;
+}
+.navbar a:hover {
+  text-decoration: underline;
 }
 ul, li {
   list-style-position: outside; /* Bullet points outside */
@@ -49,12 +71,12 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--color3);
   cursor: pointer;
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: var(--color1);
 }
 button:focus, button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
