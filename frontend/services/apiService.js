@@ -1,98 +1,107 @@
-const abortCont = new AbortController();
+import { useAuthApiClient } from './authApiClient';
 
-const fetchElements = async (kind, query) => {
-    try {
-        let elements;
-        if (query) elements = await fetch(`http://localhost:8080/${kind}/?${query}`, {signal: abortCont.signal});
-        else elements = await fetch(`http://localhost:8080/${kind}/`, {signal: abortCont.signal});
-        return elements.json();
-    } catch (err) {
+// Create a hook for authenticated API calls
+export function useApiService() {
+  const { authFetch } = useAuthApiClient();
+  const API_BASE = 'http://localhost:8080';
+
+  return {
+    fetchElements: async (kind) => {
+      try {
+        const response = await authFetch(`${API_BASE}/${kind}/`);
+        return response.json();
+      } catch (err) {
         console.log(err);
         return err;
-    }
-};
+      }
+    },
 
-const fetchElement = async (kind, id) => {
-    try {
-        const element = await fetch(`http://localhost:8080/${kind}/${id}`, {signal: abortCont.signal});
-        return element.json();
-    } catch (err) {
+    fetchElement: async (kind, id) => {
+      try {
+        const response = await authFetch(`${API_BASE}/${kind}/${id}`);
+        return response.json();
+      } catch (err) {
         console.log(err);
         return err;
-    }
-}
+      }
+    },
 
-const fetchChildren = async (kind, id) => {
-    try {
-        const elements = await fetch(`http://localhost:8080/${kind}/getchildren/${id}`, {signal: abortCont.signal});
-        return elements.json();
-    } catch (err) {
+    fetchChildren: async (id) => {
+      try {
+        const response = await authFetch(`${API_BASE}/storynodes/children/${id}`);
+        return response.json();
+      } catch (err) {
         console.log(err);
         return err;
-    }
-};
+      }
+    },
 
-const upsertElement = async (kind, element) => {
-    try {
-        const result = await fetch(`http://localhost:8080/${kind}/`, {
-            method: 'POST',
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(element)
+    upsertElement: async (kind, element) => {
+      try {
+        const response = await authFetch(`${API_BASE}/${kind}/`, {
+          method: 'POST',
+          body: JSON.stringify(element)
         });
-        return result.json();
-    } catch (err) {
+        return response.json();
+      } catch (err) {
         console.log(err);
         return err;
-    }
-};
+      }
+    },
 
-// Can be used to create a new story, or add a child to an existing story
-const createFromTemplate = async (templateId, parentId) => {
-    try {
-        const result = await fetch('http://localhost:8080/storynodes/postfromtemplate/', {
-            method: 'POST',
-            headers: {"Content-Type": "application/json"},
-            body: parentId ?
-                JSON.stringify({templateId, parentId})
-                : JSON.stringify({templateId})
+    createFromTemplate: async (templateId, parentId) => {
+      try {
+        const response = await authFetch(`${API_BASE}/storynodes/postfromtemplate/`, {
+          method: 'POST',
+          body: JSON.stringify(parentId ? { templateId, parentId } : { templateId })
         });
-        return result.json();
-    } catch (err) {
+        return response.json();
+      } catch (err) {
         console.log(err);
         return err;
-    }
-}
+      }
+    },
 
-const deleteElement = async (kind, id) => {
-    try {
-        const result = await fetch(`http://localhost:8080/${kind}/${id}`, {method: 'DELETE'});
-        return result.json();
-    } catch (err) {
-        console.log(err);
-        return err;
-    }
-}
-
-const createFile = async (id) => {
-    try {
-        const result = await fetch('http://localhost:8080/storynodes/posttofile/', {
-            method: 'POST',
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({id})
+    deleteElement: async (kind, id) => {
+      try {
+        const response = await authFetch(`${API_BASE}/${kind}/${id}`, { 
+          method: 'DELETE' 
         });
-        return result.json();
-    } catch (err) {
+        return response.json();
+      } catch (err) {
         console.log(err);
         return err;
-    }
-}
+      }
+    },
 
-export {
-    fetchElements,
-    fetchElement,
-    fetchChildren,
-    upsertElement,
-    createFromTemplate,
-    deleteElement,
-    createFile
+    createFile: async (id) => {
+      try {
+        const response = await authFetch(`${API_BASE}/storynodes/posttofile/`, {
+          method: 'POST',
+          body: JSON.stringify({ id })
+        });
+        return response.json();
+      } catch (err) {
+        console.log(err);
+        return err;
+      }
+    },
+
+    upsertUser: async (user) => {
+      try {
+        const response = await authFetch(`${API_BASE}/users/`, {
+          method: 'POST',
+          body: JSON.stringify({
+            auth0Id: user.sub,
+            name: user.name,
+            email: user.email,
+          })
+        });
+        return response.json();
+      } catch (err) {
+        console.log(err);
+        return err;
+      }
+    }
+  };
 }
