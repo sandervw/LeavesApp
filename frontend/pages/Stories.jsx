@@ -20,9 +20,7 @@ const Stories = () => {
         <div className="container">
             <AddSidebar />
             <div className = "content">
-                <div className="listHeader">
-                    <h2>Current Stories:</h2>
-                </div>
+                <h2>Current Stories:</h2>
                 {(listNodes) && listNodes.map((story) => (
                     <Storynode
                     storynodeData={story}

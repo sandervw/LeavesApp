@@ -20,23 +20,20 @@ const AddSidebar = () => {
 
     const createStory = async (val, template) => {
         console.log("Creating story from template: ", template._id);
-        
         const data = await createFromTemplate(template._id);
         nodesDispatch({type: 'CREATE_STORYNODE', payload: data});
     }
 
     return ( 
         <aside className="sidebar">
-            <div className="sidebar-content">
-                <StorynodeCreate subType='root' />
-                {(listTemplates) && listTemplates.map((template) => (
-                    <Template
-                        templateData={template}
-                        parentFunction={createStory}
-                        buttonType='add'
-                        key={template._id} />
-                ))}
-            </div>
+            <StorynodeCreate subType='root' />
+            {(listTemplates) && listTemplates.map((template) => (
+                <Template
+                    templateData={template}
+                    parentFunction={createStory}
+                    buttonType='add'
+                    key={template._id} />
+            ))}
         </aside>
      );
 }

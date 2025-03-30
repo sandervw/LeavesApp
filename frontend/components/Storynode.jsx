@@ -18,10 +18,10 @@ const Storynode = (props) => {
     const locked = props.locked;
 
     // Go to detailed view of the element
-    const handleDetail = (e) => {
-        !(storynodeData.type==='blob')
+    const handleDetail = () => {
+        !(storynodeData.type==='leaf')
             ? navigate('/storydetail', {state: storynodeData._id})
-            : navigate('/blobdetail', {state: storynodeData._id});
+            : navigate('/leafdetail', {state: storynodeData._id});
     }
 
      // Updates the text or content of a storynode
@@ -45,12 +45,11 @@ const Storynode = (props) => {
         <div className="child" key={storynodeData._id}>
             <div className="nametype"  onClick={(e) => handleDetail(e)}>
                 <h4>{storynodeData.name}</h4>
-                <p>{storynodeData.type}</p>
             </div>
-            <div className={storynodeData.type==="blob" ? "blob text" : "text"}>
+            <div className={storynodeData.type==="leaf" ? "leaf text" : "text"}>
                 <MarkdownText text={storynodeData.text} update={(val) => updateStorynode('text', val)} />
-                {storynodeData.type==='blob' &&
-                    <div className="blobContent">
+                {storynodeData.type==='leaf' &&
+                    <div className="leafContent">
                         <MarkdownText
                             text={storynodeData.content}
                             update={(val) => updateStorynode('content', val)}
