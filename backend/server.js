@@ -2,8 +2,10 @@ import express from "express";
 import mongoose from "mongoose";
 import {config} from "dotenv";
 import cors from "cors"; // cors (Cross-Origin Resource Sharing: allows api calls from outside of the server domain)
+import { auth } from 'express-oauth2-jwt-bearer';
 import templateRoutes from "./routes/templateRoutes.js";
 import storynodeRoutes from "./routes/storynodeRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 // Create express server
 config();
@@ -17,13 +19,21 @@ server.use(express.urlencoded({ extended: true }));
 server.use(express.json())
 // Allows CORS requests
 server.use(cors());
+// JWT Middleware
+const checkJwt = auth({
+    audience: process.env.AUTH0_AUDIENCE, // must match audience from frontend
+    issuerBaseURL: `https://${process.env.AUTH0_DOMAIN}`, // your Auth0 domain
+    tokenSigningAlg: 'RS256',
+  });
 // Logging (need next to go to next function/middleware)
 server.use((req, res, next) => {
     console.log(req.path, req.method);
     next();
 });
+server.use(checkJwt);
 server.use("/templates", templateRoutes);
 server.use("/storynodes", storynodeRoutes);
+server.use("/users", userRoutes);
 
 /*==MAIN REQUESTS==*/
 server.get('/', async (req, res) => {

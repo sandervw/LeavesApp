@@ -5,14 +5,19 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { StorynodesContextProvider } from '../context/storynodesContext';
 import { TemplatesContextProvider } from '../context/templatesContext';
 import Stories from '../pages/Stories';
+import SyncUserToBackend from '../components/SyncUserToBackend';
 
 function App() {
   const { isLoading } = useAuth0();
+
+  console.log('App component loaded:', { isLoading });
+  
 
   if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="App">
+      <SyncUserToBackend />
       <Router>
         <Navbar />
         <div className="main-container">
