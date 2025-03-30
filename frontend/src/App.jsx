@@ -1,42 +1,32 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from '../components/Navbar';
 import { StorynodesContextProvider } from '../context/storynodesContext';
 import { TemplatesContextProvider } from '../context/templatesContext';
+import Navbar from '../components/Navbar';
 import Stories from '../pages/Stories';
+import Archive from '../pages/Archive';
+import Templates from '../pages/Templates';
+import TemplateDetail from '../components/TemplateDetail';
+import StorynodeDetail from '../components/StorynodeDetail';
+import LeafDetail from '../components/LeafDetail';
 
 function App() {
   return (
     <div className="App">
       <Router>
         <Navbar />
-        <div className="main-container">
-          <aside className="sidebar">
-            <div className="sidebar-content">
-              <h2>Sidebar</h2>
-              <p>Links or other content can go here.</p>
-            </div>
-            <div className="sidebar-content">
-              <h2>Story Lineage</h2>
-              <p>Story Title</p>
-              <p>..Act Title</p>
-              <p>....Chapter Title</p>
-              <p>......Scene Title</p>
-            </div>
-          </aside>
-          <div className="content">
-            <StorynodesContextProvider>
-              <TemplatesContextProvider>
-                <Routes>
-                  <Route path='/' element={<Stories />} />
-                </Routes>
-              </TemplatesContextProvider>
-            </StorynodesContextProvider>
-          </div>
-          <aside className="sidebar">
-            <button className="create-story-btn">+ Create New Story</button>
-          </aside>
-        </div>
+        <StorynodesContextProvider>
+          <TemplatesContextProvider>
+            <Routes>
+              <Route path='/' element={<Stories />} />
+              <Route path='/archive' element={<Archive />} />
+              <Route path='/storydetail' element={<StorynodeDetail />} />
+              <Route path='/templates' element={<Templates />} />
+              <Route path='/templatedetail' element={<TemplateDetail />} />
+              <Route path='/leafdetail' element={<LeafDetail />} />
+            </Routes>
+          </TemplatesContextProvider>
+        </StorynodesContextProvider>
       </Router>
     </div>
 
