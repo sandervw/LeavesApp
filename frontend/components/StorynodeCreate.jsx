@@ -11,13 +11,13 @@ const StorynodeCreate = (props) => {
     let parentId = parent ? parent._id : null;
     // When creating storynodes, there should always be a subtype
     const subType = props.subType;
-    // If the subtype is a blob, name it based on the parent
-    const isBlob = subType==='blob';
-    let blobName = '';
-    if(isBlob) {
-        blobName = !parent.children
-            ? `${parent.name} - Blob 1`
-            : `${parent.name} - Blob ${parent.children.length+1}`
+    // If the subtype is a leaf, name it based on the parent
+    const isLeaf = subType==='leaf';
+    let leafName = '';
+    if(isLeaf) {
+        leafName = !parent.children
+            ? `${parent.name} - Leaf 1`
+            : `${parent.name} - Leaf ${parent.children.length+1}`
     }
 
     // Set the initial state, with the correct subtype
@@ -36,7 +36,7 @@ const StorynodeCreate = (props) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         let newStorynode = {
-            name: isBlob ? blobName : newCreate.name,
+            name: isLeaf ? leafName : newCreate.name,
             text: newCreate.text,
             type: subType,
             parent: parentId
@@ -49,28 +49,28 @@ const StorynodeCreate = (props) => {
     }
 
     return ( 
-        <form className="child">
-            <div className="nametype box">
-                {!isBlob && <input type="text"
+        <div className="element-create">
+            <div>
+                {!isLeaf && <input type="text"
                     placeholder={'New '+subType}
                     required
                     value={newCreate.name}
                     onChange={(e) => setNewCreate({...newCreate, name: e.target.value})}
                 />}
-                {isBlob && <p>{blobName}</p>}
+                {isLeaf && <p>{leafName}</p>}
             </div>
-            <div className="text box">
+            <div>
                 <MarkdownText
                     key={newCreate.text}
                     text={newCreate.text}
                     update={(val) => setNewCreate({...newCreate, text: val})} />
             </div>
-            <div className="buttons box">
-                <button className="button-save" onClick={(e) => handleSubmit(e)}>
+            <div>
+                <button onClick={(e) => handleSubmit(e)}>
                     <img src="/save.svg" alt="save icon" />
                 </button>
             </div>
-        </form>
+        </div>
      );
 }
  

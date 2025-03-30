@@ -5,9 +5,15 @@
   --color1: #ffffffde;
   --color2: #178582;
   --color3: #BFA181;
+  --color4: #d2001f;
   --bgColor1: #242424;
   --bgColor2: #353535;
-  background-color: var(--bgColor1);
+  --bgColor3: #0A1828;
+  --bgPrimary1: #495466;
+  --bgPrimary2: #39414e;
+  --bgPrimary3: #2b313a;
+  --bgPrimary4: #242931;
+  background-color: var(--bgPrimary2);
 }
 /* The actual id=root element */
 #root {
@@ -32,10 +38,13 @@
   justify-content: flex-start;
   justify-content: space-between;
 }
+.element-create {
+  background-color: var(--bgPrimary4);
+  border-radius: 5%;
+}
 
 /* SIDEBAR STYLES */
 .sidebar {
-  background-color: var(--bgColor2);
   padding: 1rem;
   width: 250px;
   display: flex;
@@ -48,7 +57,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--bgColor2);
+  background-color: var(--bgPrimary1);
 }
 .navbar .links {
   display: flex;
@@ -63,21 +72,77 @@ ul, li {
   list-style-type: none;
 }
 
-/* BUTTON STYLES */
+/* INPUT STYLES */
+input {
+  font: inherit;
+  text-align: center;
+  font-weight: bold;
+  background: none;
+  border: none;
+  border-bottom: var(--color1) 1px solid;
+}
 button {
   border-radius: 8px;
   border: 1px solid transparent;
+  cursor: pointer;
+  background: none;
+  transition: border-color 0.25s;
+}
+button.text-button {
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: var(--color3);
-  cursor: pointer;
-  transition: border-color 0.25s;
+  background-color: var(--bgPrimary3);
+}
+button.delete-button {
+  background-color: var(--color4);
+  color: white;
 }
 button:hover {
   border-color: var(--color1);
 }
 button:focus, button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* Style placeholders */
+[data-placeholder]::before {
+  content: attr(data-placeholder); /* Use the placeholder text */
+  color: #aaa; /* Gray color for the placeholder */
+  font-style: italic; /* Optional: to distinguish placeholder text */
+  pointer-events: none; /* Ensure it doesn't interfere with user actions */
+  display: block;
+}
+::placeholder {
+  color: #aaa; /* Gray color for the placeholder */
+  font-style: italic; /* Optional: to distinguish placeholder text */
+  pointer-events: none; /* Ensure it doesn't interfere with user actions */
+  display: block;
+}
+
+/*MODAL STYLES*/
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Add this line to ensure the modal appears above other content */
+}
+.modal-content {
+  background-color: var(--bgPrimary1);
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+.modal-overlay button {
+  padding: 8px 16px;
+  margin: 5px;
+  font-size: 16px;
+  border-radius: 4px;
 }
