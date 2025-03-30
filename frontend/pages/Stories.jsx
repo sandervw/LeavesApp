@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useApiService } from '../services/apiService';
+import { createFromTemplate, fetchElements } from "../services/apiService";
 import useStorynodeContext from "../hooks/useStorynodesContext";
 import useTemplateContext from "../hooks/useTemplatesContext";
 import MarkdownText from "../components/MarkdownText";
@@ -8,7 +8,6 @@ const Stories = () => {
 
     const {listNodes, dispatch: nodesDispatch} = useStorynodeContext();
     const {listTemplates, dispatch: templatesDispatch} = useTemplateContext();
-    const {fetchElements} = useApiService();
 
     useEffect(() => {
         const fetchData = async () => {
