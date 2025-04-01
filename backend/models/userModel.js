@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt'; // Hashing/salting
+import validator from 'validator'; // Validation library
 
 // Discriminators are a way to have inheritance in a mongoose schema
 const options = { collection: 'users', timestamps: true };
@@ -20,11 +21,11 @@ userSchema.statics.signup = async function(email, username, password) {
     if (!email || !username || !password) {
         throw Error('All fields must be filled');
     }
-    if (!email.includes('@')) {
+    if (!validator.isEmail(email)) {
         throw Error('Email is not valid');
     }
-    if (password.length < 6) {
-        throw Error('Password must be at least 6 characters long');
+    if (!validator.isStrongPassword(password)) {
+        throw Error('Password is not strong enough'); // 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 symbol
     }
     const emailExists = await User.findOne({ email });
     if (emailExists) {
@@ -38,6 +39,27 @@ userSchema.statics.signup = async function(email, username, password) {
     const salt = await bcrypt.genSalt(10); // takes time to complete by design
     const hash = await bcrypt.hash(password, salt);
     const user = await User.create({ email, username, password: hash });
+    return user;
+}
+
+// static login method
+userSchema.statics.login = async function(username, password) {
+    // validation
+    if ( !username || !password) {
+        throw Error('All fields must be filled');
+    }
+    let user = await User.findOne({ username });
+    if (!user) {
+        user = await User.findOne({ email: username });
+        if (!user) {
+            throw Error('Incorrect username or email');
+        }
+    }
+    // Compare the hashed password with the plain text password
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+        throw Error('Incorrect password');
+    }
     return user;
 }
 
