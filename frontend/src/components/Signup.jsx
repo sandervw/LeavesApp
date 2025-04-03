@@ -1,22 +1,18 @@
 import { useState } from "react";
+import useSignup from "../hooks/useSignup";
 
 const Signup = ({ hideModal }) => {
 
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const { signup, error, isPending } = useSignup();
 
     const handleSubmit = async (e) => {
 
         e.preventDefault();
-        // Handle signup logic here
-        console.log({ email, username, password });
-        hideModal();
-        // Add the new storynode
-        // const data = await upsertElement('storynodes', newStorynode);
-        // if(parent) updateParent(data._id);
-        // dispatch({type: 'CREATE_STORYNODE', payload: data})
-        // setNewCreate({name: "", text: ""});
+        await signup(email, username, password);
+        if(!error && !isPending) hideModal();
     };
 
     return (
@@ -32,6 +28,7 @@ const Signup = ({ hideModal }) => {
                             type="email"
                             placeholder="Email"
                             value={email}
+                            autoComplete="email"
                             onChange={(e) => setEmail(e.target.value)}
                             required
                         />
@@ -39,6 +36,7 @@ const Signup = ({ hideModal }) => {
                             type="text"
                             placeholder="Username"
                             value={username}
+                            autoComplete="username"
                             onChange={(e) => setUsername(e.target.value)}
                             required
                         />
@@ -46,13 +44,17 @@ const Signup = ({ hideModal }) => {
                             type="password"
                             placeholder="Password"
                             value={password}
+                            autoComplete="new-password"
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
                         <button className="text-button" type="submit">Signup</button>
+                        {error && <div className="error">Error: {error}</div>}
+                        {isPending && <div className="loading">Loading...</div>}
                     </form>
                 </div>
             </div>
+            
         </div>
     );
 };

@@ -32,6 +32,7 @@ const Login = (hideModal) => {
                             type="email"
                             placeholder="Email"
                             value={email}
+                            autoComplete="email"
                             onChange={(e) => setEmail(e.target.value)}
                             required
                         />
@@ -39,6 +40,7 @@ const Login = (hideModal) => {
                             type="text"
                             placeholder="Username"
                             value={username}
+                            autoComplete="username"
                             onChange={(e) => setUsername(e.target.value)}
                             required
                         />
@@ -46,6 +48,7 @@ const Login = (hideModal) => {
                             type="password"
                             placeholder="Password"
                             value={password}
+                            autoComplete="current-password"
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
