@@ -87,6 +87,34 @@ const createFile = async (id) => {
     }
 }
 
+const signupUser = async (email, username, password) => {
+    try {
+        const result = await fetch('http://localhost:8080/users/signup', {
+            method: 'POST',
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({email, username, password})
+        });
+        return result;
+    } catch (err) {
+        console.log(err);
+        return err;
+    }
+}
+
+const loginUser = async (username, password) => {
+    try {
+        const result = await fetch('http://localhost:8080/users/login', {
+            method: 'POST',
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({username, password})
+        });
+        return result;
+    } catch (err) {
+        console.log(err);
+        return err;
+    }
+}
+
 export {
     fetchElements,
     fetchElement,
@@ -94,5 +122,7 @@ export {
     upsertElement,
     createFromTemplate,
     deleteElement,
-    createFile
+    createFile,
+    signupUser,
+    loginUser
 }

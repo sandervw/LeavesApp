@@ -15,10 +15,10 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <Navbar />
         <AuthContextProvider>
           <StorynodesContextProvider>
             <TemplatesContextProvider>
+              <Navbar />
               <Routes>
                 <Route path='/' element={<Stories />} />
                 <Route path='/archive' element={<Archive />} />
