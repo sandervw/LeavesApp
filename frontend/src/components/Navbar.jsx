@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom';
-import LoginButton from './LoginButton.jsx';
-import LogoutButton from './LogoutButton.jsx';
+import { useState } from 'react';
+import Signup from './Signup.jsx';
+
 
 const Navbar = () => {
+
+    const [showSignup, setShowSignup] = useState(false);
 
     return (
         <header className="navbar">
@@ -17,9 +20,10 @@ const Navbar = () => {
                 </ul>
             </div>
             <div className="site-login">
-                <LoginButton />
-                <LogoutButton />
+                <button className="text-button" onClick={() => setShowSignup(true)}>Log In</button>
+                <button className="text-button" onClick={() => setShowSignup(true)}>Sign Up</button>
             </div>
+            {showSignup && <Signup hideModal={() => setShowSignup(false)} />}
         </header>
     );
 };

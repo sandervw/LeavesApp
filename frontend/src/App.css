@@ -19,7 +19,7 @@
 #root {
   max-width: 1600px;
   margin: 0 auto;
-  text-align: center;
+  text-align: left;
 }
 *, *::before, *::after {
   /* Arial/sans-serif fallback fonts */
@@ -38,9 +38,21 @@
   justify-content: flex-start;
   justify-content: space-between;
 }
-.element-create {
+.content {
+  flex-grow: 2;
+  padding: 1rem;
+  
+}
+.element {
   background-color: var(--bgPrimary4);
-  border-radius: 5%;
+  border-radius: .5rem;
+}
+.detail {
+  display: flex;
+  padding-left: 1rem;
+}
+.box {
+  padding-left: 1rem;
 }
 
 /* SIDEBAR STYLES */
