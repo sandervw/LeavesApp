@@ -34,14 +34,14 @@ const Template = (props) => {
     }
     
     return ( 
-        <div className="child" key={templateData._id}>
-            <div className="nametype"  onClick={(e) => handleDetail(e)}>
+        <div className="element" key={templateData._id}>
+            <div onClick={(e) => handleDetail(e)}>
                 <h4>{templateData.name}</h4>
             </div>
-            <div className="text">
+            <div>
                 <MarkdownText text={templateData.text} update={(val) => updateTemplate('text', val)} />
             </div>
-            <div className="buttons">
+            <div>
                 {buttonType==='delete' &&
                     <button onClick={(e) => {
                         e.stopPropagation();
@@ -50,10 +50,10 @@ const Template = (props) => {
                         <img src="/trashcan.svg" alt="delete icon" />
                     </button>}
                 {buttonType==='remove' &&
-                    <button name='remove' onClick={(e) => {
+                    <button onClick={(e) => {
                         e.stopPropagation();
                         parentFunction('remove', templateData)}}>
-                        <img name='remove' src="/remove.svg" alt="remove icon" />
+                        <img src="/remove.svg" alt="remove icon" />
                     </button>}
                 {buttonType==='add' &&
                     <button onClick={(e) => {

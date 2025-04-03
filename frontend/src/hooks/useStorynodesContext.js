@@ -1,4 +1,4 @@
-import { StorynodesContext } from "../context/storynodesContext";
+import { StorynodesContext } from "../context/StorynodesContext";
 import { useContext } from "react";
 
 const useStorynodeContext = () => {

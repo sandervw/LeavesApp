@@ -9,18 +9,9 @@ const StorynodeCreate = (props) => {
     // All storynodes should have a parent, except for 'story' types
     let parent = props.parent;
     let parentId = parent ? parent._id : null;
-    // When creating storynodes, there should always be a subtype
-    const subType = props.subType;
-    // If the subtype is a leaf, name it based on the parent
-    const isLeaf = subType==='leaf';
-    let leafName = '';
-    if(isLeaf) {
-        leafName = !parent.children
-            ? `${parent.name} - Leaf 1`
-            : `${parent.name} - Leaf ${parent.children.length+1}`
-    }
+    const subType = !parent ? 'story' : 'leaf';
 
-    // Set the initial state, with the correct subtype
+    // Set the initial state, with default name
     const [newCreate, setNewCreate] = useState({name: "", text: ""});
 
     // Update the parent element with the new child
@@ -36,7 +27,7 @@ const StorynodeCreate = (props) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         let newStorynode = {
-            name: isLeaf ? leafName : newCreate.name,
+            name: newCreate.name,
             text: newCreate.text,
             type: subType,
             parent: parentId
@@ -49,15 +40,14 @@ const StorynodeCreate = (props) => {
     }
 
     return ( 
-        <div className="element-create">
+        <div className="element">
             <div>
-                {!isLeaf && <input type="text"
+                <input
                     placeholder={'New '+subType}
                     required
                     value={newCreate.name}
                     onChange={(e) => setNewCreate({...newCreate, name: e.target.value})}
-                />}
-                {isLeaf && <p>{leafName}</p>}
+                    />
             </div>
             <div>
                 <MarkdownText
