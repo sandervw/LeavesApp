@@ -14,9 +14,9 @@ const Navbar = () => {
             </div>
             <input type="search"
                 name="search"
-                autocomplete="off"
+                autoComplete="off"
                 placeholder="Search Stories and Templates"
-                class="search" />
+                className="search" />
             <div className="site-login">
                 <button className="text-button" onClick={() => setShowSignup(true)}>Log In</button>
                 <button className="text-button" onClick={() => setShowSignup(true)}>Sign Up</button>

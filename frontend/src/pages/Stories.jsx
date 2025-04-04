@@ -11,6 +11,7 @@ const Stories = () => {
         const fetchData = async () => {
             const nodes = await fetchElements('storynodes', 'type=root&archived=false');
             nodesDispatch({ type: 'SET_STORYNODES', payload: nodes });
+            nodesDispatch({ type: 'SET_DETAILNODE', payload: null });
         };
         fetchData();
     }, [nodesDispatch]);

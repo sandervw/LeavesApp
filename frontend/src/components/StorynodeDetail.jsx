@@ -15,9 +15,8 @@ const StorynodeDetail = () => {
     const location = useLocation(); // Grab the element from location state
     const navigate = useNavigate();
     const { listNodes, detailNode, dispatch: nodesDispatch } = useStorynodeContext();
-    const { listTemplates, dispatch: templatesDispatch } = useTemplateContext();
+    const { dispatch: templatesDispatch } = useTemplateContext();
     const [showModal, setShowModal] = useState(false);
-    const [subType, setSubType] = useState(null);
     const [lockWriting, setLockWriting] = useState(false);
     const [isPending, setIsPending] = useState(true);
 
@@ -28,7 +27,6 @@ const StorynodeDetail = () => {
             console.log("useEffect called");
             const data1 = await fetchElement('storynodes', location.state);
             const data1subType = 'branch';
-            setSubType(data1subType);
             const data2 = await fetchChildren('storynodes', data1._id);
             const data3 = await fetchElements('templates', 'type=' + data1subType);
             await templatesDispatch({ type: 'SET_TEMPLATES', payload: data3 });
@@ -103,85 +101,70 @@ const StorynodeDetail = () => {
     };
 
     return !isPending && (
-        <div className="container">
-            <div className="sidebar">
-                <StorynodeCreate parent={detailNode} subType={subType} />
-            </div>
-            <div className="content">
-                <div className="detail element">
-                    <div className="box">
-                        <h2
-                            contentEditable
-                            suppressContentEditableWarning={true}
-                            id={"name"}
-                            onBlur={(e) => updateStorynode('name', e.target.innerText)}
-                        >{detailNode.name}
-                        </h2>
-                        <h3>Type: {detailNode.type}</h3>
-                        <button onClick={() => navigateParent()}>
-                            <img src="/return.svg" alt="return icon" />
-                        </button>
-                        <button onClick={() => downloadStory()}>
-                            <img src="/download.svg" alt="download  icon" />
-                        </button>
-                        {detailNode.type === 'root' &&
-                            <button onClick={() => toggleArchive()}>
-                                <img src={detailNode.archived ? "/unarchive.svg" : "/archive.svg"} alt="archive  icon" />
-                            </button>}
-                        <button onClick={() => setShowModal(true)}>
-                            <img src="/trashcan.svg" alt="delete icon" />
-                        </button>
-                        {detailNode.wordWeight && <div className="wordweight">
-                            <p>Weight: {detailNode.wordWeight}</p>
+        <div className="container content">
+            <div className="element detail">
+                <div className="box-buttons">
+                    <button onClick={() => navigateParent()}>
+                        <img src="/return.svg" alt="return icon" />
+                    </button>
+                    <button onClick={() => downloadStory()}>
+                        <img src="/download.svg" alt="download  icon" />
+                    </button>
+                    {detailNode.type === 'root' &&
+                        <button onClick={() => toggleArchive()}>
+                            <img src={detailNode.archived ? "/unarchive.svg" : "/archive.svg"} alt="archive  icon" />
+                        </button>}
+                    <button onClick={() => setShowModal(true)}>
+                        <img src="/trashcan.svg" alt="delete icon" />
+                    </button>
+                </div>
+                <div className="box-detail">
+                    <h2
+                        contentEditable
+                        suppressContentEditableWarning={true}
+                        id={"name"}
+                        onBlur={(e) => updateStorynode('name', e.target.innerText)}
+                    >{detailNode.name}
+                    </h2>
+                    <h3>Type: {detailNode.type}</h3>
+                    {detailNode.wordWeight && <div className="wordweight">
+                        <p>Weight: {detailNode.wordWeight}</p>
+                    </div>}
+                    {detailNode.type === 'root'
+                        ? <div>
+                            <h3>Word Limit: </h3>
+                            <p
+                                contentEditable
+                                suppressContentEditableWarning={true}
+                                onBlur={(e) => updateStorynode('wordLimit', e.target.innerText)}
+                            >{detailNode.wordLimit}</p>
+                        </div>
+                        : <div>
+                            <h3>Word Limit: {detailNode.wordLimit}</h3>
                         </div>}
-                        {detailNode.type === 'root'
-                            ? <div>
-                                <h3>Word Limit: </h3>
-                                <p
-                                    contentEditable
-                                    suppressContentEditableWarning={true}
-                                    onBlur={(e) => updateStorynode('wordLimit', e.target.innerText)}
-                                >{detailNode.wordLimit}</p>
-                            </div>
-                            : <div>
-                                <h3>Word Limit: </h3>
-                                <p>{detailNode.wordLimit}</p>
-                            </div>}
-                        {detailNode.type === 'leaf' &&
-                            <div>
-                                <h3>Word count: </h3>
-                                <p>{detailNode.wordCount}</p>
-                            </div>}
-                    </div>
-                    <div className="box">
-                        <MarkdownText text={detailNode.text} update={(val) => updateStorynode('text', val)} />
-                    </div>
+                    {detailNode.type === 'leaf' &&
+                        <div>
+                            <h3>Word count: {detailNode.wordCount}</h3>
+                        </div>}
+                </div>
+                <div className="box-text">
+                    <MarkdownText text={detailNode.text} update={(val) => updateStorynode('text', val)} />
+                </div>
 
-                </div>
-                <div>
-                    <h3>Children:</h3>
-                    {listNodes && listNodes.map((child) =>
-                    (
-                        <Storynode
-                            storynodeData={child}
-                            buttonType='remove'
-                            parentFunction={updateStorynode}
-                            locked={lockWriting}
-                            key={child._id} />
-                    ))}
-                </div>
             </div>
-            <div className="sidebar">
-                <StorynodeCreate parent={detailNode} subType={subType} />
-                {listTemplates && listTemplates.map((child) =>
+            <div>
+                <h3>Children:</h3>
+                {listNodes && listNodes.map((child) =>
                 (
-                    <Template templateData={child}
-                        buttonType='add'
+                    <Storynode
+                        storynodeData={child}
+                        buttonType='remove'
                         parentFunction={updateStorynode}
+                        locked={lockWriting}
                         key={child._id} />
                 ))}
-                {showModal && <DeleteConfirmation hideModal={() => setShowModal(false)} confirmModal={handleDelete} />}
             </div>
+            {showModal && <DeleteConfirmation hideModal={() => setShowModal(false)} confirmModal={handleDelete} />}
         </div>
     );
 };
