@@ -4,6 +4,8 @@ import { StorynodesContextProvider } from './context/StorynodesContext';
 import { TemplatesContextProvider } from './context/TemplatesContext';
 import { AuthContextProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
+import AddSidebar from './components/AddSidebar';
+import LinkSidebar from './components/LinkSidebar';
 import Stories from './pages/Stories';
 import Archive from './pages/Archive';
 import Templates from './pages/Templates';
@@ -19,6 +21,7 @@ function App() {
           <StorynodesContextProvider>
             <TemplatesContextProvider>
               <Navbar />
+              <LinkSidebar />
               <Routes>
                 <Route path='/' element={<Stories />} />
                 <Route path='/archive' element={<Archive />} />
@@ -27,6 +30,7 @@ function App() {
                 <Route path='/templatedetail' element={<TemplateDetail />} />
                 <Route path='/leafdetail' element={<LeafDetail />} />
               </Routes>
+              <AddSidebar />
             </TemplatesContextProvider>
           </StorynodesContextProvider>
         </AuthContextProvider>

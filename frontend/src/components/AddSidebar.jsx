@@ -25,7 +25,7 @@ const AddSidebar = () => {
     }
 
     return ( 
-        <aside className="sidebar">
+        <aside className="sidebar container">
             <StorynodeCreate subType='root' />
             {(listTemplates) && listTemplates.map((template) => (
                 <Template
