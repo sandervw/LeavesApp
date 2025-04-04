@@ -9,22 +9,21 @@ const useSignup = () => {
     const { dispatch } = useAuthContext();
 
     const signup = async (email, username, password) => {
-        setError(null);
         setIsPending(true);
-
+        setError(null);
         const response = await signupUser(email, username, password);
         const data = await response.json();
 
         if (!response.ok) {
             setError(data.error);
             setIsPending(false);
+            return false;
         } else {
-            // save user to local storage
-            localStorage.setItem("user", JSON.stringify(data));
-            // dispatch login action to context
+            localStorage.setItem("user", JSON.stringify(data)); // save user to local storage
             dispatch({ type: "LOGIN", payload: data });
             setError(null);
             setIsPending(false);
+            return true;
         }
     };
 

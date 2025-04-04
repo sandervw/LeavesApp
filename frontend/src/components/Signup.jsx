@@ -9,21 +9,18 @@ const Signup = ({ hideModal }) => {
     const { signup, error, isPending } = useSignup();
 
     const handleSubmit = async (e) => {
-
         e.preventDefault();
-        await signup(email, username, password);
-        if(!error && !isPending) hideModal();
+        const success = await signup(email, username, password);
+        success && hideModal();
     };
 
     return (
-        <div className="signup-form">
             <div className="modal-overlay">
-                <div className="modal-content">
-                    <h2>Signup</h2>
-                    <form onSubmit={(e) => {
+                    <form className="modal-content" onSubmit={(e) => {
                         e.preventDefault();
                         handleSubmit(e);
                     }}>
+                        <h2>Sign Up</h2>
                         <input
                             type="email"
                             placeholder="Email"
@@ -52,10 +49,7 @@ const Signup = ({ hideModal }) => {
                         {error && <div className="error">Error: {error}</div>}
                         {isPending && <div className="loading">Loading...</div>}
                     </form>
-                </div>
             </div>
-            
-        </div>
     );
 };
 

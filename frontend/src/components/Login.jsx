@@ -7,16 +7,8 @@ const Login = (hideModal) => {
     const [password, setPassword] = useState('');
 
     const handleSubmit = async (e) => {
-
         e.preventDefault();
-        // Handle login logic here
-        console.log({ email, username, password });
         hideModal();
-        // Add the new storynode
-        // const data = await upsertElement('storynodes', newStorynode);
-        // if(parent) updateParent(data._id);
-        // dispatch({type: 'CREATE_STORYNODE', payload: data})
-        // setNewCreate({name: "", text: ""});
     };
 
     return (
