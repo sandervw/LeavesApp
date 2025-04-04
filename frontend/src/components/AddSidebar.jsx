@@ -8,15 +8,16 @@ import useStorynodeContext from "../hooks/useStorynodesContext";
 const AddSidebar = () => {
 
     const {listTemplates, dispatch: templatesDispatch} = useTemplateContext();
-    const {dispatch: nodesDispatch} = useStorynodeContext();
+    const {detailNode, dispatch: nodesDispatch} = useStorynodeContext();
 
     useEffect(() => {
         const fetchData = async () => {
-            const templates = await fetchElements('templates', 'type=root');
+            const query = !detailNode ? 'type=root' : 'type=branch';
+            const templates = await fetchElements('templates', query);
             templatesDispatch({type: 'SET_TEMPLATES', payload: templates});
         }
         fetchData();
-    }, [templatesDispatch]);
+    }, [templatesDispatch, detailNode]);
 
     const createStory = async (val, template) => {
         console.log("Creating story from template: ", template._id);
