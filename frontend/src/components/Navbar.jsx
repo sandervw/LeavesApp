@@ -8,17 +8,15 @@ const Navbar = () => {
     const [showSignup, setShowSignup] = useState(false);
 
     return (
-        <header className="navbar">
+        <header className="navbar container">
             <div className="site-header">
                 <Link to='/'><h1>Leaves</h1></Link>
             </div>
-            <div className="site-links">
-                <ul className="links">
-                    <li><Link to='/'>Stories</Link></li>
-                    <li><Link to='/templates'>Templates</Link></li>
-                    <li><Link to='/archive'>Archive</Link></li>
-                </ul>
-            </div>
+            <input type="search"
+                name="search"
+                autocomplete="off"
+                placeholder="Search Stories and Templates"
+                class="search" />
             <div className="site-login">
                 <button className="text-button" onClick={() => setShowSignup(true)}>Log In</button>
                 <button className="text-button" onClick={() => setShowSignup(true)}>Sign Up</button>

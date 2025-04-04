@@ -2,18 +2,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Baskervville&family=Poppins:wght@200;400;500;600;800&family=VT323&display=swap');
 /* The HTML element - used for defining global vars */
 :root {
-  --color1: #ffffffde;
-  --color2: #178582;
-  --color3: #BFA181;
-  --color4: #d2001f;
-  --bgColor1: #242424;
-  --bgColor2: #353535;
-  --bgColor3: #0A1828;
-  --bgPrimary1: #495466;
-  --bgPrimary2: #39414e;
-  --bgPrimary3: #2b313a;
-  --bgPrimary4: #242931;
-  background-color: var(--bgPrimary2);
+  --bgPrimary1: #121815;
+  --bgPrimary2: #1a221e;
+  --bgPrimary3: #293830;
+  --txtPrimary: #E9E5D6;
+  --accentPrimary1: #2b313a;
+  --accentPrimary2: #ACB992;
+  background-color: var(--bgPrimary1);
 }
 /* The actual id=root element */
 #root {
@@ -24,28 +19,40 @@
 *, *::before, *::after {
   /* Arial/sans-serif fallback fonts */
   font-family: "poppins", arial, sans-serif;
-  color: var(--color1);
+  color: var(--txtPrimary);
   text-decoration: none;
 }
-/* p {
-  text-align: left;
-} */
 
 /* MAIN CONTENT STYLES */
-.container {
+.App {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+}
+.container { /* Used on sidebars, content, etc..  */
+  background-color: var(--bgPrimary2);
+  padding: 1rem;
+  border-radius: 1rem;
+  margin: 1rem;
+}
+.navbar {
   display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
   justify-content: space-between;
+  align-items: center;
+  grid-column: 1 / -1;
+}
+.sidebar {
+  display: flex;
+  flex-direction: column;
 }
 .content {
-  flex-grow: 2;
-  padding: 1rem;
-  
+  display: flex;
+  flex-direction: column;
 }
 .element {
-  background-color: var(--bgPrimary4);
+  background-color: var(--bgPrimary3);
   border-radius: .5rem;
+  padding: .5rem;
+  margin: .5rem;
 }
 .detail {
   display: flex;
@@ -55,26 +62,10 @@
   padding-left: 1rem;
 }
 
-/* SIDEBAR STYLES */
-.sidebar {
-  padding: 1rem;
-  width: 250px;
-  display: flex;
-  flex-direction: column;
-}
 
 
-/* NAVBAR STYLES */
-.navbar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--bgPrimary1);
-}
-.navbar .links {
-  display: flex;
-}
-.navbar a:hover {
+/* DETAILED ELEMENT STYLES */
+a:hover {
   text-decoration: underline;
 }
 ul, li {
@@ -87,11 +78,16 @@ ul, li {
 /* INPUT STYLES */
 input {
   font: inherit;
-  text-align: center;
-  font-weight: bold;
+  text-align: left;
   background: none;
   border: none;
-  border-bottom: var(--color1) 1px solid;
+  width: 100%;
+  background-color: var(--bgPrimary3);
+  border-radius: 1rem;
+  padding: 0.5em 1em;
+  box-sizing: border-box;
+  margin: 0.5em 0;
+  max-width: 600px;
 }
 button {
   border-radius: 8px;
