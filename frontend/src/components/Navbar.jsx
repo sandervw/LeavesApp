@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Signup from './Signup';
 import Login from './Login';
 import useLogout from '../hooks/useLogout.js';
+import useAuthContext from '../hooks/useAuthContext.js';
 
 
 const Navbar = () => {
@@ -10,6 +11,7 @@ const Navbar = () => {
     const [showSignup, setShowSignup] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
     const { logout } = useLogout();
+    const { user } = useAuthContext();
 
     const handleLogout = () => {
         logout();
@@ -25,13 +27,14 @@ const Navbar = () => {
                 autoComplete="off"
                 placeholder="Search Stories and Templates"
                 className="search" />
-            <div>
+            {user && <div>
                 <button className="text-button" onClick={() => handleLogout()}>Log Out</button>
-            </div>
-            <div>
+                <span className="username">Welcome, {user.username}</span>
+            </div>}
+            {!user && <div>
                 <button className="text-button" onClick={() => setShowLogin(true)}>Log In</button>
                 <button className="text-button" onClick={() => setShowSignup(true)}>Sign Up</button>
-            </div>
+            </div>}
             {showSignup && <Signup hideModal={() => setShowSignup(false)} />}
             {showLogin && <Login hideModal={() => setShowLogin(false)} />}
         </header>

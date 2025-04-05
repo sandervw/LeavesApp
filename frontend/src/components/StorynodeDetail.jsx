@@ -4,9 +4,12 @@ import Storynode from "./Storynode";
 import InlineSVG from "./InlineSVG";
 import DeleteConfirmation from "./DeleteConfirmation";
 import MarkdownText from "./MarkdownText";
+import Droppable from './Droppable';
 import { upsertElement, fetchElements, fetchElement, fetchChildren, deleteElement, createFromTemplate, createFile } from "../services/apiService";
 import useStorynodeContext from "../hooks/useStorynodesContext";
 import useTemplateContext from "../hooks/useTemplatesContext";
+import { DndContext } from "@dnd-kit/core";
+
 
 
 
@@ -153,6 +156,7 @@ const StorynodeDetail = () => {
 
             </div>
             <div>
+                <Droppable id="droppable" className="droppable" >
                 <h3>Children:</h3>
                 {listNodes && listNodes.map((child) =>
                 (
@@ -163,6 +167,7 @@ const StorynodeDetail = () => {
                         locked={lockWriting}
                         key={child._id} />
                 ))}
+                </Droppable>
             </div>
             {showModal && <DeleteConfirmation hideModal={() => setShowModal(false)} confirmModal={handleDelete} />}
         </div>
