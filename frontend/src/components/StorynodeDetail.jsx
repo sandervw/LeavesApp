@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 import Storynode from "./Storynode";
-import Template from "./Template";
-import StorynodeCreate from "./StorynodeCreate";
+import InlineSVG from "./InlineSVG";
 import DeleteConfirmation from "./DeleteConfirmation";
 import MarkdownText from "./MarkdownText";
 import { upsertElement, fetchElements, fetchElement, fetchChildren, deleteElement, createFromTemplate, createFile } from "../services/apiService";
 import useStorynodeContext from "../hooks/useStorynodesContext";
 import useTemplateContext from "../hooks/useTemplatesContext";
+
 
 
 const StorynodeDetail = () => {
@@ -105,17 +105,17 @@ const StorynodeDetail = () => {
             <div className="element detail">
                 <div className="box-buttons">
                     <button onClick={() => navigateParent()}>
-                        <img src="/return.svg" alt="return icon" />
+                        <InlineSVG src="/return.svg" alt="return icon" className="icon" />
                     </button>
                     <button onClick={() => downloadStory()}>
-                        <img src="/download.svg" alt="download  icon" />
+                        <InlineSVG src="/download.svg" alt="download  icon" className="icon" />
                     </button>
                     {detailNode.type === 'root' &&
                         <button onClick={() => toggleArchive()}>
-                            <img src={detailNode.archived ? "/unarchive.svg" : "/archive.svg"} alt="archive  icon" />
+                            <InlineSVG src={detailNode.archived ? "/unarchive.svg" : "/archive.svg"} alt="archive  icon" className="icon" />
                         </button>}
                     <button onClick={() => setShowModal(true)}>
-                        <img src="/trashcan.svg" alt="delete icon" />
+                        <InlineSVG src="/trashcan.svg" alt="delete icon" className="icon" />
                     </button>
                 </div>
                 <div className="box-detail">
@@ -126,13 +126,13 @@ const StorynodeDetail = () => {
                         onBlur={(e) => updateStorynode('name', e.target.innerText)}
                     >{detailNode.name}
                     </h2>
-                    <h3>Type: {detailNode.type}</h3>
+                    <p>Type: {detailNode.type}</p>
                     {detailNode.wordWeight && <div className="wordweight">
                         <p>Weight: {detailNode.wordWeight}</p>
                     </div>}
                     {detailNode.type === 'root'
                         ? <div>
-                            <h3>Word Limit: </h3>
+                            <p>Word Limit: </p>
                             <p
                                 contentEditable
                                 suppressContentEditableWarning={true}

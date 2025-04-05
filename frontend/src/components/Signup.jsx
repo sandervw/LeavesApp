@@ -15,41 +15,40 @@ const Signup = ({ hideModal }) => {
     };
 
     return (
-            <div className="modal-overlay">
-                    <form className="modal-content" onSubmit={(e) => {
-                        e.preventDefault();
-                        handleSubmit(e);
-                    }}>
-                        <h2>Sign Up</h2>
-                        <input
-                            type="email"
-                            placeholder="Email"
-                            value={email}
-                            autoComplete="email"
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
-                        <input
-                            type="text"
-                            placeholder="Username"
-                            value={username}
-                            autoComplete="username"
-                            onChange={(e) => setUsername(e.target.value)}
-                            required
-                        />
-                        <input
-                            type="password"
-                            placeholder="Password"
-                            value={password}
-                            autoComplete="new-password"
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-                        <button className="text-button" type="submit">Signup</button>
-                        {error && <div className="error">Error: {error}</div>}
-                        {isPending && <div className="loading">Loading...</div>}
-                    </form>
-            </div>
+        <div className="modal-overlay">
+            <form className="modal-content" onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit(e);
+            }}>
+                <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    autoComplete="email"
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
+                <input
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    autoComplete="username"
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                />
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    autoComplete="new-password"
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+                <button className="text-button" type="submit">Sign Up</button>
+                {error && <div className="error">Error: {error}</div>}
+                {isPending && <div className="loading">Loading...</div>}
+            </form>
+        </div>
     );
 };
 
