@@ -3,6 +3,7 @@ import {  upsertElement, deleteElement } from "../services/apiService";
 import DeleteConfirmation from "./DeleteConfirmation";
 import { useState } from "react";
 import MarkdownText from "./MarkdownText";
+import InlineSVG from "./InlineSVG";
 import useTemplateContext from '../hooks/useTemplatesContext';
 
 const Template = (props) => {
@@ -47,19 +48,19 @@ const Template = (props) => {
                         e.stopPropagation();
                         setShowModal(true);
                         }}>
-                        <img src="/trashcan.svg" alt="delete icon" />
+                        <InlineSVG src="/trashcan.svg" alt="delete icon" className="icon" />
                     </button>}
                 {buttonType==='remove' &&
                     <button onClick={(e) => {
                         e.stopPropagation();
                         parentFunction('remove', templateData)}}>
-                        <img src="/remove.svg" alt="remove icon" />
+                        <InlineSVG src="/remove.svg" alt="remove icon" className="icon" />
                     </button>}
                 {buttonType==='add' &&
                     <button onClick={(e) => {
                         e.stopPropagation();
                         parentFunction('add', templateData)}}>
-                        <img src="add.svg" alt="add icon" />
+                        <InlineSVG src="/add.svg" alt="add icon" className="icon" />
                     </button>}
             </div>
             {showModal && <DeleteConfirmation hideModal={() => setShowModal(false)} confirmModal={handleDelete} />}

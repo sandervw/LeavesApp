@@ -103,6 +103,7 @@ const signupUser = async (email, username, password) => {
 
 const loginUser = async (username, password) => {
     try {
+        // Note: username can be an email or username
         const result = await fetch('http://localhost:8080/users/login', {
             method: 'POST',
             headers: {"Content-Type": "application/json"},

@@ -1,53 +1,45 @@
 import { useState } from "react";
+import useLogin from "../hooks/useLogin";
 
-const Login = (hideModal) => {
+const Login = ({ hideModal }) => {
 
-    const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const { login, error, isPending } = useLogin();
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        hideModal();
+        const success = await login(username, password);
+        success && hideModal();
     };
 
     return (
-        <div>
-            <div className="modal-overlay">
-                <div className="modal-content">
-                    <h2>Login</h2>
-                    <form onSubmit={(e) => {
-                        e.preventDefault();
-                        handleSubmit(e);
-                    }}>
-                        <input
-                            type="email"
-                            placeholder="Email"
-                            value={email}
-                            autoComplete="email"
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
-                        <input
-                            type="text"
-                            placeholder="Username"
-                            value={username}
-                            autoComplete="username"
-                            onChange={(e) => setUsername(e.target.value)}
-                            required
-                        />
-                        <input
-                            type="password"
-                            placeholder="Password"
-                            value={password}
-                            autoComplete="current-password"
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-                        <button className="text-button" type="submit">Login</button>
-                    </form>
-                </div>
-            </div>
+        <div className="modal-overlay">
+            <form className="modal-content" onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit(e);
+            }}>
+                <input
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    autoComplete="username"
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                />
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    autoComplete="new-password"
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+                <button className="text-button" type="submit">Log In</button>
+                {error && <div className="error">Error: {error}</div>}
+                {isPending && <div className="loading">Loading...</div>}
+            </form>
         </div>
     );
 };
