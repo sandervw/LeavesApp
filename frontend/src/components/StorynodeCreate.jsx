@@ -24,8 +24,7 @@ const StorynodeCreate = () => {
     };
 
     // On submission, need to handle two events: adding the new storynode, and possibly addings it ID to parent
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = async () => {
         let newStorynode = {
             name: newCreate.name,
             text: newCreate.text,
@@ -40,9 +39,9 @@ const StorynodeCreate = () => {
     };
 
     return (
-        <Draggable id="newcreate" function={(e) => handleSubmit(e)}>
+        <Draggable id="newcreate" function={() => handleSubmit()}>
             <div className="element">
-                <div>
+                <div  onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
                     <input
                         placeholder={'New ' + subType}
                         required
@@ -50,16 +49,11 @@ const StorynodeCreate = () => {
                         onChange={(e) => setNewCreate({ ...newCreate, name: e.target.value })}
                     />
                 </div>
-                <div>
+                <div  onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
                     <MarkdownText
                         key={newCreate.text}
                         text={newCreate.text}
                         update={(val) => setNewCreate({ ...newCreate, text: val })} />
-                </div>
-                <div>
-                    <button onClick={(e) => handleSubmit(e)}>
-                        <InlineSVG src="/save.svg" alt="save icon" className="icon" />
-                    </button>
                 </div>
             </div>
         </Draggable>

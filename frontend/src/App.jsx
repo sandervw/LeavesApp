@@ -4,6 +4,7 @@ import { StorynodesContextProvider } from './context/StorynodesContext';
 import { TemplatesContextProvider } from './context/TemplatesContext';
 import { AuthContextProvider } from './context/AuthContext';
 import { DndContext } from '@dnd-kit/core';
+import {PointerSensor, useSensor} from '@dnd-kit/core';
 import Navbar from './components/Navbar';
 import AddSidebar from './components/AddSidebar';
 import LinkSidebar from './components/LinkSidebar';
@@ -14,19 +15,25 @@ import TemplateDetail from './components/TemplateDetail';
 import StorynodeDetail from './components/StorynodeDetail';
 import LeafDetail from './components/LeafDetail';
 
-//TODO implement handleDragEnd function here, then just pass the callback inside the event
 const handleDragEnd = (event) => {
   const { active, over } = event;
   console.log('Drag ended:', active, 'over:', over);
-  if (over && over.id === 'droppable') active.data.function();
+  if (over && over.id === 'droppable') active.data.current.function();
 }
 
+
+
 function App() {
+  const pointerSensor = useSensor(PointerSensor, {
+    activationConstraint: {
+      distance: 10,
+    },
+  });
   return (
     <div className="App">
       <Router>
         <AuthContextProvider>
-          <DndContext onDragEnd={handleDragEnd}>
+          <DndContext onDragEnd={handleDragEnd} sensors={[pointerSensor]}>
             <StorynodesContextProvider>
               <TemplatesContextProvider>
                 <Navbar />
