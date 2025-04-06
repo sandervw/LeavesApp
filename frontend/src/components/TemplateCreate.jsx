@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { upsertElement } from '../services/apiService';
 import MarkdownText from "./MarkdownText";
-import useTemplateContext from '../hooks/useAddableContext';
+import useAddableContext from '../hooks/useAddableContext';
+
+//TODO NEED TO REFACTOR THIS WITH NEW CONTEXT HANDLING
 
 const TemplateCreate = (props) => {
-    const {dispatch} = useTemplateContext();
+    const {dispatch} = useAddableContext();
     // Optional parent element to add a new child to
     let parent = props.parent;
     // Optional subType of the parent element
@@ -19,7 +21,7 @@ const TemplateCreate = (props) => {
         parent.children.push(id);
         const data = await upsertElement('templates', parent);
         console.log(data);
-        dispatch ({type: 'SET_DETAILTEMPLATE', payload: data});
+        dispatch ({type: 'SET_NEWADDABLE', payload: data});
     };
 
     // On submission, need to handle two events: adding the new template, and possibly addings it ID to parent
@@ -34,7 +36,7 @@ const TemplateCreate = (props) => {
         // Add the new template
         const data = await upsertElement('templates', newTemplate);
         if(parent) updateParent(data._id);
-        if(newCreate.type === subType) dispatch({type: 'CREATE_TEMPLATE', payload: data}); // Only add to list if new template has same type as list elements
+        if(newCreate.type === subType) dispatch({type: 'CREATE_ADDABLE', payload: data}); // Only add to list if new template has same type as list elements
         setNewCreate({name: "", type: (subType ? subType : 'story'), text: ""});
     }
 

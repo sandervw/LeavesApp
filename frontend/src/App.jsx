@@ -1,7 +1,7 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ElementContextProvider } from './context/ElementContext';
-import { TemplatesContextProvider } from './context/AddableContext';
+import { AddableContextProvider } from './context/AddableContext';
 import { AuthContextProvider } from './context/AuthContext';
 import { DndContext } from '@dnd-kit/core';
 import {PointerSensor, useSensor} from '@dnd-kit/core';
@@ -34,7 +34,7 @@ function App() {
         <AuthContextProvider>
           <DndContext onDragEnd={handleDragEnd} sensors={[pointerSensor]}>
             <ElementContextProvider>
-              <TemplatesContextProvider>
+              <AddableContextProvider>
                 <Navbar />
                 <LinkSidebar />
                 <Routes>
@@ -45,13 +45,12 @@ function App() {
                   <Route path='/templatedetail' element={<TemplateDetail />} />
                 </Routes>
                 <AddSidebar />
-              </TemplatesContextProvider>
+              </AddableContextProvider>
             </ElementContextProvider>
           </DndContext>
         </AuthContextProvider>
       </Router>
     </div>
-
   );
 }
 
