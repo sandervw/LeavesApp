@@ -6,8 +6,6 @@ import { AuthContextProvider } from './context/AuthContext';
 import { DndContext } from '@dnd-kit/core';
 import {PointerSensor, useSensor} from '@dnd-kit/core';
 import Navbar from './components/Navbar';
-import AddSidebar from './components/AddSidebar';
-import LinkSidebar from './components/LinkSidebar';
 import Stories from './pages/Stories';
 import Archive from './pages/Archive';
 import Templates from './pages/Templates';
@@ -36,7 +34,6 @@ function App() {
             <ElementContextProvider>
               <AddableContextProvider>
                 <Navbar />
-                <LinkSidebar />
                 <Routes>
                   <Route path='/' element={<Stories />} />
                   <Route path='/archive' element={<Archive />} />
@@ -44,7 +41,6 @@ function App() {
                   <Route path='/templates' element={<Templates />} />
                   <Route path='/templatedetail' element={<TemplateDetail />} />
                 </Routes>
-                <AddSidebar />
               </AddableContextProvider>
             </ElementContextProvider>
           </DndContext>

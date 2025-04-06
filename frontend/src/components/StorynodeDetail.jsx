@@ -5,6 +5,8 @@ import InlineSVG from "./InlineSVG";
 import DeleteConfirmation from "./DeleteConfirmation";
 import MarkdownText from "./MarkdownText";
 import Droppable from './Droppable';
+import AddSidebar from '../components/AddSidebar';
+import LinkSidebar from '../components/LinkSidebar';
 import { upsertElement, fetchElements, fetchElement, fetchChildren, deleteElement, createFromTemplate, createFile } from "../services/apiService";
 import useElementContext from "../hooks/useElementContext";
 import useTemplateContext from "../hooks/useAddableContext";
@@ -103,6 +105,9 @@ const StorynodeDetail = () => {
     };
 
     return !isPending && (
+        
+        <>
+        <LinkSidebar />
         <div className="container content">
             <div className="element detail">
                 <div className="box-buttons">
@@ -170,6 +175,8 @@ const StorynodeDetail = () => {
             </div>
             {showModal && <DeleteConfirmation hideModal={() => setShowModal(false)} confirmModal={handleDelete} />}
         </div>
+        <AddSidebar kind="templates" type="root" />
+        </>
     );
 };
 
