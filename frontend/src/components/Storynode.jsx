@@ -4,11 +4,11 @@ import DeleteConfirmation from "./DeleteConfirmation";
 import { useState } from "react";
 import MarkdownText from "./MarkdownText";
 import InlineSVG from "./InlineSVG";
-import useStorynodeContext from '../hooks/useElementContext';
+import useElementContext from '../hooks/useElementContext';
 
 const Storynode = (props) => {
 
-    const {dispatch} = useStorynodeContext();
+    const {dispatch} = useElementContext();
     const navigate = useNavigate();
     // Save, add, or remove button
     const buttonType = props.buttonType;
@@ -31,13 +31,14 @@ const Storynode = (props) => {
         if(attr === 'wordCount')updatedNode = {...storynodeData, wordCount: val};
         await upsertElement('storynodes', updatedNode);
         if(attr === 'wordCount') parentFunction('wordCount', val);
-        dispatch({type: 'UPDATE_STORYNODE', payload: updatedNode});
+        dispatch({type: 'UPDATE_CHILD', payload: updatedNode});
     }
 
     // Delete the element
     const handleDelete = async () => {
         await deleteElement('storynodes', storynodeData._id);
-        dispatch({type: 'DELETE_STORYNODE', payload: storynodeData._id});
+        dispatch({type: 'DELETE_CHILD', payload: storynodeData._id});
+        //setShowModal(false);
     }
 
     return (

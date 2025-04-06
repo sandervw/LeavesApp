@@ -5,19 +5,20 @@ import { createFromTemplate, fetchElements } from "../services/apiService";
 import useAddableContext from "../hooks/useAddableContext";
 import useElementContext from "../hooks/useElementContext";
 
-const AddSidebar = () => {
+const AddSidebar = (props) => {
 
     const {addables, dispatch: addablesDispatch} = useAddableContext();
-    const {element, dispatch: elementDispatch} = useElementContext();
+    const {dispatch: elementDispatch} = useElementContext();
+
+    const {kind, type} = props;
 
     useEffect(() => {
         const fetchData = async () => {
-            const query = !element ? 'type=root' : 'type=branch';
-            const templates = await fetchElements('templates', query);
+            const templates = await fetchElements(kind, `type=${type}`);
             addablesDispatch({type: 'SET_ADDABLES', payload: templates});
         }
         fetchData();
-    }, [addablesDispatch, element]);
+    }, [addablesDispatch, kind, type]);
 
     const createStory = async (val, template) => {
         console.log("Creating story from template: ", template._id);

@@ -1,5 +1,7 @@
 import Storynode from "../components/Storynode";
 import Droppable from "../components/Droppable";
+import AddSidebar from '../components/AddSidebar';
+import LinkSidebar from '../components/LinkSidebar';
 import { useEffect } from "react";
 import { fetchElements } from "../services/apiService";
 import useElementContext from "../hooks/useElementContext";
@@ -18,17 +20,21 @@ const Stories = () => {
     }, [dispatch]);
 
     return (
-        <Droppable id="droppable" className="droppable" >
-        <div className="content container">
-            {/* <h2>Current Stories:</h2> */}
-            {(storynodes) && storynodes.map((story) => (
-                <Storynode
-                    storynodeData={story}
-                    buttonType='delete'
-                    key={story._id} />
-            ))}
-        </div>
-        </Droppable>
+        <>
+            <LinkSidebar />
+            <div className="content container">
+                <Droppable id="droppable" className="droppable" >
+                    {(storynodes) && storynodes.map((story) => (
+                        <Storynode
+                            storynodeData={story}
+                            buttonType='delete'
+                            key={story._id} />
+                    ))}
+
+                </Droppable>
+            </div>
+            <AddSidebar kind="templates" type="root" />
+        </>
     );
 };
 

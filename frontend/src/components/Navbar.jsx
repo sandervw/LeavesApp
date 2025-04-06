@@ -28,8 +28,8 @@ const Navbar = () => {
                 placeholder="Search Stories and Templates"
                 className="search" />
             {user && <div>
-                <button className="text-button" onClick={() => handleLogout()}>Log Out</button>
                 <span className="username">Welcome, {user.username}</span>
+                <button className="text-button" onClick={() => handleLogout()}>Log Out</button>
             </div>}
             {!user && <div>
                 <button className="text-button" onClick={() => setShowLogin(true)}>Log In</button>
