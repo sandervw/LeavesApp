@@ -6,9 +6,8 @@ import DeleteConfirmation from "./DeleteConfirmation";
 import MarkdownText from "./MarkdownText";
 import Droppable from './Droppable';
 import { upsertElement, fetchElements, fetchElement, fetchChildren, deleteElement, createFromTemplate, createFile } from "../services/apiService";
-import useStorynodeContext from "../hooks/useStorynodesContext";
-import useTemplateContext from "../hooks/useTemplatesContext";
-import { DndContext } from "@dnd-kit/core";
+import useElementContext from "../hooks/useElementContext";
+import useTemplateContext from "../hooks/useAddableContext";
 
 
 
@@ -17,7 +16,7 @@ const StorynodeDetail = () => {
 
     const location = useLocation(); // Grab the element from location state
     const navigate = useNavigate();
-    const { listNodes, detailNode, dispatch: nodesDispatch } = useStorynodeContext();
+    const { children, element, dispatch: elementDispatch } = useElementContext();
     const { dispatch: templatesDispatch } = useTemplateContext();
     const [showModal, setShowModal] = useState(false);
     const [lockWriting, setLockWriting] = useState(false);
@@ -28,22 +27,22 @@ const StorynodeDetail = () => {
         const fetchData = async () => {
             setIsPending(true);
             console.log("useEffect called");
-            const data1 = await fetchElement('storynodes', location.state);
-            const data1subType = 'branch';
-            const data2 = await fetchChildren('storynodes', data1._id);
-            const data3 = await fetchElements('templates', 'type=' + data1subType);
-            await templatesDispatch({ type: 'SET_TEMPLATES', payload: data3 });
-            await nodesDispatch({ type: 'SET_STORYNODES', payload: data2 });
-            await nodesDispatch({ type: 'SET_DETAILNODE', payload: data1 });
+            const storynode = await fetchElement('storynodes', location.state);
+            const storynodeSubtype = 'branch';
+            const children = await fetchChildren('storynodes', storynode._id);
+            const addables = await fetchElements('templates', 'type=' + storynodeSubtype);
+            await templatesDispatch({ type: 'SET_TEMPLATES', payload: addables });
+            await elementDispatch({ type: 'SET_CHILDREN', payload: children });
+            await elementDispatch({ type: 'SET_ELEMENT', payload: storynode });
             setIsPending(false);
         };
         fetchData();
-    }, [location.state, nodesDispatch, templatesDispatch]);
+    }, [location.state, elementDispatch, templatesDispatch]);
 
     // Return to parent element
     const navigateParent = async () => {
-        if (!detailNode.parent) navigate('/');
-        else navigate('/storydetail', { state: detailNode.parent });
+        if (!element.parent) navigate('/');
+        else navigate('/storydetail', { state: element.parent });
     };
 
     // Updates the name, purposes, or children
@@ -51,55 +50,55 @@ const StorynodeDetail = () => {
         // If the attr is a wordcount, ignore value, need to summarize the wordcount of all children
         if (attr === 'wordCount') {
             let sumWords = 0;
-            for (const child of listNodes) {
+            for (const child of children) {
                 sumWords += child.wordCount ? child.wordCount : 0;
             }
             // If the word count is over the word limit, lock the blobs
-            if (sumWords > detailNode.wordLimit) setLockWriting(true);
+            if (sumWords > element.wordLimit) setLockWriting(true);
             else setLockWriting(false);
-            upsertElement('storynodes', { ...detailNode, wordCount: sumWords });
-            nodesDispatch({ type: 'SET_DETAILNODE', payload: { ...detailNode, wordCount: sumWords } });
+            upsertElement('storynodes', { ...element, wordCount: sumWords });
+            elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, wordCount: sumWords } });
         }
         // In remove case, need to both remove and delete the child tree
         else if (attr === 'remove') {
             deleteElement('storynodes', val);
-            nodesDispatch({ type: 'DELETE_STORYNODE', payload: val });
-            let data2 = await detailNode.children.filter(child => child !== val);
-            if (data2.length === 0 && detailNode.type === 'branch') detailNode.type = 'leaf';
-            nodesDispatch({ type: 'SET_DETAILNODE', payload: { ...detailNode, children: data2 } });
+            elementDispatch({ type: 'DELETE_CHILD', payload: val });
+            let data2 = await element.children.filter(child => (child !== val && child !== null));
+            if (data2.length === 0 && element.type === 'branch') element.type = 'leaf';
+            elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, children: data2 } });
         }
         // In add case, need to convert template and all its children to listNodes (do on backend)
         else if (attr === 'add') {
-            const data = await createFromTemplate(val._id, detailNode._id);
-            if (detailNode.type === 'leaf') detailNode.type = 'branch';
-            nodesDispatch({ type: 'CREATE_STORYNODE', payload: data });
-            nodesDispatch({ type: 'SET_DETAILNODE', payload: { ...detailNode, children: [...detailNode.children, data._id] } });
+            const data = await createFromTemplate(val._id, element._id);
+            if (element.type === 'leaf') element.type = 'branch';
+            elementDispatch({ type: 'CREATE_CHILD', payload: data });
+            elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, children: [...element.children, data._id] } });
         }
         else {
             // Name, Text, WordLimit
-            const name = attr === 'name' ? val : detailNode.name;
-            const text = attr === 'text' ? val : detailNode.text;
-            const wordLimit = attr === 'wordLimit' ? val : detailNode.wordLimit;
-            upsertElement('storynodes', { ...detailNode, name, text, wordLimit });
-            nodesDispatch({ type: 'SET_DETAILNODE', payload: { ...detailNode, name, text, wordLimit } });
+            const name = attr === 'name' ? val : element.name;
+            const text = attr === 'text' ? val : element.text;
+            const wordLimit = attr === 'wordLimit' ? val : element.wordLimit;
+            upsertElement('storynodes', { ...element, name, text, wordLimit });
+            elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, name, text, wordLimit } });
         }
-        console.log(detailNode);
+        console.log(element);
     };
 
     // Delete the storynode and navigate back to main list
     const handleDelete = async () => {
-        deleteElement('storynodes', detailNode._id);
-        if (!detailNode.parent) navigate('/');
-        else navigate('/storydetail', { state: detailNode.parent });
+        deleteElement('storynodes', element._id);
+        if (!element.parent) navigate('/');
+        else navigate('/storydetail', { state: element.parent });
     };
 
     const downloadStory = async () => {
-        const data = await createFile(detailNode._id);
+        const data = await createFile(element._id);
         console.log(data);
     };
 
     const toggleArchive = async () => {
-        await upsertElement('storynodes', { ...detailNode, archived: !detailNode.archived });
+        await upsertElement('storynodes', { ...element, archived: !element.archived });
         navigate('/');
     };
 
@@ -113,9 +112,9 @@ const StorynodeDetail = () => {
                     <button onClick={() => downloadStory()}>
                         <InlineSVG src="/download.svg" alt="download  icon" className="icon" />
                     </button>
-                    {detailNode.type === 'root' &&
+                    {element.type === 'root' &&
                         <button onClick={() => toggleArchive()}>
-                            <InlineSVG src={detailNode.archived ? "/unarchive.svg" : "/archive.svg"} alt="archive  icon" className="icon" />
+                            <InlineSVG src={element.archived ? "/unarchive.svg" : "/archive.svg"} alt="archive  icon" className="icon" />
                         </button>}
                     <button onClick={() => setShowModal(true)}>
                         <InlineSVG src="/trashcan.svg" alt="delete icon" className="icon" />
@@ -127,38 +126,38 @@ const StorynodeDetail = () => {
                         suppressContentEditableWarning={true}
                         id={"name"}
                         onBlur={(e) => updateStorynode('name', e.target.innerText)}
-                    >{detailNode.name}
+                    >{element.name}
                     </h2>
-                    <p>Type: {detailNode.type}</p>
-                    {detailNode.wordWeight && <div className="wordweight">
-                        <p>Weight: {detailNode.wordWeight}</p>
+                    <p>Type: {element.type}</p>
+                    {element.wordWeight && <div className="wordweight">
+                        <p>Weight: {element.wordWeight}</p>
                     </div>}
-                    {detailNode.type === 'root'
+                    {element.type === 'root'
                         ? <div>
                             <p>Word Limit: </p>
                             <p
                                 contentEditable
                                 suppressContentEditableWarning={true}
                                 onBlur={(e) => updateStorynode('wordLimit', e.target.innerText)}
-                            >{detailNode.wordLimit}</p>
+                            >{element.wordLimit}</p>
                         </div>
                         : <div>
-                            <h3>Word Limit: {detailNode.wordLimit}</h3>
+                            <h3>Word Limit: {element.wordLimit}</h3>
                         </div>}
-                    {detailNode.type === 'leaf' &&
+                    {element.type === 'leaf' &&
                         <div>
-                            <h3>Word count: {detailNode.wordCount}</h3>
+                            <h3>Word count: {element.wordCount}</h3>
                         </div>}
                 </div>
                 <div className="box-text">
-                    <MarkdownText text={detailNode.text} update={(val) => updateStorynode('text', val)} />
+                    <MarkdownText text={element.text} update={(val) => updateStorynode('text', val)} />
                 </div>
 
             </div>
             <div>
                 <Droppable id="droppable" className="droppable" >
                 <h3>Children:</h3>
-                {listNodes && listNodes.map((child) =>
+                {children && children.map((child) =>
                 (
                     <Storynode
                         storynodeData={child}

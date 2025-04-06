@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 import {  upsertElement, fetchElement, fetchChildren, fetchElements, deleteElement } from "../services/apiService";
 import MarkdownText from "./MarkdownText";
-import useTemplateContext from "../hooks/useTemplatesContext";
+import useTemplateContext from "../hooks/useAddableContext";
 
 import DeleteConfirmation from "./DeleteConfirmation";
 

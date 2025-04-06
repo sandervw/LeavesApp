@@ -2,12 +2,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Baskervville&family=Poppins:wght@200;400;500;600;800&family=VT323&display=swap');
 /* The HTML element - used for defining global vars */
 :root {
-  --bgPrimary1: #121815;
-  --bgPrimary2: #1a221e;
-  --bgPrimary3: #293830;
-  --txtPrimary: #E9E5D6;
-  --accentPrimary1: #2b313a;
-  --accentPrimary2: #ACB992;
+  --bgPrimary1: #FBF5F3;
+  --bgPrimary2: #E6E9E3;
+  --txtPrimary: #1F1300;
+  --accentPrimary1: #A76571;
+  --accentPrimary2: #FFA630;
   background-color: var(--bgPrimary1);
 }
 /* The actual id=root element */
@@ -29,10 +28,11 @@
   grid-template-columns: 1fr 3fr 1fr;
 }
 .container { /* Used on sidebars, content, etc..  */
-  background-color: var(--bgPrimary2);
   padding: 1rem;
   border-radius: 1rem;
   margin: 1rem;
+  border: 2px solid transparent;
+  border-color: var(--bgPrimary2);
 }
 .navbar {
   display: flex;
@@ -49,10 +49,11 @@
   flex-direction: column;
 }
 .element {
-  background-color: var(--bgPrimary3);
   border-radius: 1rem;
   padding: .5rem;
   margin: .5rem;
+  border: 2px solid transparent;
+  border-color: var(--bgPrimary2);
 }
 .detail {
   display: flex;
@@ -88,7 +89,7 @@ input {
   background: none;
   border: none;
   width: 100%;
-  background-color: var(--bgPrimary3);
+  background-color: var(--bgPrimary2);
   border-radius: 1rem;
   padding: 0.5em 1em;
   box-sizing: border-box;
@@ -137,13 +138,13 @@ button.text-button:focus, button.text-button:focus-visible {
 /* Style placeholders */
 [data-placeholder]::before {
   content: attr(data-placeholder); /* Use the placeholder text */
-  color: #aaa; /* Gray color for the placeholder */
+  color: #7b7b7b; /* Gray color for the placeholder */
   font-style: italic; /* Optional: to distinguish placeholder text */
   pointer-events: none; /* Ensure it doesn't interfere with user actions */
   display: block;
 }
 ::placeholder {
-  color: #aaa; /* Gray color for the placeholder */
+  color: #7b7b7b; /* Gray color for the placeholder */
   font-style: italic; /* Optional: to distinguish placeholder text */
   pointer-events: none; /* Ensure it doesn't interfere with user actions */
   display: block;
