@@ -1,7 +1,7 @@
 import Storynode from "../components/Storynode";
 import { useEffect } from "react";
 import { fetchElements } from "../services/apiService";
-import useStorynodeContext from "../hooks/useStorynodesContext";
+import useStorynodeContext from "../hooks/useElementContext";
 
 const Archive = () => {
 

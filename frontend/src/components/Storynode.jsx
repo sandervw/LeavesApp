@@ -4,7 +4,7 @@ import DeleteConfirmation from "./DeleteConfirmation";
 import { useState } from "react";
 import MarkdownText from "./MarkdownText";
 import InlineSVG from "./InlineSVG";
-import useStorynodeContext from '../hooks/useStorynodesContext';
+import useStorynodeContext from '../hooks/useElementContext';
 
 const Storynode = (props) => {
 
@@ -20,9 +20,7 @@ const Storynode = (props) => {
 
     // Go to detailed view of the element
     const handleDetail = () => {
-        !(storynodeData.type==='leaf')
-            ? navigate('/storydetail', {state: storynodeData._id})
-            : navigate('/leafdetail', {state: storynodeData._id});
+        navigate('/storydetail', {state: storynodeData._id})
     }
 
      // Updates the text or content of a storynode

@@ -4,7 +4,7 @@ import DeleteConfirmation from "./DeleteConfirmation";
 import { useState } from "react";
 import MarkdownText from "./MarkdownText";
 import InlineSVG from "./InlineSVG";
-import useTemplateContext from '../hooks/useTemplatesContext';
+import useTemplateContext from '../hooks/useAddableContext';
 
 const Template = (props) => {
 

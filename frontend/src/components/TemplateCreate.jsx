@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { upsertElement } from '../services/apiService';
 import MarkdownText from "./MarkdownText";
-import useTemplateContext from '../hooks/useTemplatesContext';
+import useTemplateContext from '../hooks/useAddableContext';
 
 const TemplateCreate = (props) => {
     const {dispatch} = useTemplateContext();

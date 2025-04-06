@@ -1,7 +1,7 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { StorynodesContextProvider } from './context/StorynodesContext';
-import { TemplatesContextProvider } from './context/TemplatesContext';
+import { ElementContextProvider } from './context/ElementContext';
+import { TemplatesContextProvider } from './context/AddableContext';
 import { AuthContextProvider } from './context/AuthContext';
 import { DndContext } from '@dnd-kit/core';
 import {PointerSensor, useSensor} from '@dnd-kit/core';
@@ -13,7 +13,6 @@ import Archive from './pages/Archive';
 import Templates from './pages/Templates';
 import TemplateDetail from './components/TemplateDetail';
 import StorynodeDetail from './components/StorynodeDetail';
-import LeafDetail from './components/LeafDetail';
 
 const handleDragEnd = (event) => {
   const { active, over } = event;
@@ -21,20 +20,20 @@ const handleDragEnd = (event) => {
   if (over && over.id === 'droppable') active.data.current.function();
 }
 
-
-
 function App() {
+  
   const pointerSensor = useSensor(PointerSensor, {
     activationConstraint: {
       distance: 10,
     },
   });
+
   return (
     <div className="App">
       <Router>
         <AuthContextProvider>
           <DndContext onDragEnd={handleDragEnd} sensors={[pointerSensor]}>
-            <StorynodesContextProvider>
+            <ElementContextProvider>
               <TemplatesContextProvider>
                 <Navbar />
                 <LinkSidebar />
@@ -44,11 +43,10 @@ function App() {
                   <Route path='/storydetail' element={<StorynodeDetail />} />
                   <Route path='/templates' element={<Templates />} />
                   <Route path='/templatedetail' element={<TemplateDetail />} />
-                  <Route path='/leafdetail' element={<LeafDetail />} />
                 </Routes>
                 <AddSidebar />
               </TemplatesContextProvider>
-            </StorynodesContextProvider>
+            </ElementContextProvider>
           </DndContext>
         </AuthContextProvider>
       </Router>

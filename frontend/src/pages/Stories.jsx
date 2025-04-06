@@ -1,31 +1,34 @@
 import Storynode from "../components/Storynode";
+import Droppable from "../components/Droppable";
 import { useEffect } from "react";
 import { fetchElements } from "../services/apiService";
-import useStorynodeContext from "../hooks/useStorynodesContext";
+import useElementContext from "../hooks/useElementContext";
 
 const Stories = () => {
 
-    const { listNodes, dispatch: nodesDispatch } = useStorynodeContext();
+    const { children: storynodes, dispatch } = useElementContext();
 
     useEffect(() => {
         const fetchData = async () => {
             const nodes = await fetchElements('storynodes', 'type=root&archived=false');
-            nodesDispatch({ type: 'SET_STORYNODES', payload: nodes });
-            nodesDispatch({ type: 'SET_DETAILNODE', payload: null });
+            dispatch({ type: 'SET_CHILDREN', payload: nodes });
+            dispatch({ type: 'SET_ELEMENT', payload: null });
         };
         fetchData();
-    }, [nodesDispatch]);
+    }, [dispatch]);
 
     return (
+        <Droppable id="droppable" className="droppable" >
         <div className="content container">
             {/* <h2>Current Stories:</h2> */}
-            {(listNodes) && listNodes.map((story) => (
+            {(storynodes) && storynodes.map((story) => (
                 <Storynode
                     storynodeData={story}
                     buttonType='delete'
                     key={story._id} />
             ))}
         </div>
+        </Droppable>
     );
 };
 
