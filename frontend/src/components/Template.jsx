@@ -1,14 +1,14 @@
 import { useNavigate } from 'react-router-dom';
-import {  upsertElement, deleteElement } from "../services/apiService";
+import { upsertElement, deleteElement } from "../services/apiService";
 import DeleteConfirmation from "./DeleteConfirmation";
 import { useState } from "react";
 import MarkdownText from "./MarkdownText";
 import InlineSVG from "./InlineSVG";
-import useTemplateContext from '../hooks/useAddableContext';
+import useAddableContext from '../hooks/useAddableContext';
 
 const Template = (props) => {
 
-    const {dispatch} = useTemplateContext();
+    const {dispatch} = useAddableContext();
     const navigate = useNavigate();
     // Save, add, or remove button
     const buttonType = props.buttonType;
@@ -25,13 +25,13 @@ const Template = (props) => {
     // Updates the name, purposes, or children
     const updateTemplate = async (attr, val) => {
         await upsertElement('templates', {...templateData, text: val});
-        dispatch({type: 'UPDATE_TEMPLATE', payload: {...templateData, text: val}});
+        dispatch({type: 'UPDATE_ADDABLE', payload: {...templateData, text: val}});
     }
 
     // Delete the element
     const handleDelete = async () => {
         await deleteElement('templates', templateData._id);
-        dispatch({type: 'DELETE_TEMPLATE', payload: templateData._id});
+        dispatch({type: 'DELETE_ADDABLE', payload: templateData._id});
     }
     
     return ( 

@@ -2,22 +2,22 @@ import Template from "../components/Template";
 import StorynodeCreate from "../components/StorynodeCreate";
 import { useEffect } from "react";
 import { createFromTemplate, fetchElements } from "../services/apiService";
-import useTemplateContext from "../hooks/useAddableContext";
+import useAddableContext from "../hooks/useAddableContext";
 import useElementContext from "../hooks/useElementContext";
 
 const AddSidebar = () => {
 
-    const {listTemplates, dispatch: templatesDispatch} = useTemplateContext();
+    const {addables, dispatch: addablesDispatch} = useAddableContext();
     const {element, dispatch: elementDispatch} = useElementContext();
 
     useEffect(() => {
         const fetchData = async () => {
             const query = !element ? 'type=root' : 'type=branch';
             const templates = await fetchElements('templates', query);
-            templatesDispatch({type: 'SET_TEMPLATES', payload: templates});
+            addablesDispatch({type: 'SET_ADDABLES', payload: templates});
         }
         fetchData();
-    }, [templatesDispatch, element]);
+    }, [addablesDispatch, element]);
 
     const createStory = async (val, template) => {
         console.log("Creating story from template: ", template._id);
@@ -28,7 +28,7 @@ const AddSidebar = () => {
     return ( 
         <aside className="sidebar container">
             <StorynodeCreate />
-            {(listTemplates) && listTemplates.map((template) => (
+            {(addables) && addables.map((template) => (
                 <Template
                     templateData={template}
                     parentFunction={createStory}

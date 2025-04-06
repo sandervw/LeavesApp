@@ -2,16 +2,16 @@ import Template from "../components/Template";
 import Droppable from "../components/Droppable";
 import { useEffect } from "react";
 import { fetchElements } from "../services/apiService";
-import useTemplateContext from "../hooks/useAddableContext";
+import useAddableContext from "../hooks/useAddableContext";
 
 const Templates = () => {
 
-    const { listTemplates, dispatch } = useTemplateContext();
+    const { addables, dispatch } = useAddableContext();
 
     useEffect(() => {
         const fetchTemplates = async () => {
             const data = await fetchElements('templates', 'type=root');
-            dispatch({ type: 'SET_TEMPLATES', payload: data });
+            dispatch({ type: 'SET_ADDABLES', payload: data });
         };
         fetchTemplates();
     }, [dispatch]);
@@ -19,7 +19,7 @@ const Templates = () => {
     return (
         <Droppable id="droppable" className="droppable" >
             <div className="content container">
-                {(listTemplates) && listTemplates.map((template) => (
+                {(addables) && addables.map((template) => (
                     <Template
                         templateData={template}
                         buttonType='delete'
