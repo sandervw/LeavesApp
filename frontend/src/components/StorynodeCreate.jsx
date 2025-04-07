@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
-import apiService from '../services/apiService';
 import MarkdownText from "./MarkdownText";
-import InlineSVG from "./InlineSVG";
 import Draggable from './Draggable';
 import useElementContext from "../hooks/useElementContext";
+import useAPI from '../hooks/useAPI';
 
 const StorynodeCreate = () => {
     const { element, dispatch } = useElementContext();
-    // All storynodes should have a parent, except for 'story' types
+    const apiCall = useAPI();
     const subType = element ? 'leaf' : 'root';
-    // Set the initial state, with default name
     const [newCreate, setNewCreate] = useState({ name: "", text: "" });
 
     // Update the parent element with the new child
@@ -18,7 +16,7 @@ const StorynodeCreate = () => {
         if (!parent.children) parent.children = [];
         if (parent.type === 'leaf') parent.type = 'branch'; // If the parent is a leaf, change it to a branch
         await parent.children.push(id);
-        const data = await apiService.upsertElement('storynodes', parent);
+        const data = await apiCall('upsertElement', 'storynodes', parent);
         console.log(data);
         dispatch({ type: 'SET_ELEMENT', payload: data });
     };
@@ -27,12 +25,11 @@ const StorynodeCreate = () => {
     const handleSubmit = async () => {
         let newStorynode = {
             name: newCreate.name ? newCreate.name : 'New ' + subType,
-            text: newCreate.text ? newCreate.text : 'Placeholder text',
+            text: newCreate.text,
             type: subType,
             parent: element ? element._id : null,
         };
-        // Add the new storynode
-        const data = await apiService.upsertElement('storynodes', newStorynode);
+        const data = await apiCall('upsertElement', 'storynodes', newStorynode);
         if (element) await updateParent(data._id);
         dispatch({ type: 'CREATE_CHILD', payload: data });
         setNewCreate({ name: "", text: "" });
@@ -41,7 +38,7 @@ const StorynodeCreate = () => {
     return (
         <Draggable id="newcreate" function={() => handleSubmit()}>
             <div className="element">
-                <div  onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
+                <div>
                     <input
                         placeholder={'New ' + subType}
                         required
@@ -49,7 +46,7 @@ const StorynodeCreate = () => {
                         onChange={(e) => setNewCreate({ ...newCreate, name: e.target.value })}
                     />
                 </div>
-                <div  onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
+                <div>
                     <MarkdownText
                         key={newCreate.text}
                         text={newCreate.text}

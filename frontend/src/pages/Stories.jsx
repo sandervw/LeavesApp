@@ -23,17 +23,14 @@ const Stories = () => {
     return (
         <>
             <LinkSidebar />
-            <div className="content container">
-                <Droppable id="droppable" className="droppable" >
-                    {(storynodes) && storynodes.map((story) => (
-                        <Storynode
-                            storynodeData={story}
-                            buttonType='delete'
-                            key={story._id} />
-                    ))}
-
-                </Droppable>
-            </div>
+            <Droppable id="droppable" className="content container" >
+                {(storynodes) && storynodes.map((story) => (
+                    <Storynode
+                        storynodeData={story}
+                        buttonType='delete'
+                        key={story._id} />
+                ))}
+            </Droppable>
             <AddSidebar page="stories" type="root" />
         </>
     );

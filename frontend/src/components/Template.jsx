@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import apiService from "../services/apiService";
+import useAPI from '../hooks/useAPI';
 import DeleteConfirmation from "./DeleteConfirmation";
+import Draggable from "./Draggable";
 import { useState } from "react";
 import MarkdownText from "./MarkdownText";
 import InlineSVG from "./InlineSVG";
@@ -9,9 +10,8 @@ import useAddableContext from '../hooks/useAddableContext';
 const Template = (props) => {
 
     const {dispatch} = useAddableContext();
+    const apiCall = useAPI();
     const navigate = useNavigate();
-    // Save, add, or remove button
-    const buttonType = props.buttonType;
     // Parent function to add or remove a child
     const parentFunction = props.parentFunction;
     const [showModal, setShowModal] = useState(false);
@@ -24,47 +24,29 @@ const Template = (props) => {
 
     // Updates the name, purposes, or children
     const updateTemplate = async (attr, val) => {
-        await apiService.upsertElement('templates', {...templateData, text: val});
-        dispatch({type: 'UPDATE_ADDABLE', payload: {...templateData, text: val}});
+        await apiCall('upsertElement', 'templates', {...templateData, [attr]: val});
+        dispatch({type: 'UPDATE_ADDABLE', payload: {...templateData, [attr]: val}});
     }
 
     // Delete the element
     const handleDelete = async () => {
-        await apiService.deleteElement('templates', templateData._id);
+        await apiCall('deleteElement', 'templates', templateData._id);
         dispatch({type: 'DELETE_ADDABLE', payload: templateData._id});
     }
     
     return ( 
-        <div className="element" key={templateData._id}>
-            <div onClick={(e) => handleDetail(e)}>
-                <h4>{templateData.name}</h4>
+        
+        <Draggable id={templateData._id} function={() => parentFunction()}>
+            <div className="element" key={templateData._id}>
+                <div onClick={(e) => handleDetail(e)}>
+                    <h4>{templateData.name}</h4>
+                </div>
+                <div>
+                    <MarkdownText text={templateData.text} update={(val) => updateTemplate('text', val)} />
+                </div>
+                {showModal && <DeleteConfirmation hideModal={() => setShowModal(false)} confirmModal={handleDelete} />}
             </div>
-            <div>
-                <MarkdownText text={templateData.text} update={(val) => updateTemplate('text', val)} />
-            </div>
-            <div>
-                {buttonType==='delete' &&
-                    <button onClick={(e) => {
-                        e.stopPropagation();
-                        setShowModal(true);
-                        }}>
-                        <InlineSVG src="/trashcan.svg" alt="delete icon" className="icon" />
-                    </button>}
-                {buttonType==='remove' &&
-                    <button onClick={(e) => {
-                        e.stopPropagation();
-                        parentFunction('remove', templateData)}}>
-                        <InlineSVG src="/remove.svg" alt="remove icon" className="icon" />
-                    </button>}
-                {buttonType==='add' &&
-                    <button onClick={(e) => {
-                        e.stopPropagation();
-                        parentFunction('add', templateData)}}>
-                        <InlineSVG src="/add.svg" alt="add icon" className="icon" />
-                    </button>}
-            </div>
-            {showModal && <DeleteConfirmation hideModal={() => setShowModal(false)} confirmModal={handleDelete} />}
-        </div>
+        </Draggable>
      );
 }
  
