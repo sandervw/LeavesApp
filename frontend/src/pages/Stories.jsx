@@ -3,21 +3,22 @@ import Droppable from "../components/Droppable";
 import AddSidebar from '../components/AddSidebar';
 import LinkSidebar from '../components/LinkSidebar';
 import { useEffect } from "react";
-import { fetchElements } from "../services/apiService";
+import useAPI from "../hooks/useAPI";
 import useElementContext from "../hooks/useElementContext";
 
 const Stories = () => {
 
     const { children: storynodes, dispatch } = useElementContext();
+    const apiCall = useAPI();
 
     useEffect(() => {
         const fetchData = async () => {
-            const nodes = await fetchElements('storynodes', 'type=root&archived=false');
+            const nodes = await apiCall('fetchElements', 'storynodes', 'type=root&archived=false');
             dispatch({ type: 'SET_CHILDREN', payload: nodes });
             dispatch({ type: 'SET_ELEMENT', payload: null });
         };
         fetchData();
-    }, [dispatch]);
+    }, [dispatch, apiCall]);
 
     return (
         <>
@@ -33,7 +34,7 @@ const Stories = () => {
 
                 </Droppable>
             </div>
-            <AddSidebar kind="templates" type="root" />
+            <AddSidebar page="stories" type="root" />
         </>
     );
 };

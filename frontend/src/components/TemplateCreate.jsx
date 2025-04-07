@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { upsertElement } from '../services/apiService';
+import apiService from '../services/apiService';
 import MarkdownText from "./MarkdownText";
 import useAddableContext from '../hooks/useAddableContext';
 
@@ -19,7 +19,7 @@ const TemplateCreate = (props) => {
     const updateParent = async (id) => {
         if(!parent.children) parent.children = [];
         parent.children.push(id);
-        const data = await upsertElement('templates', parent);
+        const data = await apiService.upsertElement('templates', parent);
         console.log(data);
         dispatch ({type: 'SET_NEWADDABLE', payload: data});
     };
@@ -34,7 +34,7 @@ const TemplateCreate = (props) => {
             parent: parent ? parent._id : null
         };
         // Add the new template
-        const data = await upsertElement('templates', newTemplate);
+        const data = await apiService.upsertElement('templates', newTemplate);
         if(parent) updateParent(data._id);
         if(newCreate.type === subType) dispatch({type: 'CREATE_ADDABLE', payload: data}); // Only add to list if new template has same type as list elements
         setNewCreate({name: "", type: (subType ? subType : 'story'), text: ""});

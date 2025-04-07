@@ -1,32 +1,40 @@
 import Template from "../components/Template";
 import Droppable from "../components/Droppable";
+import AddSidebar from '../components/AddSidebar';
+import LinkSidebar from '../components/LinkSidebar';
 import { useEffect } from "react";
-import { fetchElements } from "../services/apiService";
-import useAddableContext from "../hooks/useAddableContext";
+import useAPI from "../hooks/useAPI";
+import useElementContext from "../hooks/useElementContext";
 
 const Templates = () => {
 
-    const { addables, dispatch } = useAddableContext();
+    const { children: templates, dispatch } = useElementContext();
+    const apiCall = useAPI();
 
     useEffect(() => {
         const fetchTemplates = async () => {
-            const data = await fetchElements('templates', 'type=root');
-            dispatch({ type: 'SET_ADDABLES', payload: data });
+            const templates = await apiCall('fetchElements', 'templates', 'type=root');
+            dispatch({ type: 'SET_CHILDREN', payload: templates });
+            dispatch({ type: 'SET_ELEMENT', payload: null });
         };
         fetchTemplates();
-    }, [dispatch]);
+    }, [dispatch, apiCall]);
 
     return (
-        <Droppable id="droppable" className="droppable" >
-            <div className="content container">
-                {(addables) && addables.map((template) => (
-                    <Template
-                        templateData={template}
-                        buttonType='delete'
-                        key={template._id} />
-                ))}
-            </div>
-        </Droppable>
+        <>
+            <LinkSidebar />
+            <Droppable id="droppable" className="droppable" >
+                <div className="content container">
+                    {(templates) && templates.map((template) => (
+                        <Template
+                            templateData={template}
+                            buttonType='delete'
+                            key={template._id} />
+                    ))}
+                </div>
+            </Droppable>
+            <AddSidebar page="templates" />
+        </>
     );
 };
 

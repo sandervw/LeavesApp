@@ -7,7 +7,7 @@ import MarkdownText from "./MarkdownText";
 import Droppable from './Droppable';
 import AddSidebar from '../components/AddSidebar';
 import LinkSidebar from '../components/LinkSidebar';
-import { upsertElement, fetchElements, fetchElement, fetchChildren, deleteElement, createFromTemplate, createFile } from "../services/apiService";
+import apiService from "../services/apiService";
 import useElementContext from "../hooks/useElementContext";
 import useTemplateContext from "../hooks/useAddableContext";
 
@@ -29,10 +29,10 @@ const StorynodeDetail = () => {
         const fetchData = async () => {
             setIsPending(true);
             console.log("useEffect called");
-            const storynode = await fetchElement('storynodes', location.state);
+            const storynode = await apiService.fetchElement('storynodes', location.state);
             const storynodeSubtype = 'branch';
-            const children = await fetchChildren('storynodes', storynode._id);
-            const addables = await fetchElements('templates', 'type=' + storynodeSubtype);
+            const children = await apiService.fetchChildren('storynodes', storynode._id);
+            const addables = await apiService.fetchElements('templates', 'type=' + storynodeSubtype);
             await templatesDispatch({ type: 'SET_TEMPLATES', payload: addables });
             await elementDispatch({ type: 'SET_CHILDREN', payload: children });
             await elementDispatch({ type: 'SET_ELEMENT', payload: storynode });
@@ -58,12 +58,12 @@ const StorynodeDetail = () => {
             // If the word count is over the word limit, lock the blobs
             if (sumWords > element.wordLimit) setLockWriting(true);
             else setLockWriting(false);
-            upsertElement('storynodes', { ...element, wordCount: sumWords });
+            apiService.upsertElement('storynodes', { ...element, wordCount: sumWords });
             elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, wordCount: sumWords } });
         }
         // In remove case, need to both remove and delete the child tree
         else if (attr === 'remove') {
-            deleteElement('storynodes', val);
+            apiService.deleteElement('storynodes', val);
             elementDispatch({ type: 'DELETE_CHILD', payload: val });
             let data2 = await element.children.filter(child => (child !== val && child !== null));
             if (data2.length === 0 && element.type === 'branch') element.type = 'leaf';
@@ -71,7 +71,7 @@ const StorynodeDetail = () => {
         }
         // In add case, need to convert template and all its children to listNodes (do on backend)
         else if (attr === 'add') {
-            const data = await createFromTemplate(val._id, element._id);
+            const data = await apiService.createFromTemplate(val._id, element._id);
             if (element.type === 'leaf') element.type = 'branch';
             elementDispatch({ type: 'CREATE_CHILD', payload: data });
             elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, children: [...element.children, data._id] } });
@@ -81,7 +81,7 @@ const StorynodeDetail = () => {
             const name = attr === 'name' ? val : element.name;
             const text = attr === 'text' ? val : element.text;
             const wordLimit = attr === 'wordLimit' ? val : element.wordLimit;
-            upsertElement('storynodes', { ...element, name, text, wordLimit });
+            apiService.upsertElement('storynodes', { ...element, name, text, wordLimit });
             elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, name, text, wordLimit } });
         }
         console.log(element);
@@ -89,18 +89,18 @@ const StorynodeDetail = () => {
 
     // Delete the storynode and navigate back to main list
     const handleDelete = async () => {
-        deleteElement('storynodes', element._id);
+        apiService.deleteElement('storynodes', element._id);
         if (!element.parent) navigate('/');
         else navigate('/storydetail', { state: element.parent });
     };
 
     const downloadStory = async () => {
-        const data = await createFile(element._id);
+        const data = await apiService.createFile(element._id);
         console.log(data);
     };
 
     const toggleArchive = async () => {
-        await upsertElement('storynodes', { ...element, archived: !element.archived });
+        await apiService.upsertElement('storynodes', { ...element, archived: !element.archived });
         navigate('/');
     };
 

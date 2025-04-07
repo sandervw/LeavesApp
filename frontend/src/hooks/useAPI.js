@@ -1,44 +1,24 @@
-import { useState } from "react";
 import useAuthContext from "../hooks/useAuthContext";
-
+import apiService from "../services/apiService";
+import { useCallback } from "react";
 const useAPI = () => {
-    const [error, setError] = useState(null);
-    const [isPending, setIsPending] = useState(false);
-    const { dispatch } = useAuthContext();
-    const abortCont = new AbortController();
+    const { user } = useAuthContext();
 
-    const apiCall = async (url, method, body) => {
-        setIsPending(true);
-        setError(null);
-
+    const apiCall = useCallback(async (method, ...args) => {
+        const serviceMethods = {...apiService}
+        if (!user) return;
         const options = {
-            method: method,
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${user.token}`
             },
         };
+        if (!serviceMethods[method]) throw new Error(`Unknown API method: ${method}`);
+        const result = await serviceMethods[method](...args, options);
+        return result;
 
-        if (body) {
-            options.body = JSON.stringify(body);
-        }
-
-        const response = await fetch(url, options);
-        const data = await response.json();
-
-        if (!response.ok) {
-            setError(data.error);
-            setIsPending(false);
-            return false;
-        } else {
-            localStorage.setItem("user", JSON.stringify(data)); // save user to local storage
-            dispatch({ type: "LOGIN", payload: data });
-            setError(null);
-            setIsPending(false);
-            return true;
-        }
-    };
-
-    return { apiCall, error, isPending };
+    }, [user]);
+    return apiCall;
 }
 
 export default useAPI;
