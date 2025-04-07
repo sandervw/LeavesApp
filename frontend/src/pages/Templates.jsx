@@ -20,10 +20,15 @@ const Templates = () => {
         fetchTemplates();
     }, [dispatch, apiCall]);
 
+    const createTemplate = async (method, data) => {
+        const newTemplate = await apiCall(method, 'templates', data)
+        dispatch({ type: 'CREATE_CHILD', payload: newTemplate});
+    };
+
     return (
         <>
             <LinkSidebar />
-            <Droppable id="droppable" className="content container" >
+            <Droppable id="droppable" className="content container" function={createTemplate}>
                 {(templates) && templates.map((template) => (
                     <Template
                         templateData={template}

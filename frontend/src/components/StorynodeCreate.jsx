@@ -5,19 +5,19 @@ import useElementContext from "../hooks/useElementContext";
 
 const StorynodeCreate = () => {
     const { element } = useElementContext();
-    const subType = element ? 'leaf' : 'root';
+    const type = element ? 'leaf' : 'root';
     const parent = element ? element._id : null;
-    const [newCreate, setNewCreate] = useState({ name: "", text: "", type: subType, parent });
+    const [newCreate, setNewCreate] = useState({ name: "", text: "", type, parent });
 
     return (
         <Draggable
             id="newcreate"
             method="upsertElement"
-            data={{...newCreate, name: (newCreate.name!=="" ? newCreate.name : 'New ' + subType)}}>
+            data={{...newCreate, name: (newCreate.name!=="" ? newCreate.name : 'New ' + type)}}>
             <div className="element">
                 <div>
                     <input
-                        placeholder={'New ' + subType}
+                        placeholder={'New ' + type}
                         required
                         value={newCreate.name}
                         onChange={(e) => setNewCreate({ ...newCreate, name: e.target.value })}

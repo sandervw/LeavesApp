@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import apiService from '../services/apiService';
 import MarkdownText from "./MarkdownText";
 import Draggable from './Draggable';
 import useElementContext from "../hooks/useElementContext";
@@ -7,50 +6,26 @@ import useElementContext from "../hooks/useElementContext";
 //TODO NEED TO REFACTOR THIS WITH NEW CONTEXT HANDLING
 
 const TemplateCreate = () => {
-    const { element, dispatch } = useElementContext();
-    // All storynodes should have a parent, except for 'story' types
-    const subType = element ? 'branch' : 'root';
-    // Set the initial state, with default name
-    const [newCreate, setNewCreate] = useState({ name: "", text: "" });
-
-    // Update the parent element with the new child
-    const updateParent = async (id) => {
-        let parent = { ...element };
-        if (!parent.children) parent.children = [];
-        if (parent.type === 'leaf') parent.type = 'branch'; // If the parent is a leaf, change it to a branch
-        await parent.children.push(id);
-        const data = await apiService.upsertElement('storynodes', parent);
-        console.log(data);
-        dispatch({ type: 'SET_ELEMENT', payload: data });
-    };
-
-    // On submission, need to handle two events: adding the new storynode, and possibly addings it ID to parent
-    const handleSubmit = async () => {
-        let newStorynode = {
-            name: newCreate.name ? newCreate.name : 'New ' + subType,
-            text: newCreate.text ? newCreate.text : 'Placeholder text',
-            type: subType,
-            parent: element ? element._id : null,
-        };
-        // Add the new storynode
-        const data = await apiService.upsertElement('storynodes', newStorynode);
-        if (element) await updateParent(data._id);
-        dispatch({ type: 'CREATE_CHILD', payload: data });
-        setNewCreate({ name: "", text: "" });
-    };
+    const { element } = useElementContext();
+    const type = element ? 'branch' : 'root';
+    const parent = element ? element._id : null;
+    const [newCreate, setNewCreate] = useState({ name: "", text: "", type, parent });
 
     return (
-        <Draggable id="newcreate" function={() => handleSubmit()}>
+        <Draggable
+            id="newcreate"
+            method="upsertElement"
+            data={{ ...newCreate, name: (newCreate.name !== "" ? newCreate.name : 'New ' + type) }}>
             <div className="element">
-                <div onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
+                <div>
                     <input
-                        placeholder={'New ' + subType}
+                        placeholder={'New ' + type}
                         required
                         value={newCreate.name}
                         onChange={(e) => setNewCreate({ ...newCreate, name: e.target.value })}
                     />
                 </div>
-                <div onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
+                <div>
                     <MarkdownText
                         key={newCreate.text}
                         text={newCreate.text}

@@ -15,8 +15,6 @@ class storynodeController {
 
     async get(req, res){
         try {
-            console.log("get storynodes", req.query);
-            
             const storynodes = await storynodeService.find(req.query);
             res.status(200).json(storynodes);
         } catch (err) {
