@@ -20,10 +20,17 @@ const Stories = () => {
         fetchData();
     }, [dispatch, apiCall]);
 
+    const createStory = async (method, data) => {
+        const newStory = (method === 'upsertElement')
+            ? await apiCall(method, 'storynodes', data)
+            : await apiCall(method, {data}); // for createFromTemplate
+        dispatch({ type: 'CREATE_CHILD', payload: newStory});
+    };
+
     return (
         <>
             <LinkSidebar />
-            <Droppable id="droppable" className="content container" >
+            <Droppable id="droppable" className="content container" function={createStory}>
                 {(storynodes) && storynodes.map((story) => (
                     <Storynode
                         storynodeData={story}

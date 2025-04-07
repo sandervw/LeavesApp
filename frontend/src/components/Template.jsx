@@ -12,8 +12,6 @@ const Template = (props) => {
     const {dispatch} = useAddableContext();
     const apiCall = useAPI();
     const navigate = useNavigate();
-    // Parent function to add or remove a child
-    const parentFunction = props.parentFunction;
     const [showModal, setShowModal] = useState(false);
     const templateData = {...props.templateData};
     
@@ -36,7 +34,7 @@ const Template = (props) => {
     
     return ( 
         
-        <Draggable id={templateData._id} function={() => parentFunction()}>
+        <Draggable id={templateData._id} data={templateData}>
             <div className="element" key={templateData._id}>
                 <div onClick={(e) => handleDetail(e)}>
                     <h4>{templateData.name}</h4>

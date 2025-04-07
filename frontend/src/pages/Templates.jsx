@@ -23,15 +23,13 @@ const Templates = () => {
     return (
         <>
             <LinkSidebar />
-            <Droppable id="droppable" className="droppable" >
-                <div className="content container">
-                    {(templates) && templates.map((template) => (
-                        <Template
-                            templateData={template}
-                            buttonType='delete'
-                            key={template._id} />
-                    ))}
-                </div>
+            <Droppable id="droppable" className="content container" >
+                {(templates) && templates.map((template) => (
+                    <Template
+                        templateData={template}
+                        buttonType='delete'
+                        key={template._id} />
+                ))}
             </Droppable>
             <AddSidebar page="templates" />
         </>
