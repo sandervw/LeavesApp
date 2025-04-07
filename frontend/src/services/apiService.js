@@ -61,8 +61,7 @@ class ApiService {
     
     // Can be used to create a new story, or add a child to an existing story
     async createFromTemplate(templateId, parentId, options){
-        try {
-            const result = await fetch(`${API_URL}storynodes/postfromtemplate/`, {
+        try {const result = await fetch(`${API_URL}storynodes/postfromtemplate/`, {
                 method: 'POST',
                 body: parentId ?
                     JSON.stringify({templateId, parentId})

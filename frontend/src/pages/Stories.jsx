@@ -23,7 +23,7 @@ const Stories = () => {
     const createStory = async (method, data) => {
         const newStory = (method === 'upsertElement')
             ? await apiCall(method, 'storynodes', data)
-            : await apiCall(method, {data}); // for createFromTemplate
+            : await apiCall(method, data, null); // for createFromTemplate
         dispatch({ type: 'CREATE_CHILD', payload: newStory});
     };
 

@@ -29,8 +29,6 @@ const AuthContextProvider = ({children}) => {
         }
     }, []); // Load user from local storage on initial render
 
-    console.log('AuthContext state:', state);
-
     return (
         <AuthContext.Provider value={{...state, dispatch}}>
             {children}

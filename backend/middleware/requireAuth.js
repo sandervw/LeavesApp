@@ -9,8 +9,6 @@ const requireAuth = async (req, res, next) => {
         return res.status(401).json({ error: "No Authorization token" });
     }
     const token = authorization.split(" ")[1]; // Grab the JWT
-    console.log(token);
-    
     try {
         const {_id} = jwt.verify(token, process.env.JWT_SECRET);
         req.user = await User.findById(_id).select("_id"); // adds the user prop to the request

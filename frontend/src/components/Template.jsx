@@ -34,7 +34,10 @@ const Template = (props) => {
     
     return ( 
         
-        <Draggable id={templateData._id} data={templateData}>
+        <Draggable
+            id={templateData._id}
+            data={templateData._id}
+            method="createFromTemplate">
             <div className="element" key={templateData._id}>
                 <div onClick={(e) => handleDetail(e)}>
                     <h4>{templateData.name}</h4>
