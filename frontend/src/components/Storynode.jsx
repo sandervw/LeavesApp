@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import apiService from "../services/apiService";
+import useAPI from '../hooks/useAPI';
 import DeleteConfirmation from "./DeleteConfirmation";
 import { useState } from "react";
 import MarkdownText from "./MarkdownText";
@@ -10,9 +10,10 @@ const Storynode = (props) => {
 
     const {dispatch} = useElementContext();
     const navigate = useNavigate();
+    const apiCall = useAPI();
     // Save, add, or remove button
     const buttonType = props.buttonType;
-    // Parent function to add or remove a child
+    // Parent function to update wordcount
     const parentFunction = props.parentFunction;
     const [showModal, setShowModal] = useState(false);
     const storynodeData = {...props.storynodeData};
@@ -29,16 +30,15 @@ const Storynode = (props) => {
         if(attr === 'text') updatedNode = {...storynodeData, text: val}
         if(attr === 'content') updatedNode = {...storynodeData, content: val};
         if(attr === 'wordCount')updatedNode = {...storynodeData, wordCount: val};
-        await apiService.upsertElement('storynodes', updatedNode);
+        await apiCall('upsertElement', 'storynodes', updatedNode);
         if(attr === 'wordCount') parentFunction('wordCount', val);
         dispatch({type: 'UPDATE_CHILD', payload: updatedNode});
     }
 
     // Delete the element
     const handleDelete = async () => {
-        await apiService.deleteElement('storynodes', storynodeData._id);
+        await apiCall('deleteElement', 'storynodes', storynodeData._id);
         dispatch({type: 'DELETE_CHILD', payload: storynodeData._id});
-        //setShowModal(false);
     }
 
     return (
