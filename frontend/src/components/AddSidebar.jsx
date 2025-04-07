@@ -4,12 +4,10 @@ import TemplateCreate from "../components/TemplateCreate";
 import { useEffect } from "react";
 import useAPI from "../hooks/useAPI";
 import useAddableContext from "../hooks/useAddableContext";
-import useElementContext from "../hooks/useElementContext";
 
 const AddSidebar = (props) => {
 
     const {addables, dispatch: addablesDispatch} = useAddableContext();
-    const {dispatch: elementDispatch} = useElementContext();
     const apiCall = useAPI();
 
     const {page, type} = props;
@@ -25,12 +23,6 @@ const AddSidebar = (props) => {
         fetchData();
     }, [addablesDispatch, page, type, apiCall]);
 
-    const createStory = async (val, template) => {
-        console.log("Creating story from template: ", template._id);
-        const data = await apiCall('createFromTemplate', template._id);
-        elementDispatch({type: 'CREATE_CHILD', payload: data});
-    }
-
     return ( 
         <aside className="sidebar container">
             {(page === 'templates' || page === 'templatedetail')
@@ -39,7 +31,6 @@ const AddSidebar = (props) => {
             {(addables) && addables.map((template) => (
                 <Template
                     templateData={template}
-                    parentFunction={createStory}
                     buttonType='add'
                     key={template._id} />
             ))}

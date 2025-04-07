@@ -5,7 +5,8 @@ const Draggable = (props) => {
   const {attributes, listeners, setNodeRef, transform} = useDraggable({
     id: props.id,
     data: {
-      function: props.function,
+      element: props.data,
+      method: props.method
     }
   });
   const style = transform ? {

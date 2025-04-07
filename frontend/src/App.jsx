@@ -15,7 +15,11 @@ import StorynodeDetail from './components/StorynodeDetail';
 const handleDragEnd = (event) => {
   const { active, over } = event;
   console.log('Drag ended:', active, 'over:', over);
-  if (over && over.id === 'droppable') active.data.current.function();
+  if (over && over.id === 'droppable'){
+    const method = active.data.current.method;
+    const data = active.data.current.element;
+    over.data.current.function(method, data);
+  } 
 }
 
 function App() {
