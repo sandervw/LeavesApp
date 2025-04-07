@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { deleteElement, upsertElement } from "../services/apiService";
+import apiService from "../services/apiService";
 import DeleteConfirmation from "./DeleteConfirmation";
 import { useState } from "react";
 import MarkdownText from "./MarkdownText";
@@ -29,14 +29,14 @@ const Storynode = (props) => {
         if(attr === 'text') updatedNode = {...storynodeData, text: val}
         if(attr === 'content') updatedNode = {...storynodeData, content: val};
         if(attr === 'wordCount')updatedNode = {...storynodeData, wordCount: val};
-        await upsertElement('storynodes', updatedNode);
+        await apiService.upsertElement('storynodes', updatedNode);
         if(attr === 'wordCount') parentFunction('wordCount', val);
         dispatch({type: 'UPDATE_CHILD', payload: updatedNode});
     }
 
     // Delete the element
     const handleDelete = async () => {
-        await deleteElement('storynodes', storynodeData._id);
+        await apiService.deleteElement('storynodes', storynodeData._id);
         dispatch({type: 'DELETE_CHILD', payload: storynodeData._id});
         //setShowModal(false);
     }

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { upsertElement, deleteElement } from "../services/apiService";
+import apiService from "../services/apiService";
 import DeleteConfirmation from "./DeleteConfirmation";
 import { useState } from "react";
 import MarkdownText from "./MarkdownText";
@@ -24,13 +24,13 @@ const Template = (props) => {
 
     // Updates the name, purposes, or children
     const updateTemplate = async (attr, val) => {
-        await upsertElement('templates', {...templateData, text: val});
+        await apiService.upsertElement('templates', {...templateData, text: val});
         dispatch({type: 'UPDATE_ADDABLE', payload: {...templateData, text: val}});
     }
 
     // Delete the element
     const handleDelete = async () => {
-        await deleteElement('templates', templateData._id);
+        await apiService.deleteElement('templates', templateData._id);
         dispatch({type: 'DELETE_ADDABLE', payload: templateData._id});
     }
     

@@ -1,33 +1,43 @@
 import Storynode from "../components/Storynode";
+import Droppable from "../components/Droppable";
+import LinkSidebar from '../components/LinkSidebar';
 import { useEffect } from "react";
-import { fetchElements } from "../services/apiService";
-import useStorynodeContext from "../hooks/useElementContext";
+import useAPI from "../hooks/useAPI";
+import useElementContext from "../hooks/useElementContext";
 
 const Archive = () => {
 
-    const {listNodes, dispatch} = useStorynodeContext();
+    const { children: storynodes, dispatch } = useElementContext();
+    const apiCall = useAPI();
 
     useEffect(() => {
-        const fetchStorynodes = async () => {
-            const data = await fetchElements('storynodes', 'type=story&archived=true');
-            dispatch({type: 'SET_STORYNODES', payload: data});
-        }
-        fetchStorynodes();
-    }, [dispatch]);
+        const fetchData = async () => {
+            const nodes = await apiCall('fetchElements', 'storynodes', 'type=root&archived=true');
+            dispatch({ type: 'SET_CHILDREN', payload: nodes });
+            dispatch({ type: 'SET_ELEMENT', payload: null });
+        };
+        fetchData();
+    }, [dispatch, apiCall]);
 
-    return ( 
-        <div className="container">
-            <div className="listHeader">
-                <h2>Archived Stories:</h2>
+    return (
+        <>
+            <LinkSidebar />
+            <div className="content container">
+                <Droppable id="droppable" className="droppable" >
+                    {(storynodes) && storynodes.map((story) => (
+                        <Storynode
+                            storynodeData={story}
+                            buttonType='delete'
+                            key={story._id} />
+                    ))}
+
+                </Droppable>
             </div>
-            {(listNodes) && listNodes.map((story) => (
-                <Storynode
-                storynodeData={story}
-                buttonType='delete'
-                key={story._id} />
-            ))}
-        </div>
-     );
-}
- 
+            <div>
+                <span>TODO drop items here to unarchive?</span>
+            </div>
+        </>
+    );
+};
+
 export default Archive;

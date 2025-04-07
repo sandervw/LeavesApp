@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { upsertElement } from '../services/apiService';
+import apiService from '../services/apiService';
 import MarkdownText from "./MarkdownText";
 import InlineSVG from "./InlineSVG";
 import Draggable from './Draggable';
@@ -18,7 +18,7 @@ const StorynodeCreate = () => {
         if (!parent.children) parent.children = [];
         if (parent.type === 'leaf') parent.type = 'branch'; // If the parent is a leaf, change it to a branch
         await parent.children.push(id);
-        const data = await upsertElement('storynodes', parent);
+        const data = await apiService.upsertElement('storynodes', parent);
         console.log(data);
         dispatch({ type: 'SET_ELEMENT', payload: data });
     };
@@ -32,7 +32,7 @@ const StorynodeCreate = () => {
             parent: element ? element._id : null,
         };
         // Add the new storynode
-        const data = await upsertElement('storynodes', newStorynode);
+        const data = await apiService.upsertElement('storynodes', newStorynode);
         if (element) await updateParent(data._id);
         dispatch({ type: 'CREATE_CHILD', payload: data });
         setNewCreate({ name: "", text: "" });

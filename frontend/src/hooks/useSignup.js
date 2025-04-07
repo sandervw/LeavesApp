@@ -1,6 +1,6 @@
 import { useState } from "react";
 import useAuthContext from "../hooks/useAuthContext";
-import { signupUser } from "../services/apiService";
+import apiService from "../services/apiService";
 
 const useSignup = () => {
 
@@ -11,7 +11,7 @@ const useSignup = () => {
     const signup = async (email, username, password) => {
         setIsPending(true);
         setError(null);
-        const response = await signupUser(email, username, password);
+        const response = await apiService.signupUser(email, username, password);
         const data = await response.json();
 
         if (!response.ok) {

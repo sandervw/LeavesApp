@@ -1,6 +1,6 @@
 import { useState } from "react";
 import useAuthContext from "./useAuthContext";
-import { loginUser } from "../services/apiService";
+import apiService from "../services/apiService";
 
 const useLogin = () => {
 
@@ -12,7 +12,7 @@ const useLogin = () => {
         setIsPending(true);
         setError(null);
         // Note: username can be an email or username
-        const response = await loginUser(username, password);
+        const response = await apiService.loginUser(username, password);
         const data = await response.json();
 
         if (!response.ok) {

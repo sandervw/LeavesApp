@@ -2,7 +2,7 @@ import Template from "./Template";
 import TemplateCreate from "./TemplateCreate"
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
-import { upsertElement, fetchElement, fetchChildren, fetchElements, deleteElement } from "../services/apiService";
+import apiService from "../services/apiService";
 import MarkdownText from "./MarkdownText";
 import useAddableContext from "../hooks/useAddableContext";
 
@@ -22,11 +22,11 @@ const TemplateDetail = () => {
         const fetchData = async () => {
             setIsPending(true);
             console.log("useEffect called");
-            const data1 = await fetchElement('templates', location.state);
+            const data1 = await apiService.fetchElement('templates', location.state);
             const data1subType = 'branch';
             setSubType(data1subType);
-            const data2 = await fetchChildren('templates', data1._id);
-            const data3 = await fetchElements('templates', 'type='+data1subType);
+            const data2 = await apiService.fetchChildren('templates', data1._id);
+            const data3 = await apiService.fetchElements('templates', 'type='+data1subType);
             setSubTemplates(data3); 
             await dispatch({type: 'SET_ADDABLES', payload: data2});
             await dispatch({type: 'SET_NEWADDABLE', payload: data1});
@@ -55,12 +55,12 @@ const TemplateDetail = () => {
         }
         
         const newTemplate = {...newAddable, name, text, children: newChildren, wordWeight};
-        await upsertElement('templates', newTemplate);
+        await apiService.upsertElement('templates', newTemplate);
         dispatch({type: 'SET_NEWADDABLE', payload: newTemplate});
     }
 
     const handleDelete = async () => {
-        await deleteElement('templates', newAddable._id);
+        await apiService.deleteElement('templates', newAddable._id);
         navigate('/templates');
     }
 
