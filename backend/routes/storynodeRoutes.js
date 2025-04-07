@@ -1,7 +1,11 @@
 import express from "express";
 import storynodeController from "../controllers/storynodeController.js";
+import requireAuth from "../middleware/requireAuth.js";
 
 const router = express.Router();
+
+// Protect all routes after this middleware
+router.use(requireAuth);
 
 router.get('/', storynodeController.get);
 

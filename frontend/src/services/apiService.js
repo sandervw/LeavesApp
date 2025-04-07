@@ -1,10 +1,10 @@
-const abortCont = new AbortController();
+//TODO add environment variables for the API URL
 
-const fetchElements = async (kind, query) => {
+const fetchElements = async (kind, query, options) => {
     try {
         let elements;
-        if (query) elements = await fetch(`http://localhost:8080/${kind}/?${query}`, {signal: abortCont.signal});
-        else elements = await fetch(`http://localhost:8080/${kind}/`, {signal: abortCont.signal});
+        if (query) elements = await fetch(`http://localhost:8080/${kind}/?${query}`, options);
+        else elements = await fetch(`http://localhost:8080/${kind}/`, options);
         return elements.json();
     } catch (err) {
         console.log(err);
@@ -12,9 +12,9 @@ const fetchElements = async (kind, query) => {
     }
 };
 
-const fetchElement = async (kind, id) => {
+const fetchElement = async (kind, id, options) => {
     try {
-        const element = await fetch(`http://localhost:8080/${kind}/${id}`, {signal: abortCont.signal});
+        const element = await fetch(`http://localhost:8080/${kind}/${id}`, options);
         return element.json();
     } catch (err) {
         console.log(err);
@@ -22,9 +22,9 @@ const fetchElement = async (kind, id) => {
     }
 }
 
-const fetchChildren = async (kind, id) => {
+const fetchChildren = async (kind, id, options) => {
     try {
-        const elements = await fetch(`http://localhost:8080/${kind}/getchildren/${id}`, {signal: abortCont.signal});
+        const elements = await fetch(`http://localhost:8080/${kind}/getchildren/${id}`, options);
         return elements.json();
     } catch (err) {
         console.log(err);
@@ -32,12 +32,13 @@ const fetchChildren = async (kind, id) => {
     }
 };
 
-const upsertElement = async (kind, element) => {
+const upsertElement = async (kind, element, options) => {
     try {
         const result = await fetch(`http://localhost:8080/${kind}/`, {
             method: 'POST',
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(element)
+            body: JSON.stringify(element),
+            ...options
         });
         return result.json();
     } catch (err) {
@@ -47,14 +48,15 @@ const upsertElement = async (kind, element) => {
 };
 
 // Can be used to create a new story, or add a child to an existing story
-const createFromTemplate = async (templateId, parentId) => {
+const createFromTemplate = async (templateId, parentId, options) => {
     try {
         const result = await fetch('http://localhost:8080/storynodes/postfromtemplate/', {
             method: 'POST',
             headers: {"Content-Type": "application/json"},
             body: parentId ?
                 JSON.stringify({templateId, parentId})
-                : JSON.stringify({templateId})
+                : JSON.stringify({templateId}),
+            ...options
         });
         return result.json();
     } catch (err) {
@@ -63,9 +65,9 @@ const createFromTemplate = async (templateId, parentId) => {
     }
 }
 
-const deleteElement = async (kind, id) => {
+const deleteElement = async (kind, id, options) => {
     try {
-        const result = await fetch(`http://localhost:8080/${kind}/${id}`, {method: 'DELETE'});
+        const result = await fetch(`http://localhost:8080/${kind}/${id}`, {method: 'DELETE', ...options});
         return result.json();
     } catch (err) {
         console.log(err);
@@ -73,12 +75,13 @@ const deleteElement = async (kind, id) => {
     }
 }
 
-const createFile = async (id) => {
+const createFile = async (id, options) => {
     try {
         const result = await fetch('http://localhost:8080/storynodes/posttofile/', {
             method: 'POST',
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({id})
+            body: JSON.stringify({id}),
+            ...options
         });
         return result.json();
     } catch (err) {
