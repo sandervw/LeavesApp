@@ -2,82 +2,172 @@
 @import url('https://fonts.googleapis.com/css2?family=Baskervville&family=Poppins:wght@200;400;500;600;800&family=VT323&display=swap');
 /* The HTML element - used for defining global vars */
 :root {
-  --color1: #ffffffde;
-  --color2: #178582;
-  --color3: #BFA181;
-  --bgColor1: #242424;
-  --bgColor2: #353535;
-  background-color: var(--bgColor1);
+  --bgPrimary1: #FBF5F3;
+  --bgPrimary2: #E6E9E3;
+  --txtPrimary: #1F1300;
+  --accentPrimary1: #A76571;
+  --accentPrimary2: #FFA630;
+  background-color: var(--bgPrimary1);
 }
 /* The actual id=root element */
 #root {
   max-width: 1600px;
   margin: 0 auto;
-  text-align: center;
+  text-align: left;
 }
 *, *::before, *::after {
   /* Arial/sans-serif fallback fonts */
   font-family: "poppins", arial, sans-serif;
-  color: var(--color1);
+  color: var(--txtPrimary);
   text-decoration: none;
 }
-/* p {
-  text-align: left;
-} */
 
 /* MAIN CONTENT STYLES */
-.main-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  justify-content: space-between;
+.App {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
 }
-
-/* SIDEBAR STYLES */
-.sidebar {
-  background-color: var(--bgColor2);
+.container { /* Used on sidebars, content, etc..  */
   padding: 1rem;
-  width: 250px;
+  border-radius: 1rem;
+  margin: 1rem;
+  border: 2px solid transparent;
+  border-color: var(--bgPrimary2);
+}
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  grid-column: 1 / -1;
+}
+.sidebar {
   display: flex;
   flex-direction: column;
 }
-
-
-/* NAVBAR STYLES */
-.navbar {
+.content {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--bgColor2);
+  flex-direction: column;
 }
-.navbar .links {
+.element {
+  border-radius: 1rem;
+  padding: .5rem;
+  margin: .5rem;
+  border: 2px solid transparent;
+  border-color: var(--bgPrimary2);
+}
+.detail {
   display: flex;
 }
-.navbar a:hover {
+.box-buttons {
+  display: flex;
+  flex-direction: column;
+  padding-top: 1rem;
+}
+.box-detail {
+  padding-left: 1rem;
+}
+.box-text {
+  padding: 1rem;
+}
+
+/* DETAILED ELEMENT STYLES */
+a:hover {
   text-decoration: underline;
 }
 ul, li {
   list-style-position: outside; /* Bullet points outside */
-  margin-left: 1.5rem;          /* Space for bullets */
   text-align: left;            /* Align text properly */
   list-style-type: none;
+  padding-left: 0;
+  margin-left: 0;
 }
 
-/* BUTTON STYLES */
+/* INPUT STYLES */
+input {
+  font: inherit;
+  text-align: left;
+  background: none;
+  border: none;
+  width: 100%;
+  background-color: var(--bgPrimary2);
+  border-radius: 1rem;
+  padding: 0.5em 1em;
+  box-sizing: border-box;
+  margin: 0.5em 0;
+  max-width: 600px;
+}
 button {
-  border-radius: 8px;
+  border-radius: 1rem;
   border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: var(--color3);
   cursor: pointer;
+  background: none;
   transition: border-color 0.25s;
 }
-button:hover {
-  border-color: var(--color1);
+.icon {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
 }
-button:focus, button:focus-visible {
+.icon svg {
+  fill: var(--txtPrimary);
+  transition: fill 0.25s;
+}
+svg:hover {
+  fill: var(--accentPrimary2);
+}
+svg:focus, svg:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+button.text-button {
+  font-size: 1rem;
+  font-family: inherit;
+  background-color: var(--accentPrimary1);
+  padding: 0.75rem 1.5rem;
+  margin: 0.5rem;
+}
+button.delete-button {
+  background-color: rgb(98, 0, 0);
+}
+button.text-button:hover {
+  border-color: var(--accentPrimary2);
+}
+button.text-button:focus, button.text-button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* Style placeholders */
+[data-placeholder]::before {
+  content: attr(data-placeholder); /* Use the placeholder text */
+  color: #7b7b7b; /* Gray color for the placeholder */
+  font-style: italic; /* Optional: to distinguish placeholder text */
+  pointer-events: none; /* Ensure it doesn't interfere with user actions */
+  display: block;
+}
+::placeholder {
+  color: #7b7b7b; /* Gray color for the placeholder */
+  font-style: italic; /* Optional: to distinguish placeholder text */
+  pointer-events: none; /* Ensure it doesn't interfere with user actions */
+  display: block;
+}
+
+/*MODAL STYLES*/
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Add this line to ensure the modal appears above other content */
+}
+.modal-content {
+  background-color: var(--bgPrimary1);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
 }

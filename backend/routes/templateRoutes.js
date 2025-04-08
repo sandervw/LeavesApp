@@ -1,7 +1,11 @@
 import express from "express";
 import templateController from "../controllers/templateController.js";
+import requireAuth from "../middleware/requireAuth.js";
 
 const router = express.Router();
+
+// Protect all routes after this middleware
+router.use(requireAuth);
 
 router.get('/', templateController.get);
 
