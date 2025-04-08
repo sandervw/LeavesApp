@@ -1,6 +1,14 @@
 import React from 'react';
 import {useDraggable} from '@dnd-kit/core';
 
+/**
+ * Wrapper for elements that can be dragged
+ * 
+ * @param {string} props.id ID of the draggable element
+ * @param {string} props.method API method to call on the element it is dropped on
+ * @param {object} props.data Data to be passed to the API method
+ * @returns {JSX.Element} Wrapped draggable element
+ */
 const Draggable = (props) => {
   const {attributes, listeners, setNodeRef, transform} = useDraggable({
     id: props.id,

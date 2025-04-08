@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MarkdownText from "./MarkdownText";
 import Draggable from './Draggable';
 import useElementContext from "../hooks/useElementContext";
-
-//TODO NEED TO REFACTOR THIS WITH NEW CONTEXT HANDLING
 
 const TemplateCreate = () => {
     const { element } = useElementContext();
     const type = element ? 'branch' : 'root';
     const parent = element ? element._id : null;
     const [newCreate, setNewCreate] = useState({ name: "", text: "", type, parent });
+
+    // Update the state when the element context changes
+    useEffect(() => {
+        setNewCreate({
+            name: "",
+            text: "",
+            type: element ? 'leaf' : 'root',
+            parent: element ? element._id : null
+        });
+    }, [element]);
 
     return (
         <Draggable
