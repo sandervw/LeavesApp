@@ -16,7 +16,7 @@ class templateController {
             res.status(200).json(templates);
         } catch (err) {
             console.log(err);
-            res.status(404).json(err);        
+            res.status(404).json({error: err.message}); 
         }
     }
 
@@ -26,7 +26,7 @@ class templateController {
             return res.status(200).json(template);
         } catch (err) {
             console.log(err);
-            res.status(404).json(err);        
+            res.status(404).json({error: err.message}); 
         }
     }
     
@@ -35,8 +35,8 @@ class templateController {
             const children = await templateService.findChildren(req.params.id);
             res.status(200).json(children);
         } catch (err) {
-            console.error(err);
-            res.status(404).json(err);
+            console.log(err);
+            res.status(404).json({error: err.message}); 
         }
     }
     
@@ -45,8 +45,8 @@ class templateController {
             const result = await templateService.upsert(req.body);
             res.status(200).json(result);
         } catch (err) {
-            console.error(err);
-            res.status(404).json(err);
+            console.log(err);
+            res.status(404).json({error: err.message}); 
         }
     }
     
@@ -55,8 +55,8 @@ class templateController {
             const result = await templateService.deleteById(req.params.id);
             res.status(200).json(result);
         } catch (err) {
-            console.error(err);
-            res.status(404).json(err);
+            console.log(err);
+            res.status(404).json({error: err.message}); 
         }
     }  
 

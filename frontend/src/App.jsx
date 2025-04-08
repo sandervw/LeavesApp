@@ -1,55 +1,56 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import { useAuth0 } from '@auth0/auth0-react';
-import { StorynodesContextProvider } from '../context/storynodesContext';
-import { TemplatesContextProvider } from '../context/templatesContext';
-import Stories from '../pages/Stories';
-import SyncUserToBackend from '../components/SyncUserToBackend';
+import { ElementContextProvider } from './context/ElementContext';
+import { AddableContextProvider } from './context/AddableContext';
+import { AuthContextProvider } from './context/AuthContext';
+import { DndContext } from '@dnd-kit/core';
+import {PointerSensor, useSensor} from '@dnd-kit/core';
+import Navbar from './components/Navbar';
+import Stories from './pages/Stories';
+import Archive from './pages/Archive';
+import Templates from './pages/Templates';
+import TemplateDetail from './components/TemplateDetail';
+import StorynodeDetail from './components/StorynodeDetail';
+
+const handleDragEnd = (event) => {
+  const { active, over } = event;
+  console.log('Drag ended:', active, 'over:', over);
+  if (over && over.id === 'droppable'){
+    const method = active.data.current.method;
+    const data = active.data.current.element;
+    over.data.current.function(method, data);
+  } 
+}
 
 function App() {
-  const { isLoading } = useAuth0();
-
-  console.log('App component loaded:', { isLoading });
   
-
-  if (isLoading) return <div>Loading...</div>;
+  const pointerSensor = useSensor(PointerSensor, {
+    activationConstraint: {
+      distance: 10,
+    },
+  });
 
   return (
     <div className="App">
-      <SyncUserToBackend />
       <Router>
-        <Navbar />
-        <div className="main-container">
-          <aside className="sidebar">
-            <div className="sidebar-content">
-              <h2>Sidebar</h2>
-              <p>Links or other content can go here.</p>
-            </div>
-            <div className="sidebar-content">
-              <h2>Story Lineage</h2>
-              <p>Story Title</p>
-              <p>..Act Title</p>
-              <p>....Chapter Title</p>
-              <p>......Scene Title</p>
-            </div>
-          </aside>
-          <div className="content">
-            <StorynodesContextProvider>
-              <TemplatesContextProvider>
+        <AuthContextProvider>
+          <DndContext onDragEnd={handleDragEnd} sensors={[pointerSensor]}>
+            <ElementContextProvider>
+              <AddableContextProvider>
+                <Navbar />
                 <Routes>
                   <Route path='/' element={<Stories />} />
+                  <Route path='/archive' element={<Archive />} />
+                  <Route path='/storydetail' element={<StorynodeDetail />} />
+                  <Route path='/templates' element={<Templates />} />
+                  <Route path='/templatedetail' element={<TemplateDetail />} />
                 </Routes>
-              </TemplatesContextProvider>
-            </StorynodesContextProvider>
-          </div>
-          <aside className="sidebar">
-            <button className="create-story-btn">+ Create New Story</button>
-          </aside>
-        </div>
+              </AddableContextProvider>
+            </ElementContextProvider>
+          </DndContext>
+        </AuthContextProvider>
       </Router>
     </div>
-
   );
 }
 
