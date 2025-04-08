@@ -82,6 +82,11 @@ const StorynodeDetail = () => {
     };
 
     const addChild = async (method, data) => {
+        console.log("ADD CHILD CALLED:");
+        console.log("Parent:", element);
+        console.log("Child:", data);
+        
+        
         if (element.type === 'leaf') element.type = 'branch';
         await apiCall('upsertElement', 'storynodes', { ...element });
         let newChild;
@@ -95,6 +100,10 @@ const StorynodeDetail = () => {
             elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, children: [...element.children, newChild._id] } });
         }
         elementDispatch({ type: 'CREATE_CHILD', payload: newChild});
+        console.log("ADD CHILD END:");
+        console.log("Parent:", element);
+        console.log("Child:", newChild);
+        
     };
 
     // Delete the storynode and navigate back to main list
