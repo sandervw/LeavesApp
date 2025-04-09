@@ -1,9 +1,9 @@
-import Template from "../components/Template";
-import StorynodeCreate from "../components/StorynodeCreate";
-import TemplateCreate from "../components/TemplateCreate";
+import Template from "../parts/Template";
+import StorynodeCreate from "../StorynodeCreate";
+import TemplateCreate from "../TemplateCreate";
 import { useEffect } from "react";
-import useAPI from "../hooks/useAPI";
-import useAddableContext from "../hooks/useAddableContext";
+import useAPI from "../../hooks/useAPI";
+import useAddableContext from "../../hooks/useAddableContext";
 
 const AddSidebar = (props) => {
 

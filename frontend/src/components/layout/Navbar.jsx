@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import Signup from './Signup';
 import Login from './Login';
-import useLogout from '../hooks/useLogout.js';
-import useAuthContext from '../hooks/useAuthContext.js';
+import useLogout from '../../hooks/useLogout.js';
+import useAuthContext from '../../hooks/useAuthContext.js';
 
 
 const Navbar = () => {

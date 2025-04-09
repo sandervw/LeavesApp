@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom';
-import useAPI from '../hooks/useAPI';
-import DeleteConfirmation from "./DeleteConfirmation";
-import Draggable from "./Draggable";
+import useAPI from '../../hooks/useAPI';
+import DeleteConfirmation from "../overlays/DeleteConfirmation";
+import Draggable from "../wrappers/Draggable";
 import { useState } from "react";
-import MarkdownText from "./MarkdownText";
-import InlineSVG from "./InlineSVG";
-import useAddableContext from '../hooks/useAddableContext';
+import MarkdownText from "../common/MarkdownText";
+import InlineSVG from "../common/InlineSVG";
+import useAddableContext from '../../hooks/useAddableContext';
 
 const Template = (props) => {
 
