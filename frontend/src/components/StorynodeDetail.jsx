@@ -9,31 +9,34 @@ import AddSidebar from '../components/AddSidebar';
 import LinkSidebar from '../components/LinkSidebar';
 import useAPI from "../hooks/useAPI";
 import useElementContext from "../hooks/useElementContext";
-import useTemplateContext from "../hooks/useAddableContext";
+import useAddableContext from "../hooks/useAddableContext";
 
 const StorynodeDetail = () => {
 
     const location = useLocation(); // Grab the element from location state
     const navigate = useNavigate();
     const { children, element, dispatch: elementDispatch } = useElementContext();
-    const { dispatch: templatesDispatch } = useTemplateContext();
+    const { dispatch: addableDispatch } = useAddableContext();
     const apiCall = useAPI();
     const [showModal, setShowModal] = useState(false);
     const [lockWriting, setLockWriting] = useState(false);
+    const [isPending, setIsPending] = useState(true);
 
     // Fetch the storynode, its children, and a list of templates that could be added
     useEffect(() => {
         const fetchData = async () => {
+            setIsPending(true);
             console.log("useEffect called");
             const storynode = await apiCall('fetchElement', 'storynodes', location.state);
             await elementDispatch({ type: 'SET_ELEMENT', payload: storynode });
             const children = await apiCall('fetchChildren', 'storynodes', location.state);
             await elementDispatch({ type: 'SET_CHILDREN', payload: children });
             const addables = await apiCall('fetchElements', 'templates', 'type=branch');
-            await templatesDispatch({ type: 'SET_TEMPLATES', payload: addables });
+            await addableDispatch({ type: 'SET_ADDABLES', payload: addables });
+            storynode && setIsPending(false); //Only load page if a storynode was retrieved
         };
         fetchData();
-    }, [location.state, elementDispatch, templatesDispatch, apiCall]);
+    }, [location.state, elementDispatch, addableDispatch, apiCall]);
 
     // Return to parent element
     const navigateParent = async () => {
@@ -81,13 +84,7 @@ const StorynodeDetail = () => {
         console.log(element);
     };
 
-    const addChild = async (method, data) => {
-        console.log("ADD CHILD CALLED:");
-        console.log("Parent:", element);
-        console.log("Child:", data);
-        
-        
-        if (element.type === 'leaf') element.type = 'branch';
+    const addChild = async (method, data) => {if (element.type === 'leaf') element.type = 'branch';
         await apiCall('upsertElement', 'storynodes', { ...element });
         let newChild;
         if(method === 'createFromTemplate') { //Handle adding to parent on backend
@@ -100,10 +97,6 @@ const StorynodeDetail = () => {
             elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, children: [...element.children, newChild._id] } });
         }
         elementDispatch({ type: 'CREATE_CHILD', payload: newChild});
-        console.log("ADD CHILD END:");
-        console.log("Parent:", element);
-        console.log("Child:", newChild);
-        
     };
 
     // Delete the storynode and navigate back to main list
@@ -123,7 +116,7 @@ const StorynodeDetail = () => {
         navigate('/');
     };
 
-    return element && (
+    return !isPending && (
         <>
             <LinkSidebar />
             <div className="container content">
