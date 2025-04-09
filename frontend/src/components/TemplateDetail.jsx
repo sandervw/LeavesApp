@@ -2,9 +2,9 @@ import Template from "./Template";
 import TemplateCreate from "./TemplateCreate"
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
-import apiService from "../services/apiService";
+import useAPI from "../hooks/useAPI";
 import MarkdownText from "./MarkdownText";
-import useAddableContext from "../hooks/useAddableContext";
+import useElementContext from "../hooks/useElementContext";
 
 import DeleteConfirmation from "./DeleteConfirmation";
 
@@ -12,28 +12,23 @@ const TemplateDetail = () => {
 
     const location = useLocation(); // Grab the element from location state
     const navigate = useNavigate();
-    const {addables, newAddable, dispatch} = useAddableContext();
-    const [isPending, setIsPending] = useState(true);
+    const { children, element, dispatch: elementDispatch } = useElementContext();
+    const apiCall = useAPI();
     const [showModal, setShowModal] = useState(false);
-    const [subType, setSubType] = useState(null);
-    const [subTemplates, setSubTemplates] = useState(null);
+    const [isPending, setIsPending] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
             setIsPending(true);
             console.log("useEffect called");
-            const data1 = await apiService.fetchElement('templates', location.state);
-            const data1subType = 'branch';
-            setSubType(data1subType);
-            const data2 = await apiService.fetchChildren('templates', data1._id);
-            const data3 = await apiService.fetchElements('templates', 'type='+data1subType);
-            setSubTemplates(data3); 
-            await dispatch({type: 'SET_ADDABLES', payload: data2});
-            await dispatch({type: 'SET_NEWADDABLE', payload: data1});
-            setIsPending(false);
+            const template = await apiCall('fetchElement', 'templates', location.state);
+            await elementDispatch({ type: 'SET_ELEMENT', payload: template });
+            const children = await apiCall('fetchChildren', 'templates', location.state);
+            await elementDispatch({ type: 'SET_CHILDREN', payload: children });
+            template && setIsPending(false); //Only load page if a storynode was retrieved
         };
         fetchData();
-    }, [location.state, dispatch]);
+    }, [location.state, elementDispatch, apiCall]);
 
     // Updates the name, purposes, or children
     const updateTemplate = async (attr, val) => {
