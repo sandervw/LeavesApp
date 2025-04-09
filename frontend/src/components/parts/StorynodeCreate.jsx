@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import MarkdownText from "./MarkdownText";
-import Draggable from './Draggable';
+import MarkdownText from "./common/MarkdownText";
+import Draggable from './wrappers/Draggable';
 import useElementContext from "../hooks/useElementContext";
 
-const TemplateCreate = () => {
+const StorynodeCreate = () => {
     const { element } = useElementContext();
-    const type = element ? 'branch' : 'root';
+    const type = element ? 'leaf' : 'root';
     const parent = element ? element._id : null;
-    const [newCreate, setNewCreate] = useState({ name: "", text: "", type, parent });
+    const [newCreate, setNewCreate] = useState({name: "", text: "", type, parent });
 
     // Update the state when the element context changes
     useEffect(() => {
@@ -23,7 +23,7 @@ const TemplateCreate = () => {
         <Draggable
             id="newcreate"
             method="upsertElement"
-            data={{ ...newCreate, name: (newCreate.name !== "" ? newCreate.name : 'New ' + type) }}>
+            data={{...newCreate, name: (newCreate.name!=="" ? newCreate.name : 'New ' + type)}}>
             <div className="element">
                 <div>
                     <input
@@ -44,4 +44,4 @@ const TemplateCreate = () => {
     );
 };
 
-export default TemplateCreate;
+export default StorynodeCreate;

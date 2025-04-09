@@ -1,12 +1,9 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 import Storynode from "./Storynode";
-import InlineSVG from "./InlineSVG";
-import DeleteConfirmation from "./DeleteConfirmation";
-import MarkdownText from "./MarkdownText";
-import Droppable from './Droppable';
-import AddSidebar from '../components/AddSidebar';
-import LinkSidebar from '../components/LinkSidebar';
+import InlineSVG from "./common/InlineSVG";
+import DeleteConfirmation from "./overlays/DeleteConfirmation";
+import MarkdownText from "./common/MarkdownText";
 import useAPI from "../hooks/useAPI";
 import useElementContext from "../hooks/useElementContext";
 import useAddableContext from "../hooks/useAddableContext";

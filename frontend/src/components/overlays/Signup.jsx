@@ -1,16 +1,16 @@
 import { useState } from "react";
-import useLogin from "../hooks/useLogin";
+import useSignup from "../../hooks/useSignup";
 
-const Login = ({ hideModal }) => {
+const Signup = ({ hideModal }) => {
 
+    const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const { login, error, isPending } = useLogin();
-
+    const { signup, error, isPending } = useSignup();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const success = await login(username, password);
+        const success = await signup(email, username, password);
         success && hideModal();
     };
 
@@ -20,6 +20,14 @@ const Login = ({ hideModal }) => {
                 e.preventDefault();
                 handleSubmit(e);
             }}>
+                <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    autoComplete="email"
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
                 <input
                     type="text"
                     placeholder="Username"
@@ -36,7 +44,7 @@ const Login = ({ hideModal }) => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-                <button className="text-button" type="submit">Log In</button>
+                <button className="text-button" type="submit">Sign Up</button>
                 {error && <div className="error">Error: {error}</div>}
                 {isPending && <div className="loading">Loading...</div>}
             </form>
@@ -44,4 +52,4 @@ const Login = ({ hideModal }) => {
     );
 };
 
-export default Login;
+export default Signup;
