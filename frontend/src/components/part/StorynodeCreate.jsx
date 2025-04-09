@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import MarkdownText from "./common/MarkdownText";
-import Draggable from './wrappers/Draggable';
-import useElementContext from "../hooks/useElementContext";
+import MarkdownText from "../common/MarkdownText";
+import Draggable from '../wrapper/Draggable';
+import useElementContext from "../../hooks/useElementContext";
 
 const StorynodeCreate = () => {
     const { element } = useElementContext();

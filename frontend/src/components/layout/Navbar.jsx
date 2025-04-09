@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import Signup from './Signup';
-import Login from './Login';
+import Signup from  '../overlay/Signup';
+import Login from '../overlay/Login';
 import useLogout from '../../hooks/useLogout.js';
 import useAuthContext from '../../hooks/useAuthContext.js';
 

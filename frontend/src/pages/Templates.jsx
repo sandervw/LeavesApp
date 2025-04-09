@@ -1,7 +1,7 @@
-import Template from "../components/Template";
-import Droppable from "../components/Droppable";
-import AddSidebar from '../components/AddSidebar';
-import LinkSidebar from '../components/LinkSidebar';
+import Template from "../components/part/Template";
+import Droppable from "../components/wrapper/Droppable";
+import AddSidebar from '../components/layout/AddSidebar';
+import LinkSidebar from '../components/layout/LinkSidebar';
 import { useEffect } from "react";
 import useAPI from "../hooks/useAPI";
 import useElementContext from "../hooks/useElementContext";

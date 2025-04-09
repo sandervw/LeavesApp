@@ -1,10 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import useAPI from '../../hooks/useAPI';
-import DeleteConfirmation from "../overlays/DeleteConfirmation";
-import Draggable from "../wrappers/Draggable";
-import { useState } from "react";
+import Draggable from "../wrapper/Draggable";
 import MarkdownText from "../common/MarkdownText";
-import InlineSVG from "../common/InlineSVG";
 import useAddableContext from '../../hooks/useAddableContext';
 
 const Template = (props) => {
@@ -12,7 +9,6 @@ const Template = (props) => {
     const {dispatch} = useAddableContext();
     const apiCall = useAPI();
     const navigate = useNavigate();
-    const [showModal, setShowModal] = useState(false);
     const templateData = {...props.templateData};
     
     // Go to detailed view of the element
@@ -24,12 +20,6 @@ const Template = (props) => {
     const updateTemplate = async (attr, val) => {
         await apiCall('upsertElement', 'templates', {...templateData, [attr]: val});
         dispatch({type: 'UPDATE_ADDABLE', payload: {...templateData, [attr]: val}});
-    }
-
-    // Delete the element
-    const handleDelete = async () => {
-        await apiCall('deleteElement', 'templates', templateData._id);
-        dispatch({type: 'DELETE_ADDABLE', payload: templateData._id});
     }
     
     return ( 
@@ -45,7 +35,6 @@ const Template = (props) => {
                 <div>
                     <MarkdownText text={templateData.text} update={(val) => updateTemplate('text', val)} />
                 </div>
-                {showModal && <DeleteConfirmation hideModal={() => setShowModal(false)} confirmModal={handleDelete} />}
             </div>
         </Draggable>
      );

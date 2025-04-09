@@ -5,7 +5,7 @@ import { AddableContextProvider } from './context/AddableContext';
 import { AuthContextProvider } from './context/AuthContext';
 import { DndContext } from '@dnd-kit/core';
 import {PointerSensor, useSensor} from '@dnd-kit/core';
-import Navbar from './components/Navbar';
+import Navbar from './components/layout/Navbar';
 import Stories from './pages/Stories';
 import Archive from './pages/Archive';
 import Templates from './pages/Templates';
