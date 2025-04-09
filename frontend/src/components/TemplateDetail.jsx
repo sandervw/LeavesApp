@@ -5,7 +5,7 @@ import DeleteConfirmation from "./overlay/DeleteConfirmation";
 import MarkdownText from "./common/MarkdownText";
 import AddSidebar from './layout/AddSidebar';
 import LinkSidebar from './layout/LinkSidebar';
-import Children from "./part/Children";
+import ElementList from "./part/ElementList";
 import useAPI from "../hooks/useAPI";
 import useElementContext from "../hooks/useElementContext";
 
@@ -72,10 +72,10 @@ const TemplateDetail = () => {
                         <MarkdownText text={element.text} update={(val) => updateTemplate('text', val)} />
                     </div>
                 </div>
-                <Children children={children} />
+                <ElementList elements={children} kind="templates" listType="children" />
                 {showModal && <DeleteConfirmation hideModal={() => setShowModal(false)} confirmModal={handleDelete} />}
             </div>
-            <AddSidebar kind="templates" />
+            <AddSidebar page="templates" />
         </>
     );
 };

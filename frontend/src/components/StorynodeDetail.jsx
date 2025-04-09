@@ -81,7 +81,8 @@ const StorynodeDetail = () => {
         console.log(element);
     };
 
-    const addChild = async (method, data) => {if (element.type === 'leaf') element.type = 'branch';
+    const addChild = async (method, data) => {
+        if (element.type === 'leaf') element.type = 'branch';
         await apiCall('upsertElement', 'storynodes', { ...element });
         let newChild;
         if(method === 'createFromTemplate') { //Handle adding to parent on backend
