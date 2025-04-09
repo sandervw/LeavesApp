@@ -1,6 +1,6 @@
-import Storynode from "../components/Storynode";
-import Droppable from "../components/Droppable";
-import LinkSidebar from '../components/LinkSidebar';
+import Storynode from "../components/part/Storynode";
+import Droppable from "../components/wrapper/Droppable";
+import LinkSidebar from '../components/layout/LinkSidebar';
 import { useEffect } from "react";
 import useAPI from "../hooks/useAPI";
 import useElementContext from "../hooks/useElementContext";

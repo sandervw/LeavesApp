@@ -1,18 +1,16 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
-import Template from "./parts/Template";
 import InlineSVG from "./common/InlineSVG";
-import DeleteConfirmation from "./overlays/DeleteConfirmation";
+import DeleteConfirmation from "./overlay/DeleteConfirmation";
 import MarkdownText from "./common/MarkdownText";
-import Droppable from './wrappers/Droppable';
 import AddSidebar from './layout/AddSidebar';
 import LinkSidebar from './layout/LinkSidebar';
+import Children from "./part/Children";
 import useAPI from "../hooks/useAPI";
 import useElementContext from "../hooks/useElementContext";
 
 
 const TemplateDetail = () => {
-
     const location = useLocation(); // Grab the element from location state
     const navigate = useNavigate();
     const { children, element, dispatch } = useElementContext();
@@ -74,14 +72,7 @@ const TemplateDetail = () => {
                         <MarkdownText text={element.text} update={(val) => updateTemplate('text', val)} />
                     </div>
                 </div>
-                {children && children.map((child) =>
-                (
-                    <Template
-                        templateData={child}
-                        buttonType='remove'
-                        parentFunction={updateTemplate}
-                        key={child._id} />
-                ))}
+                <Children children={children} />
                 {showModal && <DeleteConfirmation hideModal={() => setShowModal(false)} confirmModal={handleDelete} />}
             </div>
             <AddSidebar kind="templates" />

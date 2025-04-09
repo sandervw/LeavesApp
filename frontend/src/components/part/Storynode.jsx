@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import useAPI from '../hooks/useAPI';
-import DeleteConfirmation from "./overlays/DeleteConfirmation";
 import { useState } from "react";
-import MarkdownText from "./common/MarkdownText";
-import InlineSVG from "./common/InlineSVG";
-import useElementContext from '../hooks/useElementContext';
+import useAPI from '../../hooks/useAPI';
+import DeleteConfirmation from "../overlay/DeleteConfirmation";
+import MarkdownText from "../common/MarkdownText";
+import InlineSVG from "../common/InlineSVG";
+import useElementContext from '../../hooks/useElementContext';
 
 const Storynode = (props) => {
 

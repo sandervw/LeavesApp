@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
-import Storynode from "./Storynode";
+import Storynode from "./part/Storynode";
 import InlineSVG from "./common/InlineSVG";
-import DeleteConfirmation from "./overlays/DeleteConfirmation";
+import DeleteConfirmation from "./overlay/DeleteConfirmation";
 import MarkdownText from "./common/MarkdownText";
 import useAPI from "../hooks/useAPI";
 import useElementContext from "../hooks/useElementContext";

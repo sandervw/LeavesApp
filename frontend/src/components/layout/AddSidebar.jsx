@@ -1,7 +1,7 @@
-import Template from "../parts/Template";
-import StorynodeCreate from "../StorynodeCreate";
-import TemplateCreate from "../TemplateCreate";
 import { useEffect } from "react";
+import Template from "../part/Template";
+import StorynodeCreate from "../part/StorynodeCreate";
+import TemplateCreate from "../part/TemplateCreate";
 import useAPI from "../../hooks/useAPI";
 import useAddableContext from "../../hooks/useAddableContext";
 
