@@ -11,7 +11,7 @@ import {useDroppable} from '@dnd-kit/core';
  */
 const Droppable = (props) => {
   const {setNodeRef} = useDroppable({
-    id: 'droppable',
+    id: props.id,
     data: { function: props.function }
   });
   

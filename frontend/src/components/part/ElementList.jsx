@@ -42,7 +42,7 @@ const ElementList = ({ elements, kind, listType }) => {
     };
 
     return (
-        <Droppable id="droppable" className="droppable" function={handleAdd}>
+        <Droppable id={`${kind}${listType}`} className="droppable" function={handleAdd}>
             {elements && elements.map((child) => (
                 kind === 'storynodes' ?
                     <StoryNode storynodeData={child} key={child._id} /> :

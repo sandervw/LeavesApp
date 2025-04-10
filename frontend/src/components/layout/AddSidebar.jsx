@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import Template from "../part/Template";
 import StorynodeCreate from "../part/StorynodeCreate";
 import TemplateCreate from "../part/TemplateCreate";
+import ElementList from "../part/ElementList";
 import useAPI from "../../hooks/useAPI";
 import useAddableContext from "../../hooks/useAddableContext";
 
@@ -28,12 +29,7 @@ const AddSidebar = (props) => {
             {(page === 'templates' || page === 'templatedetail')
                 ? <TemplateCreate />
                 : <StorynodeCreate />}
-            {(addables) && addables.map((template) => (
-                <Template
-                    templateData={template}
-                    buttonType='add'
-                    key={template._id} />
-            ))}
+            <ElementList elements={addables} kind="templates" listType="static" />
         </aside>
      );
 }
