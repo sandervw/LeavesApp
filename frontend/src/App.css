@@ -58,17 +58,15 @@
 .detail {
   display: flex;
 }
+.box {
+  padding-left: 1rem;
+}
 .box-buttons {
   display: flex;
   flex-direction: column;
   padding-top: 1rem;
 }
-.box-detail {
-  padding-left: 1rem;
-}
-.box-text {
-  padding: 1rem;
-}
+
 
 /* DETAILED ELEMENT STYLES */
 a:hover {

@@ -7,14 +7,13 @@ import useElementContext from "../../hooks/useElementContext";
 
 /**
  * 
- * @param {Object} props - The component props
  * @param {Array} props.elements - The list of elements to be displayed
  * @param {string} props.kind - The kind of elements (e.g., 'storynode', 'template')
  * @param {string} props.listType - three types:
  * * 'children' - for children of a node (can be added to or removed)
  * * 'roots' - for main lists of elements (can be added to, removal requires delete confirmation)
  * * 'static' - for lists of addable elements (can't be removed/added to)
- * @returns 
+ * @returns {JSX.Element} - The rendered list of elements
  */
 const ElementList = ({ elements, kind, listType }) => {
     const { element, dispatch } = useElementContext();
@@ -24,7 +23,10 @@ const ElementList = ({ elements, kind, listType }) => {
     const handleAdd = async (method, data) => {
         if (listType === "static") return; //Prevent adding to static lists
         let newChild;
-        if (listType === "roots") newChild = await apiCall(method, kind, data);
+        if (listType === "roots") {
+            if(method === 'createFromTemplate') newChild = await apiCall(method, data._id, null);
+            else newChild = await apiCall(method, kind, data);
+        }
         if (listType === "children") {
             if (element.type === 'leaf') element.type = 'branch';
             await apiCall('upsertElement', kind, { ...element });
@@ -41,7 +43,6 @@ const ElementList = ({ elements, kind, listType }) => {
 
     return (
         <Droppable id="droppable" className="droppable" function={handleAdd}>
-            <h3>Children:</h3>
             {elements && elements.map((child) => (
                 kind === 'storynodes' ?
                     <StoryNode storynodeData={child} key={child._id} /> :

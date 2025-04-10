@@ -1,37 +1,32 @@
-import Storynode from "../components/part/Storynode";
-import Droppable from "../components/wrapper/Droppable";
+import AddSidebar from '../components/layout/AddSidebar';
 import LinkSidebar from '../components/layout/LinkSidebar';
-import { useEffect } from "react";
+import ElementList from "../components/part/ElementList";
+import { useEffect, useState } from "react";
 import useAPI from "../hooks/useAPI";
 import useElementContext from "../hooks/useElementContext";
 
 const Archive = () => {
 
+    const [isPending, setIsPending] = useState(true);
     const { children: storynodes, dispatch } = useElementContext();
     const apiCall = useAPI();
 
     useEffect(() => {
         const fetchData = async () => {
+            setIsPending(true);
             const nodes = await apiCall('fetchElements', 'storynodes', 'type=root&archived=true');
-            dispatch({ type: 'SET_CHILDREN', payload: nodes });
-            dispatch({ type: 'SET_ELEMENT', payload: null });
+            await dispatch({ type: 'SET_CHILDREN', payload: nodes });
+            await dispatch({ type: 'SET_ELEMENT', payload: null });
+            nodes && setIsPending(false); //Only load page if a storynode was retrieved
         };
         fetchData();
     }, [dispatch, apiCall]);
 
-    return (
+    return !isPending && (
         <>
             <LinkSidebar />
             <div className="content container">
-                <Droppable id="droppable" className="droppable" >
-                    {(storynodes) && storynodes.map((story) => (
-                        <Storynode
-                            storynodeData={story}
-                            buttonType='delete'
-                            key={story._id} />
-                    ))}
-
-                </Droppable>
+                <ElementList elements={storynodes} kind="storynodes" listType="roots" />
             </div>
             <div>
                 <span>TODO drop items here to unarchive?</span>

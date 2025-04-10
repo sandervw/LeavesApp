@@ -26,7 +26,7 @@ const Template = (props) => {
         
         <Draggable
             id={templateData._id}
-            data={templateData._id}
+            data={templateData}
             method="createFromTemplate">
             <div className="element" key={templateData._id}>
                 <div onClick={(e) => handleDetail(e)}>

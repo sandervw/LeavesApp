@@ -2,6 +2,7 @@ import Template from "../components/part/Template";
 import Droppable from "../components/wrapper/Droppable";
 import AddSidebar from '../components/layout/AddSidebar';
 import LinkSidebar from '../components/layout/LinkSidebar';
+import ElementList from "../components/part/ElementList";
 import { useEffect } from "react";
 import useAPI from "../hooks/useAPI";
 import useElementContext from "../hooks/useElementContext";
@@ -20,22 +21,12 @@ const Templates = () => {
         fetchTemplates();
     }, [dispatch, apiCall]);
 
-    const createTemplate = async (method, data) => {
-        const newTemplate = await apiCall(method, 'templates', data)
-        dispatch({ type: 'CREATE_CHILD', payload: newTemplate});
-    };
-
     return (
         <>
             <LinkSidebar />
-            <Droppable id="droppable" className="content container" function={createTemplate}>
-                {(templates) && templates.map((template) => (
-                    <Template
-                        templateData={template}
-                        buttonType='delete'
-                        key={template._id} />
-                ))}
-            </Droppable>
+            <div className = "content container">
+                <ElementList elements={templates} kind="templates" listType="roots" />
+            </div>
             <AddSidebar page="templates" />
         </>
     );
