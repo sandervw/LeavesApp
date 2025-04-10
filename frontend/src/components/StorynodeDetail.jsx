@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
-import Storynode from "./part/Storynode";
 import InlineSVG from "./common/InlineSVG";
 import DeleteConfirmation from "./overlay/DeleteConfirmation";
 import MarkdownText from "./common/MarkdownText";
+import AddSidebar from './layout/AddSidebar';
+import LinkSidebar from './layout/LinkSidebar';
+import ElementList from "./part/ElementList";
 import useAPI from "../hooks/useAPI";
 import useElementContext from "../hooks/useElementContext";
 import useAddableContext from "../hooks/useAddableContext";
@@ -16,7 +18,6 @@ const StorynodeDetail = () => {
     const { dispatch: addableDispatch } = useAddableContext();
     const apiCall = useAPI();
     const [showModal, setShowModal] = useState(false);
-    const [lockWriting, setLockWriting] = useState(false);
     const [isPending, setIsPending] = useState(true);
 
     // Fetch the storynode, its children, and a list of templates that could be added
@@ -43,63 +44,30 @@ const StorynodeDetail = () => {
 
     // Updates the name, purposes, or children
     const updateStorynode = async (attr, val) => {
-        // If the attr is a wordcount, ignore value, need to summarize the wordcount of all children
-        if (attr === 'wordCount') {
-            let sumWords = 0;
-            for (const child of children) {
-                sumWords += child.wordCount ? child.wordCount : 0;
-            }
-            // If the word count is over the word limit, lock the blobs
-            if (sumWords > element.wordLimit) setLockWriting(true);
-            else setLockWriting(false);
-            apiCall('upsertElement', 'storynodes', { ...element, wordCount: sumWords });
-            elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, wordCount: sumWords } });
-        }
-        // In remove case, need to both remove and delete the child tree
-        else if (attr === 'remove') {
-            apiCall('deleteElement', 'storynodes', val);
-            elementDispatch({ type: 'DELETE_CHILD', payload: val });
-            let data2 = await element.children.filter(child => (child !== val && child !== null));
-            if (data2.length === 0 && element.type === 'branch') element.type = 'leaf';
-            elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, children: data2 } });
-        }
-        // In add case, need to convert template and all its children to listNodes (do on backend)
-        else if (attr === 'add') {
-            const data = await apiCall('createFromTemplate', val._id, element._id);
-            if (element.type === 'leaf') element.type = 'branch';
-            elementDispatch({ type: 'CREATE_CHILD', payload: data });
-            elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, children: [...element.children, data._id] } });
-        }
-        else {
-            // Name, Text, WordLimit
-            const name = attr === 'name' ? val : element.name;
-            const text = attr === 'text' ? val : element.text;
-            const wordLimit = attr === 'wordLimit' ? val : element.wordLimit;
-            apiCall('upsertElement', 'storynodes', { ...element, name, text, wordLimit });
-            elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, name, text, wordLimit } });
-        }
+        // TODO - refactor below to work with new list format (maybe do context?)
+        // if (attr === 'wordCount') {
+        //     let sumWords = 0;
+        //     for (const child of children) {
+        //         sumWords += child.wordCount ? child.wordCount : 0;
+        //     }
+        //     // If the word count is over the word limit, lock the blobs
+        //     if (sumWords > element.wordLimit) setLockWriting(true);
+        //     else setLockWriting(false);
+        //     apiCall('upsertElement', 'storynodes', { ...element, wordCount: sumWords });
+        //     elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, wordCount: sumWords } });
+        // }
+        // Name, Text, WordLimit
+        const name = attr === 'name' ? val : element.name;
+        const text = attr === 'text' ? val : element.text;
+        const wordLimit = attr === 'wordLimit' ? val : element.wordLimit;
+        apiCall('upsertElement', 'storynodes', { ...element, name, text, wordLimit });
+        elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, name, text, wordLimit } });
         console.log(element);
-    };
-
-    const addChild = async (method, data) => {
-        if (element.type === 'leaf') element.type = 'branch';
-        await apiCall('upsertElement', 'storynodes', { ...element });
-        let newChild;
-        if(method === 'createFromTemplate') { //Handle adding to parent on backend
-            newChild = await apiCall(method, data._id, element._id);
-            elementDispatch({ type: 'SET_ELEMENT', payload: { ...element } });
-        }
-        else { //Handle adding to parent on frontend
-            newChild = await apiCall(method, 'storynodes', data);
-            await apiCall('upsertElement', 'storynodes', { ...element, children: [...element.children, newChild._id] });
-            elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, children: [...element.children, newChild._id] } });
-        }
-        elementDispatch({ type: 'CREATE_CHILD', payload: newChild});
     };
 
     // Delete the storynode and navigate back to main list
     const handleDelete = async () => {
-        apiCall('deleteElement', 'storynodes', element._id);
+        await apiCall('deleteElement', 'storynodes', element._id);
         if (!element.parent) navigate('/');
         else navigate('/storydetail', { state: element.parent });
     };
@@ -134,7 +102,7 @@ const StorynodeDetail = () => {
                             <InlineSVG src="/trashcan.svg" alt="delete icon" className="icon" />
                         </button>
                     </div>
-                    <div className="box-detail">
+                    <div className="box">
                         <h2
                             contentEditable
                             suppressContentEditableWarning={true}
@@ -163,26 +131,15 @@ const StorynodeDetail = () => {
                                 <h3>Word count: {element.wordCount}</h3>
                             </div>}
                     </div>
-                    <div className="box-text">
+                    <div className="box">
                         <MarkdownText text={element.text} update={(val) => updateStorynode('text', val)} />
                     </div>
 
                 </div>
-                <Droppable id="droppable" className="droppable" function={addChild}>
-                    <h3>Children:</h3>
-                    {children && children.map((child) =>
-                    (
-                        <Storynode
-                            storynodeData={child}
-                            buttonType='remove'
-                            parentFunction={updateStorynode}
-                            locked={lockWriting}
-                            key={child._id} />
-                    ))}
-                </Droppable>
+                <ElementList elements={children} kind="storynodes" listType="children" />
                 {showModal && <DeleteConfirmation hideModal={() => setShowModal(false)} confirmModal={handleDelete} />}
             </div>
-            <AddSidebar kind="templates" type="branch" />
+            <AddSidebar page="storynodedetail" type="branch" />
         </>
     );
 };

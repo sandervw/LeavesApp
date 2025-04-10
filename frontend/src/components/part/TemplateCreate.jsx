@@ -14,7 +14,7 @@ const TemplateCreate = () => {
         setNewCreate({
             name: "",
             text: "",
-            type: element ? 'leaf' : 'root',
+            type: element ? 'branch' : 'root',
             parent: element ? element._id : null
         });
     }, [element]);

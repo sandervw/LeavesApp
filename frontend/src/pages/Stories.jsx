@@ -1,43 +1,33 @@
-import Storynode from "../components/part/Storynode";
-import Droppable from "../components/wrapper/Droppable";
 import AddSidebar from '../components/layout/AddSidebar';
 import LinkSidebar from '../components/layout/LinkSidebar';
-import { useEffect } from "react";
+import ElementList from "../components/part/ElementList";
+import { useEffect, useState } from "react";
 import useAPI from "../hooks/useAPI";
 import useElementContext from "../hooks/useElementContext";
 
 const Stories = () => {
 
+    const [isPending, setIsPending] = useState(true);
     const { children: storynodes, dispatch } = useElementContext();
     const apiCall = useAPI();
 
     useEffect(() => {
         const fetchData = async () => {
+            setIsPending(true);
             const nodes = await apiCall('fetchElements', 'storynodes', 'type=root&archived=false');
-            dispatch({ type: 'SET_CHILDREN', payload: nodes });
-            dispatch({ type: 'SET_ELEMENT', payload: null });
+            await dispatch({ type: 'SET_CHILDREN', payload: nodes });
+            await dispatch({ type: 'SET_ELEMENT', payload: null });
+            nodes && setIsPending(false); //Only load page if a storynode was retrieved
         };
         fetchData();
     }, [dispatch, apiCall]);
 
-    const createStory = async (method, data) => {
-        const newStory = (method === 'upsertElement')
-            ? await apiCall(method, 'storynodes', data)
-            : await apiCall(method, data, null); // for createFromTemplate
-        dispatch({ type: 'CREATE_CHILD', payload: newStory});
-    };
-
-    return (
+    return !isPending && (
         <>
             <LinkSidebar />
-            <Droppable id="droppable" className="content container" function={createStory}>
-                {(storynodes) && storynodes.map((story) => (
-                    <Storynode
-                        storynodeData={story}
-                        buttonType='delete'
-                        key={story._id} />
-                ))}
-            </Droppable>
+            <div className = "content container">
+                <ElementList elements={storynodes} kind="storynodes" listType="roots" />
+            </div>
             <AddSidebar page="stories" type="root" />
         </>
     );

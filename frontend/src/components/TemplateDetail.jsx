@@ -5,6 +5,7 @@ import DeleteConfirmation from "./overlay/DeleteConfirmation";
 import MarkdownText from "./common/MarkdownText";
 import AddSidebar from './layout/AddSidebar';
 import LinkSidebar from './layout/LinkSidebar';
+import ElementFeature from "./part/ElementFeature";
 import ElementList from "./part/ElementList";
 import useAPI from "../hooks/useAPI";
 import useElementContext from "../hooks/useElementContext";
@@ -34,7 +35,7 @@ const TemplateDetail = () => {
     // Updates for name, text, and wordWeight
     const updateTemplate = async (attr, val) => {
         const updatedTemplate = await apiCall('upsertElement', 'templates', { ...element, [attr]: val });
-        dispatch({ type: 'SET_NEWADDABLE', payload: updatedTemplate });
+        dispatch({ type: 'SET_ELEMENT', payload: updatedTemplate });
     };
 
     const handleDelete = async () => {
@@ -52,23 +53,8 @@ const TemplateDetail = () => {
                             <InlineSVG src="/trashcan.svg" alt="delete icon" className="icon" />
                         </button>
                     </div>
-                    <div className="box-detail">
-                        <h2
-                            contentEditable
-                            suppressContentEditableWarning={true}
-                            id={"name"}
-                            onBlur={(e) => updateTemplate('name', e.target.innerText)}
-                        >{element.name}</h2>
-                        <p>Type: {element.type}</p>
-                        <p>Weight: </p>
-                        <p
-                            contentEditable
-                            suppressContentEditableWarning={true}
-                            id={"wordWeight"}
-                            onBlur={(e) => updateTemplate('wordWeight', e.target.innerText)}
-                        >{element.wordWeight}</p>
-                    </div>
-                    <div className="box-text">
+                    <ElementFeature element={element} onUpdate={updateTemplate} />
+                    <div className="box">
                         <MarkdownText text={element.text} update={(val) => updateTemplate('text', val)} />
                     </div>
                 </div>
