@@ -11,6 +11,12 @@ import useAPI from "../hooks/useAPI";
 import useElementContext from "../hooks/useElementContext";
 import useAddableContext from "../hooks/useAddableContext";
 
+/**
+ * TODO
+ * - Add back locking feature for writing if word count is over limit
+ * - Add back word count (sum of word counts of all children)
+ */
+
 const StorynodeDetail = () => {
 
     const location = useLocation(); // Grab the element from location state

@@ -38,7 +38,7 @@ const ElementList = ({ elements, kind, listType }) => {
             // Sync frontend
             dispatch({ type: 'SET_ELEMENT', payload: { ...element, children: [...element.children, newChild._id] } });
         }
-        dispatch({ type: 'CREATE_CHILD', payload: newChild});
+        newChild && dispatch({ type: 'CREATE_CHILD', payload: newChild});
     };
 
     return (
