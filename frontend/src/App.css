@@ -66,6 +66,9 @@
   flex-direction: column;
   padding-top: 1rem;
 }
+.droppable {
+  padding-bottom: 2rem;
+}
 
 /* DETAILED ELEMENT STYLES */
 a:hover {
