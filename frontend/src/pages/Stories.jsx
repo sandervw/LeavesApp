@@ -14,10 +14,10 @@ const Stories = () => {
     useEffect(() => {
         const fetchData = async () => {
             setIsPending(true);
-            const nodes = await apiCall('fetchElements', 'storynodes', 'type=root&archived=false');
+            const nodes = await apiCall('fetchElements', 'storynodes', 'type=root&archived=false') ?? [];
             await dispatch({ type: 'SET_CHILDREN', payload: nodes });
             await dispatch({ type: 'SET_ELEMENT', payload: null });
-            nodes && setIsPending(false); //Only load page if a storynode was retrieved
+            setIsPending(false); //Only load page if a storynode was retrieved
         };
         fetchData();
     }, [dispatch, apiCall]);
