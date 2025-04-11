@@ -15,7 +15,8 @@ class storynodeController {
 
     async get(req, res){
         try {
-            const storynodes = await storynodeService.find(req.query);
+            const user_id = req.user._id;
+            const storynodes = await storynodeService.find(req.query, user_id);
             res.status(200).json(storynodes);
         } catch (err) {
             console.log(err);
@@ -25,7 +26,8 @@ class storynodeController {
 
     async getById(req, res){
         try {
-            const storynode = await storynodeService.findById(req.params.id);
+            const user_id = req.user._id;
+            const storynode = await storynodeService.findById(req.params.id, user_id);
             return res.status(200).json(storynode);
         } catch (err) {
             console.log(err);
@@ -35,7 +37,8 @@ class storynodeController {
     
     async getChildren(req, res){
         try {
-            const children = await storynodeService.findChildren(req.params.id);
+            const user_id = req.user._id;
+            const children = await storynodeService.findChildren(req.params.id, user_id);
             res.status(200).json(children);
         } catch (err) {
             console.log(err);
@@ -45,7 +48,8 @@ class storynodeController {
     
     async post(req, res){
         try {
-            const result = await storynodeService.upsert(req.body);
+            const user_id = req.user._id;
+            const result = await storynodeService.upsert(req.body, user_id);
             res.status(200).json(result);
         } catch (err) {
             console.log(err);
@@ -55,7 +59,8 @@ class storynodeController {
     
     async deleteById(req, res){
         try {
-            const result = await storynodeService.deleteById(req.params.id);
+            const user_id = req.user._id;
+            const result = await storynodeService.deleteById(req.params.id, user_id);
             res.status(200).json(result);
         } catch (err) {
             console.log(err);
@@ -65,7 +70,8 @@ class storynodeController {
 
     async postFromTemplate(req, res){
         try {
-            const result = await storynodeService.addFromTemplate(req.body);
+            const user_id = req.user._id;
+            const result = await storynodeService.addFromTemplate(req.body, user_id);
             res.status(200).json(result);
         } catch (err) {
             console.log(err);
@@ -75,7 +81,8 @@ class storynodeController {
 
     async postFromFile(req, res){
         try {
-            const result = await storynodeService.addFromFile(req.body.filename);
+            const user_id = req.user._id;
+            const result = await storynodeService.addFromFile(req.body.filename, user_id);
             res.status(200).json(result);
         } catch (err) {
             console.log(err);
@@ -85,7 +92,8 @@ class storynodeController {
 
     async postToFile(req, res){
         try {
-            const result = await storynodeService.saveToFile(req.body);
+            const user_id = req.user._id;
+            const result = await storynodeService.saveToFile(req.body, user_id);
             res.status(200).json(result);
         } catch (err) {
             console.log(err);

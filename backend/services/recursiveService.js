@@ -61,12 +61,12 @@ const recursiveUpdateWordLimits = async (node, wordLimit) => {
 }
 
 // Function to recursively convert a template tree to a storynode
-const recursiveStorynodeFromTemplate = async (templateId, parentId) => {
+const recursiveStorynodeFromTemplate = async (user_id, templateId, parentId) => {
     // Create a new storynode with the template's data, making sure to give it a parent if supplied
-    const template = await Template.findById(templateId);
+    const template = await Template.findOne({_id: templateId, user_id});
     const storyData = (parentId
-        ? {name: template.name, type: template.type, text: template.text, parent: parentId}
-        : {name: template.name, type: template.type, text: template.text});
+        ? {user_id, name: template.name, type: template.type, text: template.text, parent: parentId}
+        : {user_id, name: template.name, type: template.type, text: template.text});
     // If the template has a wordWeight, add that to the storynode
     if(template.wordWeight) storyData.wordWeight = template.wordWeight;
     console.log(storyData);
@@ -76,12 +76,12 @@ const recursiveStorynodeFromTemplate = async (templateId, parentId) => {
         let storyNodeArr = [];
         let childArr = template.children;
         for (const child of childArr){
-            let result = await recursiveStorynodeFromTemplate(child, storynode._id);
+            let result = await recursiveStorynodeFromTemplate(user_id, child, storynode._id);
             // Add the child to the parent's children array
             storyNodeArr.push(result._id);
         };
         // Update the parent with the new children
-        await Storynode.findOneAndUpdate({_id: storynode._id}, {children: storyNodeArr});
+        await Storynode.findOneAndUpdate({_id: storynode._id, user_id}, {children: storyNodeArr});
     }
     // base case: return the new storynode
     return storynode;

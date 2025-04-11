@@ -11,39 +11,41 @@ export default class elementService {
         this.deleteById = this.deleteById.bind(this);
     }
 
-    async find(query){
+    async find(query, user_id){
+        const userFilter = { user_id };
         return query 
-            ? await this.model.find(query).sort({ createdAt: 'desc' })
-            : await this.model.find().sort({ createdAt: 'desc' });
+            ? await this.model.find({ ...query, ...userFilter }).sort({ createdAt: 'desc' })
+            : await this.model.find(userFilter).sort({ createdAt: 'desc' });
     }
 
-    async findById(id){
+    async findById(id, user_id){
         if(!id || !mongoose.Types.ObjectId.isValid(id)) throw new Error('Not a valid ID');
-        const element = await this.model.findById(id);
+        const element = await this.model.findOne({ _id: id, user_id });
         if (!element) throw new Error('No objects found.');
-        return element
+        return element;
     }
 
-    async findChildren(id){
+    async findChildren(id, user_id){
         if (!id || !mongoose.Types.ObjectId.isValid(id)) throw new Error('Not a valid ID');
-        const element = await this.model.findById(id);
+        const element = await this.model.findOne({ _id: id, user_id });
         if (!element) throw new Error('No parent object found.');
         const childIds = element.children;
-        return await this.model.find({'_id': childIds});
+        return await this.model.find({ _id: { $in: childIds }, user_id });
     }
 
-    async upsert(data){
+    async upsert(data, user_id){
+        data.user_id = user_id; // Ensure user_id is set in the data
         if (data._id) {
-            return await this.model.findByIdAndUpdate(data._id, data, { new: true });
+            return await this.model.findOneAndUpdate({ _id: data._id, user_id }, data, { new: true });
         }
         return await this.model.create(data);
     }
 
-    async deleteById(id){
+    async deleteById(id, user_id){
         if (!id || !mongoose.Types.ObjectId.isValid(id)) throw new Error('Not a valid ID');
-        const result = await this.model.findByIdAndDelete(id);
+        const result = await this.model.findOneAndDelete({ _id: id, user_id });
         if (!result) throw new Error('No such object exists');
-        return {"Deleted:": result};
+        return { "Deleted": result };
     }
 
 }
