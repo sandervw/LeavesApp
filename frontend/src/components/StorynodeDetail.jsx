@@ -6,6 +6,7 @@ import MarkdownText from "./common/MarkdownText";
 import AddSidebar from './layout/AddSidebar';
 import LinkSidebar from './layout/LinkSidebar';
 import ElementList from "./part/ElementList";
+import ElementFeature from "./part/ElementFeature";
 import useAPI from "../hooks/useAPI";
 import useElementContext from "../hooks/useElementContext";
 import useAddableContext from "../hooks/useAddableContext";
@@ -102,35 +103,7 @@ const StorynodeDetail = () => {
                             <InlineSVG src="/trashcan.svg" alt="delete icon" className="icon" />
                         </button>
                     </div>
-                    <div className="box">
-                        <h2
-                            contentEditable
-                            suppressContentEditableWarning={true}
-                            id={"name"}
-                            onBlur={(e) => updateStorynode('name', e.target.innerText)}
-                        >{element.name}
-                        </h2>
-                        <p>Type: {element.type}</p>
-                        {element.wordWeight && <div className="wordweight">
-                            <p>Weight: {element.wordWeight}</p>
-                        </div>}
-                        {element.type === 'root'
-                            ? <div>
-                                <p>Word Limit: </p>
-                                <p
-                                    contentEditable
-                                    suppressContentEditableWarning={true}
-                                    onBlur={(e) => updateStorynode('wordLimit', e.target.innerText)}
-                                >{element.wordLimit}</p>
-                            </div>
-                            : <div>
-                                <h3>Word Limit: {element.wordLimit}</h3>
-                            </div>}
-                        {element.type === 'leaf' &&
-                            <div>
-                                <h3>Word count: {element.wordCount}</h3>
-                            </div>}
-                    </div>
+                    <ElementFeature element={element} onUpdate={updateStorynode} />
                     <div className="box">
                         <MarkdownText text={element.text} update={(val) => updateStorynode('text', val)} />
                     </div>
