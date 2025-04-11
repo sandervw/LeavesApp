@@ -12,7 +12,8 @@ class templateController {
 
     async get(req, res){
         try {
-            const templates = await templateService.find(req.query);
+            const user_id = req.user._id;
+            const templates = await templateService.find(req.query, user_id);
             res.status(200).json(templates);
         } catch (err) {
             console.log(err);
@@ -22,7 +23,8 @@ class templateController {
 
     async getById(req, res){
         try {
-            const template = await templateService.findById(req.params.id);
+            const user_id = req.user._id;
+            const template = await templateService.findById(req.params.id, user_id);
             return res.status(200).json(template);
         } catch (err) {
             console.log(err);
@@ -32,7 +34,8 @@ class templateController {
     
     async getChildren(req, res){
         try {
-            const children = await templateService.findChildren(req.params.id);
+            const user_id = req.user._id;
+            const children = await templateService.findChildren(req.params.id, user_id);
             res.status(200).json(children);
         } catch (err) {
             console.log(err);
@@ -42,7 +45,8 @@ class templateController {
     
     async post(req, res){
         try {
-            const result = await templateService.upsert(req.body);
+            const user_id = req.user._id;
+            const result = await templateService.upsert(req.body, user_id);
             res.status(200).json(result);
         } catch (err) {
             console.log(err);
@@ -52,7 +56,8 @@ class templateController {
     
     async deleteById(req, res){
         try {
-            const result = await templateService.deleteById(req.params.id);
+            const user_id = req.user._id;
+            const result = await templateService.deleteById(req.params.id, user_id);
             res.status(200).json(result);
         } catch (err) {
             console.log(err);

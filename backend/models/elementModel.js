@@ -14,6 +14,7 @@ const elementSchema = new Schema({
     name: { type: String, required: true},
     type: {type: String, required: true },
     text: { type: String },
+    user_id: { type: String, required: true }, 
 }, options);
 
 // Convert schema into model; a model is a constructor compiled from the schema definition

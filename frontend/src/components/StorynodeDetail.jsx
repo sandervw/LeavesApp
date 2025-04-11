@@ -63,12 +63,9 @@ const StorynodeDetail = () => {
         //     apiCall('upsertElement', 'storynodes', { ...element, wordCount: sumWords });
         //     elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, wordCount: sumWords } });
         // }
-        // Name, Text, WordLimit
-        const name = attr === 'name' ? val : element.name;
-        const text = attr === 'text' ? val : element.text;
-        const wordLimit = attr === 'wordLimit' ? val : element.wordLimit;
-        apiCall('upsertElement', 'storynodes', { ...element, name, text, wordLimit });
-        elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, name, text, wordLimit } });
+        // Update the corresponding attribute of the element with the provided value
+        apiCall('upsertElement', 'storynodes', { ...element, [attr]: val });
+        elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, [attr]: val } });
         console.log(element);
     };
 
@@ -111,7 +108,10 @@ const StorynodeDetail = () => {
                     </div>
                     <ElementFeature element={element} onUpdate={updateStorynode} />
                     <div className="box">
-                        <MarkdownText text={element.text} update={(val) => updateStorynode('text', val)} />
+                        <MarkdownText
+                            text={element.text}
+                            update={(val) => updateStorynode('text', val)}
+                            wordCount={(val) => updateStorynode('wordCount', val)} />
                     </div>
 
                 </div>
