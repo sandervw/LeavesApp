@@ -19,7 +19,7 @@ const AuthReducer = (state, action) => {
 
 const AuthContextProvider = ({children}) => {
     const [state, dispatch] = useReducer(AuthReducer, {
-        user: null
+        user: JSON.parse(localStorage.getItem('user')) || null // Initialize state with user from local storage if available
     });
 
     useEffect(() => {
@@ -29,6 +29,8 @@ const AuthContextProvider = ({children}) => {
         }
     }, []); // Load user from local storage on initial render
 
+    console.log("AuthContext state:", state); // Debugging line
+    
     return (
         <AuthContext.Provider value={{...state, dispatch}}>
             {children}
