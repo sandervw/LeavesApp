@@ -1,12 +1,19 @@
 import useAuthContext from "./useAuthContext";
+import useAddableContext from "./useAddableContext";
+import useElementContext from "./useElementContext";
 
 const useLogout = () => {
-    const { dispatch } = useAuthContext();
+    const { dispatch: authDispatch } = useAuthContext();
+    const { dispatch: addableDispatch } = useAddableContext();
+    const { dispatch: elementDispatch } = useElementContext();
 
     // No need for any backend call
     const logout = async () => {
         localStorage.removeItem("user"); // remove user from local storage
-        dispatch({ type: "LOGOUT" }); // dispatch logout action to context
+        authDispatch({ type: "LOGOUT" }); // dispatch logout action to context
+        addableDispatch({ type: "SET_ADDABLES", payload: null });
+        elementDispatch({ type: "SET_ELEMENT", payload: null });
+        elementDispatch({ type: "SET_CHILDREN", payload: null });
     };
 
     return { logout };
