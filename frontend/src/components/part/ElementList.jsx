@@ -2,7 +2,6 @@ import React from 'react';
 import Template from './Template';
 import StoryNode from './Storynode';
 import Droppable from '../wrapper/Droppable';
-import Draggable from '../wrapper/Draggable';
 import useAPI from "../../hooks/useAPI";
 import useElementContext from "../../hooks/useElementContext";
 import useAddableContext from "../../hooks/useAddableContext";
@@ -53,18 +52,11 @@ const ElementList = ({ elements, kind, listType }) => {
     };
 
     return (
-        <Droppable id={`${kind}${listType}`} className="droppable" function={handleAdd}>
+        <Droppable id={`${kind}${listType}`} className="droppable" method="createFromTemplate" function={handleAdd}>
             {elements && elements.map((child) => (
-                console.log(`Rendering ${child._id} in ${kind}${listType}`),
-                <Draggable
-                    id={child._id}
-                    key={child._id}
-                    data={child}
-                    method="createFromTemplate">
-                    {kind === 'storynodes'
-                    ? <StoryNode storynodeData={child} listFunction={updateElement} />
-                    : <Template templateData={child} listFunction={updateElement} />}
-                </Draggable>
+                kind === 'storynodes'
+                    ? <StoryNode storynodeData={child} key={child._id} listFunction={updateElement} />
+                    : <Template templateData={child} key={child._id} listFunction={updateElement} />
             ))}
         </Droppable>
     );
