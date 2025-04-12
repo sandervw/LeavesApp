@@ -69,6 +69,18 @@
 .droppable {
   padding-bottom: 2rem;
 }
+.rubbish-box {
+  padding-bottom: 2rem;
+  background-color: rgba(255, 0, 0, 0.05); /* faint red */
+  background-image: 
+    linear-gradient(45deg, rgba(255, 0, 0, 0.15) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(255, 0, 0, 0.15) 25%, transparent 25%);
+  background-size: 20px 20px;
+  background-repeat: repeat;
+  border: 2px dashed rgba(255, 0, 0, 0.5); /* optional: makes purpose obvious */
+  transition: background-color 0.2s ease;
+
+}
 
 /* DETAILED ELEMENT STYLES */
 a:hover {

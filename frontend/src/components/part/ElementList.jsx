@@ -2,8 +2,10 @@ import React from 'react';
 import Template from './Template';
 import StoryNode from './Storynode';
 import Droppable from '../wrapper/Droppable';
+import Draggable from '../wrapper/Draggable';
 import useAPI from "../../hooks/useAPI";
 import useElementContext from "../../hooks/useElementContext";
+import useAddableContext from "../../hooks/useAddableContext";
 
 /**
  * 
@@ -16,7 +18,8 @@ import useElementContext from "../../hooks/useElementContext";
  * @returns {JSX.Element} - The rendered list of elements
  */
 const ElementList = ({ elements, kind, listType }) => {
-    const { element, dispatch } = useElementContext();
+    const { element, dispatch: elementDispatch } = useElementContext();
+    const { dispatch: addableDispatch } = useAddableContext();
     const apiCall = useAPI();
 
     // TODO - possibly refactor to handle type updates (leaf-to-branch, branch-to-leaf) on backend
@@ -24,32 +27,47 @@ const ElementList = ({ elements, kind, listType }) => {
         if (listType === "static") return; //Prevent adding to static lists
         let newChild;
         if (listType === "roots") {
-            if(method === 'createFromTemplate') newChild = await apiCall(method, data._id, null);
+            if (method === 'createFromTemplate') newChild = await apiCall(method, data._id, null);
             else newChild = await apiCall(method, kind, data);
         }
         if (listType === "children") {
             if (element.type === 'leaf') element.type = 'branch';
             await apiCall('upsertElement', kind, { ...element });
-            if(method === 'createFromTemplate') newChild = await apiCall(method, data._id, element._id);
-            else{
+            if (method === 'createFromTemplate') newChild = await apiCall(method, data._id, element._id);
+            else {
                 newChild = await apiCall(method, kind, data);
                 await apiCall('upsertElement', kind, { ...element, children: [...element.children, newChild._id] });
             }
             // Sync frontend
-            dispatch({ type: 'SET_ELEMENT', payload: { ...element, children: [...element.children, newChild._id] } });
+            elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, children: [...element.children, newChild._id] } });
         }
-        newChild && dispatch({ type: 'CREATE_CHILD', payload: newChild});
+        newChild && elementDispatch({ type: 'CREATE_CHILD', payload: newChild });
+    };
+
+    // Updates the name, purposes, or children
+    const updateElement = async (attr, val, data) => {
+        await apiCall('upsertElement', 'templates', { ...data, [attr]: val });
+        listType === 'static'
+            ? addableDispatch({ type: 'UPDATE_ADDABLE', payload: { ...data, [attr]: val } })
+            : elementDispatch({ type: 'UPDATE_ELEMENT', payload: { ...data, [attr]: val } });
     };
 
     return (
         <Droppable id={`${kind}${listType}`} className="droppable" function={handleAdd}>
             {elements && elements.map((child) => (
-                kind === 'storynodes' ?
-                    <StoryNode storynodeData={child} key={child._id} /> :
-                    <Template templateData={child} key={child._id} />
+                console.log(`Rendering ${child._id} in ${kind}${listType}`),
+                <Draggable
+                    id={child._id}
+                    key={child._id}
+                    data={child}
+                    method="createFromTemplate">
+                    {kind === 'storynodes'
+                    ? <StoryNode storynodeData={child} listFunction={updateElement} />
+                    : <Template templateData={child} listFunction={updateElement} />}
+                </Draggable>
             ))}
         </Droppable>
     );
-}
+};
 
 export default ElementList;
