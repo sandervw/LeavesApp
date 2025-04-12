@@ -13,6 +13,8 @@ import StorynodeDetail from './components/StorynodeDetail';
 
 function App() {
 
+  //TODO possibly fix by adding useEffect (remember to remove initalization of user in authContext)
+  //TODO - add loading screen while checking auth status
   const { user } = useAuthContext();
 
   const pointerSensor = useSensor(PointerSensor, {
