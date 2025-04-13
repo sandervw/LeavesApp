@@ -6,6 +6,10 @@ import Droppable from '../wrapper/Droppable';
 import useAPI from "../../hooks/useAPI";
 import useElementContext from "../../hooks/useElementContext";
 
+/**
+ * 
+ * @returns {JSX.Element} A Droppable component where elements can be dragged for deletion.
+ */
 const RubbishPile = () => {    
     const { element, dispatch } = useElementContext();
     const navigate = useNavigate();
@@ -13,25 +17,30 @@ const RubbishPile = () => {
     const [showModal, setShowModal] = useState(false);
     const [deleteParams, setDeleteParams] = useState({ source: '', kind: '', data: null });
 
-    const handleDelete= async () => {
-        console.log("Deleting element:", deleteParams.source, deleteParams.kind, deleteParams.data._id);
-        if (deleteParams.source === 'children' || deleteParams.source === 'roots') {
-            await apiCall('deleteElement', deleteParams.kind, deleteParams.data._id);
-            dispatch({ type: 'DELETE_CHILD', payload: deleteParams.data._id });
+    const handleDelete = async (...confirmArgs) => {
+        console.log(confirmArgs);
+        
+        let [source, kind, data] = confirmArgs || deleteParams;
+        console.log("Deleting element:", source, kind, data);
+        if (['children', 'roots', 'detail'].includes(source)) {
+            await apiCall('deleteElement', kind, data._id);
+            await dispatch({ type: 'DELETE_CHILD', payload: data._id });
             setShowModal(false);
-            if(deleteParams.source === 'detail') {
+            if(source === 'detail') {
                 if (element.parent) navigate('/');
                 else navigate('/storydetail', { state: element.parent });
             }
         } else {
-            console.error("Cannot delete element from:", deleteParams.source);
+            console.error("Cannot delete element from:", source);
             setShowModal(false);
         }
     };
 
+    // Make user confirm deletion if it is a detail or root element
     const confirmDelete = (source, data) => {
         setDeleteParams({ source, kind: `${data.kind}s`, data });
-        setShowModal(true);
+        if (source==='detail' || source==='roots') setShowModal(true);
+        else handleDelete(source, `${data.kind}s`, data); // No confirmation needed for children
     }
 
     return ( 

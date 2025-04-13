@@ -17,14 +17,13 @@ const Template = (props) => {
         <Draggable
             id={templateData._id}
             source={source}
-            data={templateData}>
-            <div className="element" key={templateData._id}>
-                <div onClick={(e) => handleDetail(e)}>
-                    <h4>{templateData.name}</h4>
-                </div>
-                <div>
-                    <MarkdownText text={templateData.text} update={(val) => listFunction('text', val, templateData)} />
-                </div>
+            data={templateData}
+            className="element">
+            <div onClick={(e) => handleDetail(e)}>
+                <h4>{templateData.name}</h4>
+            </div>
+            <div>
+                <MarkdownText text={templateData.text} update={(val) => listFunction('text', val, templateData)} />
             </div>
         </Draggable>
     );

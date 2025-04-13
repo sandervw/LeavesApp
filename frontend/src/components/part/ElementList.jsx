@@ -45,7 +45,7 @@ const ElementList = ({ elements, kind, listType }) => {
         newChild && elementDispatch({ type: 'CREATE_CHILD', payload: newChild });
     };
 
-    // Updates the name, purposes, or children
+    // Updates one of the child elements
     const updateElement = async (attr, val, data) => {
         await apiCall('upsertElement', kind, { ...data, [attr]: val });
         listType === 'static'
