@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import MarkdownText from "../common/MarkdownText";
+import MarkdownText from "./MarkdownText";
 import Draggable from '../wrapper/Draggable';
 import useElementContext from "../../hooks/useElementContext";
 
