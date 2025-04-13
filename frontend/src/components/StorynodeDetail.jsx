@@ -6,6 +6,7 @@ import AddSidebar from './layout/AddSidebar';
 import LinkSidebar from './layout/LinkSidebar';
 import ElementList from "./part/ElementList";
 import ElementFeature from "./part/ElementFeature";
+import Draggable from "./wrapper/Draggable";
 import useAPI from "../hooks/useAPI";
 import useElementContext from "../hooks/useElementContext";
 
@@ -45,8 +46,9 @@ const StorynodeDetail = () => {
 
     // Updates the name, text, or word count of the storynode
     const updateStorynode = async (attr, val) => {
-        apiCall('upsertElement', 'storynodes', { ...element, [attr]: val });
-        elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, [attr]: val } });
+        const newChildren = element.children.filter(child => child !== null); // Some cleanup
+        apiCall('upsertElement', 'storynodes', { ...element, [attr]: val, children: newChildren });
+        elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, [attr]: val, children: newChildren } });
         console.log(element);
     };
 
@@ -64,7 +66,11 @@ const StorynodeDetail = () => {
         <>
             <LinkSidebar />
             <div className="container content">
-                <div className="element detail">
+                <Draggable
+                    id={element._id}
+                    source="detail"
+                    data={element}
+                    className="element detail">
                     <div className="box-buttons">
                         <button onClick={() => navigateParent()}>
                             <InlineSVG src="/return.svg" alt="return icon" className="icon" />
@@ -84,7 +90,7 @@ const StorynodeDetail = () => {
                             update={(val) => updateStorynode('text', val)}
                             wordCount={(val) => updateStorynode('wordCount', val)} />
                     </div>
-                </div>
+                </Draggable>
                 <ElementList elements={children} kind="storynodes" listType="children" />
             </div>
             <AddSidebar page="storynodedetail" type="branch" />

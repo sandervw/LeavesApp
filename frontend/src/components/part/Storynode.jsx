@@ -18,22 +18,21 @@ const Storynode = (props) => {
         <Draggable
             id={storynodeData._id}
             source={source}
-            data={storynodeData}>
-            <div className="element" key={storynodeData._id}>
-                <div onClick={(e) => handleDetail(e)}>
-                    <h4>{storynodeData.name}</h4>
-                </div>
-                <div>
-                    {storynodeData.type !== 'leaf'
-                        ? <MarkdownText text={storynodeData.text} update={(val) => listFunction('text', val, storynodeData)} />
-                        : <div className="leafContent">
-                            <MarkdownText
-                                text={storynodeData.text}
-                                update={(val) => listFunction('text', val, storynodeData)}
-                                wordCount={(val) => listFunction('wordCount', val, storynodeData)}
-                                locked={locked} />
-                        </div>}
-                </div>
+            data={storynodeData}
+            className="element">
+            <div onClick={(e) => handleDetail(e)}>
+                <h4>{storynodeData.name}</h4>
+            </div>
+            <div>
+                {storynodeData.type !== 'leaf'
+                    ? <MarkdownText text={storynodeData.text} update={(val) => listFunction('text', val, storynodeData)} />
+                    : <div className="leafContent">
+                        <MarkdownText
+                            text={storynodeData.text}
+                            update={(val) => listFunction('text', val, storynodeData)}
+                            wordCount={(val) => listFunction('wordCount', val, storynodeData)}
+                            locked={locked} />
+                    </div>}
             </div>
         </Draggable>
     );
