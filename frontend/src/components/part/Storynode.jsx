@@ -1,15 +1,12 @@
 import { useNavigate } from 'react-router-dom';
-import useAPI from '../../hooks/useAPI';
-import DeleteConfirmation from "../overlay/DeleteConfirmation";
 import MarkdownText from "../common/MarkdownText";
-import useElementContext from '../../hooks/useElementContext';
+import Draggable from '../wrapper/Draggable';
 
 const Storynode = (props) => {
-
-    const { dispatch } = useElementContext();
     const navigate = useNavigate();
-    const apiCall = useAPI();
     const storynodeData = { ...props.storynodeData };
+    const listFunction = props.listFunction;
+    const source = props.source;
     const locked = props.locked;
 
     // Go to detailed view of the element
@@ -17,34 +14,28 @@ const Storynode = (props) => {
         navigate('/storydetail', { state: storynodeData._id });
     };
 
-    // Updates the text of a storynode
-    const updateStorynode = async (attr, val) => {
-        let updatedNode;
-        if (attr === 'text') updatedNode = { ...storynodeData, text: val };
-        if (attr === 'wordCount') updatedNode = { ...storynodeData, wordCount: val };
-        await apiCall('upsertElement', 'storynodes', updatedNode);
-        //if (attr === 'wordCount') parentFunction('wordCount', val);
-        dispatch({ type: 'UPDATE_CHILD', payload: updatedNode });
-    };
-
     return (
-        <div className="element" key={storynodeData._id}>
-            <div onClick={(e) => handleDetail(e)}>
-                <h4>{storynodeData.name}</h4>
+        <Draggable
+            id={storynodeData._id}
+            source={source}
+            data={storynodeData}>
+            <div className="element" key={storynodeData._id}>
+                <div onClick={(e) => handleDetail(e)}>
+                    <h4>{storynodeData.name}</h4>
+                </div>
+                <div>
+                    {storynodeData.type !== 'leaf'
+                        ? <MarkdownText text={storynodeData.text} update={(val) => listFunction('text', val, storynodeData)} />
+                        : <div className="leafContent">
+                            <MarkdownText
+                                text={storynodeData.text}
+                                update={(val) => listFunction('text', val, storynodeData)}
+                                wordCount={(val) => listFunction('wordCount', val, storynodeData)}
+                                locked={locked} />
+                        </div>}
+                </div>
             </div>
-            <div>
-                {storynodeData.type !== 'leaf'
-                    ? <MarkdownText text={storynodeData.text} update={(val) => updateStorynode('text', val)} />
-                    :
-                    <div className="leafContent">
-                        <MarkdownText
-                            text={storynodeData.text}
-                            update={(val) => updateStorynode('text', val)}
-                            wordCount={(val) => updateStorynode('wordCount', val)}
-                            locked={locked} />
-                    </div>}
-            </div>
-        </div>
+        </Draggable>
     );
 };
 

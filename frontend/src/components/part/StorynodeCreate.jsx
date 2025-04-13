@@ -21,8 +21,8 @@ const StorynodeCreate = () => {
 
     return (
         <Draggable
-            id="newcreate"
-            method="upsertElement"
+            id="storynodeCreate"
+            source="storynodeCreate"
             data={{...newCreate, name: (newCreate.name!=="" ? newCreate.name : 'New ' + type)}}>
             <div className="element">
                 <div>

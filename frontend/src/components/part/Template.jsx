@@ -6,6 +6,7 @@ const Template = (props) => {
     const navigate = useNavigate();
     const templateData = { ...props.templateData };
     const listFunction = props.listFunction;
+    const source = props.source;
 
     // Go to detailed view of the element
     const handleDetail = () => {
@@ -15,6 +16,7 @@ const Template = (props) => {
     return (
         <Draggable
             id={templateData._id}
+            source={source}
             data={templateData}>
             <div className="element" key={templateData._id}>
                 <div onClick={(e) => handleDetail(e)}>

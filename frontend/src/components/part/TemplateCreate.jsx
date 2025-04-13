@@ -21,8 +21,8 @@ const TemplateCreate = () => {
 
     return (
         <Draggable
-            id="newcreate"
-            method="upsertElement"
+            id="templateCreate"
+            source="templateCreate"
             data={{ ...newCreate, name: (newCreate.name !== "" ? newCreate.name : 'New ' + type) }}>
             <div className="element">
                 <div>

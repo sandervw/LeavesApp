@@ -11,22 +11,22 @@ const RubbishPile = () => {
     const navigate = useNavigate();
     const apiCall = useAPI();
     const [showModal, setShowModal] = useState(false);
-    const [deleteParams, setDeleteParams] = useState({ method: '', kind: '', data: null });
+    const [deleteParams, setDeleteParams] = useState({ source: '', kind: '', data: null });
 
     const handleDelete= async () => {   
-        if (deleteParams.method === 'deleteElement') {
-            await apiCall(deleteParams.method, deleteParams.kind, deleteParams.data._id);
+        if (deleteParams.source === 'children' || deleteParams.source === 'roots') {
+            await apiCall('deleteElement', deleteParams.kind, deleteParams.data._id);
             dispatch({ type: 'DELETE_ELEMENT', payload: deleteParams.data._id });
             setShowModal(false);
             if (element.parent) navigate('/');
             else navigate('/storydetail', { state: element.parent });
         } else {
-            console.error("Invalid method for delete operation:", deleteParams.method);
+            console.error("Cannot delete element from:", deleteParams.source);
         }
     };
 
-    const confirmDelete = (method, data) => {
-        setDeleteParams({ method, kind: data.kind, data });
+    const confirmDelete = (source, data) => {
+        setDeleteParams({ source, kind: data.kind, data });
         setShowModal(true);
     }
 
