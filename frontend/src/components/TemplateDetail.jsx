@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
-import InlineSVG from "./common/InlineSVG";
+import InlineSVG from "./part/common/InlineSVG";
 import DeleteConfirmation from "./overlay/DeleteConfirmation";
-import MarkdownText from "./common/MarkdownText";
+import MarkdownText from "./part/MarkdownText";
 import AddSidebar from './layout/AddSidebar';
 import LinkSidebar from './layout/LinkSidebar';
 import ElementFeature from "./part/ElementFeature";

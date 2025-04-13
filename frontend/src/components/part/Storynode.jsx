@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import MarkdownText from "../common/MarkdownText";
+import MarkdownText from "./MarkdownText";
 import Draggable from '../wrapper/Draggable';
 
 const Storynode = (props) => {
