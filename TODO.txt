@@ -1,0 +1,12 @@
+Typescript conversion
+Expandable Stories/Templates Sidebar (how to handle state?)
+Word-count
+Branch-back-to-leaf
+Drophandler (args: delete/add, item, source)
+Delete of Detail elements
+CSS App Layout:
+    General improvements
+    Subtle gradient to elements
+    A subset of fixed styles
+    Keep elements modular
+    Light/Dark mode
