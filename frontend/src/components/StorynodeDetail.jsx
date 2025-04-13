@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
-import InlineSVG from "./part/common/InlineSVG";
-import MarkdownText from "./part/MarkdownText";
+import { ArchiveButton, DownloadButton, ReturnButton } from "./part/common/Buttons";
+import MarkdownText from "./part/common/MarkdownText";
 import AddSidebar from './layout/AddSidebar';
 import LinkSidebar from './layout/LinkSidebar';
 import ElementList from "./part/ElementList";
@@ -72,16 +72,9 @@ const StorynodeDetail = () => {
                     data={element}
                     className="element detail">
                     <div className="box-buttons">
-                        <button onClick={() => navigateParent()}>
-                            <InlineSVG src="/return.svg" alt="return icon" className="icon" />
-                        </button>
-                        <button onClick={() => downloadStory()}>
-                            <InlineSVG src="/download.svg" alt="download  icon" className="icon" />
-                        </button>
-                        {element.type === 'root' &&
-                            <button onClick={() => toggleArchive()}>
-                                <InlineSVG src={element.archived ? "/unarchive.svg" : "/archive.svg"} alt="archive  icon" className="icon" />
-                            </button>}
+                        <ReturnButton onClick={navigateParent} />
+                        <DownloadButton onClick={downloadStory} />
+                        {element.type === 'root' && <ArchiveButton onClick={toggleArchive} />}
                     </div>
                     <ElementFeature element={element} onUpdate={updateStorynode} />
                     <div className="box">

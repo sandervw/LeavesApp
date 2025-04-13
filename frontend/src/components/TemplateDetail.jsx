@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 import InlineSVG from "./part/common/InlineSVG";
 import DeleteConfirmation from "./overlay/DeleteConfirmation";
-import MarkdownText from "./part/MarkdownText";
+import MarkdownText from "./part/common/MarkdownText";
 import AddSidebar from './layout/AddSidebar';
 import LinkSidebar from './layout/LinkSidebar';
 import ElementFeature from "./part/ElementFeature";
