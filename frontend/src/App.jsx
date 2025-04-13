@@ -26,9 +26,9 @@ function App() {
     const { active, over } = event;
     console.log('Drag ended:', active, 'over:', over);
     if (over) {
-      const method = over.data.current.method;
-      const data = active.data.current;
-      over.data.current.function(method, data);
+      const source = active.data.current.source;
+      const data = active.data.current.element;
+      over.data.current.function(source, data);
     }
   };
 

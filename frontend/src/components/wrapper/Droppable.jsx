@@ -13,8 +13,7 @@ const Droppable = (props) => {
   const {setNodeRef} = useDroppable({
     id: props.id,
     data: { 
-      function: props.function,
-      method: props.method,
+      function: props.function
     }
   });
   
