@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import MarkdownText from "./common/MarkdownText";
+import MarkdownText from './common/MarkdownText';
 import Draggable from '../wrapper/Draggable';
-import useElementContext from "../../hooks/useElementContext";
+import useElementContext from '../../hooks/useElementContext';
 
 const TemplateCreate = () => {
     const { element } = useElementContext();
     const type = element ? 'branch' : 'root';
     const parent = element ? element._id : null;
-    const [newCreate, setNewCreate] = useState({ name: "", text: "", type, parent });
+    const [newCreate, setNewCreate] = useState({ name: '', text: '', type, parent });
 
     // Update the state when the element context changes
     useEffect(() => {
         setNewCreate({
-            name: "",
-            text: "",
+            name: '',
+            text: '',
             type: element ? 'branch' : 'root',
             parent: element ? element._id : null
         });
@@ -21,10 +21,10 @@ const TemplateCreate = () => {
 
     return (
         <Draggable
-            id="templateCreate"
-            source="templateCreate"
-            data={{ ...newCreate, name: (newCreate.name !== "" ? newCreate.name : 'New ' + type) }}>
-            <div className="element">
+            id='templateCreate'
+            source='templateCreate'
+            data={{ ...newCreate, name: (newCreate.name !== '' ? newCreate.name : 'New ' + type) }}>
+            <div className='element'>
                 <div>
                     <input
                         placeholder={'New ' + type}

@@ -1,10 +1,10 @@
-import { useEffect } from "react";
-import Template from "../part/Template";
-import StorynodeCreate from "../part/StorynodeCreate";
-import TemplateCreate from "../part/TemplateCreate";
-import ElementList from "../part/ElementList";
-import useAPI from "../../hooks/useAPI";
-import useAddableContext from "../../hooks/useAddableContext";
+import { useEffect } from 'react';
+import Template from '../part/Template';
+import StorynodeCreate from '../part/StorynodeCreate';
+import TemplateCreate from '../part/TemplateCreate';
+import ElementList from '../part/ElementList';
+import useAPI from '../../hooks/useAPI';
+import useAddableContext from '../../hooks/useAddableContext';
 
 const AddSidebar = (props) => {
 
@@ -25,11 +25,11 @@ const AddSidebar = (props) => {
     }, [addablesDispatch, page, type, apiCall]);
 
     return ( 
-        <aside className="sidebar container">
+        <aside className='sidebar container'>
             {(page === 'templates' || page === 'templatedetail')
                 ? <TemplateCreate />
                 : <StorynodeCreate />}
-            <ElementList elements={addables} kind="templates" listType="static" />
+            <ElementList elements={addables} kind='templates' listType='static' />
         </aside>
      );
 }

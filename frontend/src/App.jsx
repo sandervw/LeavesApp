@@ -33,17 +33,17 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className='App'>
       <Router>
         <DndContext onDragEnd={handleDragEnd} sensors={[pointerSensor]}>
           <Navbar />
           <Routes>
-            <Route path="/" element={user ? <Stories /> : <Navigate to="/landing" />} />
-            <Route path='/templates' element={user ? <Templates /> : <Navigate to="/landing" />} />
-            <Route path='/archive' element={user ? <Archive /> : <Navigate to="/landing" />} />
-            <Route path='/storydetail' element={user ? <StorynodeDetail /> : <Navigate to="/landing" />} />
-            <Route path='/templatedetail' element={user ? <TemplateDetail /> : <Navigate to="/landing" />} />
-            <Route path="/landing" element={!user ? <Landing /> : <Navigate to="/" />} />
+            <Route path='/' element={user ? <Stories /> : <Navigate to='/landing' />} />
+            <Route path='/templates' element={user ? <Templates /> : <Navigate to='/landing' />} />
+            <Route path='/archive' element={user ? <Archive /> : <Navigate to='/landing' />} />
+            <Route path='/storydetail' element={user ? <StorynodeDetail /> : <Navigate to='/landing' />} />
+            <Route path='/templatedetail' element={user ? <TemplateDetail /> : <Navigate to='/landing' />} />
+            <Route path='/landing' element={!user ? <Landing /> : <Navigate to='/' />} />
           </Routes>
         </DndContext>
       </Router>

@@ -2,9 +2,9 @@ import React from 'react';
 import Template from './Template';
 import StoryNode from './Storynode';
 import Droppable from '../wrapper/Droppable';
-import useAPI from "../../hooks/useAPI";
-import useElementContext from "../../hooks/useElementContext";
-import useAddableContext from "../../hooks/useAddableContext";
+import useAPI from '../../hooks/useAPI';
+import useElementContext from '../../hooks/useElementContext';
+import useAddableContext from '../../hooks/useAddableContext';
 
 /**
  * 
@@ -23,15 +23,15 @@ const ElementList = ({ elements, kind, listType }) => {
 
     // TODO - possibly refactor to handle type updates (leaf-to-branch, branch-to-leaf) on backend
     const handleAdd = async (source, data) => {
-        console.log("Adding element:", source, data);
+        console.log('Adding element:', source, data);
         
-        if (listType === "static") return; //Prevent adding to static lists
+        if (listType === 'static') return; //Prevent adding to static lists
         let newChild;
-        if (listType === "roots") {
+        if (listType === 'roots') {
             if (source === 'static') newChild = await apiCall('createFromTemplate', data._id, null);
             else newChild = await apiCall('upsertElement', kind, data);  // source = templateCreate or storynodeCreate
         }
-        if (listType === "children") {
+        if (listType === 'children') {
             if (element.type === 'leaf') element.type = 'branch';
             await apiCall('upsertElement', kind, { ...element });
             if (source === 'static') newChild = await apiCall('createFromTemplate', data._id, element._id);
@@ -54,7 +54,7 @@ const ElementList = ({ elements, kind, listType }) => {
     };
 
     return (
-        <Droppable id={`${kind}${listType}`} className="droppable" function={handleAdd}>
+        <Droppable id={`${kind}${listType}`} className='droppable' function={handleAdd}>
             {elements && elements.map((child) => (
                 kind === 'storynodes'
                     ? <StoryNode key={child._id} storynodeData={child} source={listType} listFunction={updateElement} />

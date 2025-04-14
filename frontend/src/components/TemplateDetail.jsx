@@ -1,14 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import InlineSVG from "./part/common/InlineSVG";
-import DeleteConfirmation from "./overlay/DeleteConfirmation";
-import MarkdownText from "./part/common/MarkdownText";
+import InlineSVG from './part/common/InlineSVG';
+import DeleteConfirmation from './overlay/DeleteConfirmation';
+import MarkdownText from './part/common/MarkdownText';
 import AddSidebar from './layout/AddSidebar';
 import LinkSidebar from './layout/LinkSidebar';
-import ElementFeature from "./part/ElementFeature";
-import ElementList from "./part/ElementList";
-import useAPI from "../hooks/useAPI";
-import useElementContext from "../hooks/useElementContext";
+import ElementFeature from './part/ElementFeature';
+import ElementList from './part/ElementList';
+import useAPI from '../hooks/useAPI';
+import useElementContext from '../hooks/useElementContext';
 
 
 const TemplateDetail = () => {
@@ -22,7 +22,7 @@ const TemplateDetail = () => {
     useEffect(() => {
         const fetchData = async () => {
             setIsPending(true);
-            console.log("useEffect called");
+            console.log('useEffect called');
             const template = await apiCall('fetchElement', 'templates', location.state);
             await dispatch({ type: 'SET_ELEMENT', payload: template });
             const children = await apiCall('fetchChildren', 'templates', location.state);
@@ -46,22 +46,22 @@ const TemplateDetail = () => {
     return !isPending && (
         <>
             <LinkSidebar />
-            <div className="container content">
-                <div className="element detail">
-                    <div className="box-buttons">
+            <div className='container content'>
+                <div className='element detail'>
+                    <div className='box-buttons'>
                         <button onClick={() => setShowModal(true)}>
-                            <InlineSVG src="/trashcan.svg" alt="delete icon" className="icon" />
+                            <InlineSVG src='/trashcan.svg' alt='delete icon' className='icon' />
                         </button>
                     </div>
                     <ElementFeature element={element} onUpdate={updateTemplate} />
-                    <div className="box">
+                    <div className='box'>
                         <MarkdownText text={element.text} update={(val) => updateTemplate('text', val)} />
                     </div>
                 </div>
-                <ElementList elements={children} kind="templates" listType="children" />
+                <ElementList elements={children} kind='templates' listType='children' />
                 {showModal && <DeleteConfirmation hideModal={() => setShowModal(false)} confirmModal={handleDelete} />}
             </div>
-            <AddSidebar page="templates" />
+            <AddSidebar page='templates' />
         </>
     );
 };

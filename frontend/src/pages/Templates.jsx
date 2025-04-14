@@ -1,11 +1,11 @@
-import Template from "../components/part/Template";
-import Droppable from "../components/wrapper/Droppable";
+import Template from '../components/part/Template';
+import Droppable from '../components/wrapper/Droppable';
 import AddSidebar from '../components/layout/AddSidebar';
 import LinkSidebar from '../components/layout/LinkSidebar';
-import ElementList from "../components/part/ElementList";
-import { useEffect } from "react";
-import useAPI from "../hooks/useAPI";
-import useElementContext from "../hooks/useElementContext";
+import ElementList from '../components/part/ElementList';
+import { useEffect } from 'react';
+import useAPI from '../hooks/useAPI';
+import useElementContext from '../hooks/useElementContext';
 
 const Templates = () => {
 
@@ -24,10 +24,10 @@ const Templates = () => {
     return (
         <>
             <LinkSidebar />
-            <div className = "content container">
-                <ElementList elements={templates} kind="templates" listType="roots" />
+            <div className = 'content container'>
+                <ElementList elements={templates} kind='templates' listType='roots' />
             </div>
-            <AddSidebar page="templates" />
+            <AddSidebar page='templates' />
         </>
     );
 };

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import useLogin from "../../hooks/useLogin";
+import { useState } from 'react';
+import useLogin from '../../hooks/useLogin';
 
 const Login = ({ hideModal }) => {
 
@@ -15,30 +15,30 @@ const Login = ({ hideModal }) => {
     };
 
     return (
-        <div className="modal-overlay">
-            <form className="modal-content" onSubmit={(e) => {
+        <div className='modal-overlay'>
+            <form className='modal-content' onSubmit={(e) => {
                 e.preventDefault();
                 handleSubmit(e);
             }}>
                 <input
-                    type="text"
-                    placeholder="Username"
+                    type='text'
+                    placeholder='Username'
                     value={username}
-                    autoComplete="username"
+                    autoComplete='username'
                     onChange={(e) => setUsername(e.target.value)}
                     required
                 />
                 <input
-                    type="password"
-                    placeholder="Password"
+                    type='password'
+                    placeholder='Password'
                     value={password}
-                    autoComplete="new-password"
+                    autoComplete='new-password'
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-                <button className="text-button" type="submit">Log In</button>
-                {error && <div className="error">Error: {error}</div>}
-                {isPending && <div className="loading">Loading...</div>}
+                <button className='text-button' type='submit'>Log In</button>
+                {error && <div className='error'>Error: {error}</div>}
+                {isPending && <div className='loading'>Loading...</div>}
             </form>
         </div>
     );

@@ -1,9 +1,9 @@
-import InlineSVG from "./InlineSVG";
+import InlineSVG from './InlineSVG';
 
 const ReturnButton = ({onClick}) => {
     return ( 
         <button onClick={() => onClick()}>
-            <InlineSVG src="/return.svg" alt="return icon" className="icon" />
+            <InlineSVG src='/return.svg' alt='return icon' className='icon' />
         </button>
      );
 }
@@ -11,7 +11,7 @@ const ReturnButton = ({onClick}) => {
 const DownloadButton = ({onClick}) => {
     return ( 
         <button onClick={() => onClick()}>
-            <InlineSVG src="/download.svg" alt="download icon" className="icon" />
+            <InlineSVG src='/download.svg' alt='download icon' className='icon' />
         </button>
      );
 }
@@ -19,7 +19,7 @@ const DownloadButton = ({onClick}) => {
 const ArchiveButton = ({onClick}) => {
     return ( 
         <button onClick={() => onClick()}>
-            <InlineSVG src="/archive.svg" alt="archive icon" className="icon" />
+            <InlineSVG src='/archive.svg' alt='archive icon' className='icon' />
         </button>
      );
 }
@@ -27,7 +27,7 @@ const ArchiveButton = ({onClick}) => {
 const UnarchiveButton = ({onClick}) => {
     return ( 
         <button onClick={() => onClick()}>
-            <InlineSVG src="/unarchive.svg" alt="unarchive icon" className="icon" />
+            <InlineSVG src='/unarchive.svg' alt='unarchive icon' className='icon' />
         </button>
      );
 }
@@ -35,7 +35,7 @@ const UnarchiveButton = ({onClick}) => {
 const DeleteButton = ({onClick}) => {
     return ( 
         <button onClick={() => onClick()}>
-            <InlineSVG src="/delete.svg" alt="delete icon" className="icon" />
+            <InlineSVG src='/delete.svg' alt='delete icon' className='icon' />
         </button>
      );
 }
@@ -43,7 +43,7 @@ const DeleteButton = ({onClick}) => {
 const DraggableButton = ({onClick}) => {
     return ( 
         <button onClick={() => onClick()}>
-            <InlineSVG src="/drag.svg" alt="drag icon" className="icon faded-icon" />
+            <InlineSVG src='/drag.svg' alt='drag icon' className='icon faded-icon' />
         </button>
      );
 }

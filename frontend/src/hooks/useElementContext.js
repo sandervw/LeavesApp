@@ -1,5 +1,5 @@
-import { ElementContext } from "../context/ElementContext";
-import { useContext } from "react";
+import { ElementContext } from '../context/ElementContext';
+import { useContext } from 'react';
 
 const useElementContext = () => {
     // Returns the state and dispatch function from the context

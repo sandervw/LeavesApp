@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import MarkdownText from "./common/MarkdownText";
+import MarkdownText from './common/MarkdownText';
 import Draggable from '../wrapper/Draggable';
 
 const Storynode = (props) => {
@@ -19,14 +19,14 @@ const Storynode = (props) => {
             id={storynodeData._id}
             source={source}
             data={storynodeData}
-            className="element">
+            className='element'>
             <div onClick={(e) => handleDetail(e)}>
                 <h4>{storynodeData.name}</h4>
             </div>
             <div>
                 {storynodeData.type !== 'leaf'
                     ? <MarkdownText text={storynodeData.text} update={(val) => listFunction('text', val, storynodeData)} />
-                    : <div className="leafContent">
+                    : <div className='leafContent'>
                         <MarkdownText
                             text={storynodeData.text}
                             update={(val) => listFunction('text', val, storynodeData)}
