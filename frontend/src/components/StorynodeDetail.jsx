@@ -10,12 +10,6 @@ import Draggable from './wrapper/Draggable';
 import useAPI from '../hooks/useAPI';
 import useElementContext from '../hooks/useElementContext';
 
-/**
- * TODO
- * - Add back locking feature for writing if word count is over limit
- * - Add back word count (sum of word counts of all children)
- */
-
 const StorynodeDetail = () => {
 
     const location = useLocation(); // Grab the element from location state
@@ -46,6 +40,7 @@ const StorynodeDetail = () => {
 
     // Updates the name, text, or word count of the storynode
     const updateStorynode = async (attr, val) => {
+        console.log('Updating storynode:', attr, val);
         const newChildren = element.children.filter(child => child !== null); // Some cleanup
         apiCall('upsertElement', 'storynodes', { ...element, [attr]: val, children: newChildren });
         elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, [attr]: val, children: newChildren } });
