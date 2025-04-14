@@ -1,39 +1,39 @@
-const HeaderTrait = (trait, onUpdate, editable) => {
+const HeaderTrait = ({trait, value, onUpdate, editable}) => {
     return (
             <h2
                 contentEditable={editable}
                 suppressContentEditableWarning={true}
                 id={trait}
                 onBlur={(e) => onUpdate(trait, e.target.innerText)}
-            >{trait}</h2>
+            >{value}</h2>
     );
 }
 
-const LabeledHeaderTrait = (trait, label, onUpdate, editable) => {
+const LabeledHeaderTrait = ({trait, value, label, onUpdate, editable}) => {
     return (
         <div className='inline-trait'>
             <p>{label}</p>
-            {HeaderTrait(trait, onUpdate, editable)}
+            <HeaderTrait trait={trait} value={value} onUpdate={onUpdate} editable={editable} />
         </div>
     );
 }
 
-const ParagraphTrait = (trait, onUpdate, editable) => {
+const ParagraphTrait = ({trait, value, onUpdate, editable}) => {
     return (
         <p
             contentEditable={editable}
             suppressContentEditableWarning={true}
             id={trait}
             onBlur={(e) => onUpdate(trait, e.target.innerText)}
-        >{trait}</p>
+        >{value}</p>
     );
 }
 
-const LabeledParagraphTrait = (trait, label, onUpdate, editable) => {
+const LabeledParagraphTrait = ({trait, value, label, onUpdate, editable}) => {
     return (
         <div className='inline-trait'>
             <p>{label}</p>
-            {ParagraphTrait(trait, onUpdate, editable)}
+            <ParagraphTrait trait={trait} value={value} onUpdate={onUpdate} editable={editable} />
         </div>
     );
 }
