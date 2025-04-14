@@ -1,6 +1,6 @@
 import InlineSVG from "./InlineSVG";
 
-const ReturnButton = (onClick) => {
+const ReturnButton = ({onClick}) => {
     return ( 
         <button onClick={() => onClick()}>
             <InlineSVG src="/return.svg" alt="return icon" className="icon" />
@@ -8,7 +8,7 @@ const ReturnButton = (onClick) => {
      );
 }
 
-const DownloadButton = (onClick) => {
+const DownloadButton = ({onClick}) => {
     return ( 
         <button onClick={() => onClick()}>
             <InlineSVG src="/download.svg" alt="download icon" className="icon" />
@@ -16,7 +16,7 @@ const DownloadButton = (onClick) => {
      );
 }
 
-const ArchiveButton = (onClick) => {
+const ArchiveButton = ({onClick}) => {
     return ( 
         <button onClick={() => onClick()}>
             <InlineSVG src="/archive.svg" alt="archive icon" className="icon" />
@@ -24,7 +24,7 @@ const ArchiveButton = (onClick) => {
      );
 }
 
-const UnarchiveButton = (onClick) => {
+const UnarchiveButton = ({onClick}) => {
     return ( 
         <button onClick={() => onClick()}>
             <InlineSVG src="/unarchive.svg" alt="unarchive icon" className="icon" />
@@ -32,7 +32,7 @@ const UnarchiveButton = (onClick) => {
      );
 }
 
-const DeleteButton = (onClick) => {
+const DeleteButton = ({onClick}) => {
     return ( 
         <button onClick={() => onClick()}>
             <InlineSVG src="/delete.svg" alt="delete icon" className="icon" />
@@ -40,10 +40,10 @@ const DeleteButton = (onClick) => {
      );
 }
 
-const DraggableButton = (onClick) => {
+const DraggableButton = ({onClick}) => {
     return ( 
         <button onClick={() => onClick()}>
-            <InlineSVG src="/drag.svg" alt="drag icon" className="icon" />
+            <InlineSVG src="/drag.svg" alt="drag icon" className="icon faded-icon" />
         </button>
      );
 }
