@@ -124,6 +124,9 @@ button {
   fill: var(--txtPrimary);
   transition: fill 0.25s;
 }
+.faded-icon {
+  opacity: 0.5;
+}
 svg:hover {
   fill: var(--accentPrimary2);
 }
