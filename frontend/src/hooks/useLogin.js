@@ -1,6 +1,6 @@
-import { useState } from "react";
-import useAuthContext from "./useAuthContext";
-import apiService from "../services/apiService";
+import { useState } from 'react';
+import useAuthContext from './useAuthContext';
+import apiService from '../services/apiService';
 
 const useLogin = () => {
 
@@ -20,8 +20,8 @@ const useLogin = () => {
             setIsPending(false);
             return false;
         } else {
-            localStorage.setItem("user", JSON.stringify(data)); // save user to local storage
-            dispatch({ type: "LOGIN", payload: data });
+            localStorage.setItem('user', JSON.stringify(data)); // save user to local storage
+            dispatch({ type: 'LOGIN', payload: data });
             setError(null);
             setIsPending(false);
             return true;

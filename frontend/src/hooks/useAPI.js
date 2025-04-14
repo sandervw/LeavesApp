@@ -1,6 +1,6 @@
-import useAuthContext from "../hooks/useAuthContext";
-import apiService from "../services/apiService";
-import { useCallback } from "react";
+import useAuthContext from '../hooks/useAuthContext';
+import apiService from '../services/apiService';
+import { useCallback } from 'react';
 const useAPI = () => {
     const { user } = useAuthContext();
 
@@ -9,8 +9,8 @@ const useAPI = () => {
         if (!user) return;
         const options = {
             headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${user.token}`
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user.token}`
             },
         };
         if (!serviceMethods[method]) throw new Error(`Unknown API method: ${method}`);

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import useSignup from "../../hooks/useSignup";
+import { useState } from 'react';
+import useSignup from '../../hooks/useSignup';
 
 const Signup = ({ hideModal }) => {
 
@@ -15,38 +15,38 @@ const Signup = ({ hideModal }) => {
     };
 
     return (
-        <div className="modal-overlay">
-            <form className="modal-content" onSubmit={(e) => {
+        <div className='modal-overlay'>
+            <form className='modal-content' onSubmit={(e) => {
                 e.preventDefault();
                 handleSubmit(e);
             }}>
                 <input
-                    type="email"
-                    placeholder="Email"
+                    type='email'
+                    placeholder='Email'
                     value={email}
-                    autoComplete="email"
+                    autoComplete='email'
                     onChange={(e) => setEmail(e.target.value)}
                     required
                 />
                 <input
-                    type="text"
-                    placeholder="Username"
+                    type='text'
+                    placeholder='Username'
                     value={username}
-                    autoComplete="username"
+                    autoComplete='username'
                     onChange={(e) => setUsername(e.target.value)}
                     required
                 />
                 <input
-                    type="password"
-                    placeholder="Password"
+                    type='password'
+                    placeholder='Password'
                     value={password}
-                    autoComplete="new-password"
+                    autoComplete='new-password'
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-                <button className="text-button" type="submit">Sign Up</button>
-                {error && <div className="error">Error: {error}</div>}
-                {isPending && <div className="loading">Loading...</div>}
+                <button className='text-button' type='submit'>Sign Up</button>
+                {error && <div className='error'>Error: {error}</div>}
+                {isPending && <div className='loading'>Loading...</div>}
             </form>
         </div>
     );

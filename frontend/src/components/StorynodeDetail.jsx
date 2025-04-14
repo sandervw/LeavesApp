@@ -1,14 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArchiveButton, DownloadButton, ReturnButton } from "./part/common/Buttons";
-import MarkdownText from "./part/common/MarkdownText";
+import { ArchiveButton, DownloadButton, ReturnButton } from './part/common/Buttons';
+import MarkdownText from './part/common/MarkdownText';
 import AddSidebar from './layout/AddSidebar';
 import LinkSidebar from './layout/LinkSidebar';
-import ElementList from "./part/ElementList";
-import ElementFeature from "./part/ElementFeature";
-import Draggable from "./wrapper/Draggable";
-import useAPI from "../hooks/useAPI";
-import useElementContext from "../hooks/useElementContext";
+import ElementList from './part/ElementList';
+import ElementFeature from './part/ElementFeature';
+import Draggable from './wrapper/Draggable';
+import useAPI from '../hooks/useAPI';
+import useElementContext from '../hooks/useElementContext';
 
 /**
  * TODO
@@ -28,7 +28,7 @@ const StorynodeDetail = () => {
     useEffect(() => {
         const fetchData = async () => {
             setIsPending(true);
-            console.log("useEffect called");
+            console.log('useEffect called');
             const storynode = await apiCall('fetchElement', 'storynodes', location.state);
             await elementDispatch({ type: 'SET_ELEMENT', payload: storynode });
             const children = await apiCall('fetchChildren', 'storynodes', location.state);
@@ -65,28 +65,28 @@ const StorynodeDetail = () => {
     return !isPending && (
         <>
             <LinkSidebar />
-            <div className="container content">
+            <div className='container content'>
                 <Draggable
                     id={element._id}
-                    source="detail"
+                    source='detail'
                     data={element}
-                    className="element detail">
-                    <div className="box-buttons">
+                    className='element detail'>
+                    <div className='box-buttons'>
                         <ReturnButton onClick={navigateParent} />
                         <DownloadButton onClick={downloadStory} />
                         {element.type === 'root' && <ArchiveButton onClick={toggleArchive} />}
                     </div>
                     <ElementFeature element={element} onUpdate={updateStorynode} />
-                    <div className="box">
+                    <div className='box'>
                         <MarkdownText
                             text={element.text}
                             update={(val) => updateStorynode('text', val)}
                             wordCount={(val) => updateStorynode('wordCount', val)} />
                     </div>
                 </Draggable>
-                <ElementList elements={children} kind="storynodes" listType="children" />
+                <ElementList elements={children} kind='storynodes' listType='children' />
             </div>
-            <AddSidebar page="storynodedetail" type="branch" />
+            <AddSidebar page='storynodedetail' type='branch' />
         </>
     );
 };

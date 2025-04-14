@@ -1,9 +1,9 @@
 import AddSidebar from '../components/layout/AddSidebar';
 import LinkSidebar from '../components/layout/LinkSidebar';
-import ElementList from "../components/part/ElementList";
-import { useEffect, useState } from "react";
-import useAPI from "../hooks/useAPI";
-import useElementContext from "../hooks/useElementContext";
+import ElementList from '../components/part/ElementList';
+import { useEffect, useState } from 'react';
+import useAPI from '../hooks/useAPI';
+import useElementContext from '../hooks/useElementContext';
 
 const Stories = () => {
 
@@ -25,10 +25,10 @@ const Stories = () => {
     return !isPending && (
         <>
             <LinkSidebar />
-            <div className = "content container">
-                <ElementList elements={storynodes} kind="storynodes" listType="roots" />
+            <div className = 'content container'>
+                <ElementList elements={storynodes} kind='storynodes' listType='roots' />
             </div>
-            <AddSidebar page="stories" type="root" />
+            <AddSidebar page='stories' type='root' />
         </>
     );
 };

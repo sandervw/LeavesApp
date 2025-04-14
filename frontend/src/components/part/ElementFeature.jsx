@@ -3,26 +3,26 @@ const ElementFeature = ({ element, onUpdate }) => {
     const { name, kind, type, wordWeight, wordLimit, wordCount } = element;
 
     return (
-        <div className="box">
+        <div className='box'>
             <h2
                 contentEditable
                 suppressContentEditableWarning={true}
-                id={"name"}
+                id={'name'}
                 onBlur={(e) => onUpdate('name', e.target.innerText)}
             >{name}
             </h2>
             <p>Type: {type}</p>
-            {(kind === "template" && wordWeight) && <div>
+            {(kind === 'template' && wordWeight) && <div>
                 <p>Weight:</p>
                 <p
                     contentEditable
                     suppressContentEditableWarning={true}
-                    id={"wordWeight"}
+                    id={'wordWeight'}
                     onBlur={(e) => onUpdate('wordWeight', e.target.innerText)}
                 >{wordWeight}
                 </p>
             </div>}
-            {kind === "storynode" &&
+            {kind === 'storynode' &&
                 <>
                     {type === 'root'
                         ? <div>

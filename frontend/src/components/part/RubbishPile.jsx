@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DeleteConfirmation from '../overlay/DeleteConfirmation';
 import Droppable from '../wrapper/Droppable';
-import useAPI from "../../hooks/useAPI";
-import useElementContext from "../../hooks/useElementContext";
+import useAPI from '../../hooks/useAPI';
+import useElementContext from '../../hooks/useElementContext';
 
 /**
  * 
@@ -21,7 +21,7 @@ const RubbishPile = () => {
         console.log(confirmArgs);
         
         let [source, kind, data] = confirmArgs || deleteParams;
-        console.log("Deleting element:", source, kind, data);
+        console.log('Deleting element:', source, kind, data);
         if (['children', 'roots', 'detail'].includes(source)) {
             await apiCall('deleteElement', kind, data._id);
             await dispatch({ type: 'DELETE_CHILD', payload: data._id });
@@ -31,7 +31,7 @@ const RubbishPile = () => {
                 else navigate('/storydetail', { state: element.parent });
             }
         } else {
-            console.error("Cannot delete element from:", source);
+            console.error('Cannot delete element from:', source);
             setShowModal(false);
         }
     };
@@ -44,7 +44,7 @@ const RubbishPile = () => {
     }
 
     return ( 
-        <Droppable id='RubbishPile' className="rubbish-box" function={confirmDelete}>
+        <Droppable id='RubbishPile' className='rubbish-box' function={confirmDelete}>
             <p>Drag and drop here to delete</p>
             {showModal && <DeleteConfirmation hideModal={() => setShowModal(false)} confirmModal={handleDelete} />}
         </Droppable>

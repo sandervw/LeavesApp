@@ -104,7 +104,7 @@ class ApiService {
         try {
             const result = await fetch(`${API_URL}users/signup`, {
                 method: 'POST',
-                headers: {"Content-Type": "application/json"},
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({email, username, password})
             });
             return result;
@@ -119,7 +119,7 @@ class ApiService {
             // Note: username can be an email or username
             const result = await fetch(`${API_URL}users/login`, {
                 method: 'POST',
-                headers: {"Content-Type": "application/json"},
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({username, password})
             });
             return result;

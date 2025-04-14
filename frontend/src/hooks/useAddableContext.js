@@ -1,5 +1,5 @@
-import { AddableContext } from "../context/AddableContext";
-import { useContext } from "react";
+import { AddableContext } from '../context/AddableContext';
+import { useContext } from 'react';
 
 const useAddableContext = () => {
     // Hook returns the value of the AddableContext
