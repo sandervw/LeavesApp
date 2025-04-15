@@ -1,5 +1,6 @@
 import React from 'react';
 import {useDraggable} from '@dnd-kit/core';
+import { DraggableButton } from '../part/common/Buttons';
 
 /**
  * Wrapper for elements that can be dragged
@@ -23,7 +24,8 @@ const Draggable = (props) => {
 
   
   return (
-    <div ref={setNodeRef} style={style} className={props.className} {...listeners} {...attributes}>
+    <div ref={setNodeRef} style={style} className={props.className}>
+      <DraggableButton {...listeners} {...attributes} />
       {props.children}
     </div>
   );

@@ -40,9 +40,9 @@ const DeleteButton = ({onClick}) => {
      );
 }
 
-const DraggableButton = ({onClick}) => {
+const DraggableButton = (props) => {
     return ( 
-        <button onClick={() => onClick()}>
+        <button {...props}>
             <InlineSVG src='/drag.svg' alt='drag icon' className='icon faded-icon' />
         </button>
      );
