@@ -93,6 +93,10 @@ ul, li {
   padding-left: 0;
   margin-left: 0;
 }
+.inline-trait {
+  display: flex;
+  align-items: center;
+}
 
 /* INPUT STYLES */
 input {

@@ -1,3 +1,5 @@
+import { DraggableButton } from "./Buttons";
+
 const HeaderTrait = ({trait, value, onUpdate, editable}) => {
     return (
             <h2
@@ -13,6 +15,15 @@ const LabeledHeaderTrait = ({trait, value, label, onUpdate, editable}) => {
     return (
         <div className='inline-trait'>
             <p>{label}</p>
+            <HeaderTrait trait={trait} value={value} onUpdate={onUpdate} editable={editable} />
+        </div>
+    );
+}
+
+const DraggableHeaderTrait = ({trait, value, onUpdate, editable}) => {
+    return (
+        <div className='inline-trait'>
+            <DraggableButton />
             <HeaderTrait trait={trait} value={value} onUpdate={onUpdate} editable={editable} />
         </div>
     );
@@ -41,6 +52,7 @@ const LabeledParagraphTrait = ({trait, value, label, onUpdate, editable}) => {
 export {
     HeaderTrait,
     LabeledHeaderTrait,
+    DraggableHeaderTrait,
     ParagraphTrait,
     LabeledParagraphTrait
 }
