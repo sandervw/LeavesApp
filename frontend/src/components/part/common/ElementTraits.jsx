@@ -1,4 +1,6 @@
 import { DraggableButton } from "./Buttons";
+import { useContext } from 'react';
+import { DragHandlerContext } from "../../../context/dragHandlerContext";
 
 const HeaderTrait = ({trait, value, onUpdate, editable}) => {
     return (
@@ -21,9 +23,10 @@ const LabeledHeaderTrait = ({trait, value, label, onUpdate, editable}) => {
 }
 
 const DraggableHeaderTrait = ({trait, value, onUpdate, editable}) => {
+    const dragHandler = useContext(DragHandlerContext);
     return (
         <div className='inline-trait'>
-            <DraggableButton drag-handle='true' />
+            <DraggableButton drag-handle='true' {...dragHandler} />
             <HeaderTrait trait={trait} value={value} onUpdate={onUpdate} editable={editable} />
         </div>
     );
