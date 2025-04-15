@@ -2,8 +2,9 @@ Typescript conversion
 Expandable Stories/Templates Sidebar (how to handle state?)
 Word-count
 Branch-back-to-leaf
+Fix Template to match Storynode
+Fix drophandler rendering
 Drophandler (args: delete/add, item, source)
-Delete of Detail elements
 CSS App Layout:
     General improvements
     Subtle gradient to elements
