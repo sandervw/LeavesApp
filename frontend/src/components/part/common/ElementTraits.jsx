@@ -23,7 +23,7 @@ const LabeledHeaderTrait = ({trait, value, label, onUpdate, editable}) => {
 const DraggableHeaderTrait = ({trait, value, onUpdate, editable}) => {
     return (
         <div className='inline-trait'>
-            <DraggableButton />
+            <DraggableButton drag-handle='true' />
             <HeaderTrait trait={trait} value={value} onUpdate={onUpdate} editable={editable} />
         </div>
     );

@@ -18,7 +18,6 @@ const RubbishPile = () => {
     const [deleteParams, setDeleteParams] = useState({ source: '', kind: '', data: null });
 
     const handleDelete = async (confirmArgs) => {
-        console.log('Deleting element:', confirmArgs);
         // If no args are passed in, use the deleteParams stored in state
         const { source, kind, data } = confirmArgs || deleteParams;
         console.log('Deleting element:', source, kind, data);
@@ -27,7 +26,7 @@ const RubbishPile = () => {
             await dispatch({ type: 'DELETE_CHILD', payload: data._id });
             setShowModal(false);
             if(source === 'detail') {
-                if (element.parent) navigate('/');
+                if (!element.parent) navigate('/');
                 else navigate('/storydetail', { state: element.parent });
             }
         } else {
