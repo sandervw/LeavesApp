@@ -24,7 +24,6 @@ const ElementList = ({ elements, kind, listType }) => {
     // TODO - possibly refactor to handle type updates (leaf-to-branch, branch-to-leaf) on backend
     const handleAdd = async (source, data) => {
         console.log('Adding element:', source, data);
-        
         if (listType === 'static') return; //Prevent adding to static lists
         let newChild;
         if (listType === 'roots') {
@@ -54,7 +53,7 @@ const ElementList = ({ elements, kind, listType }) => {
     };
 
     return (
-        <Droppable id={`${kind}${listType}`} className='droppable' function={handleAdd}>
+        <Droppable id={listType} className='droppable' function={handleAdd}>
             {elements && elements.map((child) => (
                 kind === 'storynodes'
                     ? <StoryNode key={child._id} storynodeData={child} source={listType} listFunction={updateElement} />

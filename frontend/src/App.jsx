@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import useAuthContext from './hooks/useAuthContext';
 import { DndContext } from '@dnd-kit/core';
 import { PointerSensor, useSensor } from '@dnd-kit/core';
+import { customCollisionDetectionAlgorithm, handleDragEnd } from './services/dndService';
 import Navbar from './components/layout/Navbar';
 import Landing from './pages/Landing';
 import Stories from './pages/Stories';
@@ -22,20 +23,10 @@ function App() {
     },
   });
 
-  const handleDragEnd = (event) => {
-    const { active, over } = event;
-    console.log('Drag ended:', active, 'over:', over);
-    if (over) {
-      const source = active.data.current.source;
-      const data = active.data.current.element;
-      over.data.current.function(source, data);
-    }
-  };
-
   return (
     <div className='App'>
       <Router>
-        <DndContext onDragEnd={handleDragEnd} sensors={[pointerSensor]}>
+        <DndContext onDragEnd={handleDragEnd} sensors={[pointerSensor] } collisionDetection={customCollisionDetectionAlgorithm}>
           <Navbar />
           <Routes>
             <Route path='/' element={user ? <Stories /> : <Navigate to='/landing' />} />
