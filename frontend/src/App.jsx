@@ -11,6 +11,8 @@ import Archive from './pages/Archive';
 import Templates from './pages/Templates';
 import TemplateDetail from './components/TemplateDetail';
 import StorynodeDetail from './components/StorynodeDetail';
+import AddSidebar from './components/layout/AddSidebar';
+import LinkSidebar from './components/layout/LinkSidebar';
 
 /**
  * Responsible for routing to the different pages of the app.
@@ -29,8 +31,10 @@ function App() {
   return (
     <div className='App'>
       <Router>
-        <DndContext onDragEnd={handleDragEnd} sensors={[pointerSensor] } collisionDetection={customCollisionDetectionAlgorithm}>
+        <DndContext onDragEnd={handleDragEnd} sensors={[pointerSensor]} collisionDetection={customCollisionDetectionAlgorithm}>
           <Navbar />
+
+          <LinkSidebar />
           <Routes>
             <Route path='/' element={user ? <Stories /> : <Navigate to='/landing' />} />
             <Route path='/templates' element={user ? <Templates /> : <Navigate to='/landing' />} />
@@ -39,6 +43,7 @@ function App() {
             <Route path='/templatedetail' element={user ? <TemplateDetail /> : <Navigate to='/landing' />} />
             <Route path='/landing' element={!user ? <Landing /> : <Navigate to='/' />} />
           </Routes>
+          <AddSidebar />
         </DndContext>
       </Router>
     </div>
