@@ -3,7 +3,8 @@ Expandable Stories/Templates Sidebar (how to handle state?)
 Word-count
 Branch-back-to-leaf
 Fix Template to match Storynode
-Fix drophandler rendering
+Fix Story/Template headers for clickable detail
+Add loading screens (such as while checking auth status)
 Drophandler (args: delete/add, item, source)
 CSS App Layout:
     General improvements

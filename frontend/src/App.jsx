@@ -12,9 +12,12 @@ import Templates from './pages/Templates';
 import TemplateDetail from './components/TemplateDetail';
 import StorynodeDetail from './components/StorynodeDetail';
 
+/**
+ * Responsible for routing to the different pages of the app.
+ * @returns {JSX.Element} The main app component.
+ */
 function App() {
 
-  //TODO - add loading screen while checking auth status
   const { user } = useAuthContext();
 
   const pointerSensor = useSensor(PointerSensor, {
@@ -40,6 +43,7 @@ function App() {
       </Router>
     </div>
   );
+
 }
 
 export default App;
