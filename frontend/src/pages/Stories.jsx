@@ -11,10 +11,10 @@ const Stories = () => {
 
     return (
         <>
-            {error && <div className='error content container'>{error}</div>}
-            {isPending && <div className='loading content container'>Loading...</div>}
+            {error && <div className='error container'>{error}</div>}
+            {isPending && <div className='loading container'>Loading...</div>}
             {!isPending && !error &&
-                <div className='content container'>
+                <div className='container content'>
                     <ElementList elements={children} kind='storynodes' listType='roots' />
                 </div>}
         </>
