@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import InlineSVG from './part/common/InlineSVG';
-import DeleteConfirmation from './overlay/DeleteConfirmation';
-import MarkdownText from './part/common/MarkdownText';
-import AddSidebar from './layout/AddSidebar';
-import LinkSidebar from './layout/LinkSidebar';
-import ElementFeature from './part/ElementFeature';
-import ElementList from './part/ElementList';
+import InlineSVG from '../components/part/common/InlineSVG';
+import DeleteConfirmation from '../components/overlay/DeleteConfirmation';
+import MarkdownText from '../components/part/common/MarkdownText';
+import AddSidebar from '../components/layout/AddSidebar';
+import LinkSidebar from '../components/layout/LinkSidebar';
+import ElementFeature from '../components/part/ElementFeature';
+import ElementList from '../components/part/ElementList';
 import useAPI from '../hooks/useAPI';
 import useElementContext from '../hooks/useElementContext';
 
@@ -45,7 +45,6 @@ const TemplateDetail = () => {
 
     return !isPending && (
         <>
-            <LinkSidebar />
             <div className='container content'>
                 <div className='element detail'>
                     <div className='box-buttons'>
@@ -61,7 +60,6 @@ const TemplateDetail = () => {
                 <ElementList elements={children} kind='templates' listType='children' />
                 {showModal && <DeleteConfirmation hideModal={() => setShowModal(false)} confirmModal={handleDelete} />}
             </div>
-            <AddSidebar page='templates' />
         </>
     );
 };

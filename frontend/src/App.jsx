@@ -9,8 +9,8 @@ import Landing from './pages/Landing';
 import Stories from './pages/Stories';
 import Archive from './pages/Archive';
 import Templates from './pages/Templates';
-import TemplateDetail from './components/TemplateDetail';
-import StorynodeDetail from './components/StorynodeDetail';
+import TemplateDetail from './pages/TemplateDetail';
+import StorynodeDetail from './pages/StorynodeDetail';
 import AddSidebar from './components/layout/AddSidebar';
 import LinkSidebar from './components/layout/LinkSidebar';
 

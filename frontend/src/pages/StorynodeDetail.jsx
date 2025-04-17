@@ -1,36 +1,16 @@
-import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArchiveButton, DownloadButton, ReturnButton } from './part/common/Buttons';
-import MarkdownText from './part/common/MarkdownText';
-import AddSidebar from './layout/AddSidebar';
-import LinkSidebar from './layout/LinkSidebar';
-import ElementList from './part/ElementList';
-import ElementFeature from './part/ElementFeature';
-import Draggable from './wrapper/Draggable';
-import useAPI from '../hooks/useAPI';
-import useElementContext from '../hooks/useElementContext';
+import { ArchiveButton, DownloadButton, ReturnButton } from '../components/part/common/Buttons';
+import MarkdownText from '../components/part/common/MarkdownText';
+import ElementList from '../components/part/ElementList';
+import ElementFeature from '../components/part/ElementFeature';
+import Draggable from '../components/wrapper/Draggable';
+import usePage from '../hooks/usePage';
 
 const StorynodeDetail = () => {
 
     const location = useLocation(); // Grab the element from location state
     const navigate = useNavigate();
-    const { children, element, dispatch: elementDispatch } = useElementContext();
-    const apiCall = useAPI();
-    const [isPending, setIsPending] = useState(true);
-
-    // Fetch the storynode, its children, and a list of templates that could be added
-    useEffect(() => {
-        const fetchData = async () => {
-            setIsPending(true);
-            console.log('useEffect called');
-            const storynode = await apiCall('fetchElement', 'storynodes', location.state);
-            await elementDispatch({ type: 'SET_ELEMENT', payload: storynode });
-            const children = await apiCall('fetchChildren', 'storynodes', location.state);
-            await elementDispatch({ type: 'SET_CHILDREN', payload: children });
-            storynode && setIsPending(false); //Only load page if a storynode was retrieved
-        };
-        fetchData();
-    }, [location.state, elementDispatch, apiCall]);
+    const { error, isPending, children, element } = usePage('storynodeDetail', location.state);
 
     // Return to parent element
     const navigateParent = async () => {
@@ -59,7 +39,6 @@ const StorynodeDetail = () => {
 
     return !isPending && (
         <>
-            <LinkSidebar />
             <div className='container content'>
                 <Draggable
                     id={element._id}
@@ -81,7 +60,6 @@ const StorynodeDetail = () => {
                 </Draggable>
                 <ElementList elements={children} kind='storynodes' listType='children' />
             </div>
-            <AddSidebar page='storynodedetail' type='branch' />
         </>
     );
 };

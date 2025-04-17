@@ -3,12 +3,12 @@ import useElementContext from './useElementContext';
 import useAddableContext from './useAddableContext';
 import useAPI from './useAPI';
 
-const usePage = (page) => {
+const usePage = (page, elementID) => {
 
     const [currentPage, setCurrentPage] = useState('');
     const [error, setError] = useState(null);
     const [isPending, setIsPending] = useState(false);
-    const { children: elements, dispatch: ElementDispatch } = useElementContext();
+    const { element, children, dispatch: ElementDispatch } = useElementContext();
     const { addables, dispatch: addablesDispatch } = useAddableContext();
     const apiCall = useAPI();
 
@@ -18,25 +18,33 @@ const usePage = (page) => {
             if (!page) return;
             setCurrentPage(page);
             setIsPending(true);
-            const storynodes = page === 'stories' && (await apiCall('fetchElements', 'storynodes', 'type=root&archived=false') ?? []);
-            const templates = page === 'stories' && (await apiCall('fetchElements', 'templates', `type=root`) ?? []);
+            let children, element, addables;
+            if (page === 'stories') {
+                children = await apiCall('fetchElements', 'storynodes', 'type=root&archived=false') ?? [];
+                addables = await apiCall('fetchElements', 'templates', `type=root`) ?? [];
+            }
+            if (page === 'storynodeDetail') {
+                element = await apiCall('fetchElement', 'storynodes', elementID) ?? null;
+                children = await apiCall('fetchChildren', 'storynodes', elementID) ?? [];
+                addables = await apiCall('fetchElements', 'templates', `type=branch`) ?? [];
+            }
 
-            if (storynodes.error || templates.error) {
-                setError(storynodes.error);
+            if (children.error || addables.error || element.error) {
+                setError(children.error || addables.error || element.error);
                 setIsPending(false);
             } else {
-                await ElementDispatch({ type: 'SET_CHILDREN', payload: storynodes });
-                await ElementDispatch({ type: 'SET_ELEMENT', payload: null });
-                await addablesDispatch({ type: 'SET_ADDABLES', payload: templates });
+                await ElementDispatch({ type: 'SET_CHILDREN', payload: children });
+                await ElementDispatch({ type: 'SET_ELEMENT', payload: element });
+                await addablesDispatch({ type: 'SET_ADDABLES', payload: addables });
                 setError(null);
                 setIsPending(false);
             }
             setIsPending(false);
         };
         fetchData();
-    }, [ElementDispatch, addablesDispatch, apiCall, page]);
+    }, [ElementDispatch, addablesDispatch, apiCall, page, elementID]);
 
-    return { error, isPending, elements, addables, currentPage };
+    return { error, isPending, element, children, addables, currentPage };
 
 };
 
