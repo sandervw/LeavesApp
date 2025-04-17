@@ -7,7 +7,7 @@ const usePage = (page, elementID) => {
 
     const [currentPage, setCurrentPage] = useState('');
     const [error, setError] = useState(null);
-    const [isPending, setIsPending] = useState(false);
+    const [isPending, setIsPending] = useState(true);
     const { element, children, dispatch: ElementDispatch } = useElementContext();
     const { addables, dispatch: addablesDispatch } = useAddableContext();
     const apiCall = useAPI();
@@ -20,6 +20,7 @@ const usePage = (page, elementID) => {
             setIsPending(true);
             let children, element, addables;
             if (page === 'stories') {
+                element = '';
                 children = await apiCall('fetchElements', 'storynodes', 'type=root&archived=false') ?? [];
                 addables = await apiCall('fetchElements', 'templates', `type=root`) ?? [];
             }
