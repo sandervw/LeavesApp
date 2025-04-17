@@ -23,11 +23,9 @@ const Templates = () => {
 
     return (
         <>
-            <LinkSidebar />
             <div className = 'content container'>
                 <ElementList elements={templates} kind='templates' listType='roots' />
             </div>
-            <AddSidebar page='templates' />
         </>
     );
 };

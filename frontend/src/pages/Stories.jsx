@@ -7,7 +7,7 @@ import usePage from '../hooks/usePage';
  */
 const Stories = () => {
 
-    const { error, isPending, elements } = usePage('stories');
+    const { error, isPending, children } = usePage('stories');
 
     return (
         <>
@@ -15,11 +15,11 @@ const Stories = () => {
             {isPending && <div className='loading content container'>Loading...</div>}
             {!isPending && !error &&
                 <div className='content container'>
-                    <ElementList elements={elements} kind='storynodes' listType='roots' />
+                    <ElementList elements={children} kind='storynodes' listType='roots' />
                 </div>}
         </>
     );
-    
+
 };
 
 export default Stories;
