@@ -1,4 +1,4 @@
-import { DraggableHeaderTrait, LabeledParagraphTrait } from './common/ElementTraits';
+import { Header2Trait, ParagraphTrait } from './common/ElementTraits';
 import MarkdownText from './common/MarkdownText';
 
 const ElementFeature = ({ element, onUpdate }) => {
@@ -7,15 +7,38 @@ const ElementFeature = ({ element, onUpdate }) => {
     return (
         <>
             <div className='box'>
-                <DraggableHeaderTrait trait="name" value={name} onUpdate={onUpdate} editable={true} />
-                <LabeledParagraphTrait trait="type" value={type} label='Type: ' editable={false} />
-                {(kind === 'template' && wordWeight)
-                    && <LabeledParagraphTrait trait="wordWeight" value={wordWeight} label='Word Weight: ' onUpdate={onUpdate} editable={true} />}
+                <Header2Trait
+                    trait="name"
+                    value={name}
+                    onBlur={(e) => onUpdate('name', e.target.innerText)}
+                    contentEditable={true}
+                    dragHandler={true} />
+                <ParagraphTrait
+                    trait="type"
+                    value={type}
+                    label='Type: '
+                    contentEditable={false} />
+                {(kind === 'template' && wordWeight)&&
+                    <ParagraphTrait
+                        trait="wordWeight"
+                        value={wordWeight}
+                        label='Word Weight: '
+                        onBlur={(e) => onUpdate('wordWeight', e.target.innerText)}
+                        contentEditable={true} />}
                 {kind === 'storynode' &&
                     <>
-                        <LabeledParagraphTrait trait="wordLimit" value={wordLimit} label='Word Limit: ' onUpdate={onUpdate} editable={type === 'root'} />
-                        {type === 'leaf'
-                            && <LabeledParagraphTrait trait="wordCount" value={wordCount} label='Word Count: ' editable={false} />}
+                        <ParagraphTrait
+                            trait="wordLimit"
+                            value={wordLimit}
+                            label='Word Limit: '
+                            onBlur={(e) => onUpdate('wordLimit', e.target.innerText)}
+                            contentEditable={type === 'root'} />
+                        {type === 'leaf' &&
+                            <ParagraphTrait
+                                trait="wordCount"
+                                value={wordCount}
+                                label='Word Count: '
+                                contentEditable={false} />}
                     </>}
             </div>
             <div className='box'>

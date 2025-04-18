@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import MarkdownText from './common/MarkdownText';
 import Draggable from '../wrapper/Draggable';
-import { DraggableHeaderTrait } from './common/ElementTraits';
+import { Header3Trait } from './common/ElementTraits';
 
 const Template = (props) => {
     const navigate = useNavigate();
@@ -20,7 +20,12 @@ const Template = (props) => {
             source={source}
             data={templateData}
             className='element'>
-            <DraggableHeaderTrait trait="name" value={templateData.name} onUpdate={(e) => handleDetail(e)} editable={true} />
+            <Header3Trait
+                trait="name"
+                value={templateData.name}
+                dragHandler={true}
+                className='clickable'
+                onClick={() => handleDetail()} />
             <div>
                 <MarkdownText text={templateData.text} update={(val) => listFunction('text', val, templateData)} />
             </div>
