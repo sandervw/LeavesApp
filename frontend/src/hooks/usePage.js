@@ -24,12 +24,21 @@ const usePage = (page, elementID) => {
                 children = await apiCall('fetchElements', 'storynodes', 'type=root&archived=false') ?? [];
                 addables = await apiCall('fetchElements', 'templates', `type=root`) ?? [];
             }
+            if (page === 'templates') {
+                element = '';
+                children = await apiCall('fetchElements', 'templates', 'type=root') ?? [];
+                addables = [];
+            }
             if (page === 'storynodeDetail') {
                 element = await apiCall('fetchElement', 'storynodes', elementID) ?? null;
                 children = await apiCall('fetchChildren', 'storynodes', elementID) ?? [];
                 addables = await apiCall('fetchElements', 'templates', `type=branch`) ?? [];
             }
-
+            if (page === 'templateDetail') {
+                element = await apiCall('fetchElement', 'templates', elementID) ?? null;
+                children = await apiCall('fetchChildren', 'templates', elementID) ?? [];
+                addables = [];
+            }
             if (children.error || addables.error || element.error) {
                 setError(children.error || addables.error || element.error);
                 setIsPending(false);
