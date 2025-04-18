@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import MarkdownText from './common/MarkdownText';
 import Draggable from '../wrapper/Draggable';
-import { DraggableHeaderTrait } from './common/ElementTraits';
+import { Header3Trait } from './common/ElementTraits';
 
 const Storynode = (props) => {
     const navigate = useNavigate();
@@ -21,7 +21,12 @@ const Storynode = (props) => {
             source={source}
             data={storynodeData}
             className='element'>
-            <DraggableHeaderTrait trait="name" value={storynodeData.name} onUpdate={(e) => handleDetail(e)} editable={true} />
+            <Header3Trait
+                trait="name"
+                value={storynodeData.name}
+                dragHandler={true}
+                className='clickable'
+                onClick={() => handleDetail()} />
             <div>
                 {storynodeData.type !== 'leaf'
                     ? <MarkdownText text={storynodeData.text} update={(val) => listFunction('text', val, storynodeData)} />
