@@ -44,6 +44,9 @@ const MarkdownText = (props) => {
         setText(markdown);
         console.log('Markdown Content:', markdown);
       }
+      if(props.wordCount) {
+        props.wordCount(wordCount);
+      }
     },
   });
 
