@@ -9,7 +9,7 @@ const AddSidebar = () => {
 
     return (
         <aside className='sidebar container'>
-            {(currentPage === 'templates' || currentPage === 'templatedetail')
+            {(currentPage === 'templates' || currentPage === 'templateDetail')
                 ? <TemplateCreate />
                 : <StorynodeCreate />}
             <ElementList elements={addables} kind='templates' listType='static' />

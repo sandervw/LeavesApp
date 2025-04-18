@@ -2,6 +2,16 @@ import { DraggableButton } from "./Buttons";
 import { useContext } from 'react';
 import { DragHandlerContext } from "../../../context/dragHandlerContext";
 
+const InputHeader = ({dragHandler, ...props}) => {
+    const handler = useContext(DragHandlerContext);
+    return (
+        <div className='inline-trait'>
+            {dragHandler && <DraggableButton drag-handle='true' {...handler} />}
+            <input{...props} />
+        </div>
+    );
+}
+
 const Header2Trait = ({trait, value, label, dragHandler, ...props}) => {
     const handler = useContext(DragHandlerContext);
     return (
@@ -48,6 +58,7 @@ const ParagraphTrait = ({trait, value, label, dragHandler, ...props}) => {
 }
  
 export {
+    InputHeader,
     Header2Trait,
     Header3Trait,
     ParagraphTrait

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import MarkdownText from './common/MarkdownText';
 import Draggable from '../wrapper/Draggable';
 import useElementContext from '../../hooks/useElementContext';
+import { InputHeader } from './common/ElementTraits';
 
 const StorynodeCreate = () => {
     const { element } = useElementContext();
@@ -26,7 +27,8 @@ const StorynodeCreate = () => {
             data={{...newCreate, name: (newCreate.name!=='' ? newCreate.name : 'New ' + type)}}>
             <div className='element'>
                 <div>
-                    <input
+                    <InputHeader
+                        dragHandler={true}
                         placeholder={'New ' + type}
                         required
                         value={newCreate.name}

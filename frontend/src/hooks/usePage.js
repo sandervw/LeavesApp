@@ -13,9 +13,9 @@ const usePage = (page, elementID) => {
     const apiCall = useAPI();
 
     useEffect(() => {
-        console.log('UseEffect called in useTree');
+        console.log('UseEffect called in useTree by page:', page);
+        if (!page) return;
         const fetchData = async () => {
-            if (!page) return;
             setCurrentPage(page);
             setIsPending(true);
             let children, element, addables;
@@ -53,7 +53,8 @@ const usePage = (page, elementID) => {
         };
         fetchData();
     }, [ElementDispatch, addablesDispatch, apiCall, page, elementID]);
-
+    console.log(`return page ${currentPage} after being called from page ${page}`);
+    
     return { error, isPending, element, children, addables, currentPage };
 
 };
