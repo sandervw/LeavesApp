@@ -1,41 +1,27 @@
-import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import InlineSVG from '../components/part/common/InlineSVG';
-import DeleteConfirmation from '../components/overlay/DeleteConfirmation';
-import MarkdownText from '../components/part/common/MarkdownText';
-import AddSidebar from '../components/layout/AddSidebar';
-import LinkSidebar from '../components/layout/LinkSidebar';
-import ElementFeature from '../components/part/ElementFeature';
+import { ArchiveButton, DownloadButton, ReturnButton } from '../components/part/common/Buttons';
 import ElementList from '../components/part/ElementList';
-import useAPI from '../hooks/useAPI';
+import ElementFeature from '../components/part/ElementFeature';
+import Draggable from '../components/wrapper/Draggable';
+import usePage from '../hooks/usePage';
 import useElementContext from '../hooks/useElementContext';
+import useAPI from '../hooks/useAPI';
 
 
 const TemplateDetail = () => {
+    
     const location = useLocation(); // Grab the element from location state
     const navigate = useNavigate();
-    const { children, element, dispatch } = useElementContext();
+    const { error, isPending, children, element } = usePage('templateDetail', location.state);
+    const { dispatch: elementDispatch } = useElementContext();
     const apiCall = useAPI();
-    const [showModal, setShowModal] = useState(false);
-    const [isPending, setIsPending] = useState(true);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            setIsPending(true);
-            console.log('useEffect called');
-            const template = await apiCall('fetchElement', 'templates', location.state);
-            await dispatch({ type: 'SET_ELEMENT', payload: template });
-            const children = await apiCall('fetchChildren', 'templates', location.state);
-            await dispatch({ type: 'SET_CHILDREN', payload: children });
-            template && setIsPending(false); //Only load page if a storynode was retrieved
-        };
-        fetchData();
-    }, [location.state, dispatch, apiCall]);
 
     // Updates for name, text, and wordWeight
     const updateTemplate = async (attr, val) => {
-        const updatedTemplate = await apiCall('upsertElement', 'templates', { ...element, [attr]: val });
-        dispatch({ type: 'SET_ELEMENT', payload: updatedTemplate });
+        console.log('Updating storynode:', attr, val);
+        const newChildren = element.children.filter(child => child !== null); // Some cleanup
+        const updatedTemplate = await apiCall('upsertElement', 'templates', { ...element, [attr]: val, children: newChildren });
+        elementDispatch({ type: 'SET_ELEMENT', payload: updatedTemplate });
     };
 
     const handleDelete = async () => {

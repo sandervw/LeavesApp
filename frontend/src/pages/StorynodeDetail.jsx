@@ -19,9 +19,8 @@ const StorynodeDetail = () => {
     const updateStorynode = async (attr, val) => {
         console.log('Updating storynode:', attr, val);
         const newChildren = element.children.filter(child => child !== null); // Some cleanup
-        apiCall('upsertElement', 'storynodes', { ...element, [attr]: val, children: newChildren });
-        elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, [attr]: val, children: newChildren } });
-        console.log(element);
+        const updatedStorynode = await apiCall('upsertElement', 'storynodes', { ...element, [attr]: val, children: newChildren });
+        elementDispatch({ type: 'SET_ELEMENT', payload: updatedStorynode });
     };
 
     const navigateParent = async () => {
