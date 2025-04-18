@@ -44,7 +44,8 @@ const ElementFeature = ({ element, onUpdate }) => {
             <div className='box'>
                 <MarkdownText
                     text={element.text}
-                    update={(val) => onUpdate('text', val)} />
+                    update={(val) => onUpdate('text', val)}
+                    wordCount={(val) => onUpdate('wordCount', val)} />
             </div>
         </>
     );

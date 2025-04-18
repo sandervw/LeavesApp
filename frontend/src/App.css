@@ -60,6 +60,7 @@
 }
 .box {
   padding-left: 1rem;
+  min-width: 20%; /* 20% of the parent element: keeps header from shrinking too much */
 }
 .box-buttons {
   display: flex;

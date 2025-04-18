@@ -30,13 +30,11 @@ const Storynode = (props) => {
             <div>
                 {storynodeData.type !== 'leaf'
                     ? <MarkdownText text={storynodeData.text} update={(val) => listFunction('text', val, storynodeData)} />
-                    : <div className='leafContent'>
-                        <MarkdownText
-                            text={storynodeData.text}
-                            update={(val) => listFunction('text', val, storynodeData)}
-                            wordCount={(val) => listFunction('wordCount', val, storynodeData)}
-                            locked={locked} />
-                    </div>}
+                    : <MarkdownText // Word count is only necessary on leaf notes
+                        text={storynodeData.text}
+                        update={(val) => listFunction('text', val, storynodeData)}
+                        wordCount={(val) => listFunction('wordCount', val, storynodeData)}
+                        locked={locked} />}
             </div>
         </Draggable>
     );
