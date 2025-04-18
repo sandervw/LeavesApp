@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import MarkdownText from './common/MarkdownText';
 import Draggable from '../wrapper/Draggable';
 import useElementContext from '../../hooks/useElementContext';
+import { InputHeader } from './common/ElementTraits';
 
 const TemplateCreate = () => {
     const { element } = useElementContext();
@@ -14,7 +15,7 @@ const TemplateCreate = () => {
         setNewCreate({
             name: '',
             text: '',
-            type: element ? 'branch' : 'root',
+            type: element ? 'branch' : 'root', // If we are on the detail page, set the type to branch
             parent: element ? element._id : null
         });
     }, [element]);
@@ -26,7 +27,8 @@ const TemplateCreate = () => {
             data={{ ...newCreate, name: (newCreate.name !== '' ? newCreate.name : 'New ' + type) }}>
             <div className='element'>
                 <div>
-                    <input
+                    <InputHeader
+                        dragHandler={true}
                         placeholder={'New ' + type}
                         required
                         value={newCreate.name}

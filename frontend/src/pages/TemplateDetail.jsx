@@ -1,5 +1,4 @@
-import { useLocation, useNavigate } from 'react-router-dom';
-import { ArchiveButton, DownloadButton, ReturnButton } from '../components/part/common/Buttons';
+import { useLocation } from 'react-router-dom';
 import ElementList from '../components/part/ElementList';
 import ElementFeature from '../components/part/ElementFeature';
 import Draggable from '../components/wrapper/Draggable';
@@ -9,9 +8,8 @@ import useAPI from '../hooks/useAPI';
 
 
 const TemplateDetail = () => {
-    
+
     const location = useLocation(); // Grab the element from location state
-    const navigate = useNavigate();
     const { error, isPending, children, element } = usePage('templateDetail', location.state);
     const { dispatch: elementDispatch } = useElementContext();
     const apiCall = useAPI();
@@ -24,30 +22,21 @@ const TemplateDetail = () => {
         elementDispatch({ type: 'SET_ELEMENT', payload: updatedTemplate });
     };
 
-    const handleDelete = async () => {
-        await apiCall('deleteElement', 'templates', element._id);
-        navigate('/templates');
-    };
-
-    return !isPending && (
-        <>
-            <div className='container content'>
-                <div className='element detail'>
-                    <div className='box-buttons'>
-                        <button onClick={() => setShowModal(true)}>
-                            <InlineSVG src='/trashcan.svg' alt='delete icon' className='icon' />
-                        </button>
-                    </div>
+    return <>
+        {error && <div className='error container'>{error}</div>}
+        {isPending && <div className='loading container'>Loading...</div>}
+        {!isPending && !error &&
+            <div className='content container'>
+                <Draggable
+                    id={element._id}
+                    source='detail'
+                    data={element}
+                    className='element detail'>
                     <ElementFeature element={element} onUpdate={updateTemplate} />
-                    <div className='box'>
-                        <MarkdownText text={element.text} update={(val) => updateTemplate('text', val)} />
-                    </div>
-                </div>
+                </Draggable>
                 <ElementList elements={children} kind='templates' listType='children' />
-                {showModal && <DeleteConfirmation hideModal={() => setShowModal(false)} confirmModal={handleDelete} />}
-            </div>
-        </>
-    );
+            </div>}
+    </>;
 };
 
 export default TemplateDetail;

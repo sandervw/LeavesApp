@@ -42,7 +42,7 @@ const StorynodeDetail = () => {
         {error && <div className='error container'>{error}</div>}
         {isPending && <div className='loading container'>Loading...</div>}
         {!isPending && !error &&
-            <div className='container content'>
+            <div className='content container'>
                 <Draggable
                     id={element._id}
                     source='detail'
