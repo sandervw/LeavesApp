@@ -35,10 +35,6 @@ const MarkdownText = (props) => {
         setText(newMarkdown);
         setWordCount(newWordCount);
       }
-
-      if (props.wordCount) {
-        props.wordCount(newWordCount);
-      }
     },
     onBlur: ({ editor }) => {
       if(props.update) {

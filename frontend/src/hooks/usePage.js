@@ -1,23 +1,26 @@
 import { useState, useEffect } from 'react';
 import useElementContext from './useElementContext';
 import useAddableContext from './useAddableContext';
+import usePageContext from './usePageContext';
 import useAPI from './useAPI';
 
 const usePage = (page, elementID) => {
 
-    const [currentPage, setCurrentPage] = useState('');
     const [error, setError] = useState(null);
     const [isPending, setIsPending] = useState(true);
     const { element, children, dispatch: ElementDispatch } = useElementContext();
     const { addables, dispatch: addablesDispatch } = useAddableContext();
+    const { currentPage, dispatch: PageDispatch } = usePageContext();
+
+
     const apiCall = useAPI();
 
     useEffect(() => {
         console.log('UseEffect called in useTree by page:', page);
         if (!page) return;
         const fetchData = async () => {
-            setCurrentPage(page);
             setIsPending(true);
+            await PageDispatch({ type: 'SET_PAGE', payload: page });
             let children, element, addables;
             if (page === 'stories') {
                 element = '';
@@ -52,8 +55,7 @@ const usePage = (page, elementID) => {
             setIsPending(false);
         };
         fetchData();
-    }, [ElementDispatch, addablesDispatch, apiCall, page, elementID]);
-    console.log(`return page ${currentPage} after being called from page ${page}`);
+    }, [ElementDispatch, addablesDispatch, PageDispatch, apiCall, page, elementID]);
     
     return { error, isPending, element, children, addables, currentPage };
 

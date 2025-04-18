@@ -33,7 +33,6 @@ function App() {
       <Router>
         <DndContext onDragEnd={handleDragEnd} sensors={[pointerSensor]} collisionDetection={customCollisionDetectionAlgorithm}>
           <Navbar />
-
           <LinkSidebar />
           <Routes>
             <Route path='/' element={user ? <Stories /> : <Navigate to='/landing' />} />

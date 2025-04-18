@@ -2,8 +2,7 @@ Typescript conversion
 Expandable Stories/Templates Sidebar (how to handle state?)
 Word-count
 Branch-back-to-leaf
-Fix Template to match Storynode
-fix new storynode/template with draggable
+Fix MarkdownText in template/storynode to stop writing to server on each keystroke
 Drophandler (args: delete/add, item, source)
 CSS App Layout:
     General improvements

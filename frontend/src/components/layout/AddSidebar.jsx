@@ -4,7 +4,6 @@ import ElementList from '../part/ElementList';
 import usePage from '../../hooks/usePage';
 
 const AddSidebar = () => {
-
     const { addables, currentPage } = usePage();
 
     return (
