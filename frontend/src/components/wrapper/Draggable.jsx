@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDraggable } from '@dnd-kit/core';
-import { DragHandlerContext } from '../../context/dragHandlerContext';
+import { DragHandlerContext } from '../../context/DragHandlerContext';
 
 /**
  * Wrapper for elements that can be dragged
