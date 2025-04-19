@@ -3,7 +3,6 @@ Expandable Stories/Templates Sidebar (how to handle state?)
 Word-count (each root or branch storynode's wordcount is the sum of its children's wordcounts)
     For Root/Branch - call it something like 'Total Branch Wordcount:'
 Branch-back-to-leaf
-Drophandler (args: delete/add, item, source)
 CSS App Layout:
     General improvements
     Subtle gradient to elements
