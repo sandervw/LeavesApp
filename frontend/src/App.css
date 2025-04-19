@@ -123,6 +123,9 @@ button {
   background: none;
   transition: border-color 0.25s;
 }
+.search {
+  width: 40%;
+}
 .icon {
   width: 24px;
   height: 24px;

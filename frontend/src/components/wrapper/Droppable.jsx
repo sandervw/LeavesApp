@@ -2,7 +2,7 @@ import React from 'react';
 import {useDroppable} from '@dnd-kit/core';
 
 /**
- * Wrapper for elements that can be dropped into
+ * Wrapper for elements that can be dropped into.
  * 
  * @param {ReactNode} props.children Child elements to be wrapped
  * @param {string} props.className Class name for the droppable element
