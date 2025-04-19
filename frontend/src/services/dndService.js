@@ -24,10 +24,7 @@ const handleDragEnd = (event) => {
     if (over && active.data.current) {
         const source = active.data.current.source;
         const data = active.data.current.element;
-        if (over.id === source) throw new Error("Cannot drop on itself");
-        else if (over.id === 'static') throw new Error("Cannot drop on static element");
-        else if (over.id === 'children' && source === 'detail') throw new Error("Cannot drop on children from detail element");
-        else over.data.current.function(source, data);
+        over.data.current.function(source, data);
     }
 };
 
