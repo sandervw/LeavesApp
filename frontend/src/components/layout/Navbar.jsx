@@ -4,6 +4,7 @@ import Signup from  '../overlay/Signup';
 import Login from '../overlay/Login';
 import useLogout from '../../hooks/useLogout.js';
 import useAuthContext from '../../hooks/useAuthContext.js';
+import Searchbar from '../part/Searchbar.jsx';
 
 
 const Navbar = () => {
@@ -15,18 +16,14 @@ const Navbar = () => {
 
     const handleLogout = () => {
         logout();
-    }
+    };
 
     return (
         <header className='navbar container'>
             <div className='site-header'>
                 <Link to='/'><h1>Leaves</h1></Link>
             </div>
-            <input type='search'
-                name='search'
-                autoComplete='off'
-                placeholder='Search Stories and Templates'
-                className='search' />
+            <Searchbar />
             {user && <div>
                 <span className='username'>Welcome, {user.username}</span>
                 <button className='text-button' onClick={() => handleLogout()}>Log Out</button>
