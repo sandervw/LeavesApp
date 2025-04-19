@@ -8,13 +8,14 @@ const StorynodeCreate = () => {
     const { element } = useElementContext();
     const type = element ? 'leaf' : 'root';
     const parent = element ? element._id : null;
-    const [newCreate, setNewCreate] = useState({name: '', text: '', type, parent });
+    const [newCreate, setNewCreate] = useState({name: '', text: '', kind: 'storynode', type, parent });
 
     // Update the state when the element context changes
     useEffect(() => {
         setNewCreate({
             name: '',
             text: '',
+            kind: 'storynode',
             type: element ? 'leaf' : 'root',
             parent: element ? element._id : null
         });
