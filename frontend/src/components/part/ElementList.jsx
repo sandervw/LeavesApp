@@ -3,6 +3,7 @@ import Template from './Template';
 import StoryNode from './Storynode';
 import Droppable from '../wrapper/Droppable';
 import useAPI from '../../hooks/useAPI';
+import useDropHandler from '../../hooks/useDropHandler';
 import useElementContext from '../../hooks/useElementContext';
 import useAddableContext from '../../hooks/useAddableContext';
 
@@ -17,32 +18,10 @@ import useAddableContext from '../../hooks/useAddableContext';
  * @returns {JSX.Element} - The rendered list of elements
  */
 const ElementList = ({ elements, kind, listType }) => {
-    const { element, dispatch: elementDispatch } = useElementContext();
+    const { dispatch: elementDispatch } = useElementContext();
     const { dispatch: addableDispatch } = useAddableContext();
     const apiCall = useAPI();
-
-    // TODO - possibly refactor to handle type updates (leaf-to-branch, branch-to-leaf) on backend
-    const handleAdd = async (source, data) => {
-        console.log('Adding element:', source, data);
-        if (listType === 'static') return; //Prevent adding to static lists
-        let newChild;
-        if (listType === 'roots') {
-            if (source === 'static') newChild = await apiCall('createFromTemplate', data._id, null);
-            else newChild = await apiCall('upsertElement', kind, data);  // source = templateCreate or storynodeCreate
-        }
-        if (listType === 'children') {
-            if (element.type === 'leaf') element.type = 'branch';
-            await apiCall('upsertElement', kind, { ...element });
-            if (source === 'static') newChild = await apiCall('createFromTemplate', data._id, element._id);
-            else { // source = templateCreate or storynodeCreate
-                newChild = await apiCall('upsertElement', kind, data);
-                await apiCall('upsertElement', kind, { ...element, children: [...element.children, newChild._id] });
-            }
-            // Sync frontend
-            elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, children: [...element.children, newChild._id] } });
-        }
-        newChild && elementDispatch({ type: 'CREATE_CHILD', payload: newChild });
-    };
+    const { handleAdd } = useDropHandler(listType);
 
     // Updates one of the child elements
     const updateElement = async (attr, val, data) => {

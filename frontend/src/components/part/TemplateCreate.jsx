@@ -8,13 +8,14 @@ const TemplateCreate = () => {
     const { element } = useElementContext();
     const type = element ? 'branch' : 'root';
     const parent = element ? element._id : null;
-    const [newCreate, setNewCreate] = useState({ name: '', text: '', type, parent });
+    const [newCreate, setNewCreate] = useState({ name: '', text: '', kind: 'template', type, parent });
 
     // Update the state when the element context changes
     useEffect(() => {
         setNewCreate({
             name: '',
             text: '',
+            kind: 'template',
             type: element ? 'branch' : 'root', // If we are on the detail page, set the type to branch
             parent: element ? element._id : null
         });
