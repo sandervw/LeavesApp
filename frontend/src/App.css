@@ -87,7 +87,7 @@
 }
 
 /* DETAILED ELEMENT STYLES */
-a:hover {
+li:hover {
   text-decoration: underline;
 }
 ul, li {
@@ -96,6 +96,7 @@ ul, li {
   list-style-type: none;
   padding-left: 0;
   margin-left: 0;
+  cursor: pointer;
 }
 .inline-trait {
   display: flex;
