@@ -113,7 +113,6 @@ input {
   border-radius: 1rem;
   padding: 0.5em 1em;
   box-sizing: border-box;
-  margin: 0.5em 0;
   max-width: 600px;
 }
 button {
@@ -124,7 +123,17 @@ button {
   transition: border-color 0.25s;
 }
 .search {
+  position: relative; /* Needed for absolute positioning of dropdown */
   width: 40%;
+}
+.dropdown {
+  position: absolute;
+  top: 100%; /* places it just below the input */
+  left: 0;
+  z-index: 1000; /* ensure it renders above other elements */
+  width: 100%; /* match the width of the input */
+  background-color: var(--bgPrimary2);
+  border-radius: 1rem;
 }
 .icon {
   width: 24px;
