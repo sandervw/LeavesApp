@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useAPI from "../../hooks/useAPI";
 
 const Searchbar = () => {
+    const navigate = useNavigate();
     const apiCall = useAPI();
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredResults, setFilteredResults] = useState([]);
@@ -20,14 +22,22 @@ const Searchbar = () => {
         const value = e.target.value;
         setSearchTerm(value);
         if (value && userElements.length > 0) {
-            const namesAndKinds = userElements.map(({ name, kind }) => ({ name, kind }));
-            const matches = namesAndKinds.filter(item => item.name.toLowerCase().includes(value.toLowerCase()));
-            const results = matches.map(match => `${match.kind}: ${match.name}`);
-            setFilteredResults(results);
+            const matches = userElements.filter(item => item.name.toLowerCase().includes(value.toLowerCase()));
+            setFilteredResults(matches);
         } else {
             setFilteredResults([]);
         }
     };
+
+    const goToResult = (result) => {
+        if (result.kind === 'storynode') {
+            navigate(`/storydetail`, { state: result._id });
+        } else if (result.kind === 'template') {
+            navigate('/templatedetail', { state: result._id });
+        }
+        setSearchTerm('');
+        setFilteredResults([]);
+    }
 
     return (
         <div className='search'>
@@ -39,7 +49,9 @@ const Searchbar = () => {
                 <div className='dropdown'>
                     <ul>
                         {filteredResults.map((result, index) => (
-                            <li key={index}>{result}</li>
+                            <li key={index}
+                                onClick={() => goToResult(result)}
+                                >{result.kind}: {result.name}</li>
                         ))}
                     </ul>
                 </div>
