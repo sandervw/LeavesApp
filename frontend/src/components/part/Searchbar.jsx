@@ -11,8 +11,8 @@ const Searchbar = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const storynodes = await apiCall('fetchElements', 'storynodes', '');
-            const templates = await apiCall('fetchElements', 'templates', '');
+            const storynodes = await apiCall('fetchElements', 'storynodes', 'type=root&archived=false');
+            const templates = await apiCall('fetchElements', 'templates', 'type=root');
             setUserElements([...storynodes, ...templates]);
         };
         fetchData();
@@ -51,7 +51,7 @@ const Searchbar = () => {
                         {filteredResults.map((result, index) => (
                             <li key={index}
                                 onClick={() => goToResult(result)}
-                                >{result.kind}: {result.name}</li>
+                                >{result.name}</li>
                         ))}
                     </ul>
                 </div>
