@@ -20,7 +20,7 @@ const Searchbar = () => {
         const value = e.target.value;
         setSearchTerm(value);
         if (value && userElements.length > 0) {
-            const namesAndKinds = userElements.map(({name, kind}) => ({name, kind}));
+            const namesAndKinds = userElements.map(({ name, kind }) => ({ name, kind }));
             const matches = namesAndKinds.filter(item => item.name.toLowerCase().includes(value.toLowerCase()));
             const results = matches.map(match => `${match.kind}: ${match.name}`);
             setFilteredResults(results);
@@ -31,16 +31,18 @@ const Searchbar = () => {
 
     return (
         <div className='search'>
-            <input 
+            <input
                 placeholder='Search Stories and Templates'
                 value={searchTerm}
                 onChange={handleSearch} />
             {filteredResults.length > 0 && (
-                <ul className='dropdown'>
-                    {filteredResults.map((result, index) => (
-                        <li key={index}>{result}</li>
-                    ))}
-                </ul>
+                <div className='dropdown'>
+                    <ul>
+                        {filteredResults.map((result, index) => (
+                            <li key={index}>{result}</li>
+                        ))}
+                    </ul>
+                </div>
             )}
         </div>
     );
