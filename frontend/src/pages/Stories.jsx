@@ -15,7 +15,7 @@ const Stories = () => {
             {isPending && <div className='loading container'>Loading...</div>}
             {!isPending && !error &&
                 <div className='container content'>
-                    <ElementList elements={children} kind='storynodes' listType='roots' />
+                    <ElementList elements={children} kind='storynode' listType='roots' />
                 </div>}
         </>
     );

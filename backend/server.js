@@ -23,9 +23,9 @@ server.use((req, res, next) => {
     console.log(req.path, req.method);
     next();
 });
-server.use("/templates", templateRoutes);
-server.use("/storynodes", storynodeRoutes);
-server.use("/users", userRoutes);
+server.use("/template", templateRoutes);
+server.use("/storynode", storynodeRoutes);
+server.use("/user", userRoutes);
 
 /*==MAIN REQUESTS==*/
 server.get('/', async (req, res) => {

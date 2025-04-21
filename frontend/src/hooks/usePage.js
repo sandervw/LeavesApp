@@ -24,22 +24,22 @@ const usePage = (page, elementID) => {
             let children, element, addables;
             if (page === 'stories') {
                 element = '';
-                children = await apiCall('fetchElements', 'storynodes', 'type=root&archived=false') ?? [];
-                addables = await apiCall('fetchElements', 'templates', `type=root`) ?? [];
+                children = await apiCall('fetchElements', 'storynode', 'type=root&archived=false') ?? [];
+                addables = await apiCall('fetchElements', 'template', `type=root`) ?? [];
             }
             if (page === 'templates') {
                 element = '';
-                children = await apiCall('fetchElements', 'templates', 'type=root') ?? [];
+                children = await apiCall('fetchElements', 'template', 'type=root') ?? [];
                 addables = [];
             }
             if (page === 'storynodeDetail') {
-                element = await apiCall('fetchElement', 'storynodes', elementID) ?? null;
-                children = await apiCall('fetchChildren', 'storynodes', elementID) ?? [];
-                addables = await apiCall('fetchElements', 'templates', `type=branch`) ?? [];
+                element = await apiCall('fetchElement', 'storynode', elementID) ?? null;
+                children = await apiCall('fetchChildren', 'storynode', elementID) ?? [];
+                addables = await apiCall('fetchElements', 'template', `type=branch`) ?? [];
             }
             if (page === 'templateDetail') {
-                element = await apiCall('fetchElement', 'templates', elementID) ?? null;
-                children = await apiCall('fetchChildren', 'templates', elementID) ?? [];
+                element = await apiCall('fetchElement', 'template', elementID) ?? null;
+                children = await apiCall('fetchChildren', 'template', elementID) ?? [];
                 addables = [];
             }
             if (children.error || addables.error || element.error) {

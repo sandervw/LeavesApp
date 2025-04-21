@@ -34,7 +34,7 @@ const ElementList = ({ elements, kind, listType }) => {
     return (
         <Droppable id={listType} className='droppable' function={handleAdd}>
             {elements && elements.map((child) => (
-                kind === 'storynodes'
+                kind === 'storynode'
                     ? <StoryNode key={child._id} storynodeData={child} source={listType} listFunction={updateElement} />
                     : <Template key={child._id} templateData={child} source={listType} listFunction={updateElement} />
             ))}

@@ -18,7 +18,7 @@ const TemplateDetail = () => {
     const updateTemplate = async (attr, val) => {
         console.log('Updating storynode:', attr, val);
         const newChildren = element.children.filter(child => child !== null); // Some cleanup
-        const updatedTemplate = await apiCall('upsertElement', 'templates', { ...element, [attr]: val, children: newChildren });
+        const updatedTemplate = await apiCall('upsertElement', element.kind, { ...element, [attr]: val, children: newChildren });
         elementDispatch({ type: 'SET_ELEMENT', payload: updatedTemplate });
     };
 
@@ -34,7 +34,7 @@ const TemplateDetail = () => {
                     className='element detail'>
                     <ElementFeature element={element} onUpdate={updateTemplate} />
                 </Draggable>
-                <ElementList elements={children} kind='templates' listType='children' />
+                <ElementList elements={children} kind='template' listType='children' />
             </div>}
     </>;
 };

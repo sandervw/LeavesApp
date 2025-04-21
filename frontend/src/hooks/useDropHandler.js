@@ -33,8 +33,7 @@ const useDropHandler = (droppableType) => {
         try {
             checkError(source, data, 'delete');
             console.log('Deleting element:', source, data.kind, data);
-            const kind = `${data.kind}s`;
-            await apiCall('deleteElement', kind, data._id);
+            await apiCall('deleteElement', data.kind, data._id);
             await elementDispatch({ type: 'DELETE_CHILD', payload: data._id });
             if (source === 'detail') {
                 if (!element.parent) navigate('/');
@@ -51,20 +50,18 @@ const useDropHandler = (droppableType) => {
             checkError(source, data, 'add');
             console.log('Adding element:', source, data);
             if (droppableType === 'static') return; //Prevent adding to static lists
-            let kind = `${data.kind}s`;
             let newChild;
             if (droppableType === 'roots') {
                 if (source === 'static') newChild = await apiCall('createFromTemplate', data._id, null);
-                else newChild = await apiCall('upsertElement', kind, data);  // source = templateCreate or storynodeCreate
+                else newChild = await apiCall('upsertElement', data.kind, data);  // source = templateCreate or storynodeCreate
             }
             if (droppableType === 'children') {
-                let kind = `${element.kind}s`; // Take care to use Element kind in this case
                 if (element.type === 'leaf') element.type = 'branch';
-                await apiCall('upsertElement', kind, { ...element });
+                await apiCall('upsertElement', data.kind, { ...element });
                 if (source === 'static') newChild = await apiCall('createFromTemplate', data._id, element._id);
                 else { // source = templateCreate or storynodeCreate
-                    newChild = await apiCall('upsertElement', kind, data);
-                    await apiCall('upsertElement', kind, { ...element, children: [...element.children, newChild._id] });
+                    newChild = await apiCall('upsertElement', data.kind, data);
+                    await apiCall('upsertElement', data.kind, { ...element, children: [...element.children, newChild._id] });
                 }
                 // Sync frontend
                 elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, children: [...element.children, newChild._id] } });
