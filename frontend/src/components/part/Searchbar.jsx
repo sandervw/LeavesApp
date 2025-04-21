@@ -11,8 +11,8 @@ const Searchbar = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const storynodes = await apiCall('fetchElements', 'storynodes', 'type=root&archived=false');
-            const templates = await apiCall('fetchElements', 'templates', 'type=root');
+            const storynodes = await apiCall('fetchElements', 'storynode', 'type=root&archived=false');
+            const templates = await apiCall('fetchElements', 'template', 'type=root');
             setUserElements([...storynodes, ...templates]);
         };
         fetchData();

@@ -11,7 +11,7 @@ const AddSidebar = () => {
             {(currentPage === 'templates' || currentPage === 'templateDetail')
                 ? <TemplateCreate />
                 : <StorynodeCreate />}
-            <ElementList elements={addables} kind='templates' listType='static' />
+            <ElementList elements={addables} kind='template' listType='static' />
         </aside>
     );
     

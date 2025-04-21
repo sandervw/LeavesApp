@@ -62,7 +62,7 @@ class ApiService {
     // Can be used to create a new story, or add a child to an existing story
     async createFromTemplate(templateId, parentId, options){
         try {
-            const result = await fetch(`${API_URL}storynodes/postfromtemplate/`, {
+            const result = await fetch(`${API_URL}storynode/postfromtemplate/`, {
                 method: 'POST',
                 body: parentId ?
                     JSON.stringify({templateId, parentId})
@@ -88,7 +88,7 @@ class ApiService {
     
     async createFile(id, options){
         try {
-            const result = await fetch(`${API_URL}storynodes/posttofile/`, {
+            const result = await fetch(`${API_URL}storynode/posttofile/`, {
                 method: 'POST',
                 body: JSON.stringify({id}),
                 ...options
@@ -102,7 +102,7 @@ class ApiService {
     
     async signupUser(email, username, password){
         try {
-            const result = await fetch(`${API_URL}users/signup`, {
+            const result = await fetch(`${API_URL}user/signup`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({email, username, password})
@@ -117,7 +117,7 @@ class ApiService {
     async loginUser(username, password){
         try {
             // Note: username can be an email or username
-            const result = await fetch(`${API_URL}users/login`, {
+            const result = await fetch(`${API_URL}user/login`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({username, password})

@@ -14,7 +14,7 @@ const Archive = () => {
     useEffect(() => {
         const fetchData = async () => {
             setIsPending(true);
-            const nodes = await apiCall('fetchElements', 'storynodes', 'type=root&archived=true');
+            const nodes = await apiCall('fetchElements', 'storynode', 'type=root&archived=true');
             await dispatch({ type: 'SET_CHILDREN', payload: nodes });
             await dispatch({ type: 'SET_ELEMENT', payload: null });
             nodes && setIsPending(false); //Only load page if a storynode was retrieved
@@ -26,7 +26,7 @@ const Archive = () => {
         <>
             <LinkSidebar />
             <div className='content container'>
-                <ElementList elements={storynodes} kind='storynodes' listType='roots' />
+                <ElementList elements={storynodes} kind='storynode' listType='roots' />
             </div>
             <div>
                 <span>TODO drop items here to unarchive?</span>

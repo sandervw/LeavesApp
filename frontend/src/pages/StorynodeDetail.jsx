@@ -19,7 +19,7 @@ const StorynodeDetail = () => {
     const updateStorynode = async (attr, val) => {
         console.log('Updating storynode:', attr, val);
         const newChildren = element.children.filter(child => child !== null); // Some cleanup
-        const updatedStorynode = await apiCall('upsertElement', 'storynodes', { ...element, [attr]: val, children: newChildren });
+        const updatedStorynode = await apiCall('upsertElement', element.kind, { ...element, [attr]: val, children: newChildren });
         elementDispatch({ type: 'SET_ELEMENT', payload: updatedStorynode });
     };
 
@@ -34,7 +34,7 @@ const StorynodeDetail = () => {
     };
 
     const toggleArchive = async () => {
-        await apiCall('upsertElement', 'storynodes', { ...element, archived: !element.archived });
+        await apiCall('upsertElement', 'storynode', { ...element, archived: !element.archived });
         navigate('/');
     };
 
@@ -55,7 +55,7 @@ const StorynodeDetail = () => {
                     </div>
                     <ElementFeature element={element} onUpdate={updateStorynode} />
                 </Draggable>
-                <ElementList elements={children} kind='storynodes' listType='children' />
+                <ElementList elements={children} kind='storynode' listType='children' />
             </div>}
     </>
 };
