@@ -17,10 +17,7 @@ const StorynodeDetail = () => {
 
     // Updates the name, text, or word count of the storynode
     const updateStorynode = async (attr, val) => {
-        let newAttributes = { [attr]: val };
-        newAttributes.children = element.children.filter(child => child !== null); // Some cleanup
-        if (attr === 'text') newAttributes.wordCount = val.trim().split(/\s+/).filter(word => word).length;
-        const updatedStorynode = await apiCall('upsertElement', element.kind, { ...element, ...newAttributes });
+        const updatedStorynode = await apiCall('upsertElement', element.kind, { ...element, [attr]: val });
         elementDispatch({ type: 'SET_ELEMENT', payload: updatedStorynode });
     };
 

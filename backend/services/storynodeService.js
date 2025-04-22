@@ -23,9 +23,15 @@ class storynodeService extends elementService {
 
     async upsert(data, user_id){
         data.user_id = user_id; // Ensure user_id is set in the data
-        if (data._id){ // Send an update
+        // Send an update
+        if (data._id){
+            if (data.children.length > 0) {
+                data.children = data.children.filter(child => child !== null); // Some cleanup
+                let children = await Storynode.find({ _id: { $in: data.children }, user_id });
+                data.wordCount = children.reduce((acc, child) => acc + child.wordCount, 0); // Sum the word counts of all children
+            }
+            else data.wordCount = data.text.trim().split(/\s+/).filter(word => word).length; // Count words in the text
             let result = await Storynode.findOneAndUpdate({ _id: data._id, user_id }, data, {new: true});
-            // If this is a root node and it's word limit changed, update the limit of all children recursively
             if(result.type === 'root' && data.wordLimit){
                 await recursiveUpdateWordLimits(result, data.wordLimit);
             }
