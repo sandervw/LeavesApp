@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import elementService from "./elementService.js";
 import { Template } from "../models/models.js";
+import { recursiveDelete } from "../services/recursiveService.js";
 
 class templateService extends elementService {
 
@@ -17,10 +18,8 @@ class templateService extends elementService {
             object.children = object.children.filter((child) => (child !== id && child !== null));
             await Template.updateOne({_id: object._id}, {children: object.children});
         })
-        // Then, delete template itself
-        const result = await Template.findOneAndDelete({ _id: id, user_id });
-        if(!result) throw new Error('No such object exists');
-        return {"Deleted:": result};
+        // Next, recursively delete the template itself
+        return {"Deleted:": await recursiveDelete(id)};
     }
 
 }

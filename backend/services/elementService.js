@@ -36,6 +36,7 @@ export default class elementService {
     async upsert(data, user_id){
         data.user_id = user_id; // Ensure user_id is set in the data
         if (data._id) {
+            data.children = data.children.filter(child => child !== null);
             return await this.model.findOneAndUpdate({ _id: data._id, user_id }, data, { new: true });
         }
         return await this.model.create(data);
