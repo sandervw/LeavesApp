@@ -48,7 +48,7 @@ const useDropHandler = (droppableType) => {
     const handleAdd = async (source, data) => {
         try {
             checkError(source, data, 'add');
-            console.log('Adding element:', source, data);
+            console.log(`Adding from ${source} to ${droppableType}`, data);
             if (droppableType === 'static') return; //Prevent adding to static lists
             let newChild;
             if (droppableType === 'roots') {
@@ -57,18 +57,18 @@ const useDropHandler = (droppableType) => {
             }
             if (droppableType === 'children') {
                 if (element.type === 'leaf') element.type = 'branch';
-                await apiCall('upsertElement', data.kind, { ...element });
+                await apiCall('upsertElement', element.kind, { ...element });
                 if (source === 'static') newChild = await apiCall('createFromTemplate', data._id, element._id);
                 else { // source = templateCreate or storynodeCreate
-                    newChild = await apiCall('upsertElement', data.kind, data);
-                    await apiCall('upsertElement', data.kind, { ...element, children: [...element.children, newChild._id] });
+                    newChild = await apiCall('upsertElement', element.kind, data);
+                    await apiCall('upsertElement', element.kind, { ...element, children: [...element.children, newChild._id] });
                 }
                 // Sync frontend
                 elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, children: [...element.children, newChild._id] } });
             }
             newChild && elementDispatch({ type: 'CREATE_CHILD', payload: newChild });
         } catch (error) {
-            console.error(error.message);
+            console.error(error);
             return;
         }
     };
