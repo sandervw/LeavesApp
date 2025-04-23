@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { getErrorMessage } from "../utils/errorUtil";
-import userService from "../services/userService";
+import * as userService from "../services/userService";
 
 export const signup = async (req: Request, res: Response) => {
     try {
