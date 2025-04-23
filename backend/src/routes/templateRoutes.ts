@@ -1,6 +1,6 @@
-import express from "express";
-import templateController from "../controllers/templateController";
-import requireAuth from "../middleware/requireAuth";
+import express from 'express';
+import templateController from '../controllers/templateController';
+import requireAuth from '../middleware/requireAuth';
 
 const router = express.Router();
 

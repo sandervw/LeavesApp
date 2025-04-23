@@ -1,4 +1,4 @@
-import templateService from "../services/templateService.js";
+import templateService from '../services/templateService.js';
 
 class templateController {
 

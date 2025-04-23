@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 export default class elementService {
 
@@ -46,7 +46,7 @@ export default class elementService {
         if (!id || !mongoose.Types.ObjectId.isValid(id)) throw new Error('Not a valid ID');
         const result = await this.model.findOneAndDelete({ _id: id, user_id });
         if (!result) throw new Error('No such object exists');
-        return { "Deleted": result };
+        return { 'Deleted': result };
     }
 
 }

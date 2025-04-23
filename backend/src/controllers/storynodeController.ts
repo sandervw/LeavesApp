@@ -1,4 +1,4 @@
-import storynodeService from "../services/storynodeService";
+import storynodeService from '../services/storynodeService';
 
 class storynodeController {
 

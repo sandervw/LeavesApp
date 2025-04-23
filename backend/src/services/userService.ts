@@ -1,5 +1,5 @@
-import { User } from "../models/userModel.js";
-import jwt from "jsonwebtoken";
+import { User } from '../models/userModel.js';
+import jwt from 'jsonwebtoken';
 
 export const signupUser = async (userData) => {
     const { email, username, password } = userData;
@@ -20,5 +20,5 @@ export const loginUser = async (userData) => {
 
 // Generate JWT Token
 async createToken(_id) {
-    return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "3d" });
+    return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: '3d' });
 }
