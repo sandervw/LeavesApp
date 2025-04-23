@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
-import elementService from "./elementService.js";
-import { Template } from "../models/models.js";
-import { recursiveDelete } from "./recursiveService.js";
+import mongoose from 'mongoose';
+import elementService from './elementService.js';
+import { Template } from '../models/models.js';
+import { recursiveDelete } from './recursiveService.js';
 
 class templateService extends elementService {
 
@@ -19,7 +19,7 @@ class templateService extends elementService {
             await Template.updateOne({_id: object._id}, {children: object.children});
         })
         // Next, recursively delete the template itself
-        return {"Deleted:": await recursiveDelete(id)};
+        return {'Deleted:': await recursiveDelete(id)};
     }
 
 }

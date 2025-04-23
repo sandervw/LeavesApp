@@ -1,34 +1,32 @@
-import express from "express";
-import mongoose from "mongoose";
-import {config} from "dotenv";
-import { PORT, MONGO_URI } from "./constants/env";
-import cors from "cors"; // cors (Cross-Origin Resource Sharing: allows api calls from outside of the server domain)
-import templateRoutes from "./routes/templateRoutes";
-import storynodeRoutes from "./routes/storynodeRoutes";
-import userRoutes from "./routes/userRoutes";
+import express, { Request, Response } from 'express';
+import mongoose from 'mongoose';
+import { PORT, MONGO_URI } from './constants/env';
+import cors from 'cors'; // cors (Cross-Origin Resource Sharing: allows api calls from outside of the server domain)
+import templateRoutes from './routes/templateRoutes';
+import storynodeRoutes from './routes/storynodeRoutes';
+import userRoutes from './routes/userRoutes';
 
 // Create express server
-config();
-const server = express();
+const app = express();
 
 /*==MIDDLEWARE==*/
 // Parses URL-encoded request body (IE. name=John+Doe&age=25)
-server.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 // Parses request body into a javascript object (tells express to expect a Content-Type of JSON)
-server.use(express.json())
+app.use(express.json());
 // Allows CORS requests
-server.use(cors());
+app.use(cors());
 // Logging (need next to go to next function/middleware)
-server.use((req, res, next) => {
+app.use((req: Request, res: Response, next) => {
     console.log(req.path, req.method);
     next();
 });
-server.use("/template", templateRoutes);
-server.use("/storynode", storynodeRoutes);
-server.use("/user", userRoutes);
+// app.use('/template', templateRoutes);
+// app.use('/storynode', storynodeRoutes);
+// app.use('/user', userRoutes);
 
 /*==MAIN REQUESTS==*/
-server.get('/', async (req, res) => {
+app.get('/', async (req: Request, res: Response) => {
     res.json({mssg: 'Welcome to the app'});
 });
 
@@ -37,7 +35,7 @@ server.get('/', async (req, res) => {
 mongoose.connect(MONGO_URI)
     .then(() => {
         // Start listening for requests
-        server.listen(PORT, () => {
+        app.listen(PORT, () => {
             console.log(`Listening on Port ${PORT}`);
         });
     })

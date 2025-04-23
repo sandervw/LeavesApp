@@ -1,5 +1,5 @@
-import { Element } from "../models/elementModel.js";
-import { Storynode, Template} from "../models/models.js";
+import { Element } from '../models/elementModel.js';
+import { Storynode, Template} from '../models/models.js';
 
 // Function to recursively delete elements
 const recursiveDelete = async (id) => {

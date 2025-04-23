@@ -1,14 +1,14 @@
-import mongoose from "mongoose";
-import elementService from "./elementService.js";
-import {Storynode} from "../models/models.js";
-import {readTxtAsJSON, writeArrayToFile} from "./fileService.js";
+import mongoose from 'mongoose';
+import elementService from './elementService.js';
+import {Storynode} from '../models/models.js';
+import {readTxtAsJSON, writeArrayToFile} from './fileService.js';
 import {
     recursiveDelete,
     recursiveGetLeafs,
     recursiveUpdateWordLimits,
     recursiveStorynodeFromTemplate ,
     recursiveStorynodeFromJSON
-} from "./recursiveService.js";
+} from './recursiveService.js';
 
 class storynodeService extends elementService {
 
@@ -52,7 +52,7 @@ class storynodeService extends elementService {
             await Storynode.updateOne({_id: parent._id}, {children: parent.children});
         } 
         // Next, recursively delete toDelete and all children
-        return {"Deleted:": await recursiveDelete(toDelete._id)};
+        return {'Deleted:': await recursiveDelete(toDelete._id)};
     }
 
     // Creates a storynode from a template (or adds a template as a child)
