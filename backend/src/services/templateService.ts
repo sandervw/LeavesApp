@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import elementService from "./elementService.js";
 import { Template } from "../models/models.js";
-import { recursiveDelete } from "../services/recursiveService.js";
+import { recursiveDelete } from "./recursiveService.js";
 
 class templateService extends elementService {
 
