@@ -1,14 +1,14 @@
 import mongoose from "mongoose";
 import elementService from "./elementService.js";
 import {Storynode} from "../models/models.js";
-import {readTxtAsJSON, writeArrayToFile} from "../services/fileService.js";
+import {readTxtAsJSON, writeArrayToFile} from "./fileService.js";
 import {
     recursiveDelete,
     recursiveGetLeafs,
     recursiveUpdateWordLimits,
     recursiveStorynodeFromTemplate ,
     recursiveStorynodeFromJSON
-} from "../services/recursiveService.js";
+} from "./recursiveService.js";
 
 class storynodeService extends elementService {
 

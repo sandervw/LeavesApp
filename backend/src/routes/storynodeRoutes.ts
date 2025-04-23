@@ -1,6 +1,6 @@
 import express from "express";
-import storynodeController from "../controllers/storynodeController.js";
-import requireAuth from "../middleware/requireAuth.js";
+import storynodeController from "../controllers/storynodeController";
+import requireAuth from "../middleware/requireAuth";
 
 const router = express.Router();
 

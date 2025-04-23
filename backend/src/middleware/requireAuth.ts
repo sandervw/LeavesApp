@@ -1,9 +1,11 @@
 import jwt from "jsonwebtoken";
-import { User } from "../models/userModel.js";
+import { User } from "../models/userModel";
+import { Request, Response, NextFunction } from "express";
+
 
 
 // Check if user is authenticated
-const requireAuth = async (req, res, next) => {
+const requireAuth = async (req: Request, res: Response, next: NextFunction) => {
     const { authorization } = req.headers;
     if (!authorization) {
         return res.status(401).json({ error: "No Authorization token" });
