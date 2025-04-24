@@ -1,0 +1,26 @@
+import mongoose from 'mongoose';
+import VerificationCodeTypes from '../constants/verificationCodeType';
+
+// Gives us methods and typing for props on mongoDB document
+export interface VerificationCodeDoc extends mongoose.Document {
+    userId: mongoose.Types.ObjectId;
+    codeType: VerificationCodeTypes;
+    createdAt: Date;
+    expiresAt: Date;
+}
+
+// Each schema maps to a MongoDB collection and defines the shape of the documents within that collection
+const VerificationCodeSchema = new mongoose.Schema<VerificationCodeDoc>({
+    userId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User', index: true },
+    codeType: { type: String, required: true },
+    createdAt: { type: Date, required: true, default: Date.now },
+    expiresAt: { type: Date, required: true },
+});
+
+const VerificationCodeModel = mongoose.model<VerificationCodeDoc>(
+    'VerificationCode',
+    VerificationCodeSchema,
+    'verification_codes' // Overrides default collection name
+);
+
+export default VerificationCodeModel;
