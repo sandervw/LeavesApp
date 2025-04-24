@@ -9,3 +9,9 @@ export const thirtyDaysFromNow = () => {
         Date.now() + 30 * 24 * 60 * 60 * 1000 // 30 days in milliseconds
     );
 }
+
+export const fifteenMinutesFromNow = () => {
+    return new Date(
+        Date.now() + 15 * 60 * 1000 // 15 minutes in milliseconds
+    );
+}
