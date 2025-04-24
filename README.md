@@ -5,6 +5,7 @@ TECHNOLOGIES USED:
 ## Express: 
 ## Node.js: Server runtime environment - allows JS on backend
 ## React:
+## ZOD: schema validation library
 
 BACKEND APP STRUCTURE
 ## server.py: The main ENTRY-POINT of the application

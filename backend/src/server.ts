@@ -6,6 +6,7 @@ import cors from 'cors'; // Cross-Origin Resource Sharing: allows api calls from
 import connectToDatabase from './config/db';
 import errorHandler from './middleware/errorHandler';
 import { OK } from './constants/http';
+import userRoutes from './routes/user.route';
 
 // Create express server
 const app = express();
@@ -20,14 +21,14 @@ app.use(
     })
 );
 app.use(cookieParser()); // Parses cookies from request headers (for authentication)
-// Logging (need next to go to next function/middleware)
+
 app.use((req, res, next) => {
     console.log(req.path, req.method);
     next();
 });
 // app.use('/template', templateRoutes);
 // app.use('/storynode', storynodeRoutes);
-// app.use('/user', userRoutes);
+app.use('/user', userRoutes);
 
 /*==MAIN REQUESTS==*/
 app.get('/', (req, res, next) => {
