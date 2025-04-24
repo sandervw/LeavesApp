@@ -5,6 +5,8 @@ import SessionModel from '../models/session.model';
 import UserModel from '../models/user.model';
 import VerificationCodeModel from '../models/verificationCode.model';
 import { oneYearFromNow } from '../utils/date';
+import appAssert from '../utils/appAssert';
+import { CONFLICT } from '../constants/http';
 
 export type CreateAccountParams = {
     email: string;
@@ -13,10 +15,17 @@ export type CreateAccountParams = {
     userAgent?: string;
 }
 
+/**
+ * Creates a new user and returns the user and authentication tokens.
+ * @param userData.email - The email of the user
+ * @param userData.username - The username of the user
+ * @param userData.password - The password of the user
+ * @returns The created user and the access and refresh tokens
+ */
 export const signupUser = async (userData: CreateAccountParams) => {
     // Verify existing user doens't exist
     const existingUser = await UserModel.exists({ email: userData.email });
-    if (existingUser) throw new Error('User already exists');
+    appAssert(!existingUser, CONFLICT, 'Email already in use');
     // Create user
     const user = await UserModel.create({
         email: userData.email,
@@ -48,5 +57,9 @@ export const signupUser = async (userData: CreateAccountParams) => {
         { audience: ['user'], expiresIn: '15m'}
     );
     // return user and tokens
-    
-}
+    return {
+        user,
+        accessToken,
+        refreshToken,
+    };
+};

@@ -1,5 +1,8 @@
 import { z } from 'zod';
 import catchErrors from '../utils/catchErrors';
+import { signupUser } from '../services/user.service';
+import { CREATED } from '../constants/http';
+import { setAuthCookies } from '../utils/cookies';
 
 const userSchema = z.object({
     email: z.string().email().min(1).max(255),
@@ -8,6 +11,9 @@ const userSchema = z.object({
     userAgent: z.string().optional(),
 });
 
+/**
+ * Handles user signup by validating the request, creating a new user, and sending authentication cookies.
+ */
 export const signup = catchErrors(async (req, res) => {
     // validate request
     const request = userSchema.parse({
@@ -15,15 +21,8 @@ export const signup = catchErrors(async (req, res) => {
         userAgent: req.headers['user-agent'],
     });
     // call service
-
+    const { user, accessToken, refreshToken } = await signupUser(request);
     //return response
+    return setAuthCookies({ res, accessToken, refreshToken })
+    .status(CREATED).json(user);
 });
-
-// export const login = async (req: Request, res: Response) => {
-//     try {
-//         const result = await userService.loginUser(req.body);
-//         res.status(200).json(result);
-//     } catch (error) {
-//         res.status(500).json(getErrorMessage(error));
-//     }
-// };
