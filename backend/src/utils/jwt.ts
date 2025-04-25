@@ -1,32 +1,33 @@
-import jwt, { SignOptions } from "jsonwebtoken";
+import jwt, { SignOptions, VerifyOptions } from "jsonwebtoken";
 import { SessionDoc } from "../models/session.model";
 import { JWT_REFRESH_SECRET, JWT_SECRET } from "../constants/env";
 
+const defaults: SignOptions = {
+    audience: ['user'],
+};
 
 export type RefreshTokenPayload = {
-    sessionId: SessionDoc['id']
-}
+    sessionId: SessionDoc['id'];
+};
 
 export type AccessTokenPayload = {
     sessionId: SessionDoc['id'],
-    userId: SessionDoc['userId']
-}
+    userId: SessionDoc['userId'];
+};
 
-type SignOptionsAndSecret = SignOptions & { secret: string }
+type SignOptionsAndSecret = SignOptions & { secret: string; };
 
-const defaults: SignOptions = {
-    audience: ['user'],
-}
+type VerifyOptionsAndSecret = VerifyOptions & { secret: string; };
 
 export const accessTokenSignOptions: SignOptionsAndSecret = {
     expiresIn: '15m',
     secret: JWT_SECRET
-}
+};
 
 export const refreshTokenSignOptions: SignOptionsAndSecret = {
     expiresIn: '30d',
     secret: JWT_REFRESH_SECRET
-}
+};
 
 /**
  * Signs a JWT token with the given payload and options.
@@ -43,8 +44,26 @@ export const signToken = (
         payload,
         secret,
         { ...defaults, ...signOpts }); // Uses default audience if none provided
-}
+};
 
-export const verifyToken = (
-    token: 
-)
+/**
+ * Verifies a JWT token and returns the payload or an error message.
+ * @param token - The JWT token to verify
+ * @param options - Options for verification, including the secret and audience
+ * @returns The decoded payload if verification is successful, or an error message if it fails
+ */
+export const verifyToken = <Payload extends object = AccessTokenPayload>(
+    token: string,
+    options?: VerifyOptionsAndSecret
+) => {
+    const { secret = JWT_SECRET, ...verifyOpts } = options || {};
+    try {
+        const payload = jwt.verify(
+            token,
+            secret,
+            { ...defaults, ...verifyOpts }) as Payload;
+        return { payload };
+    } catch (error: any) {
+        return { error: error.message };
+    }
+};

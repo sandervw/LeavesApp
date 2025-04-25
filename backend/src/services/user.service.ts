@@ -7,7 +7,7 @@ import VerificationCodeModel from '../models/verificationCode.model';
 import { oneYearFromNow } from '../utils/date';
 import appAssert from '../utils/appAssert';
 import { CONFLICT, UNAUTHORIZED } from '../constants/http';
-import { refreshTokenSignOptions, signToken } from '../utils/jwt';
+import { refreshTokenSignOptions, signToken, verifyToken } from '../utils/jwt';
 
 export type SignupUserParams = {
     email: string;
@@ -96,3 +96,16 @@ export const loginUser = async ({email, password, userAgent}: LoginUserParams) =
         refreshToken,
     };
 };
+
+/**
+ * Logs out a user by deleting their session from the database.
+ * @param accessToken - Access token for user to logout
+ */
+export const logoutUser = async (accessToken: string) => {
+    const { payload } = verifyToken(accessToken);
+    if (payload)  await SessionModel.findByIdAndDelete(payload.sessionId);
+}
+
+export const refreshAccessToken = async (refreshToken: string) => {
+    
+}
