@@ -11,12 +11,12 @@ const defaults: CookieOptions = {
     secure, // Ensures the cookie is only sent over HTTPS (not HTTP)
 }
 
-const getAccessTokenCookieOptions = (): CookieOptions => ({
+export const getAccessTokenCookieOptions = (): CookieOptions => ({
     ...defaults,
     expires: fifteenMinutesFromNow()
 });
 
-const getRefreshTokenCookieOptions = (): CookieOptions => ({
+export const getRefreshTokenCookieOptions = (): CookieOptions => ({
     ...defaults,
     expires: thirtyDaysFromNow(),
     path: REFRESH_PATH, 
@@ -25,12 +25,13 @@ const getRefreshTokenCookieOptions = (): CookieOptions => ({
 type Params = {
     res: Response;
     accessToken: string;
-    refreshToken: string;
+    refreshToken?: string;
 }
 /**
- * Sets the access and refresh tokens as cookies on the response object.
+ * Sets the access (and optional refresh) token(s)a as cookies on the response object.
  */
 export const setAuthCookies = ({ res, accessToken, refreshToken }: Params) => {
+    if (!refreshToken) return res.cookie('accessToken', accessToken, getAccessTokenCookieOptions());
     return res.cookie('accessToken', accessToken, getAccessTokenCookieOptions())
         .cookie('refreshToken', refreshToken, getRefreshTokenCookieOptions());
 }

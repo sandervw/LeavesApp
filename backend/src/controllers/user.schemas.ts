@@ -13,3 +13,5 @@ export const loginSchema = z.object({
 export const signupSchema = loginSchema.extend({
     username: usernameSchema,
 });
+
+export const verificationCodeSchema = z.string().min(1).max(24); // Based on mongodb ObjectId length

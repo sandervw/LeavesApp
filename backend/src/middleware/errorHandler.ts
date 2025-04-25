@@ -2,12 +2,15 @@ import { ErrorRequestHandler, Response } from "express";
 import { BAD_REQUEST, INTERNAL_SERVER_ERROR } from "../constants/http";
 import { z } from "zod";
 import AppError from "../utils/appError";
+import { clearAuthCookies, REFRESH_PATH } from "../utils/cookies";
 
 /**
  * Middleware to catch all errors throw by api routes
  */
 const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
     console.log(`PATH: ${req.path}`, error);
+
+    if (req.path === REFRESH_PATH) clearAuthCookies(res); // Clear both cookies if error occurs on refresh route
 
     if (error instanceof z.ZodError) {
         return handleZodError(res, error);
