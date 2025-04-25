@@ -1,22 +1,15 @@
-import { z } from 'zod';
 import catchErrors from '../utils/catchErrors';
-import { signupUser } from '../services/user.service';
-import { CREATED } from '../constants/http';
+import { signupUser, loginUser } from '../services/user.service';
+import { CREATED, OK } from '../constants/http';
 import { setAuthCookies } from '../utils/cookies';
-
-const userSchema = z.object({
-    email: z.string().email().min(1).max(255),
-    username: z.string().min(1).max(255),
-    password: z.string().min(6).max(255),
-    userAgent: z.string().optional(),
-});
+import { signupSchema, loginSchema } from './user.schemas';
 
 /**
  * Handles user signup by validating the request, creating a new user, and sending authentication cookies.
  */
 export const signup = catchErrors(async (req, res) => {
     // validate request
-    const request = userSchema.parse({
+    const request = signupSchema.parse({
         ...req.body,
         userAgent: req.headers['user-agent'],
     });
@@ -24,5 +17,15 @@ export const signup = catchErrors(async (req, res) => {
     const { user, accessToken, refreshToken } = await signupUser(request);
     //return response
     return setAuthCookies({ res, accessToken, refreshToken })
-    .status(CREATED).json(user);
+        .status(CREATED).json(user);
+});
+
+export const login = catchErrors(async (req, res) => {
+    const request = loginSchema.parse({
+        ...req.body,
+        userAgent: req.headers['user-agent'],
+    });
+    const { accessToken, refreshToken } = await loginUser(request);
+    return setAuthCookies({ res, accessToken, refreshToken })
+        .status(OK).json({ message: 'Logged in successfully' });
 });
