@@ -4,10 +4,11 @@ import VerificationCodeType from '../constants/verificationCodeType';
 import SessionModel from '../models/session.model';
 import UserModel from '../models/user.model';
 import VerificationCodeModel from '../models/verificationCode.model';
-import { oneYearFromNow } from '../utils/date';
+import { ONE_DAY_MS, oneYearFromNow, thirtyDaysFromNow } from '../utils/date';
 import appAssert from '../utils/appAssert';
 import { CONFLICT, UNAUTHORIZED } from '../constants/http';
-import { refreshTokenSignOptions, signToken, verifyToken } from '../utils/jwt';
+import { RefreshTokenPayload, refreshTokenSignOptions, signToken, verifyToken } from '../utils/jwt';
+import { access } from 'fs';
 
 export type SignupUserParams = {
     email: string;
@@ -107,5 +108,32 @@ export const logoutUser = async (accessToken: string) => {
 }
 
 export const refreshAccessToken = async (refreshToken: string) => {
-    
+    const { payload } = verifyToken<RefreshTokenPayload>(
+        refreshToken,
+        { secret: refreshTokenSignOptions.secret });
+    appAssert(payload, UNAUTHORIZED, 'Invalid token'); // Token expired or invalid
+    const session = await SessionModel.findById(payload.sessionId);
+    appAssert(
+        session && session.expiresAt.getTime() > Date.now(),
+        UNAUTHORIZED,
+        'Session Expired'); // Session expired or invalid
+    // Refresh session if it expires in the next 24 hours (better user experience)
+    const sessionNeedsRefresh = session.expiresAt.getTime() - Date.now() < ONE_DAY_MS;
+    if (sessionNeedsRefresh) {
+        session.expiresAt = thirtyDaysFromNow();
+        await session.save();
+    }
+    const newRefreshToken = sessionNeedsRefresh ? signToken(
+        { sessionId: session._id },
+        refreshTokenSignOptions
+    ) : undefined;
+    // Sign new access token
+    const accessToken = signToken({
+        sessionId: session._id,
+        userId: session.userId,
+    });
+    return { accessToken, newRefreshToken };
+}
+
+export const verifyEmail = async (verificationCode: string) => {
 }
