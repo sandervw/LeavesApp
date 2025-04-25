@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import VerificationCodeTypes from '../constants/verificationCodeType';
 
 // Gives us methods and typing for props on mongoDB document
-export interface VerificationCodeDoc extends mongoose.Document {
+export interface VerificationCodeDoc extends mongoose.Document<mongoose.Types.ObjectId> {
     userId: mongoose.Types.ObjectId;
     codeType: VerificationCodeTypes;
     createdAt: Date;

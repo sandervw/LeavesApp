@@ -29,3 +29,13 @@ export const login = catchErrors(async (req, res) => {
     return setAuthCookies({ res, accessToken, refreshToken })
         .status(OK).json({ message: 'Logged in successfully' });
 });
+
+export const logout = catchErrors(async (req, res) => {
+    const accessToken = req.cookies.accessToken;
+    const { payload } = 
+    const request = loginSchema.parse({
+        ...req.body,
+        userAgent: req.headers['user-agent'],
+    });
+    return res.status(OK).json({ message: 'User logged out' });
+});

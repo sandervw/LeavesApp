@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { thirtyDaysFromNow } from '../utils/date';
 
-export interface SessionDoc extends mongoose.Document {
+export interface SessionDoc extends mongoose.Document<mongoose.Types.ObjectId> {
     userId: mongoose.Types.ObjectId;
     userAgent?: string; // What device user is signed in on
     createdAt: Date;
