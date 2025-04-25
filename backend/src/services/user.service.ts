@@ -6,7 +6,7 @@ import UserModel from '../models/user.model';
 import VerificationCodeModel from '../models/verificationCode.model';
 import { ONE_DAY_MS, oneYearFromNow, thirtyDaysFromNow } from '../utils/date';
 import appAssert from '../utils/appAssert';
-import { CONFLICT, UNAUTHORIZED } from '../constants/http';
+import { CONFLICT, NOT_FOUND, UNAUTHORIZED } from '../constants/http';
 import { RefreshTokenPayload, refreshTokenSignOptions, signToken, verifyToken } from '../utils/jwt';
 import { access } from 'fs';
 
@@ -107,6 +107,12 @@ export const logoutUser = async (accessToken: string) => {
     if (payload)  await SessionModel.findByIdAndDelete(payload.sessionId);
 }
 
+/**
+ * Refreshes the access token for a user by verifying the refresh token and creating a new access token.
+ * @param refreshToken - Refresh token for user to refresh access token
+ * @returns The new access token and refresh token (if applicable)
+ * @throws UNAUTHORIZED if the refresh token is invalid or expired
+ */
 export const refreshAccessToken = async (refreshToken: string) => {
     const { payload } = verifyToken<RefreshTokenPayload>(
         refreshToken,
@@ -135,5 +141,24 @@ export const refreshAccessToken = async (refreshToken: string) => {
     return { accessToken, newRefreshToken };
 }
 
+/**
+ * Takes an email verification code ID; looks up the code in the database;
+ * if a code is found, grabs the user ID from the code document;
+ * then looks up the user in the database and marks them as verified;
+ * finally, deletes the code from the database.
+ * @param verificationCode - The verification code to verify
+ */
 export const verifyEmail = async (verificationCode: string) => {
+    const code = await VerificationCodeModel.findOne({ 
+        _id: verificationCode,
+        codeType: VerificationCodeType.EmailVerification,
+        expiresAt: { $gt: new Date() }, // Check if code is expired
+     });
+    appAssert(code, NOT_FOUND, 'Invalid or expired code'); // Code expired or invalid
+    const user = await UserModel.findById(code.userId);
+    appAssert(user, UNAUTHORIZED, 'User not found');
+    user.verified = true;
+    await user.save();
+    await code.deleteOne(); // Delete code from database
+    return {user: user.omitPassword()};
 }

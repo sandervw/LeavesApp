@@ -1,15 +1,12 @@
 import catchErrors from '../utils/catchErrors';
 import { signupUser, loginUser, logoutUser, refreshAccessToken, verifyEmail } from '../services/user.service';
-import { CREATED, OK, UNAUTHORIZED } from '../constants/http';
+import { CREATED, OK } from '../constants/http';
 import { setAuthCookies } from '../utils/cookies';
 import { signupSchema, loginSchema, verificationCodeSchema } from './user.schemas';
-import { verifyToken } from '../utils/jwt';
-import SessionModel from '../models/session.model';
 import { clearAuthCookies } from '../utils/cookies';
-import appAssert from '../utils/appAssert';
 
 /**
- * Handles user signup; validates request; creates user; sends user and authentication cookies.
+ * Handles user signup.
  */
 export const signup = catchErrors(async (req, res) => {
     // validate request
@@ -25,7 +22,7 @@ export const signup = catchErrors(async (req, res) => {
 });
 
 /**
- * Handles user login; validates request; authenticates user; sends authentication cookies.
+ * Handles user login.
  */
 export const login = catchErrors(async (req, res) => {
     const request = loginSchema.parse({
@@ -38,7 +35,7 @@ export const login = catchErrors(async (req, res) => {
 });
 
 /**
- * Handles user logout; verifies access token; deletes session from database.
+ * Handles user logout.
  */
 export const logout = catchErrors(async (req, res) => {
     const accessToken = req.cookies.accessToken as string || '';
@@ -47,7 +44,7 @@ export const logout = catchErrors(async (req, res) => {
 });
 
 /**
- * Handles access token refresh; verifies refresh token; creates new access token (possibly new refresh token); sends cookies.
+ * Handles access token refresh.
  */
 export const refresh = catchErrors(async (req, res) => {
     const refreshToken = req.cookies.refreshToken as string || '';
@@ -57,9 +54,10 @@ export const refresh = catchErrors(async (req, res) => {
 });
 
 /**
- * Handles email verification; verifies token; updates user emailVerified field.
+ * Handles email verification.
  */
 export const verify = catchErrors(async (req, res) => {
     const verificationCode = verificationCodeSchema.parse(req.params.code);
-    const { payload } = verifyEmail(verificationCode);
+    await verifyEmail(verificationCode);
+    return res.status(OK).json({ message: 'Email verified successfully' });
 });
