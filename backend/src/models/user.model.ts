@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { compareValue, hashValue } from '../utils/bcrypt';
 
 // Gives us methods and typing for props on mongoDB document
-export interface UserDoc extends mongoose.Document {
+export interface UserDoc extends mongoose.Document<mongoose.Types.ObjectId> {
     email: string;
     username: string;
     password: string;
