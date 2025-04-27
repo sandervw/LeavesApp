@@ -6,8 +6,8 @@ import { fiveMinutesAgo, ONE_DAY_MS, oneHourFromNow, oneYearFromNow, thirtyDaysF
 import appAssert from '../utils/appAssert';
 import { CONFLICT, INTERNAL_SERVER_ERROR, NOT_FOUND, UNAUTHORIZED } from '../constants/http';
 import { RefreshTokenPayload, refreshTokenSignOptions, signToken, verifyToken } from '../utils/jwt';
-import { sendMail } from '../utils/sendMail';
-import { getPasswordResetTemplate, getVerifyEmailTemplate } from '../utils/emailTemplates';
+import { sendMail } from '../utils/emailUtils';
+import { getPasswordResetTemplate, getVerifyEmailTemplate } from '../utils/emailUtils'; 
 import { APP_ORIGIN } from '../constants/env';
 
 export type SignupUserParams = {
@@ -15,7 +15,7 @@ export type SignupUserParams = {
     username: string;
     password: string;
     userAgent?: string;
-}
+};
 
 /**
  * Creates a new user and returns the user and authentication tokens.
@@ -34,7 +34,7 @@ export const signupUser = async (userData: SignupUserParams) => {
         username: userData.username,
         password: userData.password,
     });
-    
+
     // Create verification code
     const verificationCode = await VerificationCodeModel.create({
         userId: user._id,
@@ -48,7 +48,7 @@ export const signupUser = async (userData: SignupUserParams) => {
         ...getVerifyEmailTemplate(verificationUrl),
     });
     if (error) console.log(error); //TODO remove this after testing
-    
+
     // Create session (unit of time user is logged in for)
     const session = await SessionModel.create({
         userId: user._id,
@@ -56,7 +56,7 @@ export const signupUser = async (userData: SignupUserParams) => {
     });
     const sessionInfo = { sessionId: session._id };
     // Sign access token and refresh token
-    const refreshToken = signToken( sessionInfo , refreshTokenSignOptions);
+    const refreshToken = signToken(sessionInfo, refreshTokenSignOptions);
     const accessToken = signToken({ ...sessionInfo, userId: user._id }); // Defaults to AccessTokenSignOptions
     // return user and tokens
     return {
@@ -70,7 +70,7 @@ export type LoginUserParams = {
     email: string;
     password: string;
     userAgent?: string;
-}
+};
 
 /**
  * Logs in a user and returns the user and authentication tokens.
@@ -79,7 +79,7 @@ export type LoginUserParams = {
  * @returns The created user and the access and refresh tokens
  * @returns The created user and the access and refresh tokens
  */
-export const loginUser = async ({email, password, userAgent}: LoginUserParams) => {
+export const loginUser = async ({ email, password, userAgent }: LoginUserParams) => {
     // Get user by email
     const user = await UserModel.findOne({ email });
     // Verify user exists
@@ -94,7 +94,7 @@ export const loginUser = async ({email, password, userAgent}: LoginUserParams) =
     });
     const sessionInfo = { sessionId: session._id };
     // Sign access token and refresh token
-    const refreshToken = signToken(sessionInfo, refreshTokenSignOptions)
+    const refreshToken = signToken(sessionInfo, refreshTokenSignOptions);
     const accessToken = signToken({ ...sessionInfo, userId: user._id });
     // return user and access tokens
     return {
@@ -110,8 +110,8 @@ export const loginUser = async ({email, password, userAgent}: LoginUserParams) =
  */
 export const logoutUser = async (accessToken: string) => {
     const { payload } = verifyToken(accessToken);
-    if (payload)  await SessionModel.findByIdAndDelete(payload.sessionId);
-}
+    if (payload) await SessionModel.findByIdAndDelete(payload.sessionId);
+};
 
 /**
  * Refreshes the access token for a user by verifying the refresh token and creating a new access token.
@@ -145,7 +145,7 @@ export const refreshAccessToken = async (refreshToken: string) => {
         userId: session.userId,
     });
     return { accessToken, newRefreshToken };
-}
+};
 
 /**
  * Takes an email verification code ID; looks up the code in the database;
@@ -155,19 +155,19 @@ export const refreshAccessToken = async (refreshToken: string) => {
  * @param verificationCode - The verification code to verify
  */
 export const verifyEmail = async (verificationCode: string) => {
-    const code = await VerificationCodeModel.findOne({ 
+    const code = await VerificationCodeModel.findOne({
         _id: verificationCode,
         codeType: VerificationCodeType.EmailVerification,
         expiresAt: { $gt: new Date() }, // Check if code is expired
-     });
+    });
     appAssert(code, NOT_FOUND, 'Invalid or expired code'); // Code expired or invalid
     const user = await UserModel.findById(code.userId);
     appAssert(user, UNAUTHORIZED, 'User not found');
     user.verified = true;
     await user.save();
     await code.deleteOne(); // Delete code from database
-    return {user: user.omitPassword()};
-}
+    return { user: user.omitPassword() };
+};
 
 /**
  * Sends a password reset email to the user with a verification code.
@@ -206,15 +206,20 @@ export const forgotPassword = async (email: string) => {
     return {
         verificationUrl,
         emailId: data.id
-    }
-}
+    };
+};
+
+type ResetPasswordParams = {
+    verificationCode: string;
+    password: string;
+};
 
 /**
  * Resets the user's password using the verification code and new password.
  * @param verificationCode - The verification code (must be within 1 hour of creation)
  * @param newPassword - The new password to set for the user
  */
-export const resetPassword = async (verificationCode: string, newPassword: string) => {
+export const resetPassword = async ({ verificationCode, password }: ResetPasswordParams) => {
     const code = await VerificationCodeModel.findOne({
         _id: verificationCode,
         codeType: VerificationCodeType.PasswordReset,
@@ -223,8 +228,9 @@ export const resetPassword = async (verificationCode: string, newPassword: strin
     appAssert(code, NOT_FOUND, 'Invalid or expired code'); // Code expired or invalid
     const user = await UserModel.findById(code.userId);
     appAssert(user, NOT_FOUND, 'User not found');
-    user.password = newPassword;
+    user.password = password;
     await user.save();
-    await code.deleteOne(); // Delete code from database
-    return {user: user.omitPassword()};
-}
+    await code.deleteOne(); // Delete verification code from DB
+    await SessionModel.deleteMany({ userId: user._id }); // delete all sessions (user has login on password reset)
+    return { user: user.omitPassword() };
+};
