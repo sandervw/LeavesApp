@@ -1,14 +1,14 @@
 import catchErrors from '../utils/catchErrors';
-import { signupUser, loginUser, logoutUser, refreshAccessToken, verifyEmail } from '../services/user.service';
+import { signupUser, loginUser, logoutUser, refreshAccessToken, verifyEmail, forgotPassword, resetPassword } from '../services/user.service';
 import { CREATED, OK } from '../constants/http';
 import { setAuthCookies } from '../utils/cookies';
-import { signupSchema, loginSchema, verificationCodeSchema } from './user.schemas';
+import { signupSchema, loginSchema, verificationCodeSchema, emailSchema, resetPasswordSchema } from './user.schemas';
 import { clearAuthCookies } from '../utils/cookies';
 
 /**
  * Handles user signup.
  */
-export const signup = catchErrors(async (req, res) => {
+export const signupController = catchErrors(async (req, res) => {
     // validate request
     const request = signupSchema.parse({
         ...req.body,
@@ -24,7 +24,7 @@ export const signup = catchErrors(async (req, res) => {
 /**
  * Handles user login.
  */
-export const login = catchErrors(async (req, res) => {
+export const loginController = catchErrors(async (req, res) => {
     const request = loginSchema.parse({
         ...req.body,
         userAgent: req.headers['user-agent'],
@@ -37,7 +37,7 @@ export const login = catchErrors(async (req, res) => {
 /**
  * Handles user logout.
  */
-export const logout = catchErrors(async (req, res) => {
+export const logoutController = catchErrors(async (req, res) => {
     const accessToken = req.cookies.accessToken as string || '';
     await logoutUser(accessToken);
     return clearAuthCookies(res).status(OK).json({ message: 'Logged out successfully' });
@@ -46,7 +46,7 @@ export const logout = catchErrors(async (req, res) => {
 /**
  * Handles access token refresh.
  */
-export const refresh = catchErrors(async (req, res) => {
+export const refreshController = catchErrors(async (req, res) => {
     const refreshToken = req.cookies.refreshToken as string || '';
     const { accessToken, newRefreshToken } = await refreshAccessToken(refreshToken);
     return setAuthCookies({ res, accessToken, refreshToken: newRefreshToken })
@@ -56,8 +56,29 @@ export const refresh = catchErrors(async (req, res) => {
 /**
  * Handles email verification.
  */
-export const verify = catchErrors(async (req, res) => {
+export const verifyController = catchErrors(async (req, res) => {
     const verificationCode = verificationCodeSchema.parse(req.params.code);
     await verifyEmail(verificationCode);
     return res.status(OK).json({ message: 'Email verified successfully' });
+});
+
+/**
+ * Handles forgot password request.
+ */
+export const forgotPasswordController = catchErrors(async (req, res) => {
+    const email = emailSchema.parse(req.body.email);
+    await forgotPassword(email);
+    return res.status(OK).json({ message: 'Password reset email sent' });
+});
+
+/**
+ * Handles password reset request.
+ */
+export const resetPasswordController = catchErrors(async (req, res) => {
+    const {
+        password,
+        verificationCode
+    } = resetPasswordSchema.parse(req.body);
+    await resetPassword(verificationCode, password);
+    return res.status(OK).json({ message: 'Password reset successfully' });
 });

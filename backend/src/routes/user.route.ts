@@ -1,13 +1,15 @@
 import { Router } from 'express';
-import { signup, login, logout, refresh, verify } from '../controllers/user.controller';
+import * as controller from '../controllers/user.controller';
 
 const userRoutes = Router();
 
-userRoutes.post('/signup', signup);
-userRoutes.post('/login', login);
-userRoutes.get('/logout', logout);
-userRoutes.get('/refresh', refresh);
-userRoutes.get('/email/verify/:code', verify);
+userRoutes.post('/signup', controller.signupController);
+userRoutes.post('/login', controller.loginController);
+userRoutes.get('/logout', controller.logoutController);
+userRoutes.get('/refresh', controller.refreshController);
+userRoutes.get('/email/verify/:code', controller.verifyController);
+userRoutes.post('/password/forgot', controller.forgotPasswordController);
+userRoutes.post('/password/reset', controller.forgotPasswordController);
 
 
 export default userRoutes;

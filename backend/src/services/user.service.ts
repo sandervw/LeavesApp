@@ -2,12 +2,12 @@ import VerificationCodeType from '../constants/verificationCodeType';
 import SessionModel from '../models/session.model';
 import UserModel from '../models/user.model';
 import VerificationCodeModel from '../models/verificationCode.model';
-import { ONE_DAY_MS, oneYearFromNow, thirtyDaysFromNow } from '../utils/date';
+import { fiveMinutesAgo, ONE_DAY_MS, oneHourFromNow, oneYearFromNow, thirtyDaysFromNow } from '../utils/date';
 import appAssert from '../utils/appAssert';
-import { CONFLICT, NOT_FOUND, UNAUTHORIZED } from '../constants/http';
+import { CONFLICT, INTERNAL_SERVER_ERROR, NOT_FOUND, UNAUTHORIZED } from '../constants/http';
 import { RefreshTokenPayload, refreshTokenSignOptions, signToken, verifyToken } from '../utils/jwt';
 import { sendMail } from '../utils/sendMail';
-import { getVerifyEmailTemplate } from '../utils/emailTemplates';
+import { getPasswordResetTemplate, getVerifyEmailTemplate } from '../utils/emailTemplates';
 import { APP_ORIGIN } from '../constants/env';
 
 export type SignupUserParams = {
@@ -164,6 +164,66 @@ export const verifyEmail = async (verificationCode: string) => {
     const user = await UserModel.findById(code.userId);
     appAssert(user, UNAUTHORIZED, 'User not found');
     user.verified = true;
+    await user.save();
+    await code.deleteOne(); // Delete code from database
+    return {user: user.omitPassword()};
+}
+
+/**
+ * Sends a password reset email to the user with a verification code.
+ *  - Makes sure that they are not past the rate limit of 1 email every 5 minutes
+ * @param email - The email of the user to send the password reset email to
+ * @returns The verification code for the password reset
+ */
+export const forgotPassword = async (email: string) => {
+    const user = await UserModel.findOne({ email });
+    appAssert(user, NOT_FOUND, 'Could not find user');
+    //Check rate limit (so they can't spam email resets)
+    const fiveMinutes = fiveMinutesAgo();
+    const count = await VerificationCodeModel.countDocuments({
+        userId: user._id,
+        codeType: VerificationCodeType.PasswordReset,
+        createdAt: { $gt: fiveMinutes }, // created in the last 5 minutesq
+    });
+    appAssert(count <= 1, UNAUTHORIZED, 'Too many requests. Please try again later.');
+    const expiresAt = oneHourFromNow();
+    const verificationCode = await VerificationCodeModel.create({
+        userId: user._id,
+        codeType: VerificationCodeType.PasswordReset,
+        expiresAt,
+    });
+    // Send password reset email
+    const verificationUrl = `${APP_ORIGIN}/password/reset/?code=${verificationCode._id}&exp=${expiresAt.getTime()}`;
+    const { data, error } = await sendMail({
+        to: user.email,
+        ...getPasswordResetTemplate(verificationUrl),
+    });
+    // Check if email was sent successfully
+    appAssert(
+        data?.id,
+        INTERNAL_SERVER_ERROR,
+        `${error?.name} - ${error?.message}`);
+    return {
+        verificationUrl,
+        emailId: data.id
+    }
+}
+
+/**
+ * Resets the user's password using the verification code and new password.
+ * @param verificationCode - The verification code (must be within 1 hour of creation)
+ * @param newPassword - The new password to set for the user
+ */
+export const resetPassword = async (verificationCode: string, newPassword: string) => {
+    const code = await VerificationCodeModel.findOne({
+        _id: verificationCode,
+        codeType: VerificationCodeType.PasswordReset,
+        expiresAt: { $gt: new Date() }, // Check if code is expired
+    });
+    appAssert(code, NOT_FOUND, 'Invalid or expired code'); // Code expired or invalid
+    const user = await UserModel.findById(code.userId);
+    appAssert(user, NOT_FOUND, 'User not found');
+    user.password = newPassword;
     await user.save();
     await code.deleteOne(); // Delete code from database
     return {user: user.omitPassword()};
