@@ -1,4 +1,17 @@
+import AppErrorCode from "../constants/appErrorCode";
+import { HttpStatusCode } from "../constants/http";
 import { NextFunction, Request, Response } from 'express'
+
+
+export class AppError extends Error {
+    constructor(
+        public statusCode: HttpStatusCode,
+        public message: string,
+        public errorCode?: AppErrorCode,
+    ){
+        super(message);
+    }
+}
 
 type AsyncController = (
     req: Request,
@@ -11,7 +24,7 @@ type AsyncController = (
  * @param controller - The function to wrap
  * @returns A new function with error handling
  */
-const catchErrors = (controller: AsyncController): AsyncController => {
+export const catchErrors = (controller: AsyncController): AsyncController => {
     return async (req, res, next) => {
         try {
             await controller(req, res, next);
@@ -20,5 +33,3 @@ const catchErrors = (controller: AsyncController): AsyncController => {
         }
     }
 }
-
-export default catchErrors;

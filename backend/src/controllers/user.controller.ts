@@ -1,4 +1,4 @@
-import catchErrors from '../utils/catchErrors';
+import { catchErrors } from '../utils/errorUtils';
 import { signupUser, loginUser, logoutUser, refreshAccessToken, verifyEmail, forgotPassword, resetPassword } from '../services/user.service';
 import { CREATED, OK } from '../constants/http';
 import { setAuthCookies } from '../utils/cookies';
@@ -75,10 +75,7 @@ export const forgotPasswordController = catchErrors(async (req, res) => {
  * Handles password reset request.
  */
 export const resetPasswordController = catchErrors(async (req, res) => {
-    const {
-        password,
-        verificationCode
-    } = resetPasswordSchema.parse(req.body);
-    await resetPassword(verificationCode, password);
+    const request = resetPasswordSchema.parse(req.body);
+    await resetPassword(request);
     return res.status(OK).json({ message: 'Password reset successfully' });
 });
