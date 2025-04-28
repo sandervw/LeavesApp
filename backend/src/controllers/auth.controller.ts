@@ -1,8 +1,8 @@
 import { catchErrors } from '../utils/errorUtils';
-import { signupUser, loginUser, logoutUser, refreshAccessToken, verifyEmail, forgotPassword, resetPassword } from '../services/user.service';
+import { signupUser, loginUser, logoutUser, refreshAccessToken, verifyEmail, forgotPassword, resetPassword } from '../services/auth.service';
 import { CREATED, OK } from '../constants/http';
 import { setAuthCookies } from '../utils/cookies';
-import { signupSchema, loginSchema, verificationCodeSchema, emailSchema, resetPasswordSchema } from './user.schemas';
+import { signupSchema, loginSchema, verificationCodeSchema, emailSchema, resetPasswordSchema } from './auth.schemas';
 import { clearAuthCookies } from '../utils/cookies';
 
 /**
@@ -77,5 +77,5 @@ export const forgotPasswordController = catchErrors(async (req, res) => {
 export const resetPasswordController = catchErrors(async (req, res) => {
     const request = resetPasswordSchema.parse(req.body);
     await resetPassword(request);
-    return res.status(OK).json({ message: 'Password reset successfully' });
+    return clearAuthCookies(res).status(OK).json({ message: 'Password reset successfully' });
 });
