@@ -1,15 +1,9 @@
-import { z } from 'zod';
 import { catchErrors } from '../utils/errorUtils';
 import { signupUser, loginUser, logoutUser, refreshAccessToken, verifyEmail, forgotPassword, resetPassword } from '../services/auth.service';
 import { CREATED, OK } from '../constants/http';
 import { setAuthCookies } from '../utils/cookies';
 import { clearAuthCookies } from '../utils/cookies';
-
-const emailSchema = z.string().email().min(1).max(255);
-const mongoIdSchema = z.string().min(1).max(24); // Based on mongodb ObjectId length
-const usernameSchema = z.string().min(1).max(255);
-const passwordSchema = z.string().min(6).max(255);
-const userAgentSchema = z.string().optional();
+import { emailSchema, passwordSchema, usernameSchema, userAgentSchema, mongoIdSchema } from './controller.schema'
 
 /** Handles user signup. */
 export const signupController = catchErrors(async (req, res) => {
