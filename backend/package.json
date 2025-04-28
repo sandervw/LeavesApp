@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "dev": "ts-node-dev --files src/server.ts"
+    "dev": "ts-node-dev --files src/server.ts index.d.ts"
   },
   "repository": {
     "type": "git",
