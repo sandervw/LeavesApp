@@ -3,7 +3,7 @@ import { fifteenMinutesFromNow, thirtyDaysFromNow } from "./date";
 
 const secure = process.env.NODE_ENV === 'production';
 
-export const REFRESH_PATH = '/user/refresh'; // Only send the refresh token on this path
+export const REFRESH_PATH = '/auth/refresh'; // Only send the refresh token on this path
 
 const defaults: CookieOptions = {
     sameSite: 'strict', // Helps prevent CSRF attacks
