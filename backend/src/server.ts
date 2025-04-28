@@ -7,6 +7,8 @@ import connectToDatabase from './config/db';
 import errorHandler from './middleware/errorHandler';
 import { OK } from './constants/http';
 import authRoutes from './routes/auth.route';
+import userRoutes from './routes/user.routes';
+import authenticate from './middleware/authenticate';
 
 // Create express server
 const app = express();
@@ -29,6 +31,7 @@ app.use((req, res, next) => {
 // app.use('/template', templateRoutes);
 // app.use('/storynode', storynodeRoutes);
 app.use('/auth', authRoutes);
+app.use('/user', authenticate, userRoutes);
 
 /*==MAIN REQUESTS==*/
 app.get('/', (req, res, next) => {

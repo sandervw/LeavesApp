@@ -47,8 +47,6 @@ export const signupUser = async (userData: SignupUserParams) => {
         to: user.email,
         ...getVerifyEmailTemplate(verificationUrl),
     });
-    if (error) console.log(error); //TODO remove this after testing
-
     // Create session (unit of time user is logged in for)
     const session = await SessionModel.create({
         userId: user._id,
@@ -123,8 +121,6 @@ export const refreshAccessToken = async (refreshToken: string) => {
     const { payload } = verifyToken<RefreshTokenPayload>(
         refreshToken,
         { secret: refreshTokenSignOptions.secret });
-    console.log('refresh token payload', payload);
-    
     appAssert(payload, UNAUTHORIZED, 'Invalid token'); // Token expired or invalid
     const session = await SessionModel.findById(payload.sessionId);
     appAssert(

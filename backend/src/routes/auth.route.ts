@@ -1,8 +1,11 @@
 import { Router } from 'express';
 import * as controller from '../controllers/auth.controller';
 
+
+/** Routes focused on basic authentication setup (not regularly retrieving user data) */
 const authRoutes = Router();
 
+// Prefix: /auth
 authRoutes.post('/signup', controller.signupController);
 authRoutes.post('/login', controller.loginController);
 authRoutes.get('/logout', controller.logoutController);
