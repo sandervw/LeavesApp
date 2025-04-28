@@ -123,6 +123,8 @@ export const refreshAccessToken = async (refreshToken: string) => {
     const { payload } = verifyToken<RefreshTokenPayload>(
         refreshToken,
         { secret: refreshTokenSignOptions.secret });
+    console.log('refresh token payload', payload);
+    
     appAssert(payload, UNAUTHORIZED, 'Invalid token'); // Token expired or invalid
     const session = await SessionModel.findById(payload.sessionId);
     appAssert(
