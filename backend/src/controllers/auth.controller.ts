@@ -3,7 +3,7 @@ import { signupUser, loginUser, logoutUser, refreshAccessToken, verifyEmail, for
 import { CREATED, OK } from '../constants/http';
 import { setAuthCookies } from '../utils/cookies';
 import { clearAuthCookies } from '../utils/cookies';
-import { emailSchema, passwordSchema, usernameSchema, userAgentSchema, mongoIdSchema } from './controller.schema'
+import { emailSchema, passwordSchema, usernameSchema, userAgentSchema, mongoIdSchema } from '../schemas/controller.schema'
 
 /** Handles user signup. */
 export const signupController = catchErrors(async (req, res) => {

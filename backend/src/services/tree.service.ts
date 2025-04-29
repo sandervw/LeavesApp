@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { TreeDoc } from '../models/tree.model';
+import { TreeDoc } from '../schemas/mongo.schema';
 import appAssert from '../utils/appAssert';
 import { NOT_FOUND } from '../constants/http';
 
@@ -7,15 +7,6 @@ type QueryParam = {
     [key: string]: undefined | string | QueryParam | (string | QueryParam)[];
 }
 type UserParam = mongoose.Types.ObjectId;
-
-type FindParams = {
-    userId: UserParam;
-    query: QueryParam;
-}
-type FindByIdParams = {
-    userId: UserParam;
-    id: string;
-}
 
 export default class ElementService {
 
@@ -35,7 +26,7 @@ export default class ElementService {
      * @param userId - the userId to filter by
      * @param query - an optional query to filter
      */
-    async find({ userId, query }: FindParams) {
+    async find({ userId, query }: { userId: UserParam, query?: QueryParam }) {
         const result = await this.model.find({ userId, ...query }).sort({ createdAt: -1 });
         appAssert(result, NOT_FOUND, 'No elements found');
         return result;
@@ -46,7 +37,7 @@ export default class ElementService {
      * @param userId - the userId to filter by
      * @param id - the id of the element to find
      */
-    async findById({ userId, id }: FindByIdParams){
+    async findById({ userId, id }: { userId: UserParam, id: string }) {
         const result = await this.model.findOne({ _id: id, userId });
         appAssert(result, NOT_FOUND, 'No such object exists');
         return result;
@@ -57,7 +48,7 @@ export default class ElementService {
      * @param userId - the userId to filter by
      * @param id - the id of the parent element
      */
-    async findChildren({ userId, id }: FindByIdParams){
+    async findChildren({ userId, id }: { userId: UserParam, id: string }) {
         const parent = await this.model.findOne({ _id: id, userId });
         appAssert(parent, NOT_FOUND, 'Parent element not found');
         const children = await this.model.find({ _id: { $in: parent.children }, userId });
@@ -65,7 +56,7 @@ export default class ElementService {
         return children;
     }
 
-    async upsert(data, user_id){
+    async upsert({ userId, data }: { userId: UserParam, data: TreeDoc }) {
         data.user_id = user_id; // Ensure user_id is set in the data
         if (data._id) {
             data.children = data.children.filter(child => child !== null);

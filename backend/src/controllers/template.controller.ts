@@ -1,7 +1,7 @@
-import { OK } from '../constants/http.js';
-import templateService from '../services/template.service.js';
-import { catchErrors } from '../utils/errorUtils.js';
-import { mongoIdSchema } from './controller.schema.js';
+import { OK } from '../constants/http';
+import templateService from '../services/template.service';
+import { catchErrors } from '../utils/errorUtils';
+import { mongoIdSchema } from '../schemas/controller.schema';
 
 export const getTemplatesController = catchErrors( async (req, res) => {
     const request = { userId: req.userId, query: req.query };

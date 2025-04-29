@@ -1,9 +1,9 @@
+import 'dotenv/config'; // NEEDS TO BE ON TOP: loads environment variables from a .env file
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors'; // Cross-Origin Resource Sharing: allows api calls from outside of the server domain
 import { PORT, NODE_ENV, APP_ORIGIN } from './constants/env';
 import connectToDatabase from './config/db';
-import 'dotenv/config'; // loads environment variables from a .env file
 import errorHandler from './middleware/errorHandler';
 import authenticate from './middleware/authenticate';
 import { OK } from './constants/http';
@@ -34,7 +34,7 @@ app.use((req, res, next) => {
 app.use('/auth', authRoutes);
 app.use('/user', authenticate, userRoutes);
 app.use('/sessions', authenticate, sessionRoutes);
-app.use('/template', authenticate, templateRoutes);
+// app.use('/template', authenticate, templateRoutes);
 // app.use('/storynode', storynodeRoutes);
 app.use(errorHandler); // Catches all errors thrown in routes above
 

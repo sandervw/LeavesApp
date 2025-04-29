@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+/**
+ * Schemas for validating basic data types in controllers.
+ */
 export const emailSchema = z.string().email().min(1).max(255);
 export const mongoIdSchema = z.string().min(1).max(24); // Based on mongodb ObjectId length
 export const usernameSchema = z.string().min(1).max(255);

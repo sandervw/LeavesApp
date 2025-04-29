@@ -1,17 +1,6 @@
 import mongoose from 'mongoose';
 import { compareValue, hashValue } from '../utils/bcrypt';
-
-// Gives us methods and typing for props on mongoDB document
-export interface UserDoc extends mongoose.Document<mongoose.Types.ObjectId> {
-    email: string;
-    username: string;
-    password: string;
-    verified: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-    comparePassword(val: string): Promise<boolean>;
-    omitPassword(): Pick<UserDoc, "_id" | "email" | "username" | "verified" | "createdAt" | "updatedAt">;
-}
+import { UserDoc } from '../schemas/mongo.schema';
 
 // Each schema maps to a MongoDB collection and defines the shape of the documents within that collection
 const userSchema = new mongoose.Schema<UserDoc>({
