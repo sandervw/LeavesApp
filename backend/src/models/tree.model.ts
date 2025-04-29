@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+// Gives us methods and typing for props on mongoDB document
 export interface TreeDoc extends mongoose.Document<mongoose.Types.ObjectId> {
     name: string;
     type: string; // root, branch, or leaf
@@ -11,7 +12,7 @@ export interface TreeDoc extends mongoose.Document<mongoose.Types.ObjectId> {
 
 // Each schema maps to a MongoDB collection and defines the shape of the documents within that collection
 // Discriminators are a way to have inheritance in a mongoose schema
-const TreeSchema = new mongoose.Schema<TreeDoc>({
+const treeSchema = new mongoose.Schema<TreeDoc>({
     name: { type: String, required: true},
     type: {type: String, required: true },
     text: { type: String, default: '' },
@@ -22,4 +23,4 @@ const TreeSchema = new mongoose.Schema<TreeDoc>({
 
 // Convert schema into model; a model is a constructor compiled from the schema definition
 // Models are responsible for creating/reading docs from MongoDB
-export const Tree = mongoose.model('element', TreeSchema);
+export const Tree = mongoose.model('element', treeSchema);

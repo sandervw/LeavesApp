@@ -8,7 +8,7 @@ export interface SessionDoc extends mongoose.Document<mongoose.Types.ObjectId> {
     expiresAt: Date;
 }
 
-const SessionSchema = new mongoose.Schema<SessionDoc>({
+const sessionSchema = new mongoose.Schema<SessionDoc>({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true },
     userAgent: { type: String },
     createdAt: { type: Date, required: true, default: Date.now },
@@ -17,7 +17,7 @@ const SessionSchema = new mongoose.Schema<SessionDoc>({
 
 const SessionModel = mongoose.model<SessionDoc>(
     'Session',
-    SessionSchema,
+    sessionSchema,
 );
 
 export default SessionModel;

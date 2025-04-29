@@ -3,14 +3,17 @@ import { TreeDoc } from '../models/tree.model';
 import appAssert from '../utils/appAssert';
 import { NOT_FOUND } from '../constants/http';
 
-
-
-type findParams = {
-    query: querystring.ParsedQs,
+interface QueryParam {
+    [key: string]: undefined | string | QueryParam | (string | QueryParam)[];
+}
+interface UserParam {
     userId: mongoose.Types.ObjectId
 }
+interface FindParams extends UserParam {
+    query: QueryParam;
+}
 
-export default class elementService {
+export default class ElementService {
 
     constructor(model: mongoose.Model<TreeDoc>) {
         this.model = model;
@@ -24,21 +27,21 @@ export default class elementService {
     private model;
 
     /**
-     * Finds all elements in the database that match the query and userId.
-     * @param query - an optional query to filter
+     * Finds all the user's elements (matching a query if provided).
      * @param userId - the userId to filter by
+     * @param query - an optional query to filter
      * @returns an array of elements that match the query and userId
      */
-    async find({query, userId}: findParams){
+    async find({ userId, query }: FindParams){
         const userFilter = { userId };
         const result = await this.model.find({ ...query, ...userFilter }).sort({ createdAt: 'desc' });
         appAssert(result, NOT_FOUND, 'No elements found');
         return result;
     }
 
-    async findById(id, user_id){
+    async findById({ userId, id }: UserParam & { id: string }){
         if(!id || !mongoose.Types.ObjectId.isValid(id)) throw new Error('Not a valid ID');
-        const element = await this.model.findOne({ _id: id, user_id });
+        const element = await this.model.findOne({ _id: id, userId });
         if (!element) throw new Error('No objects found.');
         return element;
     }
