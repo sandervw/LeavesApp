@@ -24,26 +24,23 @@ app.use(
     })
 );
 app.use(cookieParser()); // Parses cookies from request headers (for authentication)
-
 app.use((req, res, next) => {
     console.log(req.path, req.method);
     next();
 });
+
+/*==ROUTES==*/
 // app.use('/template', templateRoutes);
 // app.use('/storynode', storynodeRoutes);
 app.use('/auth', authRoutes);
 app.use('/user', authenticate, userRoutes);
 app.use('/sessions', authenticate, sessionRoutes);
+app.use(errorHandler); // Catches all errors thrown in routes above
 
 /*==MAIN REQUESTS==*/
 app.get('/', (req, res, next) => {
     res.status(OK).json({ status: 'healthy' });
 });
-
-
-app.use(errorHandler); // Catches all errors thrown in routes above
-
-// Start listening for requests
 app.listen(PORT, async () => {
     console.log(`Listening on Port ${PORT} in ${NODE_ENV}`);
     await connectToDatabase();
