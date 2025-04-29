@@ -1,6 +1,7 @@
 import { OK } from '../constants/http.js';
 import templateService from '../services/template.service.js';
 import { catchErrors } from '../utils/errorUtils.js';
+import { mongoIdSchema } from './controller.schema.js';
 
 export const getTemplatesController = catchErrors( async (req, res) => {
     const request = { userId: req.userId, query: req.query };
@@ -9,25 +10,17 @@ export const getTemplatesController = catchErrors( async (req, res) => {
 });
 
 export const getOneTemplateController = catchErrors( async (req, res) => {
-    // try {
-    //     const user_id = req.user._id;
-    //     const template = await templateService.findById(req.params.id, user_id);
-    //     return res.status(200).json(template);
-    // } catch (err) {
-    //     console.log(err);
-    //     res.status(404).json({ error: err.message });
-    // }
+    const templateId = mongoIdSchema.parse(req.params.id);
+    const request = { userId: req.userId, id: templateId };
+    const template = await templateService.findById(request);
+    return res.status(OK).json(template);
 });
     
 export const getTemplateChildrenController = catchErrors( async (req, res) => {
-    // try {
-    //     const user_id = req.user._id;
-    //     const children = await templateService.findChildren(req.params.id, user_id);
-    //     res.status(200).json(children);
-    // } catch (err) {
-    //     console.log(err);
-    //     res.status(404).json({ error: err.message });
-    // }
+    const templateId = mongoIdSchema.parse(req.params.id);
+    const request = { userId: req.userId, id: templateId };
+    const children = await templateService.findChildren(request);
+    return res.status(OK).json(children);
 });
     
 export const postTemplateController = catchErrors( async (req, res) => {
