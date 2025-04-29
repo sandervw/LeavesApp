@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import elementService from './elementService.js';
+import elementService from './tree.service.js';
 import {Storynode} from '../models/models.js';
 import {readTxtAsJSON, writeArrayToFile} from './fileService.js';
 import {

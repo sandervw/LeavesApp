@@ -38,7 +38,7 @@ export const signupUser = async (userData: SignupUserParams) => {
     // Create verification code
     const verificationCode = await VerificationCodeModel.create({
         userId: user._id,
-        codeType: VerificationCodeType.EmailVerification,
+        codeType: VerificationCodeType.EMAILVERIFICATION,
         expiresAt: oneYearFromNow(),
     });
     // Send verification email
@@ -155,7 +155,7 @@ export const refreshAccessToken = async (refreshToken: string) => {
 export const verifyEmail = async (verificationCode: string) => {
     const code = await VerificationCodeModel.findOne({
         _id: verificationCode,
-        codeType: VerificationCodeType.EmailVerification,
+        codeType: VerificationCodeType.EMAILVERIFICATION,
         expiresAt: { $gt: new Date() }, // Check if code is expired
     });
     appAssert(code, NOT_FOUND, 'Invalid or expired code'); // Code expired or invalid
@@ -180,14 +180,14 @@ export const forgotPassword = async (email: string) => {
     const fiveMinutes = fiveMinutesAgo();
     const count = await VerificationCodeModel.countDocuments({
         userId: user._id,
-        codeType: VerificationCodeType.PasswordReset,
+        codeType: VerificationCodeType.PASSWORDRESET,
         createdAt: { $gt: fiveMinutes }, // created in the last 5 minutesq
     });
     appAssert(count <= 1, UNAUTHORIZED, 'Too many requests. Please try again later.');
     const expiresAt = oneHourFromNow();
     const verificationCode = await VerificationCodeModel.create({
         userId: user._id,
-        codeType: VerificationCodeType.PasswordReset,
+        codeType: VerificationCodeType.PASSWORDRESET,
         expiresAt,
     });
     // Send password reset email
@@ -220,7 +220,7 @@ type ResetPasswordParams = {
 export const resetPassword = async ({ verificationCode, password }: ResetPasswordParams) => {
     const code = await VerificationCodeModel.findOne({
         _id: verificationCode,
-        codeType: VerificationCodeType.PasswordReset,
+        codeType: VerificationCodeType.PASSWORDRESET,
         expiresAt: { $gt: new Date() }, // Check if code is expired
     });
     appAssert(code, NOT_FOUND, 'Invalid or expired code'); // Code expired or invalid

@@ -1,4 +1,4 @@
-import { Element } from '../models/elementModel.js';
+import { Element } from '../models/tree.model.js';
 import { Storynode, Template} from '../models/models.js';
 
 // Function to recursively delete elements

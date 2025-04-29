@@ -1,8 +1,18 @@
 import mongoose from 'mongoose';
+import { TreeDoc } from '../models/tree.model';
+import appAssert from '../utils/appAssert';
+import { NOT_FOUND } from '../constants/http';
+
+
+
+type findParams = {
+    query: querystring.ParsedQs,
+    userId: mongoose.Types.ObjectId
+}
 
 export default class elementService {
 
-    constructor(model) {
+    constructor(model: mongoose.Model<TreeDoc>) {
         this.model = model;
         this.find = this.find.bind(this);
         this.findById = this.findById.bind(this);
@@ -10,12 +20,20 @@ export default class elementService {
         this.upsert = this.upsert.bind(this);
         this.deleteById = this.deleteById.bind(this);
     }
+    
+    private model;
 
-    async find(query, user_id){
-        const userFilter = { user_id };
-        return query 
-            ? await this.model.find({ ...query, ...userFilter }).sort({ createdAt: 'desc' })
-            : await this.model.find(userFilter).sort({ createdAt: 'desc' });
+    /**
+     * Finds all elements in the database that match the query and userId.
+     * @param query - an optional query to filter
+     * @param userId - the userId to filter by
+     * @returns an array of elements that match the query and userId
+     */
+    async find({query, userId}: findParams){
+        const userFilter = { userId };
+        const result = await this.model.find({ ...query, ...userFilter }).sort({ createdAt: 'desc' });
+        appAssert(result, NOT_FOUND, 'No elements found');
+        return result;
     }
 
     async findById(id, user_id){
