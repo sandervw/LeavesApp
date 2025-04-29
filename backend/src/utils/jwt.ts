@@ -1,6 +1,6 @@
 import jwt, { SignOptions, VerifyOptions } from "jsonwebtoken";
-import { SessionDoc } from "../models/session.model";
 import { JWT_REFRESH_SECRET, JWT_SECRET } from "../constants/env";
+import { SessionDoc } from "../schemas/mongo.schema";
 
 const defaults: SignOptions = {
     audience: ['user'],

@@ -2,7 +2,7 @@ import { NOT_FOUND, OK } from "../constants/http";
 import SessionModel from "../models/session.model";
 import appAssert from "../utils/appAssert";
 import { catchErrors } from "../utils/errorUtils";
-import { mongoIdSchema } from "./controller.schema";
+import { mongoIdSchema } from "../schemas/controller.schema";
 
 /**
  * Retrieves the session information for the current user
