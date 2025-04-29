@@ -2,22 +2,23 @@ import mongoose from 'mongoose';
 
 /**
  * Schemas to ensure our controllers and services shake hands on the same data structure.
- * This is a good place to define the shape of our data and any default values.
+ * Defines shape of data in MongoDB and the shape of data in our controllers and services.
+ * Each of these needs to extend mongoose.Document, for two reasons:
+ * 1. Use mongoose doc's props/methods
+ * 2. Use mongoose's ObjectId type for _id
  */
 
-// This one needs to extend mongoose.Document (see pick below)
 export interface UserDoc extends mongoose.Document<mongoose.Types.ObjectId> {
     email: string;
-    username: string;
+    username: string; // Mostly for showing off in the UI
     password: string;
-    verified: boolean;
+    verified: boolean; // Whether the user has verified their email
     createdAt: Date;
     updatedAt: Date;
     comparePassword(val: string): Promise<boolean>;
     omitPassword(): Pick<UserDoc, "_id" | "email" | "username" | "verified" | "createdAt" | "updatedAt">;
 }
 
-// This one needs to extend mongoose.Document (see jwt util)
 export interface SessionDoc extends mongoose.Document<mongoose.Types.ObjectId> {
     userId: mongoose.Types.ObjectId;
     userAgent?: string; // What device user is signed in on
@@ -25,7 +26,7 @@ export interface SessionDoc extends mongoose.Document<mongoose.Types.ObjectId> {
     expiresAt: Date;
 }
 
-export interface TreeDoc {
+export interface TreeDoc extends mongoose.Document<mongoose.Types.ObjectId> {
     name: string;
     type: string; // root, branch, or leaf
     text: string;

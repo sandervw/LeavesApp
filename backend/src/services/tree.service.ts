@@ -56,18 +56,25 @@ export default class ElementService {
         return children;
     }
 
+    /**
+     * Returns an element after upserting.
+     * @param userId - the user to associate the element with
+     * @param data - the element to create or update
+     */
     async upsert({ userId, data }: { userId: UserParam, data: TreeDoc }) {
-        data.user_id = user_id; // Ensure user_id is set in the data
+        /////////////////////////////////////TODO//////////////////////////////////////
+        data.userId = userId; // Ensure user_id is set in the data
         if (data._id) {
-            data.children = data.children.filter(child => child !== null);
-            return await this.model.findOneAndUpdate({ _id: data._id, user_id }, data, { new: true });
+            data.children = data.children.filter(child => child !== null); // Clean up from frontend
+            return await this.model.findOneAndUpdate({ _id: data._id, userId }, data, { new: true });
         }
         return await this.model.create(data);
     }
 
-    async deleteById(id, user_id){
+    async deleteById({ userId, id }: { userId: UserParam, id: string }){
+        /////////////////////////////////////TODO//////////////////////////////////////
         if (!id || !mongoose.Types.ObjectId.isValid(id)) throw new Error('Not a valid ID');
-        const result = await this.model.findOneAndDelete({ _id: id, user_id });
+        const result = await this.model.findOneAndDelete({ _id: id, userId });
         if (!result) throw new Error('No such object exists');
         return { 'Deleted': result };
     }
