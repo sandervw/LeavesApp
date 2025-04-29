@@ -24,14 +24,7 @@ export const getTemplateChildrenController = catchErrors( async (req, res) => {
 });
     
 export const postTemplateController = catchErrors( async (req, res) => {
-    // try {
-    //     const user_id = req.user._id;
-    //     const result = await templateService.upsert(req.body, user_id);
-    //     res.status(200).json(result);
-    // } catch (err) {
-    //     console.log(err);
-    //     res.status(404).json({ error: err.message });
-    // }
+    const template: TemplateDoc = req.body;
 });
     
 export const deleteTemplateController = catchErrors( async (req, res) => {
