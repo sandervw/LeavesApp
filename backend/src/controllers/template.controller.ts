@@ -1,10 +1,9 @@
-import { NOT_FOUND, OK } from '../constants/http.js';
+import { OK } from '../constants/http.js';
 import templateService from '../services/template.service.js';
-import appAssert from '../utils/appAssert.js';
 import { catchErrors } from '../utils/errorUtils.js';
 
 export const getTemplatesController = catchErrors( async (req, res) => {
-    const request = { query: req.query, userId: req.userId };
+    const request = { userId: req.userId, query: req.query };
     const templates = await templateService.find( request );
     return res.status(OK).json(templates);
 });
