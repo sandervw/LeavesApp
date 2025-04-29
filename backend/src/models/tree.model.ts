@@ -18,7 +18,7 @@ const treeSchema = new mongoose.Schema<TreeDoc>({
     text: { type: String, default: '' },
     children: { type: [String], default: [] }, // Array of ObjectIds referencing child nodes
     parent: { type: String, default: null }, // ObjectId referencing the parent node
-    userId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User', index: true }, 
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true }, 
 }, { discriminatorKey: 'kind', collection: 'trees', timestamps: true });
 
 // Convert schema into model; a model is a constructor compiled from the schema definition

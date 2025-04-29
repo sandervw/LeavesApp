@@ -10,6 +10,7 @@ import { OK } from './constants/http';
 import authRoutes from './routes/auth.route';
 import userRoutes from './routes/user.route';
 import sessionRoutes from './routes/session.route';
+import templateRoutes from './routes/template.route';
 
 // Create express server
 const app = express();
@@ -33,7 +34,7 @@ app.use((req, res, next) => {
 app.use('/auth', authRoutes);
 app.use('/user', authenticate, userRoutes);
 app.use('/sessions', authenticate, sessionRoutes);
-// app.use('/template', templateRoutes);
+app.use('/template', authenticate, templateRoutes);
 // app.use('/storynode', storynodeRoutes);
 app.use(errorHandler); // Catches all errors thrown in routes above
 

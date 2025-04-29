@@ -115,7 +115,6 @@ export const logoutUser = async (accessToken: string) => {
  * Refreshes the access token for a user by verifying the refresh token and creating a new access token.
  * @param refreshToken - Refresh token for user to refresh access token
  * @returns The new access token and refresh token (if applicable)
- * @throws UNAUTHORIZED if the refresh token is invalid or expired
  */
 export const refreshAccessToken = async (refreshToken: string) => {
     const { payload } = verifyToken<RefreshTokenPayload>(

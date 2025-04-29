@@ -3,14 +3,18 @@ import { TreeDoc } from '../models/tree.model';
 import appAssert from '../utils/appAssert';
 import { NOT_FOUND } from '../constants/http';
 
-interface QueryParam {
+type QueryParam = {
     [key: string]: undefined | string | QueryParam | (string | QueryParam)[];
 }
-interface UserParam {
-    userId: mongoose.Types.ObjectId
-}
-interface FindParams extends UserParam {
+type UserParam = mongoose.Types.ObjectId;
+
+type FindParams = {
+    userId: UserParam;
     query: QueryParam;
+}
+type FindByIdParams = {
+    userId: UserParam;
+    id: string;
 }
 
 export default class ElementService {
@@ -27,31 +31,38 @@ export default class ElementService {
     private model;
 
     /**
-     * Finds all the user's elements (matching a query if provided).
+     * Returns all the user's elements (matching a query if provided).
      * @param userId - the userId to filter by
      * @param query - an optional query to filter
-     * @returns an array of elements that match the query and userId
      */
-    async find({ userId, query }: FindParams){
-        const userFilter = { userId };
-        const result = await this.model.find({ ...query, ...userFilter }).sort({ createdAt: 'desc' });
+    async find({ userId, query }: FindParams) {
+        const result = await this.model.find({ userId, ...query }).sort({ createdAt: -1 });
         appAssert(result, NOT_FOUND, 'No elements found');
         return result;
     }
 
-    async findById({ userId, id }: UserParam & { id: string }){
-        if(!id || !mongoose.Types.ObjectId.isValid(id)) throw new Error('Not a valid ID');
-        const element = await this.model.findOne({ _id: id, userId });
-        if (!element) throw new Error('No objects found.');
-        return element;
+    /**
+     * Return a single element by ID
+     * @param userId - the userId to filter by
+     * @param id - the id of the element to find
+     */
+    async findById({ userId, id }: FindByIdParams){
+        const result = await this.model.findOne({ _id: id, userId });
+        appAssert(result, NOT_FOUND, 'No such object exists');
+        return result;
     }
 
-    async findChildren(id, user_id){
-        if (!id || !mongoose.Types.ObjectId.isValid(id)) throw new Error('Not a valid ID');
-        const element = await this.model.findOne({ _id: id, user_id });
-        if (!element) throw new Error('No parent object found.');
-        const childIds = element.children;
-        return await this.model.find({ _id: { $in: childIds }, user_id });
+    /**
+     * Returns all the children of a given element
+     * @param userId - the userId to filter by
+     * @param id - the id of the parent element
+     */
+    async findChildren({ userId, id }: FindByIdParams){
+        const parent = await this.model.findOne({ _id: id, userId });
+        appAssert(parent, NOT_FOUND, 'Parent element not found');
+        const children = await this.model.find({ _id: { $in: parent.children }, userId });
+        appAssert(children, NOT_FOUND, 'No children found');
+        return children;
     }
 
     async upsert(data, user_id){
