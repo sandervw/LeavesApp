@@ -2,38 +2,33 @@ import { OK } from '../constants/http';
 import templateService from '../services/template.service';
 import { catchErrors } from '../utils/errorUtils';
 import { mongoIdSchema } from '../schemas/controller.schema';
+import { TemplateDoc } from '../schemas/mongo.schema';
 
 export const getTemplatesController = catchErrors( async (req, res) => {
-    const request = { userId: req.userId, query: req.query };
-    const templates = await templateService.find( request );
+    const templates = await templateService.find(req.userId, req.query);
     return res.status(OK).json(templates);
 });
 
 export const getOneTemplateController = catchErrors( async (req, res) => {
     const templateId = mongoIdSchema.parse(req.params.id);
-    const request = { userId: req.userId, id: templateId };
-    const template = await templateService.findById(request);
+    const template = await templateService.findById(req.userId, templateId);
     return res.status(OK).json(template);
 });
     
 export const getTemplateChildrenController = catchErrors( async (req, res) => {
     const templateId = mongoIdSchema.parse(req.params.id);
-    const request = { userId: req.userId, id: templateId };
-    const children = await templateService.findChildren(request);
+    const children = await templateService.findChildren(req.userId, templateId);
     return res.status(OK).json(children);
 });
     
 export const postTemplateController = catchErrors( async (req, res) => {
     const template: TemplateDoc = req.body;
+    const result = await templateService.upsert(req.userId, template);
+    return res.status(OK).json(result);
 });
     
 export const deleteTemplateController = catchErrors( async (req, res) => {
-    // try {
-    //     const user_id = req.user._id;
-    //     const result = await templateService.deleteById(req.params.id, user_id);
-    //     res.status(200).json(result);
-    // } catch (err) {
-    //     console.log(err);
-    //     res.status(404).json({ error: err.message });
-    // }
+    const templateId = mongoIdSchema.parse(req.params.id);
+    const result = await templateService.deleteById(req.userId, templateId);
+    return res.status(OK).json(result);
 }); 

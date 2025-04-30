@@ -8,9 +8,9 @@ type QueryParam = {
 }
 type UserParam = mongoose.Types.ObjectId;
 
-export default class ElementService {
+export default class TreeService<T extends TreeDoc> {
 
-    constructor(model: mongoose.Model<TreeDoc>) {
+    constructor(model: mongoose.Model<T>) {
         this.model = model;
         this.find = this.find.bind(this);
         this.findById = this.findById.bind(this);
@@ -26,7 +26,7 @@ export default class ElementService {
      * @param userId - the userId to filter by
      * @param query - an optional query to filter
      */
-    async find({ userId, query }: { userId: UserParam, query?: QueryParam }) {
+    async find(userId: UserParam, query?: QueryParam) {
         const result = await this.model.find({ userId, ...query }).sort({ createdAt: -1 });
         appAssert(result, NOT_FOUND, 'No elements found');
         return result;
@@ -37,7 +37,7 @@ export default class ElementService {
      * @param userId - the userId to filter by
      * @param id - the id of the element to find
      */
-    async findById({ userId, id }: { userId: UserParam, id: string }) {
+    async findById(userId: UserParam, id: string) {
         const result = await this.model.findOne({ _id: id, userId });
         appAssert(result, NOT_FOUND, 'No such object exists');
         return result;
@@ -48,7 +48,7 @@ export default class ElementService {
      * @param userId - the userId to filter by
      * @param id - the id of the parent element
      */
-    async findChildren({ userId, id }: { userId: UserParam, id: string }) {
+    async findChildren(userId: UserParam, id: string) {
         const parent = await this.model.findOne({ _id: id, userId });
         appAssert(parent, NOT_FOUND, 'Parent element not found');
         const children = await this.model.find({ _id: { $in: parent.children }, userId });
@@ -61,22 +61,24 @@ export default class ElementService {
      * @param userId - the user to associate the element with
      * @param data - the element to create or update
      */
-    async upsert({ userId, data }: { userId: UserParam, data: TreeDoc }) {
-        /////////////////////////////////////TODO//////////////////////////////////////
+    async upsert(userId: UserParam, data: T) {
         data.userId = userId; // Ensure user_id is set in the data
         if (data._id) {
             data.children = data.children.filter(child => child !== null); // Clean up from frontend
-            return await this.model.findOneAndUpdate({ _id: data._id, userId }, data, { new: true });
+            return await this.model.findOneAndUpdate({ _id: data._id, userId }, { $set: data }, { new: true });
         }
         return await this.model.create(data);
     }
 
-    async deleteById({ userId, id }: { userId: UserParam, id: string }){
-        /////////////////////////////////////TODO//////////////////////////////////////
-        if (!id || !mongoose.Types.ObjectId.isValid(id)) throw new Error('Not a valid ID');
-        const result = await this.model.findOneAndDelete({ _id: id, userId });
-        if (!result) throw new Error('No such object exists');
-        return { 'Deleted': result };
+    /**
+     * Deletes an element if it exists, then returns it.
+     * @param userId - the userId to filter by
+     * @param id - the id of the element to delete
+     */
+    async deleteById(userId: UserParam, id: string){
+        const deleted = await this.model.findOneAndDelete({ _id: id, userId });
+        appAssert(deleted, NOT_FOUND, 'Element not found');
+        return { 'Deleted': deleted };
     }
 
 }

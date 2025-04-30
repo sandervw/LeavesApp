@@ -34,3 +34,15 @@ export interface TreeDoc extends mongoose.Document<mongoose.Types.ObjectId> {
     parent: string | null; // ObjectId referencing the parent node
     userId: mongoose.Types.ObjectId; // User ID to associate with the tree element
 }
+
+export interface TemplateDoc extends TreeDoc {
+    wordWeight: number; // Used to store the percentage of the word count that this element should take up
+}
+
+export interface StorynodeDoc extends TreeDoc {
+    isComplete: boolean; // Used for rendering a finished vs unfinished element
+    wordWeight: number; // Used to store the percentage of the word count that this element should take up
+    wordLimit: number; // Used to store the maximum number of words for this node
+    wordCount: number; // Used to store the current word count for this node
+    archived: boolean; // Used to store whether a story is archived or not
+}
