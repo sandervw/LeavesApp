@@ -1,26 +1,17 @@
 import express from 'express';
-import storynodeController from '../controllers/storynodeController';
-import requireAuth from '../middleware/requireAuth';
+import * as controller from '../controllers/storynode.controller';
 
+/** Routes focused on CRUD for storynodes */
 const router = express.Router();
 
-// Protect all routes after this middleware
-router.use(requireAuth);
-
-router.get('/', storynodeController.get);
-
-router.get('/:id', storynodeController.getById);
-
-router.get('/getchildren/:id', storynodeController.getChildren);
-
-router.post('/', storynodeController.post);
-
-router.delete('/:id', storynodeController.deleteById);
-
-router.post('/postfromtemplate/', storynodeController.postFromTemplate);
-
-router.post('/postfromfile/', storynodeController.postFromFile);
-
-router.post('/posttofile/', storynodeController.postToFile);
+// Prefix: /storynodes
+router.get('/', controller.getStorynodesController);
+router.get('/:id', controller.getOneStorynodeController);
+router.get('/getchildren/:id', controller.getStorynodeChildrenController);
+router.post('/', controller.postStorynodeController);
+router.delete('/:id', controller.deleteStorynodeController);
+router.post('/postfromstorynode/', controller.postFromTemplateController);
+router.post('/postfromfile/', controller.postFromFileController);
+router.post('/posttofile/', controller.postToFileController);
 
 export default router;

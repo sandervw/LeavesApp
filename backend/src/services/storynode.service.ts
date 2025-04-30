@@ -1,21 +1,18 @@
 import mongoose from 'mongoose';
-import TreeService from './tree.service.js';
-import {Storynode} from '../models/models.js';
-import {readTxtAsJSON, writeArrayToFile} from './fileService.js';
-import {
-    recursiveDelete,
-    recursiveGetLeafs,
-    recursiveUpdateWordLimits,
-    recursiveStorynodeFromTemplate ,
-    recursiveStorynodeFromJSON
-} from './recursive.service.js';
+import TreeService from './tree.service';
+import { Storynode } from '../models/models';
+import { StorynodeDoc } from '../schemas/mongo.schema';
+import appAssert from '../utils/appAssert';
+import { NOT_FOUND } from '../constants/http';
+import { recursiveGetDescendants } from './recursive.service';
 
-class storynodeService extends TreeService {
+type UserParam = mongoose.Types.ObjectId;
+
+class storynodeService extends TreeService<StorynodeDoc> {
 
     constructor() {
         super(Storynode);
         this.upsert = this.upsert.bind(this);
-        this.deleteById = this.deleteById.bind(this);
         this.addFromTemplate = this.addFromTemplate.bind(this);
         this.addFromFile = this.addFromFile.bind(this);
         this.saveToFile = this.saveToFile.bind(this);
@@ -39,20 +36,6 @@ class storynodeService extends TreeService {
         }
         // Send a new storynode
         return await Storynode.create(data);
-    }
-
-    async deleteById(id, user_id){
-        if(!id || !mongoose.Types.ObjectId.isValid(id)) throw new Error('Not a valid ID');
-        const toDelete = await Storynode.findOne({ _id: id, user_id });        
-        if(!toDelete) throw new Error('No such object found');
-        // First, delete the reference to toDelete from its parent
-        const parent = await Storynode.findById(toDelete.parent);
-        if(parent){
-            parent.children = parent.children.filter((child) => (child != id));
-            await Storynode.updateOne({_id: parent._id}, {children: parent.children});
-        } 
-        // Next, recursively delete toDelete and all children
-        return {'Deleted:': await recursiveDelete(toDelete._id)};
     }
 
     // Creates a storynode from a template (or adds a template as a child)

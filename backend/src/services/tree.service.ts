@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { TreeDoc } from '../schemas/mongo.schema';
 import appAssert from '../utils/appAssert';
 import { NOT_FOUND } from '../constants/http';
+import { recursiveGetDescendants } from './recursive.service';
 
 type QueryParam = {
     [key: string]: undefined | string | QueryParam | (string | QueryParam)[];
@@ -71,15 +72,25 @@ export default class TreeService<T extends TreeDoc> {
     }
 
     /**
-     * Deletes an element if it exists, then returns it.
-     * Note: this does not delete the children, or remove the element from its parent.
+     * Deletes a tree element by ID, including all its children and references in the parent.
      * @param userId - the userId to filter by
      * @param id - the id of the element to delete
      */
     async deleteById(userId: UserParam, id: string){
-        const deleted = await this.model.findOneAndDelete({ _id: id, userId });
-        appAssert(deleted, NOT_FOUND, 'Element not found');
-        return { 'Deleted': deleted };
+        const toDelete = await this.model.findOne({ _id: id, userId });
+        appAssert(toDelete, NOT_FOUND, 'Element not found');
+        // First, delete reference to this template from parent template
+        if (toDelete.parent) {
+            const parent = await this.model.findOne({ _id: toDelete.parent, userId });
+            appAssert(parent, NOT_FOUND, 'Parent element not found');
+            parent.children = parent.children.filter((child: string) => (child !== id && child !== null));
+            parent.save();
+        }
+        // Next, delete all descendents of this template
+        const descendents = await recursiveGetDescendants<T>(toDelete, this.model);
+        await this.model.deleteMany({ _id: { $in: descendents.map((descendent) => descendent._id) } });
+        // Finally, delete this template
+        return { 'Deleted': await this.model.findByIdAndDelete(id) };
     }
 
 }
