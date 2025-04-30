@@ -34,7 +34,7 @@ app.use((req, res, next) => {
 app.use('/auth', authRoutes);
 app.use('/user', authenticate, userRoutes);
 app.use('/sessions', authenticate, sessionRoutes);
-// app.use('/template', authenticate, templateRoutes);
+app.use('/templates', authenticate, templateRoutes);
 // app.use('/storynode', storynodeRoutes);
 app.use(errorHandler); // Catches all errors thrown in routes above
 
