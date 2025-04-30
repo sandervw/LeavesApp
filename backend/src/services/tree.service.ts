@@ -72,6 +72,7 @@ export default class TreeService<T extends TreeDoc> {
 
     /**
      * Deletes an element if it exists, then returns it.
+     * Note: this does not delete the children, or remove the element from its parent.
      * @param userId - the userId to filter by
      * @param id - the id of the element to delete
      */
