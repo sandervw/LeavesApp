@@ -4,23 +4,17 @@ import appAssert from "../utils/appAssert";
 import { NOT_FOUND } from "../constants/http";
 
 /**
- * Given a template or storynode id, recursively delete the element and all its children.
- * @param id - the id of the element to delete
+ * Given a template or storynode id, recursively get all descendants of that tree.
+ * @param id - the id of the element
+ * @returns - an array of all descendants of the element (not including the element itself)
  */
-export const recursiveDelete = async <T extends TreeDoc>(id: string, model: mongoose.Model<T>) => {
-    // Find the element by id
-    let toDelete = await model.findById(id); 
-    // If the element has children, recursively delete them
-    if(toDelete && toDelete.children){
-        let childArr = toDelete.children;
-        for (const child of childArr){
-            await recursiveDelete(child, model);
-        };
+export const recursiveGetDescendants = async <T extends TreeDoc>(tree: T, model: mongoose.Model<T>) => {
+    let descendents = await model.find({ _id: { $in: tree.children } });
+    for (const child of descendents) {
+        let childDescendents = await recursiveGetDescendants<T>(child, model);
+        descendents = [...descendents, ...childDescendents];
     }
-    // Finally, delete the element itself
-    const deleted = await model.findByIdAndDelete(id);
-    appAssert(deleted, NOT_FOUND, 'Element not found');
-    return deleted;
+    return descendents;
 }
 
 // Function to recursively delete elements
