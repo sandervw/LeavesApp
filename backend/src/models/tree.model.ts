@@ -6,8 +6,8 @@ const treeSchema = new mongoose.Schema<TreeDoc>({
     name: { type: String, required: true},
     type: {type: String, required: true },
     text: { type: String, default: '' },
-    children: { type: [String], default: [] }, // Array of ObjectIds referencing child nodes
-    parent: { type: String, default: null }, // ObjectId referencing the parent node
+    children: { type: [String], default: [] },
+    parent: { type: String, default: null },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true }, 
 }, {
     discriminatorKey: 'kind', // Discriminators are a way to have inheritance in a mongoose schema

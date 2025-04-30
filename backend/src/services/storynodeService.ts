@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import ElementService from './tree.service.js';
+import TreeService from './tree.service.js';
 import {Storynode} from '../models/models.js';
 import {readTxtAsJSON, writeArrayToFile} from './fileService.js';
 import {
@@ -8,9 +8,9 @@ import {
     recursiveUpdateWordLimits,
     recursiveStorynodeFromTemplate ,
     recursiveStorynodeFromJSON
-} from './recursiveService.js';
+} from './recursive.service.js';
 
-class storynodeService extends ElementService {
+class storynodeService extends TreeService {
 
     constructor() {
         super(Storynode);
