@@ -8,6 +8,8 @@ import mongoose from 'mongoose';
  * 2. Use mongoose's ObjectId type for _id
  */
 
+export type mongoId = mongoose.Types.ObjectId;
+
 export interface UserDoc extends mongoose.Document<mongoose.Types.ObjectId> {
     email: string;
     username: string; // Mostly for showing off in the UI

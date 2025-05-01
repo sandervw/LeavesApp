@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { StorynodeDoc, TreeDoc } from "../schemas/mongo.schema";
+import { StorynodeDoc, TreeDoc, mongoId } from "../schemas/mongo.schema";
 import { Storynode, Template } from '../models/models';
 import appAssert from '../utils/appAssert';
 import { NOT_FOUND } from '../constants/http';
@@ -48,14 +48,15 @@ export const recursiveStorynodeFromTemplate = async (userId: mongoose.Types.Obje
     const storyData = (parentId
         ? { userId, ...templateData, parent: parentId }
         : { userId, ...templateData });
-    const storynode = await Storynode.create(storyData);
+    let storynode: StorynodeDoc = await Storynode.create(storyData);
     // Then recursively add any children of the template
     if (templateData.children) {
+        let children: StorynodeDoc[] = [];
         for (const child of templateData.children) {
-            let result = await recursiveStorynodeFromTemplate(userId, child, storynode._id);
-            // Add the child to the parent's children array
-            await Storynode.findOneAndUpdate({ _id: storynode._id }, { $push: { children: result._id } }, { new: true });
+            children.push(await recursiveStorynodeFromTemplate(userId, child, storynode._id.toString()));
         };
+        // Update the parent with the new children
+        storynode = await Storynode.findOneAndUpdate({ _id: storynode._id, userId }, { children: children.map(child => child._id) });
     }
     // base case: return the new storynode
     return storynode;
