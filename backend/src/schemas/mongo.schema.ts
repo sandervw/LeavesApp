@@ -37,6 +37,7 @@ export interface TreeDoc extends mongoose.Document<mongoose.Types.ObjectId> {
 
 export interface TemplateDoc extends TreeDoc {
     wordWeight: number; // Used to store the percentage of the word count that this element should take up
+    getDataFields(): Pick<TemplateDoc, "name" | "type" | "text" | "wordWeight">;
 }
 
 export interface StorynodeDoc extends TreeDoc {

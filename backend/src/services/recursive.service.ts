@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import { StorynodeDoc, TreeDoc } from "../schemas/mongo.schema";
-import { Storynode } from '../models/models';
+import { Storynode, Template } from '../models/models';
+import appAssert from '../utils/appAssert';
+import { NOT_FOUND } from '../constants/http';
 
 /**
  * Given a template or storynode id, recursively get all descendants of that tree.
@@ -32,20 +34,32 @@ export const recursiveUpdateWordLimits = async (node: StorynodeDoc): Promise<voi
     }
 }
 
-
-// const recursiveUpdateWordLimits = async (node, wordLimit) => {
-//     let currentElement = node;
-//     if(currentElement && currentElement.children){
-//         let childArr = currentElement.children;
-//         for (const childId of childArr){
-//             let child = await Storynode.findById(childId);
-//             child.wordWeight ? child.wordLimit = Math.floor(wordLimit * child.wordWeight/100.00) : child.wordLimit = wordLimit;
-//             await Storynode.findOneAndUpdate({_id: child._id}, {wordLimit: child.wordLimit});
-//             await recursiveUpdateWordLimits(child, child.wordLimit);
-//         };
-//     }
-//     return;
-// }
+/**
+ * Given a templateId (and optionally a parentId), recursively create a storynode tree from the template tree.
+ * @param userId - the userId to assign to the new storynodes
+ * @param templateId - the id of the template to create the storynode tree from
+ * @param parentId - the id of the parent storynode (if any)
+ * @return - the new storynode tree
+ */
+export const recursiveStorynodeFromTemplate = async (userId: mongoose.Types.ObjectId, templateId: string, parentId?: string): Promise<StorynodeDoc> => {
+    // Create a new storynode with the template's data, making sure to give it a parent if supplied
+    const templateData = await Template.findOne({ _id: templateId, userId }).getDataFields();
+    appAssert(templateData, NOT_FOUND, 'Template not found');
+    const storyData = (parentId
+        ? { userId, ...templateData, parent: parentId }
+        : { userId, ...templateData });
+    const storynode = await Storynode.create(storyData);
+    // Then recursively add any children of the template
+    if (templateData.children) {
+        for (const child of templateData.children) {
+            let result = await recursiveStorynodeFromTemplate(userId, child, storynode._id);
+            // Add the child to the parent's children array
+            await Storynode.findOneAndUpdate({ _id: storynode._id }, { $push: { children: result._id } }, { new: true });
+        };
+    }
+    // base case: return the new storynode
+    return storynode;
+}
 
 // // Function to recursively get only the base nodes (leaves) of a story, given a start Id (inclusive)
 // const recursiveGetLeafs = async (id) => {

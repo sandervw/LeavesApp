@@ -1,8 +1,7 @@
 import { CREATED, OK } from '../constants/http';
 import storynodeService from '../services/storynode.service';
 import { catchErrors } from '../utils/errorUtils';
-import { mongoIdSchema, postSchema } from '../schemas/controller.schema';
-import { StorynodeDoc } from '../schemas/mongo.schema';
+import { mongoIdSchema, optionalMongoIdSchema, postSchema } from '../schemas/controller.schema';
 
 export const getStorynodesController = catchErrors( async (req, res) => {
     const storynodes = await storynodeService.find(req.userId, req.query);
@@ -35,8 +34,8 @@ export const deleteStorynodeController = catchErrors( async (req, res) => {
 
 export const postFromTemplateController = catchErrors( async (req, res) => {
     const templateId = mongoIdSchema.parse(req.body.templateId);
-    //const parentId = mongoIdSchema.parse(req.body.parentId);
-    const newChild = await storynodeService.addFromTemplate(templateId, parentId, req.userId);
+    const parentId = optionalMongoIdSchema.parse(req.body.parentId);
+    const newChild = await storynodeService.addFromTemplate(req.userId, templateId, parentId);
 });
 
 export const postFromFileController = catchErrors( async (req, res) => {
