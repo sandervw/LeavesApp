@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { StorynodeDoc, TreeDoc, mongoId } from "../schemas/mongo.schema";
+import { StorynodeDoc, TreeDoc } from "../schemas/mongo.schema";
 import { Storynode, Template } from '../models/tree.model';
 import appAssert from '../utils/appAssert';
 import { NOT_FOUND } from '../constants/http';
@@ -12,7 +12,7 @@ import { NOT_FOUND } from '../constants/http';
 export const recursiveGetDescendants = async <T extends TreeDoc>(tree: T, model: mongoose.Model<T>) => {
     let descendents = await model.find({ _id: { $in: tree.children } });
     for (const child of descendents) {
-        let childDescendents = await recursiveGetDescendants<T>(child, model);
+        const childDescendents = await recursiveGetDescendants<T>(child, model);
         descendents = [...descendents, ...childDescendents];
     }
     return descendents;
@@ -24,7 +24,7 @@ export const recursiveGetDescendants = async <T extends TreeDoc>(tree: T, model:
  */
 export const recursiveUpdateWordLimits = async (node: StorynodeDoc): Promise<void> => {
     if(node.children && node.children.length > 0){
-        let children: StorynodeDoc[] = await Storynode.find({ _id: { $in: node.children } });
+        const children: StorynodeDoc[] = await Storynode.find({ _id: { $in: node.children } });
         for (const child of children) {
             if(child.wordWeight) child.wordLimit = Math.floor(node.wordLimit * child.wordWeight / 100.00);
             else child.wordLimit = node.wordLimit;
@@ -51,7 +51,7 @@ export const recursiveStorynodeFromTemplate = async (userId: mongoose.Types.Obje
     let storynode: StorynodeDoc = await Storynode.create(storyData);
     // Then recursively add any children of the template
     if (templateData.children) {
-        let children: StorynodeDoc[] = [];
+        const children: StorynodeDoc[] = [];
         for (const child of templateData.children) {
             children.push(await recursiveStorynodeFromTemplate(userId, child, storynode._id.toString()));
         };

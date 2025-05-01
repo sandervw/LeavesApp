@@ -11,6 +11,7 @@ import authRoutes from './routes/auth.route';
 import userRoutes from './routes/user.route';
 import sessionRoutes from './routes/session.route';
 import templateRoutes from './routes/template.route';
+import storynodeRoutes from './routes/storynode.route';
 
 // Create express server
 const app = express();
@@ -35,11 +36,13 @@ app.use('/auth', authRoutes);
 app.use('/user', authenticate, userRoutes);
 app.use('/sessions', authenticate, sessionRoutes);
 app.use('/templates', authenticate, templateRoutes);
+app.use('/storynodes', authenticate, storynodeRoutes);
+
 // app.use('/storynode', storynodeRoutes);
 app.use(errorHandler); // Catches all errors thrown in routes above
 
 /*==MAIN REQUESTS==*/
-app.get('/', (req, res, next) => {
+app.get('/', (req, res) => {
     res.status(OK).json({ status: 'healthy' });
 });
 app.listen(PORT, async () => {
