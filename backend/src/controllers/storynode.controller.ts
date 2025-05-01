@@ -39,10 +39,10 @@ export const postFromTemplateController = catchErrors( async (req, res) => {
     return res.status(CREATED).json(newTree);
 });
 
-export const postFromFileController = catchErrors( async (req, res) => {
+export const postToFileController = catchErrors( async (req, res) => {
     // TODO
 });
 
-export const postToFileController = catchErrors( async (req, res) => {
+export const postFromFileController = catchErrors( async (req, res) => {
     // TODO
 });

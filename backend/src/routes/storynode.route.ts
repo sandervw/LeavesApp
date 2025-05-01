@@ -10,8 +10,8 @@ router.get('/:id', controller.getOneStorynodeController);
 router.get('/getchildren/:id', controller.getStorynodeChildrenController);
 router.post('/', controller.postStorynodeController);
 router.delete('/:id', controller.deleteStorynodeController);
-router.post('/postfromstorynode/', controller.postFromTemplateController);
-router.post('/postfromfile/', controller.postFromFileController);
+router.post('/postfromtemplate/', controller.postFromTemplateController);
 router.post('/posttofile/', controller.postToFileController);
+router.post('/postfromfile/', controller.postFromFileController);
 
 export default router;
