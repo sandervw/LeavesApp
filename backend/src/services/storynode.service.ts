@@ -51,19 +51,20 @@ class storynodeService extends TreeService<StorynodeDoc> {
     }
 
     // Creates a storynode from a template (or adds a template as a child)
-    async addFromTemplate(data, user_id){
-        // Add a child
-        if (data.parentId){
-            let newChild = await recursiveStorynodeFromTemplate(user_id, data.templateId, data.parentId);
-            let parent = await Storynode.findById(data.parentId)
+    async addFromTemplate(userId: UserParam, templateId: string, parentId?: string){
+        // ADD NEW CHILD
+        if (parentId){
+            let parent = await Storynode.findOne({ _id: parentId, userId });
+            appAssert(parent, NOT_FOUND, 'Parent not found');
+            let newChild = await recursiveStorynodeFromTemplate(userId, templateId, parentId);
             if(parent){
                 parent.children.push(newChild._id);
-                await Storynode.findOneAndUpdate({_id: parent._id, user_id}, {children: parent.children}, {new: true});
+                await Storynode.findOneAndUpdate({_id: parent._id, userId}, {children: parent.children}, {new: true});
             }
             return newChild;
         }
         // Or, send a new storynode
-        else return await recursiveStorynodeFromTemplate(user_id, data.templateId);
+        else return await recursiveStorynodeFromTemplate(userId, templateId);
     }
 
     // Creates a storynode from a file
