@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import TreeService from './tree.service';
-import { Storynode } from '../models/models';
+import { Storynode } from '../models/tree.model';
 import { StorynodeDoc, mongoId } from '../schemas/mongo.schema';
 import appAssert from '../utils/appAssert';
 import { NOT_FOUND } from '../constants/http';

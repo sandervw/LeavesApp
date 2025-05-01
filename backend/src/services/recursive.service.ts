@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { StorynodeDoc, TreeDoc, mongoId } from "../schemas/mongo.schema";
-import { Storynode, Template } from '../models/models';
+import { Storynode, Template } from '../models/tree.model';
 import appAssert from '../utils/appAssert';
 import { NOT_FOUND } from '../constants/http';
 

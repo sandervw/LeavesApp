@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import TreeService from './tree.service';
-import { Template } from '../models/models';
+import { Template } from '../models/tree.model';
 import { TemplateDoc } from '../schemas/mongo.schema';
 
 class templateService extends TreeService<TemplateDoc> {
