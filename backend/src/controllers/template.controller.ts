@@ -2,7 +2,6 @@ import { CREATED, OK } from '../constants/http';
 import templateService from '../services/template.service';
 import { catchErrors } from '../utils/errorUtils';
 import { mongoIdSchema, postSchema } from '../schemas/controller.schema';
-import { TemplateDoc } from '../schemas/mongo.schema';
 
 export const getTemplatesController = catchErrors( async (req, res) => {
     const templates = await templateService.find(req.userId, req.query);

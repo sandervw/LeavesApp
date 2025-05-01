@@ -12,11 +12,11 @@ export const userAgentSchema = z.string().optional();
 
 export const postSchema = z.object({
     _id: optionalMongoIdSchema,
-    kind: z.enum(['storynode', 'template']),
+    kind: z.enum(['storynode', 'template']).optional(),
     userId: optionalMongoIdSchema,
     name: z.string().min(1).max(255),
     type: z.enum(['root', 'branch', 'leaf']),
-    text: z.string().min(1).max(100000),
+    text: z.string().max(100000),
     children: z.array(optionalMongoIdSchema).optional(),
     parent: optionalMongoIdSchema,
     wordWeight: z.number().optional(),

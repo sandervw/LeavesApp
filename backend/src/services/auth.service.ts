@@ -43,7 +43,7 @@ export const signupUser = async (userData: SignupUserParams) => {
     });
     // Send verification email
     const verificationUrl = `${APP_ORIGIN}/email/verify/${verificationCode._id}`;
-    const { error } = await sendMail({
+    await sendMail({
         to: user.email,
         ...getVerifyEmailTemplate(verificationUrl),
     });

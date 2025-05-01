@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import TreeService from './tree.service';
 import { Storynode } from '../models/tree.model';
 import { StorynodeDoc, mongoId } from '../schemas/mongo.schema';
@@ -28,7 +27,7 @@ class storynodeService extends TreeService<StorynodeDoc> {
             // Set the word count (based on children or text)
             if (data.children && data.children.length > 0) {
                 data.children = data.children.filter(child => child !== null); // Clean up from frontend
-                let children = await Storynode.find({ _id: { $in: data.children }, userId });
+                const children = await Storynode.find({ _id: { $in: data.children }, userId });
                 appAssert(children.length === data.children.length, NOT_FOUND, 'Some children not found');
                 data.wordCount = children.reduce((acc: number, child: StorynodeDoc) => acc + child.wordCount, 0);
             }
@@ -58,9 +57,9 @@ class storynodeService extends TreeService<StorynodeDoc> {
     async addFromTemplate(userId: mongoId, templateId: string, parentId?: string){
         // ADD NEW CHILD
         if (parentId){
-            let parent = await Storynode.findOne({ _id: parentId, userId });
+            const parent = await Storynode.findOne({ _id: parentId, userId });
             appAssert(parent, NOT_FOUND, 'Parent not found');
-            let newChild = await recursiveStorynodeFromTemplate(userId, templateId, parentId);
+            const newChild = await recursiveStorynodeFromTemplate(userId, templateId, parentId);
             if(parent){
                 parent.children.push(newChild._id);
                 await Storynode.findOneAndUpdate({_id: parent._id, userId}, {children: parent.children}, {new: true});

@@ -11,5 +11,5 @@ export const hashValue = async (val: string, saltRounds?: number) => {
  * Compares a password with a hashed password using bcrypt.
  */
 export const compareValue = async (val: string, hashedVal: string) => {
-    return bcrypt.compare(val, hashedVal).catch((err) => false); // Returns false if error thrown
+    return bcrypt.compare(val, hashedVal).catch(() => false); // Returns false if error thrown
 };

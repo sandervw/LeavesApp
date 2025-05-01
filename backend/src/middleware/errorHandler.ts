@@ -7,7 +7,7 @@ import { clearAuthCookies, REFRESH_PATH } from "../utils/cookies";
 /**
  * Middleware to catch all errors throw by api routes
  */
-const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
+const errorHandler: ErrorRequestHandler = (error, req, res) => {
     console.log(`PATH: ${req.path}`, error);
 
     if (req.path === REFRESH_PATH) clearAuthCookies(res); // Clear both cookies if error occurs on refresh route
