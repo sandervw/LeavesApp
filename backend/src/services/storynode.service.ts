@@ -4,7 +4,7 @@ import { Storynode } from '../models/models';
 import { StorynodeDoc } from '../schemas/mongo.schema';
 import appAssert from '../utils/appAssert';
 import { NOT_FOUND } from '../constants/http';
-import { recursiveGetDescendants } from './recursive.service';
+import { recursiveGetDescendants, recursiveUpdateWordLimits } from './recursive.service';
 
 type UserParam = mongoose.Types.ObjectId;
 
@@ -18,24 +18,37 @@ class storynodeService extends TreeService<StorynodeDoc> {
         this.saveToFile = this.saveToFile.bind(this);
     }
 
-    async upsert(data, user_id){
-        data.user_id = user_id; // Ensure user_id is set in the data
-        // Send an update
+    /**
+     * Upserts a storynode (creates or updates it).
+     * Note: this also updates the word count (of storynode) and word limits of childrne (roots only).
+     * @param userId - the userId to filter by
+     * @param data - the data to upsert
+     */
+    async upsert(userId: UserParam, data: StorynodeDoc){
+        // UPDATE STORYNODE
         if (data._id){
-            if (data.children.length > 0) {
-                data.children = data.children.filter(child => child !== null); // Some cleanup
-                let children = await Storynode.find({ _id: { $in: data.children }, user_id });
-                data.wordCount = children.reduce((acc, child) => acc + child.wordCount, 0); // Sum the word counts of all children
+            // Check if the storynode exists
+            // Set the word count (based on children or text)
+            if (data.children && data.children.length > 0) {
+                data.children = data.children.filter(child => child !== null); // Clean up from frontend
+                let children = await Storynode.find({ _id: { $in: data.children }, userId });
+                appAssert(children.length === data.children.length, NOT_FOUND, 'Some children not found');
+                data.wordCount = children.reduce((acc: number, child: StorynodeDoc) => acc + child.wordCount, 0);
             }
-            else data.wordCount = data.text.trim().split(/\s+/).filter(word => word).length; // Count words in the text
-            let result = await Storynode.findOneAndUpdate({ _id: data._id, user_id }, data, {new: true});
-            if(result.type === 'root' && data.wordLimit){
-                await recursiveUpdateWordLimits(result, data.wordLimit);
+            else data.wordCount = data.text.trim().split(/\s+/).filter(word => word).length; 
+            // If the storynode is a root, set the word limit for its children
+            if(data.type === 'root' && data.wordLimit){
+                await recursiveUpdateWordLimits(data);
             }
+            const result = await Storynode.findOneAndUpdate({ _id: data._id, userId }, data, { new: true });
+            appAssert(result, NOT_FOUND, 'Storynode not found');
             return result;
         }
-        // Send a new storynode
-        return await Storynode.create(data);
+        // CREATE STORYNODE
+        else{
+            data.userId = userId; // Ensure user_id is set in the data
+            return await Storynode.create(data);
+        }
     }
 
     // Creates a storynode from a template (or adds a template as a child)
