@@ -1,7 +1,7 @@
-import { OK } from '../constants/http';
+import { CREATED, OK } from '../constants/http';
 import storynodeService from '../services/storynode.service';
 import { catchErrors } from '../utils/errorUtils';
-import { mongoIdSchema } from '../schemas/controller.schema';
+import { mongoIdSchema, postSchema } from '../schemas/controller.schema';
 import { StorynodeDoc } from '../schemas/mongo.schema';
 
 export const getStorynodesController = catchErrors( async (req, res) => {
@@ -22,9 +22,9 @@ export const getStorynodeChildrenController = catchErrors( async (req, res) => {
 });
     
 export const postStorynodeController = catchErrors( async (req, res) => {
-    const storynode: StorynodeDoc = req.body;
-    const result = await storynodeService.upsert(req.userId, storynode);
-    return res.status(OK).json(result);
+    postSchema.parse(req.body); // Validate the request
+    const result = await storynodeService.upsert(req.userId, req.body);
+    return res.status(CREATED).json(result);
 });
     
 export const deleteStorynodeController = catchErrors( async (req, res) => {
@@ -34,7 +34,9 @@ export const deleteStorynodeController = catchErrors( async (req, res) => {
 }); 
 
 export const postFromTemplateController = catchErrors( async (req, res) => {
-    // TODO
+    const templateId = mongoIdSchema.parse(req.body.templateId);
+    //const parentId = mongoIdSchema.parse(req.body.parentId);
+    const newChild = await storynodeService.addFromTemplate(templateId, parentId, req.userId);
 });
 
 export const postFromFileController = catchErrors( async (req, res) => {

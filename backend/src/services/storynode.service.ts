@@ -27,7 +27,6 @@ class storynodeService extends TreeService<StorynodeDoc> {
     async upsert(userId: UserParam, data: StorynodeDoc){
         // UPDATE STORYNODE
         if (data._id){
-            // Check if the storynode exists
             // Set the word count (based on children or text)
             if (data.children && data.children.length > 0) {
                 data.children = data.children.filter(child => child !== null); // Clean up from frontend
@@ -35,14 +34,14 @@ class storynodeService extends TreeService<StorynodeDoc> {
                 appAssert(children.length === data.children.length, NOT_FOUND, 'Some children not found');
                 data.wordCount = children.reduce((acc: number, child: StorynodeDoc) => acc + child.wordCount, 0);
             }
-            else data.wordCount = data.text.trim().split(/\s+/).filter(word => word).length; 
+            else data.wordCount = data.text.trim().split(/\s+/).filter(word => word).length;
+            const storynode = await Storynode.findOneAndUpdate({ _id: data._id, userId }, data, { new: true });
+            appAssert(storynode, NOT_FOUND, 'Storynode not found');
             // If the storynode is a root, set the word limit for its children
-            if(data.type === 'root' && data.wordLimit){
-                await recursiveUpdateWordLimits(data);
+            if(storynode.type === 'root' && storynode.wordLimit){
+                await recursiveUpdateWordLimits(storynode);
             }
-            const result = await Storynode.findOneAndUpdate({ _id: data._id, userId }, data, { new: true });
-            appAssert(result, NOT_FOUND, 'Storynode not found');
-            return result;
+            return storynode;
         }
         // CREATE STORYNODE
         else{
