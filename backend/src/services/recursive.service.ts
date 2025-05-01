@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
-import { TreeDoc } from "../schemas/mongo.schema";
-import appAssert from "../utils/appAssert";
-import { NOT_FOUND } from "../constants/http";
+import { StorynodeDoc, TreeDoc } from "../schemas/mongo.schema";
+import { Storynode } from '../models/models';
 
 /**
  * Given a template or storynode id, recursively get all descendants of that tree.
@@ -17,32 +16,35 @@ export const recursiveGetDescendants = async <T extends TreeDoc>(tree: T, model:
     return descendents;
 }
 
-// Function to recursively delete elements
-// export const recursiveDelete = async (id) => {
-//     let toDelete = await Element.findById(id); 
-//     if(toDelete && toDelete.children){
-//         let childArr = toDelete.children;
-//         for (const child of childArr){
-//             recursiveDelete(child);
-//         };
-//     }
-//     return await Element.findByIdAndDelete(id);
-// }
+/**
+ * Given a storynode, recursively update the word limits of all its children (based on their wordWeights).
+ * * @param node - the storynode whose children will be updated
+ */
+export const recursiveUpdateWordLimits = async (node: StorynodeDoc): Promise<void> => {
+    if(node.children && node.children.length > 0){
+        let children: StorynodeDoc[] = await Storynode.find({ _id: { $in: node.children } });
+        for (const child of children) {
+            if(child.wordWeight) child.wordLimit = Math.floor(node.wordLimit * child.wordWeight / 100.00);
+            else child.wordLimit = node.wordLimit;
+            await Storynode.findOneAndUpdate({ _id: child._id }, { wordLimit: child.wordLimit }, { new: true });
+            await recursiveUpdateWordLimits(child);
+        }
+    }
+}
 
-// // Function to recursively get all nodes of a story/template, given a start Id (inclusive)
-// const recursiveGet = async (id) => {
-//     let toGet = await Element.findById(id);
-//     let nodeArr = [];
-//     if(toGet) nodeArr.push(toGet);
-//     if(toGet && toGet.children){
-//         let childArr = toGet.children;
-//         for (const child of childArr){
-//             let childNode = await Element.findById(child);
-//             nodeArr.push(childNode);
-//             nodeArr = [...nodeArr, ...await recursiveGet(child)];
+
+// const recursiveUpdateWordLimits = async (node, wordLimit) => {
+//     let currentElement = node;
+//     if(currentElement && currentElement.children){
+//         let childArr = currentElement.children;
+//         for (const childId of childArr){
+//             let child = await Storynode.findById(childId);
+//             child.wordWeight ? child.wordLimit = Math.floor(wordLimit * child.wordWeight/100.00) : child.wordLimit = wordLimit;
+//             await Storynode.findOneAndUpdate({_id: child._id}, {wordLimit: child.wordLimit});
+//             await recursiveUpdateWordLimits(child, child.wordLimit);
 //         };
 //     }
-//     return nodeArr;
+//     return;
 // }
 
 // // Function to recursively get only the base nodes (leaves) of a story, given a start Id (inclusive)
@@ -59,21 +61,6 @@ export const recursiveGetDescendants = async <T extends TreeDoc>(tree: T, model:
 //         };
 //     }
 //     return blobArr;
-// }
-
-// // Function to recursively update the word limits of a storynode
-// const recursiveUpdateWordLimits = async (node, wordLimit) => {
-//     let currentElement = node;
-//     if(currentElement && currentElement.children){
-//         let childArr = currentElement.children;
-//         for (const childId of childArr){
-//             let child = await Storynode.findById(childId);
-//             child.wordWeight ? child.wordLimit = Math.floor(wordLimit * child.wordWeight/100.00) : child.wordLimit = wordLimit;
-//             await Storynode.findOneAndUpdate({_id: child._id}, {wordLimit: child.wordLimit});
-//             await recursiveUpdateWordLimits(child, child.wordLimit);
-//         };
-//     }
-//     return;
 // }
 
 // // Function to recursively convert a template tree to a storynode
