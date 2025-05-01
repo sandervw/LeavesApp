@@ -1,7 +1,7 @@
-import { OK } from '../constants/http';
+import { CREATED, OK } from '../constants/http';
 import templateService from '../services/template.service';
 import { catchErrors } from '../utils/errorUtils';
-import { mongoIdSchema } from '../schemas/controller.schema';
+import { mongoIdSchema, postSchema } from '../schemas/controller.schema';
 import { TemplateDoc } from '../schemas/mongo.schema';
 
 export const getTemplatesController = catchErrors( async (req, res) => {
@@ -22,9 +22,9 @@ export const getTemplateChildrenController = catchErrors( async (req, res) => {
 });
     
 export const postTemplateController = catchErrors( async (req, res) => {
-    const template: TemplateDoc = req.body;
-    const result = await templateService.upsert(req.userId, template);
-    return res.status(OK).json(result);
+    postSchema.parse(req.body); // Validate the request
+    const result = await templateService.upsert(req.userId, req.body);
+    return res.status(CREATED).json(result);
 });
     
 export const deleteTemplateController = catchErrors( async (req, res) => {

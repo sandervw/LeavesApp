@@ -16,4 +16,4 @@ const treeSchema = new mongoose.Schema<TreeDoc>({
 
 // Convert schema into model; a model is a constructor compiled from the schema definition
 // Models are responsible for creating/reading docs from MongoDB
-export const Tree = mongoose.model('element', treeSchema);
+export const Tree = mongoose.model('tree', treeSchema);
