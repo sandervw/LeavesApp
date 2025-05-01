@@ -35,7 +35,8 @@ export const deleteStorynodeController = catchErrors( async (req, res) => {
 export const postFromTemplateController = catchErrors( async (req, res) => {
     const templateId = mongoIdSchema.parse(req.body.templateId);
     const parentId = optionalMongoIdSchema.parse(req.body.parentId);
-    const newChild = await storynodeService.addFromTemplate(req.userId, templateId, parentId);
+    const newTree = await storynodeService.addFromTemplate(req.userId, templateId, parentId);
+    return res.status(CREATED).json(newTree);
 });
 
 export const postFromFileController = catchErrors( async (req, res) => {

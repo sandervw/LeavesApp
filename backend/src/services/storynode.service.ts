@@ -1,12 +1,10 @@
 import mongoose from 'mongoose';
 import TreeService from './tree.service';
 import { Storynode } from '../models/models';
-import { StorynodeDoc } from '../schemas/mongo.schema';
+import { StorynodeDoc, mongoId } from '../schemas/mongo.schema';
 import appAssert from '../utils/appAssert';
 import { NOT_FOUND } from '../constants/http';
-import { recursiveGetDescendants, recursiveUpdateWordLimits } from './recursive.service';
-
-type UserParam = mongoose.Types.ObjectId;
+import { recursiveStorynodeFromTemplate, recursiveUpdateWordLimits } from './recursive.service';
 
 class storynodeService extends TreeService<StorynodeDoc> {
 
@@ -14,8 +12,8 @@ class storynodeService extends TreeService<StorynodeDoc> {
         super(Storynode);
         this.upsert = this.upsert.bind(this);
         this.addFromTemplate = this.addFromTemplate.bind(this);
-        this.addFromFile = this.addFromFile.bind(this);
-        this.saveToFile = this.saveToFile.bind(this);
+        // this.addFromFile = this.addFromFile.bind(this);
+        // this.saveToFile = this.saveToFile.bind(this);
     }
 
     /**
@@ -24,7 +22,7 @@ class storynodeService extends TreeService<StorynodeDoc> {
      * @param userId - the userId to filter by
      * @param data - the data to upsert
      */
-    async upsert(userId: UserParam, data: StorynodeDoc){
+    async upsert(userId: mongoId, data: StorynodeDoc){
         // UPDATE STORYNODE
         if (data._id){
             // Set the word count (based on children or text)
@@ -50,8 +48,14 @@ class storynodeService extends TreeService<StorynodeDoc> {
         }
     }
 
-    // Creates a storynode from a template (or adds a template as a child)
-    async addFromTemplate(userId: UserParam, templateId: string, parentId?: string){
+    /**
+     * Creates a storynode from a template (or adds a template as a child)
+     * @param userId - the userId to assign to the new storynodes
+     * @param templateId - the id of the template to create the storynode tree from
+     * @param parentId - the id of the parent storynode (if any)
+     * @return - the new storynode tree
+     */
+    async addFromTemplate(userId: mongoId, templateId: string, parentId?: string){
         // ADD NEW CHILD
         if (parentId){
             let parent = await Storynode.findOne({ _id: parentId, userId });
@@ -67,30 +71,30 @@ class storynodeService extends TreeService<StorynodeDoc> {
         else return await recursiveStorynodeFromTemplate(userId, templateId);
     }
 
-    // Creates a storynode from a file
-    async addFromFile(filename, user_id){
-        const json = await readTxtAsJSON(filename);
-        let storynode = await Storynode.create({
-            user_id,
-            name: filename,
-            type: 'root',
-            text: `imported from ${filename}`,
-            children: []
-        });
-        let children = await recursiveStorynodeFromJSON(json, storynode._id);
-        await Storynode.findOneAndUpdate({_id: storynode._id, user_id}, {children});
-        return storynode;
-    }
+    // // Creates a storynode from a file
+    // async addFromFile(filename, user_id){
+    //     const json = await readTxtAsJSON(filename);
+    //     let storynode = await Storynode.create({
+    //         user_id,
+    //         name: filename,
+    //         type: 'root',
+    //         text: `imported from ${filename}`,
+    //         children: []
+    //     });
+    //     let children = await recursiveStorynodeFromJSON(json, storynode._id);
+    //     await Storynode.findOneAndUpdate({_id: storynode._id, user_id}, {children});
+    //     return storynode;
+    // }
 
-    // Save a storynode to a file
-    async saveToFile(id, user_id){
-        if(!id || !mongoose.Types.ObjectId.isValid(id)) throw new Error('Not a valid ID');
-        // Recursively retrieve all the nodes
-        const storynode = await Storynode.findOne({ _id: id, user_id });
-        let storyLeafs = await recursiveGetLeafs(storynode._id);
-        let result = await writeArrayToFile(storyLeafs.map((leaf) => leaf.text), `${storynode.name}.txt`);
-        res.status(200).json({success: result});
-    }
+    // // Save a storynode to a file
+    // async saveToFile(id, user_id){
+    //     if(!id || !mongoose.Types.ObjectId.isValid(id)) throw new Error('Not a valid ID');
+    //     // Recursively retrieve all the nodes
+    //     const storynode = await Storynode.findOne({ _id: id, user_id });
+    //     let storyLeafs = await recursiveGetLeafs(storynode._id);
+    //     let result = await writeArrayToFile(storyLeafs.map((leaf) => leaf.text), `${storynode.name}.txt`);
+    //     res.status(200).json({success: result});
+    // }
 
 }
 
