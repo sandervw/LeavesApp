@@ -22,7 +22,7 @@ export const recursiveGetDescendants = async <T extends TreeDoc>(tree: T, model:
  * Given a storynode, recursively update the word limits of all its children (based on their wordWeights).
  * * @param node - the storynode whose children will be updated
  */
-export const recursiveUpdateWordLimits = async (node: StorynodeDoc): Promise<void> => {
+export const recursiveUpdateWordLimits = async (node: Readonly<StorynodeDoc>): Promise<void> => {
     if(node.children && node.children.length > 0){
         const children: StorynodeDoc[] = await Storynode.find({ _id: { $in: node.children } });
         for (const child of children) {
