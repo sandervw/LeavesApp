@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "dev": "ts-node-dev --files src/server.ts index.d.ts"
+    "dev": "ts-node-dev --files src/server.ts index.d.ts",
+    "build": "tsc && shx cp ./package.json ./dist",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -37,6 +39,7 @@
     "@types/node": "^22.14.1",
     "@types/validator": "^13.15.0",
     "eslint": "^9.25.1",
+    "shx": "^0.4.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.31.1"

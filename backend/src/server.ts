@@ -38,7 +38,6 @@ app.use('/sessions', authenticate, sessionRoutes);
 app.use('/templates', authenticate, templateRoutes);
 app.use('/storynodes', authenticate, storynodeRoutes);
 
-// app.use('/storynode', storynodeRoutes);
 app.use(errorHandler); // Catches all errors thrown in routes above
 
 /*==MAIN REQUESTS==*/
