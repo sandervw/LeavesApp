@@ -43,14 +43,15 @@ export const recursiveUpdateWordLimits = async (node: StorynodeDoc): Promise<voi
  */
 export const recursiveStorynodeFromTemplate = async (userId: mongoose.Types.ObjectId, templateId: string, parentId?: string): Promise<StorynodeDoc> => {
     // Create a new storynode with the template's data, making sure to give it a parent if supplied
-    const templateData = await Template.findOne({ _id: templateId, userId }).getDataFields();
+    const templateData = await Template.findOne({ _id: templateId, userId });
     appAssert(templateData, NOT_FOUND, 'Template not found');
     const storyData = (parentId
-        ? { userId, ...templateData, parent: parentId }
-        : { userId, ...templateData });
+        ? { userId, parent: parentId, name: templateData.name, type: templateData.type, text: templateData.text, wordWeight: templateData.wordWeight }
+        : { userId, name: templateData.name, type: templateData.type, text: templateData.text, wordWeight: templateData.wordWeight });
+    console.log(storyData);
     let storynode: StorynodeDoc = await Storynode.create(storyData);
     // Then recursively add any children of the template
-    if (templateData.children) {
+    if (templateData.children && templateData.children.length > 0) {
         const children: StorynodeDoc[] = [];
         for (const child of templateData.children) {
             children.push(await recursiveStorynodeFromTemplate(userId, child, storynode._id.toString()));
