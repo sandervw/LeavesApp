@@ -8,11 +8,11 @@ const useLogin = () => {
     const [isPending, setIsPending] = useState(false);
     const { dispatch } = useAuthContext();
 
-    const login = async (username, password) => {
+    const login = async (email, password) => {
         setIsPending(true);
         setError(null);
         // Note: username can be an email or username
-        const response = await apiService.loginUser(username, password);
+        const response = await apiService.loginUser(email, password);
         const data = await response.json();
 
         if (!response.ok) {

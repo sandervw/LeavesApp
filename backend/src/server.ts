@@ -34,9 +34,13 @@ app.use((req, res, next) => {
 /*==ROUTES==*/
 app.use('/auth', authRoutes);
 app.use('/user', authenticate, userRoutes);
-app.use('/sessions', authenticate, sessionRoutes);
-app.use('/templates', authenticate, templateRoutes);
-app.use('/storynodes', authenticate, storynodeRoutes);
+app.use('/session', authenticate, sessionRoutes);
+app.use('/template', authenticate, templateRoutes);
+app.use('/storynode', authenticate, storynodeRoutes);
+// TODO: handle unknown routes (404)
+app.use((req, res) => {
+    res.status(404).json({ message: 'Route not found' });
+});
 
 app.use(errorHandler); // Catches all errors thrown in routes above
 

@@ -3,14 +3,14 @@ import useLogin from '../../hooks/useLogin';
 
 const Login = ({ hideModal }) => {
 
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { login, error, isPending } = useLogin();
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const success = await login(username, password);
+        const success = await login(email, password);
         success && hideModal();
     };
 
@@ -21,11 +21,11 @@ const Login = ({ hideModal }) => {
                 handleSubmit(e);
             }}>
                 <input
-                    type='text'
+                    type='email'
                     placeholder='Username'
-                    value={username}
+                    value={email}
                     autoComplete='username'
-                    onChange={(e) => setUsername(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)}
                     required
                 />
                 <input
