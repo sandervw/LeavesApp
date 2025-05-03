@@ -8,9 +8,9 @@ const useAPI = () => {
         const serviceMethods = {...apiService}
         if (!user) return;
         const options = {
+            credentials: 'include',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${user.token}`
+                'Content-Type': 'application/json'
             },
         };
         if (!serviceMethods[method]) throw new Error(`Unknown API method: ${method}`);

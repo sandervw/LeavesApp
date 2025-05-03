@@ -14,13 +14,11 @@ const useLogin = () => {
         // Note: username can be an email or username
         const response = await apiService.loginUser(email, password);
         const data = await response.json();
-
         if (!response.ok) {
             setError(data.error);
             setIsPending(false);
             return false;
         } else {
-            localStorage.setItem('user', JSON.stringify(data)); // save user to local storage
             dispatch({ type: 'LOGIN', payload: data });
             setError(null);
             setIsPending(false);

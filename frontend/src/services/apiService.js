@@ -104,6 +104,7 @@ class ApiService {
         try {
             const result = await fetch(`${API_URL}auth/signup`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({email, username, password})
             });
@@ -119,6 +120,7 @@ class ApiService {
             // TODO: Fix for either email or username
             const result = await fetch(`${API_URL}auth/login`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({email, password})
             });
