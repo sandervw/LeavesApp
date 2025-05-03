@@ -2,12 +2,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Baskervville&family=Poppins:wght@200;400;500;600;800&family=VT323&display=swap');
 /* The HTML element - used for defining global vars */
 :root {
-  --bgPrimary1: #FBF5F3;
-  --bgPrimary2: #E6E9E3;
-  --txtPrimary: #1F1300;
-  --accentPrimary1: #A76571;
-  --accentPrimary2: #FFA630;
-  background-color: var(--bgPrimary1);
+  --c-white: #ffffff;
+  --c-black: #000000;
+  --c-accent: #FFA630;
+  --c-placeholder: #7f7f7f;
+  --c-txtPrimary: var(--c-black);
+  --c-bgPrimary: var(--c-white);
+  background-color: var(--c-bgPrimary);
 }
 /* The actual id=root element */
 #root {
@@ -18,7 +19,7 @@
 *, *::before, *::after {
   /* Arial/sans-serif fallback fonts */
   font-family: "poppins", arial, sans-serif;
-  color: var(--txtPrimary);
+  color: var(--c-txtPrimary);
   text-decoration: none;
 }
 
@@ -32,7 +33,7 @@
   border-radius: 1rem;
   margin: 1rem;
   border: 2px solid transparent;
-  border-color: var(--bgPrimary2);
+  border-color: var(--c-txtPrimary);
 }
 .navbar {
   display: flex;
@@ -53,7 +54,7 @@
   padding: .5rem;
   margin: .5rem;
   border: 2px solid transparent;
-  border-color: var(--bgPrimary2);
+  border-color: var(--c-txtPrimary);
 }
 .detail {
   display: flex;
@@ -75,13 +76,13 @@
 }
 .rubbish-box {
   padding-bottom: 2rem;
-  background-color: rgba(255, 0, 0, 0.05); /* faint red */
+  background-color: var(--c-bgPrimary); /* faint red */
   background-image: 
-    linear-gradient(45deg, rgba(255, 0, 0, 0.15) 25%, transparent 25%),
-    linear-gradient(-45deg, rgba(255, 0, 0, 0.15) 25%, transparent 25%);
+    linear-gradient(45deg, var(--c-placeholder) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--c-placeholder) 25%, transparent 25%);
   background-size: 20px 20px;
   background-repeat: repeat;
-  border: 2px dashed rgba(255, 0, 0, 0.5); /* optional: makes purpose obvious */
+  border: 2px dashed var(--c-txtPrimary); /* optional: makes purpose obvious */
   transition: background-color 0.2s ease;
 
 }
@@ -108,9 +109,9 @@ input {
   font: inherit;
   text-align: left;
   background: none;
-  border: none;
+  border: 1px solid var(--c-txtPrimary);
   width: 100%;
-  background-color: var(--bgPrimary2);
+  background-color: var(--c-bgPrimary);
   border-radius: 1rem;
   padding: 0.5em 1em;
   box-sizing: border-box;
@@ -133,8 +134,9 @@ button {
   left: 0;
   z-index: 1000; /* ensure it renders above other elements */
   width: 100%; /* match the width of the input */
-  background-color: var(--bgPrimary2);
+  background-color: var(--c-bgPrimary);
   border-radius: 1rem;
+  border: 1px solid var(--c-txtPrimary);
 }
 .icon {
   width: 24px;
@@ -149,7 +151,7 @@ button {
   opacity: 0.5;
 }
 svg:hover {
-  fill: var(--accentPrimary2);
+  fill: var(--c-accent);
 }
 svg:focus, svg:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -157,7 +159,7 @@ svg:focus, svg:focus-visible {
 button.text-button {
   font-size: 1rem;
   font-family: inherit;
-  background-color: var(--accentPrimary1);
+  background-color: var(--c-bgPrimary);
   padding: 0.75rem 1.5rem;
   margin: 0.5rem;
 }
@@ -165,7 +167,7 @@ button.delete-button {
   background-color: rgb(98, 0, 0);
 }
 button.text-button:hover {
-  border-color: var(--accentPrimary2);
+  border-color: var(--c-txtPrimary);
 }
 button.text-button:focus, button.text-button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -174,7 +176,7 @@ button.text-button:focus, button.text-button:focus-visible {
 /* Style placeholders */
 [data-placeholder]::before {
   content: attr(data-placeholder); /* Use the placeholder text */
-  color: #7b7b7b; /* Gray color for the placeholder */
+  color: var(--c-placeholder); /* Gray color for the placeholder */
   font-style: italic; /* Optional: to distinguish placeholder text */
   pointer-events: none; /* Ensure it doesn't interfere with user actions */
   display: block;
@@ -200,7 +202,7 @@ button.text-button:focus, button.text-button:focus-visible {
   z-index: 1000; /* Add this line to ensure the modal appears above other content */
 }
 .modal-content {
-  background-color: var(--bgPrimary1);
+  background-color: var(--c-bgPrimary);
   display: flex;
   flex-direction: column;
   padding: 20px;

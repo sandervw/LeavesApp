@@ -2,6 +2,7 @@ Typescript conversion
     Fix error handling in recursion and authenticate middleware
     Fix services return values
 Expandable Stories/Templates Sidebar (how to handle state?)
+Fix error in searchbar where state doesn't update on delete.
 Word-count (each root or branch storynode's wordcount is the sum of its children's wordcounts)
     For Root/Branch - call it something like 'Total Branch Wordcount:'
 Branch-back-to-leaf

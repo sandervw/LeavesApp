@@ -114,6 +114,20 @@ class ApiService {
             return err;
         }
     }
+
+    async refreshToken(){
+        try {
+            const result = await fetch(`${API_URL}auth/refresh`, {
+                method: 'GET',
+                credentials: 'include',
+                headers: {'Content-Type': 'application/json'},
+            });
+            return result;
+        } catch (err) {
+            console.log(err);
+            return err;
+        }
+    }
     
     async loginUser(email, password){
         try {
@@ -121,7 +135,9 @@ class ApiService {
             const result = await fetch(`${API_URL}auth/login`, {
                 method: 'POST',
                 credentials: 'include',
-                headers: {'Content-Type': 'application/json'},
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify({email, password})
             });
             return result;
