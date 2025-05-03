@@ -1,9 +1,14 @@
 Typescript conversion
+    Fix error handling in recursion and authenticate middleware
+    Fix services return values
 Expandable Stories/Templates Sidebar (how to handle state?)
 Word-count (each root or branch storynode's wordcount is the sum of its children's wordcounts)
     For Root/Branch - call it something like 'Total Branch Wordcount:'
 Branch-back-to-leaf
 CSS App Layout:
+    ONLY BLACK AND WHITE (with one accent)
+        Easy to maintain; SIMPLE
+        Makes CSS easier
     General improvements
     Subtle gradient to elements
     A subset of fixed styles

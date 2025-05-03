@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import VerificationCodeTypes from '../constants/verificationCodeType';
 
 /**
  * Schemas to ensure our controllers and services shake hands on the same data structure.
@@ -10,7 +11,7 @@ import mongoose from 'mongoose';
 
 export type mongoId = mongoose.Types.ObjectId;
 
-export interface UserDoc extends mongoose.Document<mongoose.Types.ObjectId> {
+export interface UserDoc extends mongoose.Document<mongoId> {
     email: string;
     username: string; // Mostly for showing off in the UI
     password: string;
@@ -21,20 +22,28 @@ export interface UserDoc extends mongoose.Document<mongoose.Types.ObjectId> {
     omitPassword(): Pick<UserDoc, "_id" | "email" | "username" | "verified" | "createdAt" | "updatedAt">;
 }
 
-export interface SessionDoc extends mongoose.Document<mongoose.Types.ObjectId> {
-    userId: mongoose.Types.ObjectId;
+// Gives us methods and typing for props on mongoDB document
+export interface VerificationCodeDoc extends mongoose.Document<mongoId> {
+    userId: mongoId;
+    codeType: VerificationCodeTypes;
+    createdAt: Date;
+    expiresAt: Date;
+}
+
+export interface SessionDoc extends mongoose.Document<mongoId> {
+    userId: mongoId;
     userAgent?: string; // What device user is signed in on
     createdAt: Date;
     expiresAt: Date;
 }
 
-export interface TreeDoc extends mongoose.Document<mongoose.Types.ObjectId> {
+export interface TreeDoc extends mongoose.Document<mongoId> {
     name: string;
     type: string; // root, branch, or leaf
     text: string;
     children: string[]; // Array of ObjectIds referencing child nodes
     parent: string | null; // ObjectId referencing the parent node
-    userId: mongoose.Types.ObjectId; // User ID to associate with the tree element
+    userId: mongoId; // User ID to associate with the tree element
 }
 
 export interface TemplateDoc extends TreeDoc {
