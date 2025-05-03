@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "ts-node-dev --files src/server.ts index.d.ts",
     "build": "tsc && shx cp ./package.json ./dist",
-    "start": "node server.js"
+    "start": "node server.js",
+    "lint": "eslint . --ext .ts --ignore-pattern dist/"
   },
   "repository": {
     "type": "git",

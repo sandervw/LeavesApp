@@ -32,7 +32,7 @@ class storynodeService extends TreeService<StorynodeDoc> {
                 data.wordCount = children.reduce((acc: number, child: StorynodeDoc) => acc + child.wordCount, 0);
             }
             else data.wordCount = data.text.trim().split(/\s+/).filter(word => word).length;
-            const storynode = await Storynode.findOneAndUpdate({ _id: data._id, userId }, data, { new: true });
+            const storynode = await Storynode.findOneAndUpdate({ _id: data._id, userId }, { $set: data }, { new: true });
             appAssert(storynode, NOT_FOUND, 'Storynode not found');
             // If the storynode is a root, set the word limit for its children
             if(storynode.type === 'root' && storynode.wordLimit){
