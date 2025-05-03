@@ -19,7 +19,7 @@ export const getAccessTokenCookieOptions = (): CookieOptions => ({
 export const getRefreshTokenCookieOptions = (): CookieOptions => ({
     ...defaults,
     expires: thirtyDaysFromNow(),
-    path: REFRESH_PATH, 
+    path: REFRESH_PATH, // FOUND IT!: This is the only path the refresh token will be sent on
 });
 
 type Params = {
