@@ -4,7 +4,7 @@ import * as controller from '../controllers/storynode.controller';
 /** Routes focused on CRUD for storynodes */
 const router = express.Router();
 
-// Prefix: /storynodes
+// Prefix: /storynode
 router.get('/', controller.getStorynodesController);
 router.get('/:id', controller.getOneStorynodeController);
 router.get('/getchildren/:id', controller.getStorynodeChildrenController);

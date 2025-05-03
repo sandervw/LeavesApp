@@ -26,8 +26,8 @@ export type SignupUserParams = {
  */
 export const signupUser = async (userData: SignupUserParams) => {
     // Verify existing user doens't exist
-    const existingUser = await UserModel.exists({ email: userData.email });
-    appAssert(!existingUser, CONFLICT, 'Email already in use');
+    const existingUser = await UserModel.exists({ $or: [ { email: userData.email }, { username: userData.username } ] });
+    appAssert(!existingUser, CONFLICT, 'Email/Username already in use');
     // Create user
     const user = await UserModel.create({
         email: userData.email,

@@ -3,13 +3,12 @@ import appAssert from "../utils/appAssert";
 import { UNAUTHORIZED } from "../constants/http";
 import AppErrorCode from "../constants/appErrorCode";
 import { verifyToken } from "../utils/jwt";
-import { catchErrors } from "../utils/errorUtils";
 
 /**
  * Middleware to check if the user is authenticated.
  * If the user is authenticated, it adds the userId and sessionId to the request object.
  */
-const authenticate: RequestHandler = catchErrors(async (req, res, next) => {
+const authenticate: RequestHandler = (req, res, next) => {
     const accessToken = req.cookies.accessToken as string | undefined;
     appAssert(
         accessToken,
@@ -26,6 +25,6 @@ const authenticate: RequestHandler = catchErrors(async (req, res, next) => {
     req.userId = payload.userId;
     req.sessionId = payload.sessionId;
     next();
-});
+};
 
 export default authenticate;

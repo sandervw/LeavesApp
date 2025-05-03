@@ -12,7 +12,10 @@ const useSignup = () => {
         setIsPending(true);
         setError(null);
         const response = await apiService.signupUser(email, username, password);
+        console.log(response);
+        
         const data = await response.json();
+        console.log(data);
 
         if (!response.ok) {
             setError(data.error);

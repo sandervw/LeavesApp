@@ -102,7 +102,7 @@ class ApiService {
     
     async signupUser(email, username, password){
         try {
-            const result = await fetch(`${API_URL}user/signup`, {
+            const result = await fetch(`${API_URL}auth/signup`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({email, username, password})
@@ -114,13 +114,13 @@ class ApiService {
         }
     }
     
-    async loginUser(username, password){
+    async loginUser(email, password){
         try {
-            // Note: username can be an email or username
-            const result = await fetch(`${API_URL}user/login`, {
+            // TODO: Fix for either email or username
+            const result = await fetch(`${API_URL}auth/login`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({username, password})
+                body: JSON.stringify({email, password})
             });
             return result;
         } catch (err) {
