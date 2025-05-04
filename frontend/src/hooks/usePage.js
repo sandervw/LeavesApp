@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import useElementContext from './useElementContext';
 import useAddableContext from './useAddableContext';
 import usePageContext from './usePageContext';
-import useAPI from './useAPI';
+import apiService from '../services/apiService';
 
 const usePage = (page, elementID) => {
 
@@ -12,11 +12,8 @@ const usePage = (page, elementID) => {
     const { addables, dispatch: addablesDispatch } = useAddableContext();
     const { currentPage, dispatch: PageDispatch } = usePageContext();
 
-
-    const apiCall = useAPI();
-
     useEffect(() => {
-        console.log('UseEffect called in useTree by page:', page);
+        console.log('UseEffect called in usePage by page:', page);
         if (!page) return;
         const fetchData = async () => {
             setIsPending(true);
@@ -24,22 +21,22 @@ const usePage = (page, elementID) => {
             let children, element, addables;
             if (page === 'stories') {
                 element = '';
-                children = await apiCall('fetchElements', 'storynode', 'type=root&archived=false') ?? [];
-                addables = await apiCall('fetchElements', 'template', `type=root`) ?? [];
+                children = await apiService.fetchElements('storynode', 'type=root&archived=false') ?? [];
+                addables = await apiService.fetchElements('template', `type=root`) ?? [];
             }
             if (page === 'templates') {
                 element = '';
-                children = await apiCall('fetchElements', 'template', 'type=root') ?? [];
+                children = await apiService.fetchElements('template', 'type=root') ?? [];
                 addables = [];
             }
             if (page === 'storynodeDetail') {
-                element = await apiCall('fetchElement', 'storynode', elementID) ?? null;
-                children = await apiCall('fetchChildren', 'storynode', elementID) ?? [];
-                addables = await apiCall('fetchElements', 'template', `type=branch`) ?? [];
+                element = await apiService.fetchElement('storynode', elementID) ?? null;
+                children = await apiService.fetchChildren('storynode', elementID) ?? [];
+                addables = await apiService.fetchElements('template', `type=branch`) ?? [];
             }
             if (page === 'templateDetail') {
-                element = await apiCall('fetchElement', 'template', elementID) ?? null;
-                children = await apiCall('fetchChildren', 'template', elementID) ?? [];
+                element = await apiService.fetchElement('template', elementID) ?? null;
+                children = await apiService.fetchChildren('template', elementID) ?? [];
                 addables = [];
             }
             if (children.error || addables.error || element.error) {
@@ -55,7 +52,7 @@ const usePage = (page, elementID) => {
             setIsPending(false);
         };
         fetchData();
-    }, [ElementDispatch, addablesDispatch, PageDispatch, apiCall, page, elementID]);
+    }, [ElementDispatch, addablesDispatch, PageDispatch, page, elementID]);
     
     return { error, isPending, element, children, addables, currentPage };
 

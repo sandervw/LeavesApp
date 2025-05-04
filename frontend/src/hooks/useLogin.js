@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import useAuthContext from './useAuthContext';
 //import apiService from '../services/apiService';
-import { authLogin } from '../lib/api';
+import apiService from '../services/apiService';
 
 const useLogin = () => {
 
@@ -10,10 +10,8 @@ const useLogin = () => {
     const { dispatch } = useAuthContext();
 
     const login = async (email, password) => {
-        setIsPending(true);
-        setError(null);
         // Note: username can be an email or username
-        const { status, data } = await authLogin({email, password});
+        const { status, data } = await apiService.authLogin({email, password});
         if (!status || status !== 'OK') {
             setError(data.error);
             setIsPending(false);
