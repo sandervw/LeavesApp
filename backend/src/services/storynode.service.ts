@@ -54,7 +54,7 @@ class storynodeService extends TreeService<StorynodeDoc> {
      * @param parentId - the id of the parent storynode (if any)
      * @return - the new storynode tree
      */
-    async addFromTemplate(userId: mongoId, templateId: string, parentId?: string){
+    async addFromTemplate(userId: mongoId, templateId: string, parentId?: string | null){
         // ADD NEW CHILD
         if (parentId){
             const parent = await Storynode.findOne({ _id: parentId, userId });

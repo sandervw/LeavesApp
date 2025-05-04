@@ -1,0 +1,24 @@
+import axios from 'axios';
+
+const options = {
+    baseURL: import.meta.env.VITE_BASEAPIURL,
+    withCredentials: true,
+};
+
+const API = axios.create(options);
+
+API.interceptors.response.use(
+    (response) => {
+        console.log(response);
+        
+        return response.data;
+    },
+    (error) => {
+        console.log(error.response);
+        
+        const { status, data } = error.response;
+        return Promise.reject({status, ...data});
+    }
+);
+
+export default API;
