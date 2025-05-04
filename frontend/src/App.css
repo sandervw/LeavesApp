@@ -2,12 +2,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Baskervville&family=Poppins:wght@200;400;500;600;800&family=VT323&display=swap');
 /* The HTML element - used for defining global vars */
 :root {
-  --c-white: #ffffff;
-  --c-black: #000000;
+  --solid: 1;
+  --trans: 0.5;
+  --c-black: 0, 0, 0;
+  --c-white: 255, 255, 255;
   --c-accent: #FFA630;
-  --c-placeholder: #7f7f7f;
-  --c-txtPrimary: var(--c-black);
-  --c-bgPrimary: var(--c-white);
+  --c-placeholder: rgba(var(--c-black), var(--trans));
+  --c-txtPrimary: rgba(var(--c-black), var(--solid));
+  --c-bgPrimary: rgba(var(--c-white), var(--solid));
   background-color: var(--c-bgPrimary);
 }
 /* The actual id=root element */
@@ -109,7 +111,7 @@ input {
   font: inherit;
   text-align: left;
   background: none;
-  border: 1px solid var(--c-txtPrimary);
+  border: 2px dotted var(--c-txtPrimary);
   width: 100%;
   background-color: var(--c-bgPrimary);
   border-radius: 1rem;
@@ -119,7 +121,7 @@ input {
 }
 button {
   border-radius: 1rem;
-  border: 1px solid transparent;
+  border: 2px solid transparent;
   cursor: pointer;
   background: none;
   transition: border-color 0.25s;
