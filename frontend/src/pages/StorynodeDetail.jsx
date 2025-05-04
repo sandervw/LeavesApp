@@ -13,7 +13,7 @@ const StorynodeDetail = () => {
     const navigate = useNavigate();
     const { error, isPending, children, element } = usePage('storynodeDetail', location.state);
     const { dispatch: elementDispatch } = useElementContext();
-    const apiCall = useAPI();
+    const { apiCall } = useAPI();
 
     // Updates the name, text, or word count of the storynode
     const updateStorynode = async (attr, val) => {

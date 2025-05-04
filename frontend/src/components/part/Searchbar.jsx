@@ -5,7 +5,7 @@ import useAuthContext from '../../hooks/useAuthContext';
 
 const Searchbar = () => {
     const navigate = useNavigate();
-    const apiCall = useAPI();
+    const { apiCall } = useAPI();
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredResults, setFilteredResults] = useState([]);
     const [userElements, setUserElements] = useState([]);

@@ -1,6 +1,6 @@
 Typescript conversion
     Fix error handling in recursion and authenticate middleware
-    Fix services return values
+    Fix services return values (add return types to functions with multiple return statements; helps you think it out)
 Expandable Stories/Templates Sidebar (how to handle state?)
 Fix error in searchbar where state doesn't update on delete.
 Word-count (each root or branch storynode's wordcount is the sum of its children's wordcounts)

@@ -15,7 +15,7 @@ API.interceptors.response.use(
     (response) => {
         console.log(response);
         
-        return { status: response.statusText, data: response.data };
+        return response.data;
     },
     (error) => {
         console.log(error.response);

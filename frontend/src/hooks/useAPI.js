@@ -1,5 +1,5 @@
 import useAuthContext from '../hooks/useAuthContext';
-import * as api from '../lib/api'
+import apiService from '../services/apiService';
 import { useCallback, useState } from 'react';
 const useAPI = () => {
 
@@ -10,18 +10,21 @@ const useAPI = () => {
     const apiCall = useCallback(async (method, ...args) => {
         setIsPending(true);
         setError(null);
-        const apiMethods = {...api}
-        console.log('apiMethods', apiMethods);
-        
-        //if (!user) return;
-        
+        const apiMethods = {...apiService}
+        if (!user) return;
         if (!apiMethods[method]) throw new Error(`Unknown API method: ${method}`);
         // TODO: refresh token if expired
-        const result = await apiMethods[method]({...args});
+        const result = await apiMethods[method](...args);
         if(result.error && result.error.name==='TokenExpiredError') dispatch({ type: 'LOGOUT' });
+        if (result.error) {
+            setError(result.error);
+            setIsPending(false);
+            return result;
+        }
+        setError(null);
+        setIsPending(false);
         return result;
-
-    }, [user, dispatch]);
+    }, [dispatch, user]);
     return { apiCall, error, isPending };
 }
 
