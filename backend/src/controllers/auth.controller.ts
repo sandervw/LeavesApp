@@ -28,9 +28,9 @@ export const loginController = catchErrors(async (req, res) => {
         password: passwordSchema.parse(req.body.password),
         userAgent: userAgentSchema.parse(req.headers['user-agent']),
     };
-    const { accessToken, refreshToken } = await loginUser(request);
+    const { user, accessToken, refreshToken } = await loginUser(request);
     return setAuthCookies({ res, accessToken, refreshToken })
-        .status(OK).json({ message: 'Logged in successfully' });
+        .status(OK).json({ user, message: 'Logged in successfully' });
 });
 
 /** Handles user logout. */
