@@ -8,6 +8,7 @@ class ApiService {
         this.authLogin = this.authLogin.bind(this);
         this.authLogout = this.authLogout.bind(this);
         this.authRefresh = this.authRefresh.bind(this);
+        this.getUser = this.getUser.bind(this);
         this.fetchElements = this.fetchElements.bind(this);
         this.fetchElement = this.fetchElement.bind(this);
         this.fetchChildren = this.fetchChildren.bind(this);
@@ -24,6 +25,8 @@ class ApiService {
     async authLogout() { return await API.post('/auth/logout'); }
 
     async authRefresh() { return await API.get('/auth/refresh'); }
+
+    async getUser() { return await API.get('/user/'); }
 
     async fetchElements(kind, query) {
         if (query) return await API.get(`${kind}/?${query}`);
