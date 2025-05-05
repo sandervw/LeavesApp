@@ -5,7 +5,7 @@
   --c-black: #000000;
   --c-white: #FFFFFF;
   --c-gray: #7b7b7b;
-  --c-accent: #FFA630;
+  --c-accent: #8866bb;
   --c-placeholder: var(--c-gray);
   --c-txtPrimary: var(--c-black);
   --c-bgPrimary: var(--c-white);
@@ -76,15 +76,7 @@
   cursor: pointer;
 }
 .rubbish-box {
-  padding-bottom: 2rem;
-  background-color: var(--c-bgPrimary); /* faint red */
-  background-image: 
-    linear-gradient(45deg, var(--c-placeholder) 25%, transparent 25%),
-    linear-gradient(-45deg, var(--c-placeholder) 25%, transparent 25%);
-  background-size: 20px 20px;
-  background-repeat: repeat;
-  border: 2px dashed var(--c-txtPrimary); /* optional: makes purpose obvious */
-  transition: background-color 0.2s ease;
+  border: 2px dashed var(--c-txtPrimary);
 
 }
 
@@ -109,8 +101,7 @@ ul, li {
 input {
   font: inherit;
   text-align: left;
-  background: none;
-  border: 2px dotted var(--c-txtPrimary);
+  border: 2px solid var(--c-txtPrimary);
   width: 100%;
   background-color: var(--c-bgPrimary);
   border-radius: 1rem;
@@ -119,11 +110,39 @@ input {
   max-width: 600px;
 }
 button {
-  border-radius: 1rem;
-  border: 2px solid transparent;
   cursor: pointer;
-  background: none;
   transition: border-color 0.25s;
+  border: none;
+}
+button.text-button {
+  font-size: 1rem;
+  font-family: inherit;
+  padding: 0.75rem 1.5rem;
+  margin: 0.5rem;
+  border-radius: 1rem;
+  border: 2px solid var(--c-txtPrimary);
+  transition: color 0.15s;
+}
+button.text-button:hover {
+  color: var(--c-accent);
+}
+button.delete-button {
+  background-color: rgb(98, 0, 0);
+}
+.icon {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+}
+.icon svg {
+  fill: var(--txtPrimary);
+  transition: fill 0.15s;
+}
+svg:hover {
+  fill: var(--c-accent);
+}
+svg:focus, svg:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
 }
 .search {
   position: relative; /* Needed for absolute positioning of dropdown */
@@ -138,40 +157,6 @@ button {
   background-color: var(--c-bgPrimary);
   border-radius: 1rem;
   border: 1px solid var(--c-txtPrimary);
-}
-.icon {
-  width: 24px;
-  height: 24px;
-  display: inline-block;
-}
-.icon svg {
-  fill: var(--txtPrimary);
-  transition: fill 0.25s;
-}
-.faded-icon {
-  opacity: 0.5;
-}
-svg:hover {
-  fill: var(--c-accent);
-}
-svg:focus, svg:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-button.text-button {
-  font-size: 1rem;
-  font-family: inherit;
-  background-color: var(--c-bgPrimary);
-  padding: 0.75rem 1.5rem;
-  margin: 0.5rem;
-}
-button.delete-button {
-  background-color: rgb(98, 0, 0);
-}
-button.text-button:hover {
-  border-color: var(--c-txtPrimary);
-}
-button.text-button:focus, button.text-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
 /* Style placeholders */
