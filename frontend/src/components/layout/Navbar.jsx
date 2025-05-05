@@ -26,11 +26,11 @@ const Navbar = () => {
             <Searchbar />
             {user && <div>
                 <span className='username'>Welcome, {user.username}</span>
-                <button className='text-button' onClick={() => handleLogout()}>Log Out</button>
+                <button className='text-button clickable' onClick={() => handleLogout()}>Log Out</button>
             </div>}
             {!user && <div>
-                <button className='text-button' onClick={() => setShowLogin(true)}>Log In</button>
-                <button className='text-button' onClick={() => setShowSignup(true)}>Sign Up</button>
+                <button className='text-button clickable' onClick={() => setShowLogin(true)}>Log In</button>
+                <button className='text-button clickable' onClick={() => setShowSignup(true)}>Sign Up</button>
             </div>}
             {showSignup && <Signup hideModal={() => setShowSignup(false)} />}
             {showLogin && <Login hideModal={() => setShowLogin(false)} />}
