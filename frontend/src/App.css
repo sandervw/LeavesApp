@@ -7,8 +7,8 @@
   --c-gray: #7b7b7b;
   --c-accent: #8866bb;
   --c-placeholder: var(--c-gray);
-  --c-txtPrimary: var(--c-black);
-  --c-bgPrimary: var(--c-white);
+  --c-txtPrimary: var(--c-white);
+  --c-bgPrimary: var(--c-black);
   background-color: var(--c-bgPrimary);
 }
 /* The actual id=root element */
@@ -72,17 +72,14 @@
 .droppable {
   padding-bottom: 2rem;
 }
-.clickable {
-  cursor: pointer;
+
+/* DETAILED ELEMENT STYLES */
+.inline-trait {
+  display: flex;
+  align-items: center;
 }
 .rubbish-box {
   border: 2px dashed var(--c-txtPrimary);
-
-}
-
-/* DETAILED ELEMENT STYLES */
-li:hover {
-  text-decoration: underline;
 }
 ul, li {
   list-style-position: outside; /* Bullet points outside */
@@ -91,10 +88,7 @@ ul, li {
   padding-left: 0;
   margin-left: 0;
   cursor: pointer;
-}
-.inline-trait {
-  display: flex;
-  align-items: center;
+  transition: color 0.15s;
 }
 
 /* INPUT STYLES */
@@ -111,8 +105,8 @@ input {
 }
 button {
   cursor: pointer;
-  transition: border-color 0.25s;
   border: none;
+  background-color: var(--c-bgPrimary);
 }
 button.text-button {
   font-size: 1rem;
@@ -121,13 +115,16 @@ button.text-button {
   margin: 0.5rem;
   border-radius: 1rem;
   border: 2px solid var(--c-txtPrimary);
-  transition: color 0.15s;
-}
-button.text-button:hover {
-  color: var(--c-accent);
 }
 button.delete-button {
   background-color: rgb(98, 0, 0);
+}
+.clickable {
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.clickable:hover {
+  color: var(--c-accent);
 }
 .icon {
   width: 24px;
@@ -135,14 +132,15 @@ button.delete-button {
   display: inline-block;
 }
 .icon svg {
-  fill: var(--txtPrimary);
+  fill: var(--c-txtPrimary);
   transition: fill 0.15s;
 }
 svg:hover {
   fill: var(--c-accent);
 }
-svg:focus, svg:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+
+li:hover {
+  color: var(--c-accent);
 }
 .search {
   position: relative; /* Needed for absolute positioning of dropdown */
@@ -163,13 +161,13 @@ svg:focus, svg:focus-visible {
 [data-placeholder]::before {
   content: attr(data-placeholder); /* Use the placeholder text */
   color: var(--c-placeholder); /* Gray color for the placeholder */
-  font-style: italic; /* Optional: to distinguish placeholder text */
+  font-style: italic; /* To distinguish placeholder text */
   pointer-events: none; /* Ensure it doesn't interfere with user actions */
   display: block;
 }
 ::placeholder {
-  color: #7b7b7b; /* Gray color for the placeholder */
-  font-style: italic; /* Optional: to distinguish placeholder text */
+  color: var(--c-placeholder);
+  font-style: italic; /* To distinguish placeholder text */
   pointer-events: none; /* Ensure it doesn't interfere with user actions */
   display: block;
 }
