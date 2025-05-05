@@ -18,10 +18,10 @@ API.interceptors.response.use(
         return response.data;
     },
     (error) => {
-        console.log(error.response);
+        console.log(error);
         
-        const { status, data } = error.response;
-        return Promise.reject({status, ...data});
+        const { status, data } = error.response || error;
+        return Promise.reject({status, data});
     }
 );
 
