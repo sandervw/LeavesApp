@@ -7,43 +7,46 @@ import { clearAuthCookies, REFRESH_PATH } from "../utils/cookies";
 /**
  * Middleware to catch all errors throw by api routes
  */
-const errorHandler: ErrorRequestHandler = (error, req, res) => {
-    console.log(`PATH: ${req.path}`, error);
-
-    if (req.path === REFRESH_PATH) clearAuthCookies(res); // Clear both cookies if error occurs on refresh route
-
+const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
+    console.log(`PATH ${req.path}`, error);
+  
+    if (req.path === REFRESH_PATH) {
+      clearAuthCookies(res);
+    }
+  
     if (error instanceof z.ZodError) {
-        return handleZodError(res, error);
+      handleZodError(res, error);
+      return next();
     }
-
+  
     if (error instanceof AppError) {
-        return handleAppError(res, error);
+      handleAppError(res, error);
+      return next();
     }
-
-    res.status(INTERNAL_SERVER_ERROR).send("Internal Server Error");
-};
+  
+    res.status(INTERNAL_SERVER_ERROR).send("Internal server error");
+    return next();
+  };
 
 /**
  * Handle App Errors
  */
-const handleAppError = (res: Response, error: AppError) => {
-    res.status(error.statusCode).json({
-        message: error.message,
-        errorCode: error.errorCode,
-    })};
-
-/**
- * Return nicer zod error messages
- */
 const handleZodError = (res: Response, error: z.ZodError) => {
     const errors = error.issues.map((err) => ({
-        path: err.path.join("."),
-        message: err.message,
+      path: err.path.join("."),
+      message: err.message,
     }));
-    res.status(BAD_REQUEST).json({
-        message: 'Invalid request',
-        errors
+  
+    return res.status(BAD_REQUEST).json({
+      errors,
+      message: error.message,
     });
-}
-
+  };
+  
+  const handleAppError = (res: Response, error: AppError) => {
+    return res.status(error.statusCode).json({
+      message: error.message,
+      errorCode: error.errorCode,
+    });
+  };
 export default errorHandler;
