@@ -23,7 +23,7 @@ class ApiService {
 
     async authLogin(data) { return API.post('/auth/login', data); }
 
-    async authLogout() { return API.post('/auth/logout'); }
+    async authLogout() { return API.get('/auth/logout'); }
 
     async authRefresh() { return API.get('/auth/refresh'); }
 

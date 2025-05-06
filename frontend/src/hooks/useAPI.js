@@ -23,8 +23,7 @@ const useAPI = () => {
             setIsPending(false);
             return result;
         } catch (error) {
-            console.error('API call error:', error);
-            setError(error.message);
+            setError(error);
             setIsPending(false);
             return;
         }

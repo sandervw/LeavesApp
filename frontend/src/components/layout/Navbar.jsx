@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import Signup from  '../overlay/Signup';
+import Signup from '../overlay/Signup';
 import Login from '../overlay/Login';
 import useLogout from '../../hooks/useLogout.js';
 import useAuthContext from '../../hooks/useAuthContext.js';
@@ -19,22 +19,30 @@ const Navbar = () => {
     };
 
     return (
-        <header className='navbar container'>
-            <div className='site-header'>
-                <Link to='/'><h1>Leaves</h1></Link>
-            </div>
-            <Searchbar />
-            {user && <div>
-                <span className='username'>Welcome, {user.username}</span>
-                <button className='text-button clickable' onClick={() => handleLogout()}>Log Out</button>
-            </div>}
-            {!user && <div>
-                <button className='text-button clickable' onClick={() => setShowLogin(true)}>Log In</button>
-                <button className='text-button clickable' onClick={() => setShowSignup(true)}>Sign Up</button>
-            </div>}
-            {showSignup && <Signup hideModal={() => setShowSignup(false)} />}
-            {showLogin && <Login hideModal={() => setShowLogin(false)} />}
-        </header>
+        user
+            ? <header className='navbar container'>
+                <div className='site-header'>
+                    <Link to='/'><h1>Leaves</h1></Link>
+                </div>
+                <Searchbar />
+                <div>
+                    <span className='username'>Welcome, {user.username}</span>
+                    <button className='text-button clickable' onClick={() => handleLogout()}>Log Out</button>
+                </div>
+            </header>
+            : <header className='navbar container'>
+                <div className='site-header'>
+                    <Link to='/'><h1>Leaves</h1></Link>
+                </div>
+                <div />
+                <div>
+                    <button className='text-button clickable' onClick={() => setShowLogin(true)}>Log In</button>
+                    <button className='text-button clickable' onClick={() => setShowSignup(true)}>Sign Up</button>
+                </div>
+                {showSignup && <Signup hideModal={() => setShowSignup(false)} />}
+                {showLogin && <Login hideModal={() => setShowLogin(false)} />}
+
+            </header>
     );
 };
 
