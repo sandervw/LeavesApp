@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
  */
 const useDropHandler = (droppableType) => {
     const { element, dispatch: elementDispatch } = useElementContext();
-    const apiCall = useAPI();
+    const { apiCall } = useAPI();
     const navigate = useNavigate();
 
     const checkError = (source, data, dropFunction) => {

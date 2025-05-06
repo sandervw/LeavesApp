@@ -18,31 +18,33 @@ class ApiService {
         this.createFile = this.createFile.bind(this);
     }
 
-    async authSignup(data) { return await API.post('/auth/signup', data); }
+    async authSignup(data) { return API.post('/auth/signup', data); }
 
-    async authLogin(data) { return await API.post('/auth/login', data); }
+    async authLogin(data) { return API.post('/auth/login', data); }
 
-    async authLogout() { return await API.post('/auth/logout'); }
+    async authLogout() { return API.post('/auth/logout'); }
 
-    async authRefresh() { return await API.get('/auth/refresh'); }
+    async authRefresh() { return API.get('/auth/refresh'); }
 
-    async getUser() { return await API.get('/user/'); }
+    async getUser() { return API.get('/user/'); }
+
+    async verifyEmail(verificationCode) { return API.get(`/auth/email/verify/${verificationCode}`); }
 
     async fetchElements(kind, query) {
-        if (query) return await API.get(`${kind}/?${query}`);
-        else return await API.get(`${kind}/`);
+        if (query) return API.get(`${kind}/?${query}`);
+        else return API.get(`${kind}/`);
     }
     
-    async fetchElement(kind, id){ return await API.get(`${kind}/${id}`); }
+    async fetchElement(kind, id){ return API.get(`${kind}/${id}`); }
     
-    async fetchChildren(kind, id){ return await API.get(`${kind}/getchildren/${id}`); };
+    async fetchChildren(kind, id){ return API.get(`${kind}/getchildren/${id}`); };
     
-    async upsertElement(kind, element){ return await API.post(`${kind}/`, element); };
+    async upsertElement(kind, element){ return API.post(`${kind}/`, element); };
     
     // Can be used to create a new story, or add a child to an existing story
-    async createFromTemplate(templateId, parentId){ return await API.post(`storynode/postfromtemplate/`, {templateId, parentId}); }
+    async createFromTemplate(templateId, parentId){ return API.post(`storynode/postfromtemplate/`, {templateId, parentId}); }
     
-    async deleteElement(kind, id){ return await API.delete(`${kind}/${id}`); }
+    async deleteElement(kind, id){ return API.delete(`${kind}/${id}`); }
     
     async createFile(id){
         //TODO

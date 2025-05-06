@@ -11,17 +11,17 @@ const useSignup = () => {
     const signup = async (email, username, password) => {
         setIsPending(true);
         setError(null);
-        const response = await apiService.signupUser(email, username, password);
-        const data = await response.json();
-        if (!response.ok) {
-            setError(data.error);
-            setIsPending(false);
-            return false;
-        } else {
-            dispatch({ type: 'LOGIN', payload: data });
+        try {
+            const user = await apiService.signupUser(email, username, password);
+            localStorage.setItem('user', JSON.stringify(user)); // save user to local storage
+            dispatch({ type: 'LOGIN', payload: user });
             setError(null);
             setIsPending(false);
             return true;
+        } catch (error) {
+            setError(error);
+            setIsPending(false);
+            return false;
         }
     };
 
