@@ -8,14 +8,13 @@ const useLogout = () => {
     const { dispatch: addableDispatch } = useAddableContext();
     const { dispatch: elementDispatch } = useElementContext();
 
-    // No need for any backend call
     const logout = async () => {
         authDispatch({ type: 'LOGOUT' }); // dispatch logout action to context
-        await apiService.authLogout(); // call logout API
-        localStorage.removeItem('user'); // remove user from local storage
+        elementDispatch({ type: 'SET_CHILDREN', payload: null });
         addableDispatch({ type: 'SET_ADDABLES', payload: null });
         elementDispatch({ type: 'SET_ELEMENT', payload: null });
-        elementDispatch({ type: 'SET_CHILDREN', payload: null });
+        localStorage.removeItem('user'); // remove user from local storage
+        apiService.authLogout(); // call logout API (no need to await)
     };
 
     return { logout };

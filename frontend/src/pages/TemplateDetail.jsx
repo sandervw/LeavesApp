@@ -12,7 +12,7 @@ const TemplateDetail = () => {
     const location = useLocation(); // Grab the element from location state
     const { error, isPending, children, element } = usePage('templateDetail', location.state);
     const { dispatch: elementDispatch } = useElementContext();
-    const apiCall = useAPI();
+    const { apiCall } = useAPI();
 
     // Updates for name, text, and wordWeight
     const updateTemplate = async (attr, val) => {

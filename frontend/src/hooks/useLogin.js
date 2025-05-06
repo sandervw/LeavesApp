@@ -11,9 +11,9 @@ const useLogin = () => {
     const login = async (email, password) => {
         // Note: username can be an email or username
         try {
-            const data = await apiService.authLogin({email, password});
-            localStorage.setItem('user', JSON.stringify(data.user)); // save user to local storage
-            dispatch({ type: 'LOGIN', payload: data.user });
+            const user = await apiService.authLogin({email, password});
+            localStorage.setItem('user', JSON.stringify(user)); // save user to local storage
+            dispatch({ type: 'LOGIN', payload: user });
             setError(null);
             setIsPending(false);
             return true;
@@ -21,7 +21,6 @@ const useLogin = () => {
             setError(error);
             setIsPending(false);
             return false;
-            
         }
     };
 

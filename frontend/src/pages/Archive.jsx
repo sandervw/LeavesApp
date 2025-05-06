@@ -9,7 +9,7 @@ const Archive = () => {
 
     const [isPending, setIsPending] = useState(true);
     const { children: storynodes, dispatch } = useElementContext();
-    const apiCall = useAPI();
+    const { apiCall } = useAPI();
 
     useEffect(() => {
         const fetchData = async () => {

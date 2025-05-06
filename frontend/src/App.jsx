@@ -41,6 +41,7 @@ function App() {
             <Route path='/storydetail' element={user ? <StorynodeDetail /> : <Navigate to='/landing' />} />
             <Route path='/templatedetail' element={user ? <TemplateDetail /> : <Navigate to='/landing' />} />
             <Route path='/landing' element={!user ? <Landing /> : <Navigate to='/' />} />
+            <Route path='/email/verify/:code' element={<Landing />} />
           </Routes>
           <AddSidebar />
         </DndContext>

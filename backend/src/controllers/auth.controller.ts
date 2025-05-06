@@ -30,7 +30,7 @@ export const loginController = catchErrors(async (req, res) => {
     };
     const { user, accessToken, refreshToken } = await loginUser(request);
     return setAuthCookies({ res, accessToken, refreshToken })
-        .status(OK).json({ user, message: 'Logged in successfully' });
+        .status(OK).json(user);
 });
 
 /** Handles user logout. */
