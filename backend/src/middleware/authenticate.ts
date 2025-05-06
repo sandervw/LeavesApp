@@ -16,8 +16,6 @@ const authenticate: RequestHandler = (req, res, next) => {
         'Not authorized',
         AppErrorCode.InvalidAccessToken);
     const { error, payload } = verifyToken(accessToken);
-    console.log('Payload:', payload);
-    console.log('Error:', error);
     
     appAssert(
         payload,

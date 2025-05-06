@@ -39,7 +39,7 @@ API.interceptors.response.use(
     //     }
     //   }
   
-      return Promise.reject({ status, message: data || "An error occurred" });
+      return Promise.reject(`Error: ${data.message|| "unknown error"} `);
     }
 );
 

@@ -11,8 +11,6 @@ const VerifyEmail = () => {
         const verifyEmail = async () => {
             if (code) {
                 await apiCall('verifyEmail', code);
-                console.log(error, isPending);
-                
             }
         }
         verifyEmail();
