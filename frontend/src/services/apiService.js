@@ -9,6 +9,7 @@ class ApiService {
         this.authLogout = this.authLogout.bind(this);
         this.authRefresh = this.authRefresh.bind(this);
         this.getUser = this.getUser.bind(this);
+        this.verifyEmail = this.verifyEmail.bind(this);
         this.fetchElements = this.fetchElements.bind(this);
         this.fetchElement = this.fetchElement.bind(this);
         this.fetchChildren = this.fetchChildren.bind(this);

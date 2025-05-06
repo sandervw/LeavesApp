@@ -18,6 +18,8 @@ API.interceptors.response.use(
     },
     async (error) => {
       const { config, response } = error;
+      console.log(error);
+      
       const { status, data } = response || {};
   
     //   // try to refresh the access token behind the scenes
@@ -37,7 +39,7 @@ API.interceptors.response.use(
     //     }
     //   }
   
-    //   return Promise.reject({ status, ...data });
+      return Promise.reject({ status, message: data || "An error occurred" });
     }
 );
 

@@ -13,6 +13,7 @@ import TemplateDetail from './pages/TemplateDetail';
 import StorynodeDetail from './pages/StorynodeDetail';
 import AddSidebar from './components/layout/AddSidebar';
 import LinkSidebar from './components/layout/LinkSidebar';
+import VerifyEmail from './pages/VerifyEmail';
 
 /**
  * Responsible for routing to the different pages of the app.
@@ -41,7 +42,7 @@ function App() {
             <Route path='/storydetail' element={user ? <StorynodeDetail /> : <Navigate to='/landing' />} />
             <Route path='/templatedetail' element={user ? <TemplateDetail /> : <Navigate to='/landing' />} />
             <Route path='/landing' element={!user ? <Landing /> : <Navigate to='/' />} />
-            <Route path='/email/verify/:code' element={<Landing />} />
+            <Route path='/email/verify/:code' element={<VerifyEmail />} />
           </Routes>
           <AddSidebar />
         </DndContext>

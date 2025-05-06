@@ -12,7 +12,7 @@ const useSignup = () => {
         setIsPending(true);
         setError(null);
         try {
-            const user = await apiService.signupUser(email, username, password);
+            const user = await apiService.authSignup({email, username, password});
             localStorage.setItem('user', JSON.stringify(user)); // save user to local storage
             dispatch({ type: 'LOGIN', payload: user });
             setError(null);
