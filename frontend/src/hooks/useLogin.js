@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import useAuthContext from './useAuthContext';
-//import apiService from '../services/apiService';
 import apiService from '../services/apiService';
 
 const useLogin = () => {
@@ -11,13 +10,19 @@ const useLogin = () => {
 
     const login = async (email, password) => {
         // Note: username can be an email or username
-        const data = await apiService.authLogin({email, password});
-        // TODO: error handling
-        localStorage.setItem('user', JSON.stringify(data.user)); // save user to local storage
-        dispatch({ type: 'LOGIN', payload: data.user });
-        setError(null);
-        setIsPending(false);
-        return true;
+        try {
+            const data = await apiService.authLogin({email, password});
+            localStorage.setItem('user', JSON.stringify(data.user)); // save user to local storage
+            dispatch({ type: 'LOGIN', payload: data.user });
+            setError(null);
+            setIsPending(false);
+            return true;
+        } catch (error) {
+            setError(error);
+            setIsPending(false);
+            return false;
+            
+        }
     };
 
     return { login, error, isPending };
