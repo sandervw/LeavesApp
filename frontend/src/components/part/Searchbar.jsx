@@ -16,6 +16,7 @@ const Searchbar = () => {
             if (!user) return;
             const storynodes = await apiCall('fetchElements', 'storynode', 'type=root&archived=false');
             const templates = await apiCall('fetchElements', 'template', 'type=root');
+            if (!storynodes || !templates) return;
             setUserElements([...storynodes, ...templates]);
         };
         fetchData();
