@@ -1,21 +1,16 @@
-import useAuthContext from '../hooks/useAuthContext';
+// import useAuthContext from '../hooks/useAuthContext';
 import apiService from '../services/apiService';
 import { useCallback, useState } from 'react';
 const useAPI = () => {
 
     const [error, setError] = useState(null);
     const [isPending, setIsPending] = useState(true);
-    const { user, dispatch } = useAuthContext();
+    // const { user, dispatch } = useAuthContext();
 
     const apiCall = useCallback(async (method, ...args) => {
         setIsPending(true);
         setError(null);
-        const apiMethods = {...apiService}
-        // if (!user) {
-        //     const data = await apiService.getUser();
-        //     localStorage.setItem('user', JSON.stringify(data.user));
-        //     dispatch({ type: 'LOGIN', payload: data.user });
-        // }
+        const apiMethods = {...apiService};
         if (!apiMethods[method]) throw new Error(`Unknown API method: ${method}`);
         try {
             const result = await apiMethods[method](...args);

@@ -17,10 +17,10 @@ API.interceptors.response.use(
         return response.data;
     },
     async (error) => {
-      const { config, response } = error;
+      const { response } = error;
       console.log(error);
       
-      const { status, data } = response || {};
+      const { data } = response || {};
   
     //   // try to refresh the access token behind the scenes
     //   if (status === UNAUTHORIZED && data?.errorCode === "InvalidAccessToken") {
