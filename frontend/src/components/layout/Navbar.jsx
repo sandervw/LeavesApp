@@ -34,7 +34,9 @@ const Navbar = () => {
                 <div className='site-header'>
                     <Link to='/'><h1>Leaves</h1></Link>
                 </div>
-                <div />
+                <div>
+                    <h2>Login or Signup to start</h2>
+                </div>
                 <div>
                     <button className='text-button clickable' onClick={() => setShowLogin(true)}>Log In</button>
                     <button className='text-button clickable' onClick={() => setShowSignup(true)}>Sign Up</button>

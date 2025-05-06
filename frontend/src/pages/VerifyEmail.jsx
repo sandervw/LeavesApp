@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import useAPI from "../hooks/useAPI";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 const VerifyEmail = () => {
 
@@ -17,7 +17,13 @@ const VerifyEmail = () => {
     }, [code, apiCall]);
 
     return (<>
-        {error && <div className='error container'>{error}</div>}
+        {error && <div className='error container'>
+            <div>
+                {error}
+            </div>
+            <button className='text-button clickable'><Link to='/password/forgot' className='clickable'>Reset Password</Link></button>
+            
+            </div>}
         {isPending && <div className='loading container'>Loading...</div>}
         {!isPending && !error &&
             <div>
