@@ -1,19 +1,19 @@
 import { useState } from 'react';
 import useLogin from '../../hooks/useLogin';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Login = ({ hideModal }) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { login, error, isPending } = useLogin();
+    const Navigate = useNavigate();
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const success = await login(email, password);
         if(success){
-            hideModal();
             Navigate('/');
         }
     };
