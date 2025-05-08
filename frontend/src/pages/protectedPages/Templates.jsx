@@ -1,5 +1,5 @@
-import ElementList from '../components/part/ElementList';
-import usePage from '../hooks/usePage';
+import ElementList from '../../components/part/ElementList';
+import usePage from '../../hooks/usePage';
 
 const Templates = () => {
 

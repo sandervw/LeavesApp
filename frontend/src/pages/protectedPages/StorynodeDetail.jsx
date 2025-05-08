@@ -1,11 +1,11 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArchiveButton, DownloadButton, ReturnButton } from '../components/part/common/Buttons';
-import ElementList from '../components/part/ElementList';
-import ElementFeature from '../components/part/ElementFeature';
-import Draggable from '../components/wrapper/Draggable';
-import usePage from '../hooks/usePage';
-import useElementContext from '../hooks/useElementContext';
-import useAPI from '../hooks/useAPI';
+import { ArchiveButton, DownloadButton, ReturnButton } from '../../components/part/common/Buttons';
+import ElementList from '../../components/part/ElementList';
+import ElementFeature from '../../components/part/ElementFeature';
+import Draggable from '../../components/wrapper/Draggable';
+import usePage from '../../hooks/usePage';
+import useElementContext from '../../hooks/useElementContext';
+import useAPI from '../../hooks/useAPI';
 
 const StorynodeDetail = () => {
 

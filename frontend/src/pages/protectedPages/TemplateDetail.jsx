@@ -1,10 +1,10 @@
 import { useLocation } from 'react-router-dom';
-import ElementList from '../components/part/ElementList';
-import ElementFeature from '../components/part/ElementFeature';
-import Draggable from '../components/wrapper/Draggable';
-import usePage from '../hooks/usePage';
-import useElementContext from '../hooks/useElementContext';
-import useAPI from '../hooks/useAPI';
+import ElementList from '../../components/part/ElementList';
+import ElementFeature from '../../components/part/ElementFeature';
+import Draggable from '../../components/wrapper/Draggable';
+import usePage from '../../hooks/usePage';
+import useElementContext from '../../hooks/useElementContext';
+import useAPI from '../../hooks/useAPI';
 
 
 const TemplateDetail = () => {

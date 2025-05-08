@@ -1,9 +1,9 @@
-import AddSidebar from '../components/layout/AddSidebar';
-import LinkSidebar from '../components/layout/LinkSidebar';
-import ElementList from '../components/part/ElementList';
+import AddSidebar from '../../components/layout/AddSidebar';
+import LinkSidebar from '../../components/layout/LinkSidebar';
+import ElementList from '../../components/part/ElementList';
 import { useEffect, useState } from 'react';
-import useAPI from '../hooks/useAPI';
-import useElementContext from '../hooks/useElementContext';
+import useAPI from '../../hooks/useAPI';
+import useElementContext from '../../hooks/useElementContext';
 
 const Archive = () => {
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import useAPI from "../hooks/useAPI";
+import useAPI from "../../hooks/useAPI";
 
 const ForgotPassword = () => {
 

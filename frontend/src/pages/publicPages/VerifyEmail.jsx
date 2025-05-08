@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import useAPI from "../hooks/useAPI";
+import useAPI from "../../hooks/useAPI";
 import { useParams, Link } from "react-router-dom";
 
 const VerifyEmail = () => {
