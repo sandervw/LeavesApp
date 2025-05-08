@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
 import useAuthContext from '../hooks/useAuthContext';
 import { useNavigate } from 'react-router-dom';
+import usePage from '../hooks/usePage';
 
 const Landing = () => {
     const { user } = useAuthContext();
     const navigate = useNavigate();
+    usePage({ page: 'landing' });
 
     useEffect(() => {
         if (user) {

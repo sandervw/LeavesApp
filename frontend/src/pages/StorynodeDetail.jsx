@@ -11,7 +11,7 @@ const StorynodeDetail = () => {
 
     const location = useLocation(); // Grab the element from location state
     const navigate = useNavigate();
-    const { error, isPending, children, element } = usePage('storynodeDetail', location.state);
+    const { error, isPending, children, element } = usePage({ page: 'storynodeDetail', elementID: location.state });
     const { dispatch: elementDispatch } = useElementContext();
     const { apiCall } = useAPI();
 

@@ -7,7 +7,7 @@ import usePage from '../hooks/usePage';
  */
 const Stories = () => {
 
-    const { error, isPending, children } = usePage('stories');
+    const { error, isPending, children } = usePage({ page: 'stories' });
 
     return (
         <>
