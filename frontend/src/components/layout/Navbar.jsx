@@ -1,7 +1,4 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import Signup from '../overlay/Signup';
-import Login from '../overlay/Login';
 import useLogout from '../../hooks/useLogout.js';
 import useAuthContext from '../../hooks/useAuthContext.js';
 import Searchbar from '../part/Searchbar.jsx';
@@ -42,8 +39,6 @@ const Navbar = () => {
                     <button className='text-button clickable' onClick={() => Navigate('/login')}>Log In</button>
                     <button className='text-button clickable' onClick={() => Navigate('/signup')}>Sign Up</button>
                 </div>
-                {/* {showSignup && <Signup hideModal={() => setShowSignup(false)} />}
-                {showLogin && <Login hideModal={() => setShowLogin(false)} />} */}
             </header>
     );
 };
