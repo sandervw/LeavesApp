@@ -4,18 +4,18 @@ import useAuthContext from './hooks/useAuthContext';
 import { DndContext } from '@dnd-kit/core';
 import { PointerSensor, useSensor } from '@dnd-kit/core';
 import { customCollisionDetectionAlgorithm, handleDragEnd } from './services/dndService';
+import Landing from './pages/publicPages/Landing';
+import VerifyEmail from './pages/publicPages/VerifyEmail';
+import ForgotPassword from './pages/publicPages/ForgotPassword';
+import ResetPassword from './pages/publicPages/ResetPassword';
+import Stories from './pages/protectedPages/Stories';
+import Archive from './pages/protectedPages/Archive';
+import Templates from './pages/protectedPages/Templates';
+import TemplateDetail from './pages/protectedPages/TemplateDetail';
+import StorynodeDetail from './pages/protectedPages/StorynodeDetail';
 import Navbar from './components/layout/Navbar';
-import Landing from './pages/Landing';
-import Stories from './pages/Stories';
-import Archive from './pages/Archive';
-import Templates from './pages/Templates';
-import TemplateDetail from './pages/TemplateDetail';
-import StorynodeDetail from './pages/StorynodeDetail';
 import AddSidebar from './components/layout/AddSidebar';
 import LinkSidebar from './components/layout/LinkSidebar';
-import VerifyEmail from './pages/VerifyEmail';
-import ForgotPassword from './pages/ForgotPassword';
-import ResetPassword from './pages/ResetPassword';
 
 /**
  * Responsible for routing to the different pages of the app.

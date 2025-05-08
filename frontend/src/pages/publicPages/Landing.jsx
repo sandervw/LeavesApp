@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
-import useAuthContext from '../hooks/useAuthContext';
+import useAuthContext from '../../hooks/useAuthContext';
 import { useNavigate } from 'react-router-dom';
-import usePage from '../hooks/usePage';
+import usePage from '../../hooks/usePage';
 
 const Landing = () => {
     const { user } = useAuthContext();
