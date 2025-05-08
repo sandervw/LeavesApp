@@ -42,7 +42,7 @@ const Login = ({ hideModal }) => {
                 />
                 <button className='text-button clickable' type='submit'>Log In</button>
                 <button className='text-button clickable' type='button' onClick={hideModal}>Cancel</button>
-                <button className='text-button clickable'><a href='/password/forgot' className='clickable'>Forgot Password?</a></button>
+                <button className='text-button clickable'><a href='/password/forgot'>Forgot Password?</a></button>
                 {error && <div className='error'>Error: {error}</div>}
                 {isPending && <div className='loading'>Loading...</div>}
             </form>

@@ -1,9 +1,10 @@
-import useAuthContext from '../../hooks/useAuthContext';
-import useAPI from '../../hooks/useAPI';
 import { useNavigate } from 'react-router-dom';
 import usePage from '../../hooks/usePage';
 import Signup from '../../components/overlay/Signup';
 import Login from '../../components/overlay/Login';
+import ForgotPassword from '../../components/overlay/ForgotPassword';
+import ResetPassword from '../../components/overlay/ResetPassword';
+import VerifyEmail from '../../components/overlay/VerifyEmail';
 
 /**
  * Acts as a blank landing page for the following overlay forms:
@@ -14,10 +15,8 @@ import Login from '../../components/overlay/Login';
  * - Verify Email
  */
 const FormPage = ({formType}) => {
-    const { user, dispatch } = useAuthContext();
-    usePage({ page: 'landing' });
+    usePage({ page: 'formPage' });
     const Navigate = useNavigate();
-    const { apiCall } = useAPI();
 
     return (
         <div>
@@ -25,7 +24,7 @@ const FormPage = ({formType}) => {
             {formType==='signup' && <Signup hideModal={() => Navigate('/')} />}
             {formType==='login' && <Login hideModal={() => Navigate('/')} />}
             {formType==='forgot' && <ForgotPassword hideModal={() => Navigate('/')} />}
-            {formType==='reset' && <ResetPassword hideModal={() => Navigate('/')} />}
+            {formType==='reset' && <ResetPassword />}
             {formType==='verify' && <VerifyEmail hideModal={() => Navigate('/')} />}
         </div>
     );
