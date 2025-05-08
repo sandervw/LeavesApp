@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Signup from '../overlay/Signup';
 import Login from '../overlay/Login';
@@ -9,9 +9,10 @@ import Searchbar from '../part/Searchbar.jsx';
 
 const Navbar = () => {
 
-    const [showSignup, setShowSignup] = useState(false);
-    const [showLogin, setShowLogin] = useState(false);
+    // const [showSignup, setShowSignup] = useState(false);
+    // const [showLogin, setShowLogin] = useState(false);
     const { logout } = useLogout();
+    const Navigate = useNavigate();
     const { user } = useAuthContext();
 
     const handleLogout = () => {
@@ -38,12 +39,11 @@ const Navbar = () => {
                     <h2>Login or Signup to start</h2>
                 </div>
                 <div>
-                    <button className='text-button clickable' onClick={() => setShowLogin(true)}>Log In</button>
-                    <button className='text-button clickable' onClick={() => setShowSignup(true)}>Sign Up</button>
+                    <button className='text-button clickable' onClick={() => Navigate('/login')}>Log In</button>
+                    <button className='text-button clickable' onClick={() => Navigate('/signup')}>Sign Up</button>
                 </div>
-                {showSignup && <Signup hideModal={() => setShowSignup(false)} />}
-                {showLogin && <Login hideModal={() => setShowLogin(false)} />}
-
+                {/* {showSignup && <Signup hideModal={() => setShowSignup(false)} />}
+                {showLogin && <Login hideModal={() => setShowLogin(false)} />} */}
             </header>
     );
 };
