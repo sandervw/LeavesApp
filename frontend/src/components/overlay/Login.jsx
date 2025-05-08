@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import useLogin from '../../hooks/useLogin';
+import { Navigate } from 'react-router-dom';
 
 const Login = ({ hideModal }) => {
 
@@ -11,7 +12,10 @@ const Login = ({ hideModal }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const success = await login(email, password);
-        success && hideModal();
+        if(success){
+            hideModal();
+            Navigate('/');
+        }
     };
 
     return (
@@ -36,7 +40,9 @@ const Login = ({ hideModal }) => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-                <button className='text-button' type='submit'>Log In</button>
+                <button className='text-button clickable' type='submit'>Log In</button>
+                <button className='text-button clickable' type='button' onClick={hideModal}>Cancel</button>
+                <button className='text-button clickable'><a href='/password/forgot' className='clickable'>Forgot Password?</a></button>
                 {error && <div className='error'>Error: {error}</div>}
                 {isPending && <div className='loading'>Loading...</div>}
             </form>

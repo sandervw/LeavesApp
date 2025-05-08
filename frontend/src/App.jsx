@@ -14,6 +14,8 @@ import StorynodeDetail from './pages/StorynodeDetail';
 import AddSidebar from './components/layout/AddSidebar';
 import LinkSidebar from './components/layout/LinkSidebar';
 import VerifyEmail from './pages/VerifyEmail';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 /**
  * Responsible for routing to the different pages of the app.
@@ -43,7 +45,8 @@ function App() {
             <Route path='/templatedetail' element={user ? <TemplateDetail /> : <Navigate to='/landing' />} />
             <Route path='/landing' element={!user ? <Landing /> : <Navigate to='/' />} />
             <Route path='/email/verify/:code' element={<VerifyEmail />} />
-            <Route path='/password/forgot' element={<VerifyEmail />} />
+            <Route path='/password/forgot' element={<ForgotPassword />} />
+            <Route path='/password/reset' element={<ResetPassword />} />
           </Routes>
           <AddSidebar />
         </DndContext>

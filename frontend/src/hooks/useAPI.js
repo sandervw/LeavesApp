@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 const useAPI = () => {
 
     const [error, setError] = useState(null);
-    const [isPending, setIsPending] = useState(true);
+    const [isPending, setIsPending] = useState(false);
     // const { user, dispatch } = useAuthContext();
 
     const apiCall = useCallback(async (method, ...args) => {

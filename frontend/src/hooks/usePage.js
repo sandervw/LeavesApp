@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react';
 import useElementContext from './useElementContext';
 import useAddableContext from './useAddableContext';
+import useAuthContext from './useAuthContext';
 import usePageContext from './usePageContext';
 import apiService from '../services/apiService';
 
-const usePage = (page, elementID) => {
+const usePage = (props) => {
 
+    const { page, elementID, code } = props ?? {};
+    const { user, dispatch: userDispatch } = useAuthContext();
     const [error, setError] = useState(null);
     const [isPending, setIsPending] = useState(true);
-    const { element, children, dispatch: ElementDispatch } = useElementContext();
+    const { element, children, dispatch: elementDispatch } = useElementContext();
     const { addables, dispatch: addablesDispatch } = useAddableContext();
-    const { currentPage, dispatch: PageDispatch } = usePageContext();
+    const { currentPage, dispatch: pageDispatch } = usePageContext();
 
     useEffect(() => {
         console.log('UseEffect called in usePage by page:', page);
@@ -18,7 +21,16 @@ const usePage = (page, elementID) => {
         const fetchData = async () => {
             setIsPending(true);
             try {
-                await PageDispatch({ type: 'SET_PAGE', payload: page });
+                await pageDispatch({ type: 'SET_PAGE', payload: page });
+                console.log(user);
+                
+                if (!user) { // attempt to retrieve user for local data
+                    const userData = await apiService.getUser();
+                    if (userData) {
+                        localStorage.setItem('user', JSON.stringify(user)); // save user to local storage
+                        userDispatch({ type: 'LOGIN', payload: user });
+                    }
+                }
                 let children, element, addables;
                 if (page === 'stories') {
                     element = '';
@@ -40,8 +52,8 @@ const usePage = (page, elementID) => {
                     children = await apiService.fetchChildren('template', elementID) ?? [];
                     addables = [];
                 }
-                await ElementDispatch({ type: 'SET_CHILDREN', payload: children });
-                await ElementDispatch({ type: 'SET_ELEMENT', payload: element });
+                await elementDispatch({ type: 'SET_CHILDREN', payload: children });
+                await elementDispatch({ type: 'SET_ELEMENT', payload: element });
                 await addablesDispatch({ type: 'SET_ADDABLES', payload: addables });
                 setError(null);
                 setIsPending(false);
@@ -51,9 +63,9 @@ const usePage = (page, elementID) => {
             }
         };
         fetchData();
-    }, [ElementDispatch, addablesDispatch, PageDispatch, page, elementID]);
+    }, [userDispatch, elementDispatch, addablesDispatch, pageDispatch, page, elementID, user]);
     
-    return { error, isPending, element, children, addables, currentPage };
+    return { error, isPending, element, children, addables, currentPage, user };
 
 };
 

@@ -5,7 +5,7 @@ const Templates = () => {
 
     
 
-    const { error, isPending, children } = usePage('templates');
+    const { error, isPending, children } = usePage({ page: 'templates' });
 
     return (
         <>

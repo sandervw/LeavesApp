@@ -10,6 +10,8 @@ class ApiService {
         this.authRefresh = this.authRefresh.bind(this);
         this.getUser = this.getUser.bind(this);
         this.verifyEmail = this.verifyEmail.bind(this);
+        this.forgotPassword = this.forgotPassword.bind(this);
+        this.resetPassword = this.resetPassword.bind(this);
         this.fetchElements = this.fetchElements.bind(this);
         this.fetchElement = this.fetchElement.bind(this);
         this.fetchChildren = this.fetchChildren.bind(this);
@@ -30,6 +32,10 @@ class ApiService {
     async getUser() { return API.get('/user/'); }
 
     async verifyEmail(verificationCode) { return API.get(`/auth/email/verify/${verificationCode}`); }
+
+    async forgotPassword(email) { return API.post('/auth/password/forgot', { email }); }
+
+    async resetPassword({ verificationCode, password }) { return API.post('/auth/password/reset', { verificationCode, password }); }
 
     async fetchElements(kind, query) {
         if (query) return API.get(`${kind}/?${query}`);

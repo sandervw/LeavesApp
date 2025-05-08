@@ -10,7 +10,7 @@ import useAPI from '../hooks/useAPI';
 const TemplateDetail = () => {
 
     const location = useLocation(); // Grab the element from location state
-    const { error, isPending, children, element } = usePage('templateDetail', location.state);
+    const { error, isPending, children, element } = usePage({ page: 'templateDetail', elementID: location.state });
     const { dispatch: elementDispatch } = useElementContext();
     const { apiCall } = useAPI();
 
