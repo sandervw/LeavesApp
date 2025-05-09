@@ -17,17 +17,17 @@ const ResetPassword = () => {
         e.preventDefault();
         const result = await apiCall('resetPassword', {verificationCode: code, password});
         result && setSuccess(true);
-        // Wait 5 seconds, then navigate to login page
+        // Wait 3 seconds, then navigate to login page
         setTimeout(() => {
             navigate('/login');
-        }, 5000);
+        }, 3000);
     };
 
     return (
         <div className='modal-overlay'>
             {linkIsValid
                 ? (success
-                    ? <div className='modal-content'>Password updated successfully.</div>
+                    ? <div className='modal-content'>Password updated. Redirecting...</div>
                     : <form className='modal-content' onSubmit={(e) => {
                         e.preventDefault();
                         handleSubmit(e);
@@ -35,7 +35,7 @@ const ResetPassword = () => {
                         <h2>Reset Password</h2>
                         <input
                             type='password'
-                            placeholder='Password'
+                            placeholder='New Password'
                             value={password}
                             autoComplete='new-password'
                             onChange={(e) => setPassword(e.target.value)}

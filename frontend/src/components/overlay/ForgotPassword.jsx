@@ -15,10 +15,10 @@ const ForgotPassword = () => {
     };
 
     return (
-        <div>
+        <div className='modal-overlay'>
             {success
-                ? <div>Password reset email sent. Please check your inbox.</div>
-                : <form onSubmit={(e) => {
+                ? <div className='modal-content'>Password reset email sent. Please check your inbox.</div>
+                : <form className='modal-content' onSubmit={(e) => {
                     e.preventDefault();
                     handleSubmit(e);
                 }}>

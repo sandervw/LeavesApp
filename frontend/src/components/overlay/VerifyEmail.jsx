@@ -1,35 +1,39 @@
 import { useEffect } from "react";
 import useAPI from "../../hooks/useAPI";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const VerifyEmail = () => {
 
     const { code } = useParams();
     const { error, isPending, apiCall } = useAPI();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const verifyEmail = async () => {
             if (code) {
                 await apiCall('verifyEmail', code);
             }
-        }
+        };
         verifyEmail();
     }, [code, apiCall]);
 
-    return (<>
-        {error && <div className='error container'>
-            <div>
-                {error}
-            </div>
-            <button className='text-button clickable'><Link to='/password/forgot' className='clickable'>Reset Password</Link></button>
-            
-            </div>}
-        {isPending && <div className='loading container'>Loading...</div>}
-        {!isPending && !error &&
-            <div>
-                <h1>Email Verified</h1>
-            </div>}
-    </>);
+    return (
+        <div className='modal-overlay'>
+            {error &&
+                <div className='modal-content'>
+                    <div>
+                        {error}
+                    </div>
+                    <button className='text-button clickable' onClick={() => navigate('/password/forgot')}>Reset Password</button>
+                </div>}
+            {isPending &&
+                <div className='modal-content'>Loading...</div>}
+            {!isPending && !error &&
+                <div className='modal-content'>
+                    <h1>Email Verified</h1>
+                </div>}
+        </div>
+    );
 };
 
 export default VerifyEmail;
