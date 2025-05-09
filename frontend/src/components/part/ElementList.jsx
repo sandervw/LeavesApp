@@ -20,7 +20,7 @@ import useAddableContext from '../../hooks/useAddableContext';
 const ElementList = ({ elements, kind, listType }) => {
     const { dispatch: elementDispatch } = useElementContext();
     const { dispatch: addableDispatch } = useAddableContext();
-    const apiCall = useAPI();
+    const { apiCall } = useAPI();
     const { handleAdd } = useDropHandler(listType);
 
     // Updates one of the child elements

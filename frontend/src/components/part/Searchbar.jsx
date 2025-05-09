@@ -1,22 +1,26 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAPI from "../../hooks/useAPI";
+import useAuthContext from '../../hooks/useAuthContext';
 
 const Searchbar = () => {
     const navigate = useNavigate();
-    const apiCall = useAPI();
+    const { apiCall } = useAPI();
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredResults, setFilteredResults] = useState([]);
     const [userElements, setUserElements] = useState([]);
+    const { user } = useAuthContext();
 
     useEffect(() => {
         const fetchData = async () => {
+            if (!user) return;
             const storynodes = await apiCall('fetchElements', 'storynode', 'type=root&archived=false');
             const templates = await apiCall('fetchElements', 'template', 'type=root');
+            if (!storynodes || !templates) return;
             setUserElements([...storynodes, ...templates]);
         };
         fetchData();
-    }, [apiCall]);
+    }, [apiCall, user]);
 
     const handleSearch = (e) => {
         const value = e.target.value;
@@ -45,7 +49,7 @@ const Searchbar = () => {
                 placeholder='Search Stories and Templates'
                 value={searchTerm}
                 onChange={handleSearch} />
-            {filteredResults.length > 0 && (
+            {(user && filteredResults.length > 0) && (
                 <div className='dropdown'>
                     <ul>
                         {filteredResults.map((result, index) => (

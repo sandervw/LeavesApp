@@ -4,8 +4,6 @@ const AddableContext = createContext();
 
 // state represents the previous state of the data, action is the object which is passed into the dispatch function (type and payload)
 const AddableReducer = (state, action) => {
-    console.log(action);
-    
     switch (action.type){
         case 'SET_ADDABLES':
             return {

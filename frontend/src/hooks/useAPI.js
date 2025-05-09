@@ -1,25 +1,31 @@
-import useAuthContext from '../hooks/useAuthContext';
+// import useAuthContext from '../hooks/useAuthContext';
 import apiService from '../services/apiService';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 const useAPI = () => {
-    const { user, dispatch } = useAuthContext();
+
+    const [error, setError] = useState(null);
+    const [isPending, setIsPending] = useState(false);
+    // const { user, dispatch } = useAuthContext();
 
     const apiCall = useCallback(async (method, ...args) => {
-        const serviceMethods = {...apiService}
-        if (!user) return;
-        const options = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${user.token}`
-            },
-        };
-        if (!serviceMethods[method]) throw new Error(`Unknown API method: ${method}`);
-        const result = await serviceMethods[method](...args, options);
-        if(result.error && result.error.name==='TokenExpiredError') dispatch({ type: 'LOGOUT' });
-        return result;
-
-    }, [user, dispatch]);
-    return apiCall;
+        setIsPending(true);
+        setError(null);
+        const apiMethods = {...apiService};
+        if (!apiMethods[method]) throw new Error(`Unknown API method: ${method}`);
+        try {
+            console.log(`Calling API method: ${method}`);
+            
+            const result = await apiMethods[method](...args);
+            setError(null);
+            setIsPending(false);
+            return result;
+        } catch (error) {
+            setError(error);
+            setIsPending(false);
+            return;
+        }
+    }, []);
+    return { apiCall, error, isPending };
 }
 
 export default useAPI;

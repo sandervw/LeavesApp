@@ -1,17 +1,25 @@
 import { useState } from 'react';
-import useSignup from '../../hooks/useSignup';
+import { useNavigate } from 'react-router-dom';
+import useAPI from '../../hooks/useAPI';
+import useAuthContext from '../../hooks/useAuthContext';
 
 const Signup = ({ hideModal }) => {
 
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const { signup, error, isPending } = useSignup();
+    const { error, isPending, apiCall } = useAPI();
+    const { dispatch } = useAuthContext();
+    const Navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const success = await signup(email, username, password);
-        success && hideModal();
+        const user = await apiCall('authSignup', { email, username, password });
+        if(user){
+            Navigate('/');
+            localStorage.setItem('user', JSON.stringify(user)); // save user to local storage
+            dispatch({ type: 'LOGIN', payload: user });
+        }
     };
 
     return (
@@ -45,6 +53,7 @@ const Signup = ({ hideModal }) => {
                     required
                 />
                 <button className='text-button' type='submit'>Sign Up</button>
+                <button className='text-button clickable' type='button' onClick={hideModal}>Cancel</button>
                 {error && <div className='error'>Error: {error}</div>}
                 {isPending && <div className='loading'>Loading...</div>}
             </form>

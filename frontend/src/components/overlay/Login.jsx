@@ -1,17 +1,25 @@
 import { useState } from 'react';
-import useLogin from '../../hooks/useLogin';
+import { useNavigate } from 'react-router-dom';
+import useAPI from '../../hooks/useAPI';
+import useAuthContext from '../../hooks/useAuthContext';
 
 const Login = ({ hideModal }) => {
 
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { login, error, isPending } = useLogin();
+    const { error, isPending, apiCall } = useAPI();
+    const { dispatch } = useAuthContext();
+    const Navigate = useNavigate();
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const success = await login(username, password);
-        success && hideModal();
+        const user = await apiCall('authLogin', {email, password});
+        if(user){
+            Navigate('/');
+            localStorage.setItem('user', JSON.stringify(user)); // save user to local storage
+            dispatch({ type: 'LOGIN', payload: user });
+        }
     };
 
     return (
@@ -21,11 +29,11 @@ const Login = ({ hideModal }) => {
                 handleSubmit(e);
             }}>
                 <input
-                    type='text'
+                    type='email'
                     placeholder='Username'
-                    value={username}
+                    value={email}
                     autoComplete='username'
-                    onChange={(e) => setUsername(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)}
                     required
                 />
                 <input
@@ -36,7 +44,9 @@ const Login = ({ hideModal }) => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-                <button className='text-button' type='submit'>Log In</button>
+                <button className='text-button clickable' type='submit'>Log In</button>
+                <button className='text-button clickable' type='button' onClick={hideModal}>Cancel</button>
+                <button className='text-button clickable'><a href='/password/forgot'>Forgot Password?</a></button>
                 {error && <div className='error'>Error: {error}</div>}
                 {isPending && <div className='loading'>Loading...</div>}
             </form>
