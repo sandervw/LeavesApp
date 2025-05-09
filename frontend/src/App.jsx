@@ -10,14 +10,13 @@ import Archive from './pages/protectedPages/Archive';
 import Templates from './pages/protectedPages/Templates';
 import TemplateDetail from './pages/protectedPages/TemplateDetail';
 import StorynodeDetail from './pages/protectedPages/StorynodeDetail';
+import FormPage from './pages/publicPages/FormPage';
 import Navbar from './components/layout/Navbar';
 import AddSidebar from './components/layout/AddSidebar';
 import LinkSidebar from './components/layout/LinkSidebar';
-import FormPage from './pages/publicPages/FormPage';
 
 /**
  * Responsible for routing to the different pages of the app.
- * @returns {JSX.Element} The main app component.
  */
 function App() {
 

@@ -22,7 +22,6 @@ const usePage = (props) => {
             setIsPending(true);
             try {
                 await pageDispatch({ type: 'SET_PAGE', payload: page });
-                console.log(user);
                 if (!user) { // attempt to retrieve user for local data
                     const userData = await apiService.getUser();
                     if (userData) {
