@@ -7,13 +7,13 @@ import apiService from '../services/apiService';
 
 const usePage = (props) => {
 
-    const { page, elementID, code } = props ?? {};
-    const { user, dispatch: userDispatch } = useAuthContext();
+    const { page, elementID } = props ?? {};
     const [error, setError] = useState(null);
     const [isPending, setIsPending] = useState(true);
     const { element, children, dispatch: elementDispatch } = useElementContext();
     const { addables, dispatch: addablesDispatch } = useAddableContext();
     const { currentPage, dispatch: pageDispatch } = usePageContext();
+    const { user, dispatch: userDispatch } = useAuthContext();
 
     useEffect(() => {
         console.log('UseEffect called in usePage by page:', page);
@@ -23,7 +23,6 @@ const usePage = (props) => {
             try {
                 await pageDispatch({ type: 'SET_PAGE', payload: page });
                 console.log(user);
-                
                 if (!user) { // attempt to retrieve user for local data
                     const userData = await apiService.getUser();
                     if (userData) {

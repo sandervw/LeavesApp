@@ -1,20 +1,24 @@
 import { useState } from 'react';
-import useLogin from '../../hooks/useLogin';
 import { useNavigate } from 'react-router-dom';
+import useAPI from '../../hooks/useAPI';
+import useAuthContext from '../../hooks/useAuthContext';
 
 const Login = ({ hideModal }) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { login, error, isPending } = useLogin();
+    const { error, isPending, apiCall } = useAPI();
+    const { dispatch } = useAuthContext();
     const Navigate = useNavigate();
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const success = await login(email, password);
-        if(success){
+        const user = await apiCall('authLogin', {email, password});
+        if(user){
             Navigate('/');
+            localStorage.setItem('user', JSON.stringify(user)); // save user to local storage
+            dispatch({ type: 'LOGIN', payload: user });
         }
     };
 
