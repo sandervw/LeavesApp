@@ -19,8 +19,8 @@ const FormPage = ({formType}) => {
     const Navigate = useNavigate();
 
     return (
+        /* Render an empty div - logic is in the individual forms */
         <div>
-            {/* Render an empty div - logic is in the individual forms */}
             {formType==='signup' && <Signup hideModal={() => Navigate('/')} />}
             {formType==='login' && <Login hideModal={() => Navigate('/')} />}
             {formType==='forgot' && <ForgotPassword hideModal={() => Navigate('/')} />}

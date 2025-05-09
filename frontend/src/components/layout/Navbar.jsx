@@ -1,19 +1,27 @@
 import { Link, useNavigate } from 'react-router-dom';
-import useLogout from '../../hooks/useLogout.js';
 import useAuthContext from '../../hooks/useAuthContext.js';
+import useElementContext from '../../hooks/useElementContext.js';
+import useAddableContext from '../../hooks/useAddableContext.js';
+import useAPI from '../../hooks/useAPI.js';
 import Searchbar from '../part/Searchbar.jsx';
 
 
 const Navbar = () => {
 
-    // const [showSignup, setShowSignup] = useState(false);
-    // const [showLogin, setShowLogin] = useState(false);
-    const { logout } = useLogout();
+    const { user, dispatch: authDispatch } = useAuthContext();
+    const { dispatch: addableDispatch } = useAddableContext();
+    const { dispatch: elementDispatch } = useElementContext();
+    const { apiCall } = useAPI();
     const Navigate = useNavigate();
-    const { user } = useAuthContext();
 
     const handleLogout = () => {
-        logout();
+        authDispatch({ type: 'LOGOUT' }); // dispatch logout action to context
+        elementDispatch({ type: 'SET_CHILDREN', payload: null });
+        addableDispatch({ type: 'SET_ADDABLES', payload: null });
+        elementDispatch({ type: 'SET_ELEMENT', payload: null });
+        localStorage.removeItem('user');
+        apiCall('authLogout'); // call logout API (no need to await)
+        Navigate('/landing');
     };
 
     return (
