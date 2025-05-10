@@ -29,7 +29,7 @@ class ApiService {
 
     async authRefresh() { return API.get('/auth/refresh'); }
 
-    async getUser() { return API.get('/user/'); }
+    async getUser() { return API.get('/user'); }
 
     async verifyEmail(verificationCode) { return API.get(`/auth/email/verify/${verificationCode}`); }
 
