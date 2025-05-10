@@ -21,8 +21,8 @@ const FormPage = ({formType}) => {
     return (
         /* Render an empty div - logic is in the individual forms */
         <div>
-            {formType==='signup' && <Signup hideModal={() => Navigate('/')} />}
-            {formType==='login' && <Login hideModal={() => Navigate('/')} />}
+            {formType==='signup' && <Signup hideModal={() => Navigate('/landing')} />}
+            {formType==='login' && <Login hideModal={() => Navigate('/landing')} />}
             {formType==='forgot' && <ForgotPassword hideModal={() => Navigate('/')} />}
             {formType==='reset' && <ResetPassword />}
             {formType==='verify' && <VerifyEmail hideModal={() => Navigate('/')} />}

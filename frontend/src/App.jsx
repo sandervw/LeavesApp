@@ -1,6 +1,5 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, Navigate, Form } from 'react-router-dom';
-import useAuthContext from './hooks/useAuthContext';
 import { DndContext } from '@dnd-kit/core';
 import { PointerSensor, useSensor } from '@dnd-kit/core';
 import { customCollisionDetectionAlgorithm, handleDragEnd } from './services/dndService';
@@ -21,8 +20,6 @@ import LinkSidebar from './components/layout/LinkSidebar';
  */
 function App() {
 
-  const { user } = useAuthContext();
-
   const pointerSensor = useSensor(PointerSensor, {
     activationConstraint: {
       distance: 10,
@@ -38,12 +35,12 @@ function App() {
           <Routes>
             <Route path='/' element={<AuthContainer />}>
               <Route index element={<Stories />} />
+              <Route path='/templates' element={<Templates />} />
+              <Route path='/archive' element={<Archive />} />
+              <Route path='/storydetail/' element={<StorynodeDetail />} />
+              <Route path='/templatedetail/' element={<TemplateDetail />} />
             </Route>
-            <Route path='/templates' element={user ? <Templates /> : <Navigate to='/landing' />} />
-            <Route path='/archive' element={user ? <Archive /> : <Navigate to='/landing' />} />
-            <Route path='/storydetail' element={user ? <StorynodeDetail /> : <Navigate to='/landing' />} />
-            <Route path='/templatedetail' element={user ? <TemplateDetail /> : <Navigate to='/landing' />} />
-            <Route path='/landing' element={!user ? <Landing /> : <Navigate to='/' />} />
+            <Route path='/landing' element={<Landing />} />
             <Route path='/signup' element={<FormPage formType='signup' />} />
             <Route path='/login' element={<FormPage formType='login' />} />
             <Route path='/password/forgot' element={<FormPage formType={'forgot'} />} />
