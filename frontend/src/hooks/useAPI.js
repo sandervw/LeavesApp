@@ -1,11 +1,9 @@
-// import useAuthContext from '../hooks/useAuthContext';
 import apiService from '../services/apiService';
 import { useCallback, useState } from 'react';
 const useAPI = () => {
 
     const [error, setError] = useState(null);
     const [isPending, setIsPending] = useState(false);
-    // const { user, dispatch } = useAuthContext();
 
     const apiCall = useCallback(async (method, ...args) => {
         setIsPending(true);
