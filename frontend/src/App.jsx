@@ -4,6 +4,7 @@ import useAuthContext from './hooks/useAuthContext';
 import { DndContext } from '@dnd-kit/core';
 import { PointerSensor, useSensor } from '@dnd-kit/core';
 import { customCollisionDetectionAlgorithm, handleDragEnd } from './services/dndService';
+import AuthContainer from './components/wrapper/AuthContainer';
 import Landing from './pages/publicPages/Landing';
 import Stories from './pages/protectedPages/Stories';
 import Archive from './pages/protectedPages/Archive';
@@ -35,7 +36,9 @@ function App() {
           <Navbar />
           <LinkSidebar />
           <Routes>
-            <Route path='/' element={user ? <Stories /> : <Navigate to='/landing' />} />
+            <Route path='/' element={<AuthContainer />}>
+              <Route index element={<Stories />} />
+            </Route>
             <Route path='/templates' element={user ? <Templates /> : <Navigate to='/landing' />} />
             <Route path='/archive' element={user ? <Archive /> : <Navigate to='/landing' />} />
             <Route path='/storydetail' element={user ? <StorynodeDetail /> : <Navigate to='/landing' />} />
