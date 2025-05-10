@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import RubbishPile from '../part/RubbishPile';
-import usePage from '../../hooks/usePage';
+import useAuthContext from '../../hooks/useAuthContext';
 
 const LinkSidebar = () => {
-    const { user } = usePage();
+    const { user } = useAuthContext();
 
     return (
         !user

@@ -14,8 +14,8 @@ const Navbar = () => {
     const { apiCall } = useAPI();
     const Navigate = useNavigate();
 
-    const handleLogout = () => {
-        authDispatch({ type: 'LOGOUT' }); // dispatch logout action to context
+    const handleLogout = async () => {
+        await authDispatch({ type: 'LOGOUT' }); // dispatch logout action to context
         elementDispatch({ type: 'SET_CHILDREN', payload: null });
         addableDispatch({ type: 'SET_ADDABLES', payload: null });
         elementDispatch({ type: 'SET_ELEMENT', payload: null });

@@ -9,6 +9,8 @@ const Landing = () => {
     usePage({ page: 'landing' });
 
     useEffect(() => {
+        console.log('user', user);
+        
         if (user) {
             navigate('/'); // Redirect to home if user is authenticated
         }
