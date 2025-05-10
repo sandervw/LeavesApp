@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { logout } from '../services/logoutService';
+import { setUser } from './authClient';
 
 const options = {
     baseURL: import.meta.env.VITE_BASEAPIURL,
@@ -24,16 +24,17 @@ API.interceptors.response.use(
       
       // try to refresh the access token behind the scenes
       if (status === 401 && data?.errorCode === "InvalidAccessToken") {
-        logout();
         try {
           // refresh the access token, then retry the original request
           await API.get("/auth/refresh");
-          const user = API.get("/user");
-          localStorage.setItem('user', JSON.stringify(user));
+          const user = await API.get("/user");
+          if (user) {
+            setUser(user);
+          }
           // return TokenRefreshClient(config);
         } catch (refreshError) {
           console.log("Token refresh failed", refreshError);
-          localStorage.setItem('user', null);
+          setUser(null); // Trigger logout in react context
         }
       }
       return Promise.reject(`Error: ${data.message|| "unknown error"} `);

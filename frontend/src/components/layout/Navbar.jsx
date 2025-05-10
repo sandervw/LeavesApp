@@ -21,7 +21,6 @@ const Navbar = () => {
         elementDispatch({ type: 'SET_ELEMENT', payload: null });
         localStorage.removeItem('user');
         apiCall('authLogout'); // call logout API (no need to await)
-        Navigate('/landing');
     };
 
     return (
