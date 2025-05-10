@@ -47,6 +47,11 @@ const usePage = (props) => {
                 setError(null);
                 setIsPending(false);
             } catch (error) {
+                console.log('Error in usePage:', error);
+                elementDispatch({ type: 'SET_ELEMENT', payload: null });
+                elementDispatch({ type: 'SET_CHILDREN', payload: [] });
+                addablesDispatch({ type: 'SET_ADDABLES', payload: [] });
+                pageDispatch({ type: 'SET_PAGE', payload: null });
                 setError(error);
                 setIsPending(false);
             }

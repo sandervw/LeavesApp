@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { logout } from '../services/logoutService';
 
 const options = {
     baseURL: import.meta.env.VITE_BASEAPIURL,
@@ -17,28 +18,24 @@ API.interceptors.response.use(
         return response.data;
     },
     async (error) => {
-      const { response } = error;
       console.log(error);
       
-      const { data } = response || {};
-  
-    //   // try to refresh the access token behind the scenes
-    //   if (status === UNAUTHORIZED && data?.errorCode === "InvalidAccessToken") {
-    //     try {
-    //       // refresh the access token, then retry the original request
-    //       await TokenRefreshClient.get("/auth/refresh");
-    //       return TokenRefreshClient(config);
-    //     } catch (error) {
-    //       // handle refresh errors by clearing the query cache & redirecting to login
-    //       queryClient.clear();
-    //       navigate("/login", {
-    //         state: {
-    //           redirectUrl: window.location.pathname,
-    //         },
-    //       });
-    //     }
-    //   }
-  
+      const { status, data } = error.response;
+      
+      // try to refresh the access token behind the scenes
+      if (status === 401 && data?.errorCode === "InvalidAccessToken") {
+        logout();
+        try {
+          // refresh the access token, then retry the original request
+          await API.get("/auth/refresh");
+          const user = API.get("/user");
+          localStorage.setItem('user', JSON.stringify(user));
+          // return TokenRefreshClient(config);
+        } catch (refreshError) {
+          console.log("Token refresh failed", refreshError);
+          localStorage.setItem('user', null);
+        }
+      }
       return Promise.reject(`Error: ${data.message|| "unknown error"} `);
     }
 );
