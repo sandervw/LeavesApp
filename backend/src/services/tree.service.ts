@@ -68,7 +68,7 @@ export default class TreeService<T extends TreeDoc> {
             data.children = data.children.filter(child => child !== null); // Clean up from frontend
             const result = await this.model.findOneAndUpdate({ _id: data._id, userId }, { $set: data }, { new: true });
             appAssert(result, NOT_FOUND, 'Element not found');
-            return result;
+            return result as T;
         }
         return await this.model.create(data);
     }

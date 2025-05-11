@@ -38,7 +38,7 @@ class storynodeService extends TreeService<StorynodeDoc> {
             if(storynode.type === 'root' && storynode.wordLimit){
                 await recursiveUpdateWordLimits(storynode);
             }
-            return storynode;
+            return storynode as StorynodeDoc; // Assert return type here; we know its a doc because of appAssert
         }
         // CREATE STORYNODE
         else{
