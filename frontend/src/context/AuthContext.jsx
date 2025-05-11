@@ -1,18 +1,15 @@
-import { createContext, useReducer, useEffect } from 'react';
-import { setUser, setUserSetter } from '../config/authClient';
+import { createContext, useEffect, useReducer } from 'react';
 
 const AuthContext = createContext();
 
 const AuthReducer = (state, action) => {
     switch (action.type) {
         case 'LOGIN':
-            setUser(action.payload);
             localStorage.setItem('user', JSON.stringify(action.payload));
             return {
                 user: action.payload
             };
         case 'LOGOUT':
-            setUser(null);
             localStorage.removeItem('user');
             return {
                 user: null
@@ -24,20 +21,28 @@ const AuthReducer = (state, action) => {
 
 // Lazy initialization function to load user from local storage
 const initializeState = () => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    if (storedUser) {
-        setUser(storedUser);
-    }
+    const storedUser = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
     return {
-        user: storedUser || null
+        user: storedUser
     };
 };
 
 const AuthContextProvider = ({ children }) => {
     const [state, dispatch] = useReducer(AuthReducer, {}, initializeState);
-    //Trigger state update
     useEffect(() => {
-        setUserSetter(dispatch);
+        const handleUserUpdated = (e) => {
+            const user = e.detail;
+            if (user) {
+                dispatch({ type: 'LOGIN', payload: user });
+            }
+            else {
+                dispatch({ type: 'LOGOUT' });
+            }
+        };
+        window.addEventListener('userUpdated', handleUserUpdated);
+        return () => {
+            window.removeEventListener('userUpdated', handleUserUpdated);
+        };
     }, []);
     return (
         <AuthContext.Provider value={{ ...state, dispatch }}>
