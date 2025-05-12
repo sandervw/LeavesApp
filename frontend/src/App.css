@@ -7,8 +7,8 @@
   --c-gray: #7b7b7b;
   --c-accent: #8866bb;
   --c-placeholder: var(--c-gray);
-  --c-txtPrimary: var(--c-white);
-  --c-bgPrimary: var(--c-black);
+  --c-txtPrimary: var(--c-black);
+  --c-bgPrimary: var(--c-white);
   background-color: var(--c-bgPrimary);
 }
 /* The actual id=root element */
@@ -22,6 +22,8 @@
   font-family: "poppins", arial, sans-serif;
   color: var(--c-txtPrimary);
   text-decoration: none;
+  /* Set cursor style so that it doesn't blink by default on text */
+  user-select: none;
 }
 
 /* MAIN CONTENT STYLES */
@@ -89,6 +91,10 @@ ul, li {
   margin-left: 0;
   cursor: pointer;
   transition: color 0.15s;
+}
+/* Add accent color to header in navbar */
+.navbar h1 {
+  color: var(--c-accent);
 }
 
 /* INPUT STYLES */

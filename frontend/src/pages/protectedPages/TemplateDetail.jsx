@@ -16,15 +16,16 @@ const TemplateDetail = () => {
 
     // Updates for name, text, and wordWeight
     const updateTemplate = async (attr, val) => {
+        if (attr === 'wordWeight') val = parseInt(val);
         const updatedTemplate = await apiCall('upsertElement', element.kind, { ...element, [attr]: val });
         elementDispatch({ type: 'SET_ELEMENT', payload: updatedTemplate });
     };
 
-    return <>
-        {error && <div className='error container'>{error}</div>}
-        {isPending && <div className='loading container'>Loading...</div>}
-        {!isPending && !error &&
-            <div className='content container'>
+    return error
+        ? <div className='error container'>{error}</div>
+        : isPending
+            ? <div className='loading container'>Loading...</div>
+            : <div className='content container'>
                 <Draggable
                     id={element._id}
                     source='detail'
@@ -33,8 +34,7 @@ const TemplateDetail = () => {
                     <ElementFeature element={element} onUpdate={updateTemplate} />
                 </Draggable>
                 <ElementList elements={children} kind='template' listType='children' />
-            </div>}
-    </>;
+            </div>
 };
 
 export default TemplateDetail;
