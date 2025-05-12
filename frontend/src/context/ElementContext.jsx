@@ -18,7 +18,9 @@ const ElementReducer = (state, action) => {
         case 'CREATE_CHILD':
             return {
                 children: [...state.children, action.payload],
-                element: state.element
+                element: state.element.children
+                    ? {children: [...state.element.children, action.payload._id], ...state.element}
+                    : {children: [action.payload._id], ...state.element}
             }
         case 'UPDATE_CHILD':
             return {
@@ -28,7 +30,9 @@ const ElementReducer = (state, action) => {
         case 'DELETE_CHILD':
             return {
                 children: state.children.filter(storynode => storynode._id !== action.payload),
-                element: state.element
+                element: state.element.children
+                    ? {children: state.element.children.filter(child => child !== action.payload), ...state.element}
+                    : {children: [], ...state.element}
             }
         default:
             return state;

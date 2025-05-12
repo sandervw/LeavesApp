@@ -73,6 +73,10 @@
 }
 .droppable {
   padding-bottom: 2rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 /* DETAILED ELEMENT STYLES */
@@ -81,7 +85,10 @@
   align-items: center;
 }
 .rubbish-box {
+  text-align: center;
   border: 2px dashed var(--c-txtPrimary);
+  border-radius: 1rem;
+  padding: 1rem;
 }
 ul, li {
   list-style-position: outside; /* Bullet points outside */

@@ -63,8 +63,6 @@ const useDropHandler = (droppableType) => {
                     newChild = await apiCall('upsertElement', element.kind, data);
                     await apiCall('upsertElement', element.kind, { ...element, children: [...element.children, newChild._id] });
                 }
-                // Sync frontend
-                elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, children: [...element.children, newChild._id] } });
             }
             newChild && elementDispatch({ type: 'CREATE_CHILD', payload: newChild });
         } catch (error) {
