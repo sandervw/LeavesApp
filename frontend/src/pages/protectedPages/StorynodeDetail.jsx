@@ -17,6 +17,8 @@ const StorynodeDetail = () => {
 
     // Updates the name, text, or word count of the storynode
     const updateStorynode = async (attr, val) => {
+        if (attr === 'wordCount') val = parseInt(val);
+        if (attr === 'wordLimit') val = parseInt(val);
         const updatedStorynode = await apiCall('upsertElement', element.kind, { ...element, [attr]: val });
         elementDispatch({ type: 'SET_ELEMENT', payload: updatedStorynode });
     };
@@ -36,11 +38,11 @@ const StorynodeDetail = () => {
         navigate('/');
     };
 
-    return <>
-        {error && <div className='error container'>{error}</div>}
-        {isPending && <div className='loading container'>Loading...</div>}
-        {!isPending && !error &&
-            <div className='content container'>
+    return error
+        ? <div className='error container'>{error}</div>
+        : isPending
+            ? <div className='loading container'>Loading...</div>
+            : <div className='content container'>
                 <Draggable
                     id={element._id}
                     source='detail'
@@ -54,8 +56,7 @@ const StorynodeDetail = () => {
                     <ElementFeature element={element} onUpdate={updateStorynode} />
                 </Draggable>
                 <ElementList elements={children} kind='storynode' listType='children' />
-            </div>}
-    </>
+            </div>;
 };
 
 export default StorynodeDetail;

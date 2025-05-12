@@ -4,22 +4,17 @@ import { Navigate, Outlet } from "react-router-dom";
 const AuthContainer = () => {
     const { user } = useAuthContext();
 
-    return (
-        <div>
-            {user
-                ? (
-                    <Outlet />
-                )
-                : <Navigate
-                    to="/login"
-                    replace
-                    state={{
-                        redirectUrl: window.location.pathname,
-                    }}
-                />
-            }
-        </div>
-    );
+    return user
+        ? (
+            <Outlet />
+        )
+        : <Navigate
+            to="/login"
+            replace
+            state={{
+                redirectUrl: window.location.pathname,
+            }}
+        />;
 };
 
 export default AuthContainer;
