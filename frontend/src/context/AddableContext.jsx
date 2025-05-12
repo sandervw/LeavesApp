@@ -8,27 +8,18 @@ const AddableReducer = (state, action) => {
         case 'SET_ADDABLES':
             return {
                 addables: action.payload,
-                newAddable: state.newAddable
-            }
-        case 'SET_NEWADDABLE':
-            return {
-                addables: state.addables,
-                newAddable: action.payload
             }
         case 'CREATE_ADDABLE':
             return {
                 addables: [...state.addables, action.payload],
-                newAddable: state.newAddable
             }
         case 'UPDATE_ADDABLE':
             return {
                 addables: state.addables.map(addable => addable._id === action.payload._id ? action.payload : addable),
-                newAddable: state.newAddable
             }
         case 'DELETE_ADDABLE':
             return {
                 addables: state.addables.filter(addable => addable._id !== action.payload),
-                newAddable: state.newAddable
             }
         default:
             return state;
@@ -42,8 +33,7 @@ const AddableReducer = (state, action) => {
 const AddableContextProvider = ({children}) => {
     // UseReducer similar to useState
     const [state, dispatch] = useReducer(AddableReducer, {
-        addables: null,
-        newAddable: null
+        addables: null
     });
 
     return (
