@@ -35,7 +35,7 @@
   padding: 1rem;
   border-radius: 1rem;
   margin: 1rem;
-  border: 2px solid transparent;
+  border: 2px solid;
   border-color: var(--c-txtPrimary);
 }
 .navbar {
@@ -52,13 +52,6 @@
   display: flex;
   flex-direction: column;
 }
-.element {
-  border-radius: 1rem;
-  padding: .5rem;
-  margin: .5rem;
-  border: 2px solid transparent;
-  border-color: var(--c-txtPrimary);
-}
 .detail {
   display: flex;
 }
@@ -71,9 +64,19 @@
   flex-direction: column;
   padding-top: 1rem;
 }
+.draggable {
+  border-radius: 1rem;
+  padding: .5rem;
+  margin: .5rem;
+  border: 2px solid;
+  border-color: var(--c-txtPrimary);
+  background-color: var(--c-bgPrimary);
+}
+.dragging {
+  z-index: 900;
+}
 .droppable {
   padding-bottom: 2rem;
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -84,11 +87,18 @@
   display: flex;
   align-items: center;
 }
+/* Set Rubbish box to always appear in bottom-left corner of the screen, regardless of scrolling, over other elements */
 .rubbish-box {
-  text-align: center;
-  border: 2px dashed var(--c-txtPrimary);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  max-width: 300px; /* Set a max width for the rubbish box */
+  background-color: var(--c-bgPrimary);
   border-radius: 1rem;
   padding: 1rem;
+  border: 2px solid var(--c-txtPrimary);
+  z-index: 800; /* Ensure it appears above other elements */
 }
 ul, li {
   list-style-position: outside; /* Bullet points outside */

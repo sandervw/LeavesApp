@@ -19,7 +19,7 @@ const Template = (props) => {
             id={templateData._id}
             source={source}
             data={templateData}
-            className='element'>
+            className='draggable'>
             <Header3Trait
                 trait="name"
                 value={templateData.name}

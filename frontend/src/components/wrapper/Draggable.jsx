@@ -23,11 +23,14 @@ const Draggable = (props) => {
     transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
   } : undefined;
 
+  // If the element is being dragged, add a css class for styling
+  const className = transform ? `${props.className} dragging` : props.className;
+
 
 
   return (
     <DragHandlerContext.Provider key={props.id} value={{ ...listeners, ...attributes }}>
-      <div ref={setNodeRef} style={style} className={props.className}>
+      <div ref={setNodeRef} style={style} className={className}>
         {props.children}
       </div>
     </DragHandlerContext.Provider>

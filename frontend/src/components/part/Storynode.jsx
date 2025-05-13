@@ -20,7 +20,7 @@ const Storynode = (props) => {
             id={storynodeData._id}
             source={source}
             data={storynodeData}
-            className='element'>
+            className='draggable'>
             <Header3Trait
                 trait="name"
                 value={storynodeData.name}
