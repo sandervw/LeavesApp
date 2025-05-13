@@ -4,7 +4,7 @@ import { HttpStatusCode } from "../constants/http";
 import AppErrorCode from "../constants/appErrorCode";
 
 type AppAssert = (
-    condition: any,
+    condition: unknown,
     httpStatusCode: HttpStatusCode,
     message: string,
     appErrorCode?: AppErrorCode
@@ -18,7 +18,10 @@ const appAssert: AppAssert = (
     httpStatusCode,
     message,
     appErrorCode) => {
-    return assert(condition, new AppError(httpStatusCode, message, appErrorCode));
+    if (!condition) {
+        throw new AppError(httpStatusCode, message, appErrorCode);
+    }
+    return assert(condition);
 }
 
 export default appAssert;
