@@ -1,9 +1,22 @@
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import RubbishPile from '../part/RubbishPile';
 import useAuthContext from '../../hooks/useAuthContext';
+import { ThemeToggle } from '../part/ThemeToggle';
 
 const LinkSidebar = () => {
     const { user } = useAuthContext();
+    const [theme, setTheme] = useState('light');
+
+    useEffect(() => {
+        const saved = localStorage.getItem('theme');
+        if (saved) setTheme(saved);
+    }, []);
+
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+    }, [theme]);
 
     return (
         !user
@@ -16,6 +29,7 @@ const LinkSidebar = () => {
                         <li><Link to='/archive' className='clickable'>Archive</Link></li>
                     </ul>
                 </div>
+                <ThemeToggle theme={theme} setTheme={setTheme} />
                 <div className='rubbish-pile'>
                     <RubbishPile />
                 </div>

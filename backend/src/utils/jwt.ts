@@ -7,11 +7,11 @@ const defaults: SignOptions = {
 };
 
 export type RefreshTokenPayload = {
-    sessionId: SessionDoc['id'];
+    sessionId: SessionDoc['_id'];
 };
 
 export type AccessTokenPayload = {
-    sessionId: SessionDoc['id'],
+    sessionId: SessionDoc['_id'],
     userId: SessionDoc['userId'];
 };
 
@@ -63,7 +63,8 @@ export const verifyToken = <Payload extends object = AccessTokenPayload>(
             secret,
             { ...defaults, ...verifyOpts }) as Payload;
         return { payload };
-    } catch (error: any) {
-        return { error: error.message };
+    } catch (error: unknown) {
+        if (error instanceof Error) return { error: error.message };
+        return { error: 'An unknown error occurred' };
     }
 };

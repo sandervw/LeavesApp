@@ -1,6 +1,6 @@
 import InlineSVG from './InlineSVG';
 
-const ReturnButton = ({onClick}) => {
+export const ReturnButton = ({onClick}) => {
     return ( 
         <button onClick={() => onClick()}>
             <InlineSVG src='/return.svg' alt='return icon' className='icon' />
@@ -8,7 +8,7 @@ const ReturnButton = ({onClick}) => {
      );
 }
 
-const DownloadButton = ({onClick}) => {
+export const DownloadButton = ({onClick}) => {
     return ( 
         <button onClick={() => onClick()}>
             <InlineSVG src='/download.svg' alt='download icon' className='icon' />
@@ -16,7 +16,7 @@ const DownloadButton = ({onClick}) => {
      );
 }
 
-const ArchiveButton = ({onClick}) => {
+export const ArchiveButton = ({onClick}) => {
     return ( 
         <button onClick={() => onClick()}>
             <InlineSVG src='/archive.svg' alt='archive icon' className='icon' />
@@ -24,7 +24,7 @@ const ArchiveButton = ({onClick}) => {
      );
 }
 
-const UnarchiveButton = ({onClick}) => {
+export const UnarchiveButton = ({onClick}) => {
     return ( 
         <button onClick={() => onClick()}>
             <InlineSVG src='/unarchive.svg' alt='unarchive icon' className='icon' />
@@ -32,7 +32,7 @@ const UnarchiveButton = ({onClick}) => {
      );
 }
 
-const DeleteButton = ({onClick}) => {
+export const DeleteButton = ({onClick}) => {
     return ( 
         <button onClick={() => onClick()}>
             <InlineSVG src='/delete.svg' alt='delete icon' className='icon' />
@@ -40,12 +40,26 @@ const DeleteButton = ({onClick}) => {
      );
 }
 
-const DraggableButton = (props) => {
+export const DraggableButton = (props) => {
     return ( 
         <button {...props}>
             <InlineSVG src='/drag.svg' alt='drag icon' className='icon' />
         </button>
      );
 }
- 
-export { ReturnButton, DownloadButton, ArchiveButton, UnarchiveButton, DeleteButton, DraggableButton };
+
+export const SunButton = (props) => {
+    return ( 
+        <button {...props}>
+            <InlineSVG src='/sun.svg' alt='drag icon' className='icon' />
+        </button>
+     );
+}
+
+export const MoonButton = (props) => {
+    return ( 
+        <button {...props}>
+            <InlineSVG src='/moon.svg' alt='drag icon' className='icon' />
+        </button>
+     );
+}

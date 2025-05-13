@@ -11,6 +11,10 @@
   --c-bgPrimary: var(--c-white);
   background-color: var(--c-bgPrimary);
 }
+[data-theme='dark'] {
+  --c-txtPrimary: var(--c-white);
+  --c-bgPrimary: var(--c-black);
+}
 /* The actual id=root element */
 #root {
   max-width: 1600px;
@@ -90,14 +94,17 @@
 /* Set Rubbish box to always appear in bottom-left corner of the screen, regardless of scrolling, over other elements */
 .rubbish-box {
   position: fixed;
+  text-align: center;
   bottom: 0;
   left: 0;
   width: 100%;
+  height: 100%;
   max-width: 300px; /* Set a max width for the rubbish box */
+  max-height: 150px;
   background-color: var(--c-bgPrimary);
   border-radius: 1rem;
   padding: 1rem;
-  border: 2px solid var(--c-txtPrimary);
+  border: 2px dashed var(--c-txtPrimary);
   z-index: 800; /* Ensure it appears above other elements */
 }
 ul, li {
