@@ -25,8 +25,8 @@ const StorynodeCreate = () => {
         <Draggable
             id='storynodeCreate'
             source='storynodeCreate'
+            className='draggable'
             data={{...newCreate, name: (newCreate.name!=='' ? newCreate.name : 'New ' + type)}}>
-            <div className='element'>
                 <div>
                     <InputHeader
                         dragHandler={true}
@@ -42,7 +42,6 @@ const StorynodeCreate = () => {
                         text={newCreate.text}
                         update={(val) => setNewCreate({ ...newCreate, text: val })} />
                 </div>
-            </div>
         </Draggable>
     );
 };
