@@ -1,4 +1,4 @@
-import {useDroppable} from '@dnd-kit/core';
+import { useDroppable, useDndContext } from '@dnd-kit/core';
 
 /**
  * Wrapper for elements that can be dropped into.
@@ -15,10 +15,14 @@ const Droppable = (props) => {
       function: props.function
     }
   });
+  const { active } = useDndContext();
+
+  // If any element is being dragged and this is the rubbish box, add a css class for styling
+  const className = (active && props.id==='trash') ? 'active-trash' : props.className;
   
   
   return (
-    <div ref={setNodeRef} className={props.className}>
+    <div ref={setNodeRef} className={className}>
       {props.children}
     </div>
   );

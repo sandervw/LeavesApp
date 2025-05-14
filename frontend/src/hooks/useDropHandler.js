@@ -34,7 +34,7 @@ const useDropHandler = (droppableType) => {
             checkError(source, data, 'delete');
             console.log('Deleting element:', source, data.kind, data);
             await apiCall('deleteElement', data.kind, data._id);
-            await elementDispatch({ type: 'DELETE_CHILD', payload: data._id });
+            await elementDispatch({ type: 'DELETE_CHILD', payload: data });
             if (source === 'detail') {
                 if (!element.parent) navigate('/');
                 else navigate('/storydetail', { state: element.parent });

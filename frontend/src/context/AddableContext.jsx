@@ -2,32 +2,21 @@ import { createContext, useReducer } from 'react';
 
 const AddableContext = createContext();
 
-// state represents the previous state of the data, action is the object which is passed into the dispatch function (type and payload)
+// Note: We never create or delete addables, we only update them
 const AddableReducer = (state, action) => {
     switch (action.type){
         case 'SET_ADDABLES':
             return {
                 addables: action.payload,
             }
-        case 'CREATE_ADDABLE':
-            return {
-                addables: [...state.addables, action.payload],
-            }
         case 'UPDATE_ADDABLE':
             return {
                 addables: state.addables.map(addable => addable._id === action.payload._id ? action.payload : addable),
-            }
-        case 'DELETE_ADDABLE':
-            return {
-                addables: state.addables.filter(addable => addable._id !== action.payload),
             }
         default:
             return state;
     }
 }
-
-// Example use: Type describes the state change, payload represents data to make the change
-// dispatch({type: 'CREATE_ADDABLE', payload: [{}, {}]})
 
 // AddableContext.Provider can provide values to the components it wraps
 const AddableContextProvider = ({children}) => {

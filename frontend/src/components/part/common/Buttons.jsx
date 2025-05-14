@@ -51,7 +51,7 @@ export const DraggableButton = (props) => {
 export const SunButton = (props) => {
     return ( 
         <button {...props}>
-            <InlineSVG src='/sun.svg' alt='drag icon' className='icon' />
+            <InlineSVG src='/sun.svg' alt='sun icon' className='icon' />
         </button>
      );
 }
@@ -59,7 +59,7 @@ export const SunButton = (props) => {
 export const MoonButton = (props) => {
     return ( 
         <button {...props}>
-            <InlineSVG src='/moon.svg' alt='drag icon' className='icon' />
+            <InlineSVG src='/moon.svg' alt='moon icon' className='icon' />
         </button>
      );
 }
