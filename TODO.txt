@@ -9,4 +9,3 @@ CSS App Layout:
     General improvements
     A subset of fixed styles
     Keep elements modular
-    Light/Dark mode
