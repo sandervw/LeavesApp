@@ -91,8 +91,8 @@
   display: flex;
   align-items: center;
 }
-/* Set Rubbish box to always appear in bottom-left corner of the screen, regardless of scrolling, over other elements */
-.rubbish-box {
+/* Set trash to always appear in bottom-left corner of the screen, regardless of scrolling, over other elements */
+.active-trash {
   position: fixed;
   text-align: center;
   bottom: 0;
