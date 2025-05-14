@@ -16,23 +16,24 @@ const ElementReducer = (state, action) => {
                 element: action.payload
             }
         case 'CREATE_CHILD':
+            if (state.element.type === 'leaf') state.element.type = 'branch';
+            if (state.element.children) state.element.children = [...state.element.children, action.payload._id];
+            else state.element.children = [action.payload._id];
             return {
                 children: [...state.children, action.payload],
-                element: state.element.children
-                    ? {children: [...state.element.children, action.payload._id], ...state.element}
-                    : {children: [action.payload._id], ...state.element}
+                element: state.element
             }
         case 'UPDATE_CHILD':
             return {
-                children: state.children.map(storynode => storynode._id === action.payload._id ? action.payload : storynode),
+                children: state.children.push(action.payload),
                 element: state.element
             }
         case 'DELETE_CHILD':
+            state.element.children = state.element.children.filter(child => child !== action.payload._id);
+            if(state.element.children.length === 0 && state.element.type === 'branch') state.element.type = 'leaf';
             return {
-                children: state.children.filter(storynode => storynode._id !== action.payload),
-                element: state.element.children
-                    ? {children: state.element.children.filter(child => child !== action.payload), ...state.element}
-                    : {children: [], ...state.element}
+                children: state.children.filter(storynode => storynode._id !== action.payload._id),
+                element: state.element
             }
         default:
             return state;

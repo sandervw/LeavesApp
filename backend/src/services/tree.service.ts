@@ -86,6 +86,10 @@ export default class TreeService<T extends TreeDoc> {
             const parent = await this.model.findOne({ _id: toDelete.parent, userId });
             appAssert(parent, NOT_FOUND, 'Parent element not found');
             parent.children = parent.children.filter((child: string) => (child !== id && child !== null));
+            if(parent.children.length === 0 && parent.type !== 'root') {
+                // If the parent is branch and has no children, set type to 'leaf'
+                parent.type = 'leaf';
+            }
             parent.save();
         }
         // Next, delete all descendents of this template
