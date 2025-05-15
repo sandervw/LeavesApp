@@ -98,9 +98,6 @@
   bottom: 0;
   left: 0;
   background-color: var(--c-bgPrimary);
-  border-radius: 1rem;
-  padding: 1rem;
-  border: 2px dashed var(--c-txtPrimary);
   z-index: 800; /* Ensure it appears above other elements */
 }
 .rubbish-pile .active {
@@ -108,6 +105,21 @@
   height: 100%;
   max-width: 250px; /* Set a max width for the rubbish box */
   max-height: 100px;
+  border-radius: 1rem;
+  padding: 1rem;
+  border: 2px dashed var(--c-txtPrimary);
+}
+.rubbish-pile .icon svg {
+  fill: var(--c-placeholder);
+}
+.rubbish-pile .active .icon {
+  width: 72px;
+  height: 72px;
+}
+.rubbish-pile .active .icon svg {
+  fill: var(--c-accent);
+  width: 72px;
+  height: 72px;
 }
 ul, li {
   list-style-position: outside; /* Bullet points outside */
@@ -189,7 +201,7 @@ li:hover {
   border: 1px solid var(--c-txtPrimary);
 }
 
-/* Style placeholders */
+/* Placeholder styles */
 [data-placeholder]::before {
   content: attr(data-placeholder); /* Use the placeholder text */
   color: var(--c-placeholder); /* Gray color for the placeholder */
