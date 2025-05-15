@@ -13,11 +13,8 @@ const RubbishPile = () => {
     const [deleteParams, setDeleteParams] = useState({ source: '', data: null });
     const { handleDelete } = useDropHandler('trash');
     const { active } = useDndContext();
-    const [isDeleteable, setIsDeleteable] = useState(false);
     const [className, setClassName] = useState('rubbish-pile');
     useEffect(() => {
-        console.log('RubbishPile active:', active);
-        setIsDeleteable(false); // Reset isDeleteable state
         setClassName('rubbish-pile'); // Reset className state
         // Check if the active item is a droppable element
         if(active
@@ -25,7 +22,6 @@ const RubbishPile = () => {
             || active.data.current.source === 'roots'
             || active.data.current.source === 'children'
         )){
-            setIsDeleteable(true);
             setClassName('rubbish-pile active');
         }
     }, [active]);
@@ -46,9 +42,7 @@ const RubbishPile = () => {
 
     return ( 
         <Droppable id='trash' className={className} function={checkConfirmation}>
-            {isDeleteable
-            ? <p>Drag and drop here to delete</p>
-            : <InlineSVG src='/trashcan.svg' alt='trashcan icon' className='icon' />}
+            <InlineSVG src='/trashcan.svg' alt='trashcan icon' className='icon' />
             {showModal && <DeleteConfirmation hideModal={() => setShowModal(false)} confirmModal={() => confirmDelete()} />}
         </Droppable>
         
