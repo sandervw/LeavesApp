@@ -130,6 +130,11 @@ ul, li {
   cursor: pointer;
   transition: color 0.15s;
 }
+/* align items horizontally */
+li {
+  display: flex;
+  align-items: center;
+}
 /* Add accent color to header in navbar */
 .navbar h1 {
   color: var(--c-accent);
@@ -174,10 +179,15 @@ button.delete-button {
   width: 24px;
   height: 24px;
   display: inline-block;
+  transition: transform 0.15s;
 }
 .icon svg {
   fill: var(--c-txtPrimary);
   transition: fill 0.15s;
+}
+.icon.expanded {
+  transform: rotate(90deg);
+  transition: transform 0.15s;
 }
 svg:hover {
   fill: var(--c-accent);
