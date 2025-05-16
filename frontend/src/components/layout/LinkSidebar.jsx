@@ -3,10 +3,17 @@ import { useEffect, useState } from 'react';
 import RubbishPile from '../part/RubbishPile';
 import useAuthContext from '../../hooks/useAuthContext';
 import { ThemeToggle } from '../part/ThemeToggle';
+import InlineSVG from '../part/common/InlineSVG';
 
 const LinkSidebar = () => {
     const { user } = useAuthContext();
     const [theme, setTheme] = useState('light');
+    const [expand, setExpand] = useState('');
+
+    const toggleExpand = (link) => {
+        expand === link && setExpand('');
+        expand !== link && setExpand(link);
+    };
 
     useEffect(() => {
         const saved = localStorage.getItem('theme');
@@ -24,9 +31,30 @@ const LinkSidebar = () => {
             : <aside className='sidebar container'>
                 <div className='site-links'>
                     <ul className='links'>
-                        <li><Link to='/' className='clickable'>Stories</Link></li>
-                        <li><Link to='/templates' className='clickable'>Templates</Link></li>
-                        <li><Link to='/archive' className='clickable'>Archive</Link></li>
+                        <li>
+                            <InlineSVG
+                                src='/chevron.svg'
+                                alt='expand icon'
+                                className={expand === 'stories' ? 'icon expanded' : 'icon'}
+                                onClick={() => toggleExpand('stories')} />
+                            <Link to='/' className='clickable'>Stories</Link>
+                        </li>
+                        <li>
+                            <InlineSVG
+                                src='/chevron.svg'
+                                alt='expand icon'
+                                className={expand === 'templates' ? 'icon expanded' : 'icon'}
+                                onClick={() => toggleExpand('templates')} />
+                            <Link to='/templates' className='clickable'>Templates</Link>
+                        </li>
+                        <li>
+                            <InlineSVG
+                                src='/chevron.svg'
+                                alt='expand icon'
+                                className={expand === 'archive' ? 'icon expanded' : 'icon'}
+                                onClick={() => toggleExpand('archive')} />
+                            <Link to='/archive' className='clickable'>Archive</Link>
+                        </li>
                     </ul>
                 </div>
                 <ThemeToggle theme={theme} setTheme={setTheme} />

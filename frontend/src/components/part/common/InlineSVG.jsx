@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const InlineSVG = ({ src, alt, className }) => {
+const InlineSVG = ({ src, alt, ...rest }) => {
     const [svgContent, setSvgContent] = useState(null);
 
     useEffect(() => {
@@ -18,10 +18,10 @@ const InlineSVG = ({ src, alt, className }) => {
 
     return (
         <div
-            className={className}
             role='img'
             aria-label={alt}
             dangerouslySetInnerHTML={{ __html: svgContent }}
+            {...rest}
         />
     );
 };
