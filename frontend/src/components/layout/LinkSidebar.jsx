@@ -4,11 +4,13 @@ import RubbishPile from '../part/RubbishPile';
 import useAuthContext from '../../hooks/useAuthContext';
 import { ThemeToggle } from '../part/ThemeToggle';
 import InlineSVG from '../part/common/InlineSVG';
+import useTreelistContext from '../../hooks/useTreelistContext';
 
 const LinkSidebar = () => {
     const { user } = useAuthContext();
     const [theme, setTheme] = useState('light');
     const [expand, setExpand] = useState('');
+    const { trees } = useTreelistContext();
 
     const toggleExpand = (link) => {
         expand === link && setExpand('');
@@ -38,6 +40,15 @@ const LinkSidebar = () => {
                                 className={expand === 'stories' ? 'icon expanded' : 'icon'}
                                 onClick={() => toggleExpand('stories')} />
                             <Link to='/' className='clickable'>Stories</Link>
+                            {expand === 'stories' && trees && trees.length > 0 && (
+                                <ul className='links'>
+                                    {trees.map((tree) => (
+                                        <li key={tree._id}>
+                                            <Link to='/storydetail' state={tree._id} className='clickable'>{tree.name}</Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </li>
                         <li>
                             <InlineSVG
