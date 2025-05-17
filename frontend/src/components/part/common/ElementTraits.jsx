@@ -17,7 +17,7 @@ const Header2Trait = ({trait, value, label, dragHandler, ...props}) => {
     return (
         <div className='inline-trait'>
             {dragHandler && <DraggableButton drag-handle='true' {...handler} />}
-            {label && <p>{label}</p>}
+            {label && <pre>{label}</pre>}
             <h2
                 suppressContentEditableWarning={true}
                 id={trait}
@@ -32,7 +32,7 @@ const Header3Trait = ({trait, value, label, dragHandler, ...props}) => {
     return (
         <div className='inline-trait'>
             {dragHandler && <DraggableButton drag-handle='true' {...handler} />}
-            {label && <p>{label}</p>}
+            {label && <pre>{label}</pre>}
             <h3
                 suppressContentEditableWarning={true}
                 id={trait}
@@ -47,7 +47,7 @@ const ParagraphTrait = ({trait, value, label, dragHandler, ...props}) => {
     return (
         <div className='inline-trait'>
             {dragHandler && <DraggableButton drag-handle='true' {...handler} />}
-            {label && <p>{label}</p>}
+            {label && <pre>{label}</pre>}
             <p
                 suppressContentEditableWarning={true}
                 id={trait}
