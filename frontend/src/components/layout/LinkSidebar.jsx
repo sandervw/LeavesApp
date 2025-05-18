@@ -15,6 +15,8 @@ const LinkSidebar = () => {
     const toggleExpand = (link) => {
         expand === link && setExpand('');
         expand !== link && setExpand(link);
+        console.log(trees);
+        
     };
 
     useEffect(() => {
@@ -40,16 +42,17 @@ const LinkSidebar = () => {
                                 className={expand === 'stories' ? 'icon expanded' : 'icon'}
                                 onClick={() => toggleExpand('stories')} />
                             <Link to='/' className='clickable'>Stories</Link>
-                            {expand === 'stories' && trees && trees.length > 0 && (
-                                <ul className='links'>
-                                    {trees.map((tree) => (
-                                        <li key={tree._id}>
-                                            <Link to='/storydetail' state={tree._id} className='clickable'>{tree.name}</Link>
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
                         </li>
+                        {expand === 'stories' && trees && trees.length > 0 && (
+                            <ul className='links'>
+                                {trees.map((tree) => (
+                                    (tree.kind==='storynode' && tree.archived===false) && <li key={tree._id}>
+                                        <InlineSVG src=''className={'icon'} /> {/** render an empty svg */}
+                                        <Link to='/storydetail' state={tree._id} className='clickable'>{tree.name}</Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                         <li>
                             <InlineSVG
                                 src='/chevron.svg'
@@ -58,6 +61,16 @@ const LinkSidebar = () => {
                                 onClick={() => toggleExpand('templates')} />
                             <Link to='/templates' className='clickable'>Templates</Link>
                         </li>
+                        {expand === 'templates' && trees && trees.length > 0 && (
+                            <ul className='links'>
+                                {trees.map((tree) => (
+                                    (tree.kind==='template') && <li key={tree._id}>
+                                        <InlineSVG src=''className={'icon'} /> {/** render an empty svg */}
+                                        <Link to='/templatedetail' state={tree._id} className='clickable'>{tree.name}</Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                         <li>
                             <InlineSVG
                                 src='/chevron.svg'
@@ -66,6 +79,16 @@ const LinkSidebar = () => {
                                 onClick={() => toggleExpand('archive')} />
                             <Link to='/archive' className='clickable'>Archive</Link>
                         </li>
+                        {expand === 'archive' && trees && trees.length > 0 && (
+                            <ul className='links'>
+                                {trees.map((tree) => (
+                                    (tree.archived) && <li key={tree._id}>
+                                        <InlineSVG src=''className={'icon'} /> {/** render an empty svg */}
+                                        <Link to='/storydetail' state={tree._id} className='clickable'>{tree.name}</Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </ul>
                 </div>
                 <ThemeToggle theme={theme} setTheme={setTheme} />
