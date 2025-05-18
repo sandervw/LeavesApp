@@ -15,13 +15,14 @@ const Searchbar = () => {
     useEffect(() => {
         const fetchData = async () => {
             if (!user) return;
-            const storynodes = await apiCall('fetchElements', 'storynode', 'type=root&archived=false');
+            const storynodes = await apiCall('fetchElements', 'storynode', 'type=root');
             const templates = await apiCall('fetchElements', 'template', 'type=root');
             if (!storynodes && !templates) return;
             const treelist = [...storynodes, ...templates].map(tree => ({
                 _id: tree._id,
                 name: tree.name,
-                kind: tree.kind
+                kind: tree.kind,
+                archived: tree.archived
             }));
             dispatch({ type: 'SET_TREES', payload: treelist });
         };
