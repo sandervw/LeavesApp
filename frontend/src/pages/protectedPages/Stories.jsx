@@ -2,8 +2,8 @@ import ElementList from '../../components/part/ElementList';
 import usePage from '../../hooks/usePage';
 
 /**
- * 
- * @returns {JSX.Element} The main component for the Stories page.
+ * Main page for user stories
+ * Renders an ElementList component with stories returned by the usePage hook
  */
 const Stories = () => {
 

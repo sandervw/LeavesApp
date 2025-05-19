@@ -16,7 +16,9 @@ import AddSidebar from './components/layout/AddSidebar';
 import LinkSidebar from './components/layout/LinkSidebar';
 
 /**
- * Responsible for routing to the different pages of the app.
+ * Component that routes to different pages
+ * Adds a drag-and-drop context
+ * Wraps protected pages in an authentication container
  */
 function App() {
 
@@ -32,6 +34,7 @@ function App() {
         <DndContext onDragEnd={handleDragEnd} sensors={[pointerSensor]} collisionDetection={customCollisionDetectionAlgorithm}>
           <Navbar />
           <LinkSidebar />
+          {/* Protected routes */}
           <Routes>
             <Route path='/' element={<AuthContainer />}>
               <Route index element={<Stories />} />
@@ -40,6 +43,7 @@ function App() {
               <Route path='/storydetail/' element={<StorynodeDetail />} />
               <Route path='/templatedetail/' element={<TemplateDetail />} />
             </Route>
+            {/* Unprotected routes */}
             <Route path='/landing' element={<Landing />} />
             <Route path='/signup' element={<FormPage formType='signup' />} />
             <Route path='/login' element={<FormPage formType='login' />} />
