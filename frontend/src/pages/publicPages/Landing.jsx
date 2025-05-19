@@ -3,14 +3,16 @@ import useAuthContext from '../../hooks/useAuthContext';
 import { useNavigate } from 'react-router-dom';
 import usePage from '../../hooks/usePage';
 
+/**
+ * Landing page for unauthenticated users
+ * TODO: replace generic text below
+ */
 const Landing = () => {
     const { user } = useAuthContext();
     const navigate = useNavigate();
     usePage({ page: 'landing' });
 
     useEffect(() => {
-        console.log('user', user);
-        
         if (user) {
             navigate('/'); // Redirect to home if user is authenticated
         }

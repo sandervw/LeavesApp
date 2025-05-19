@@ -1,6 +1,10 @@
 import ElementList from '../../components/part/ElementList';
 import usePage from '../../hooks/usePage';
 
+/**
+ * Main page for user templates
+ * Renders an ElementList component with templates returned by the usePage hook
+ */
 const Templates = () => {
 
     const { error, isPending, children } = usePage({ page: 'templates' });

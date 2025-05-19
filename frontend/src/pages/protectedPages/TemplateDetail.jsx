@@ -6,7 +6,11 @@ import usePage from '../../hooks/usePage';
 import useElementContext from '../../hooks/useElementContext';
 import useAPI from '../../hooks/useAPI';
 
-
+/**
+ * Page to display a single template in detail
+ * Renders the template (an ElementFeature component) and its children (ElementList)
+ * Uses the usePage hook to fetch the template and its children
+ */
 const TemplateDetail = () => {
 
     const location = useLocation(); // Grab the element from location state
