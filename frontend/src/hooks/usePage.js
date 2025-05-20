@@ -4,6 +4,12 @@ import useAddableContext from './useAddableContext';
 import usePageContext from './usePageContext';
 import apiService from '../services/apiService';
 
+/**
+ * Hook to set story/template state (Detail and children elements), addable state, and current page state
+ * @param {string} props.page the page name (e.g. 'stories', 'templates', 'storynodeDetail', 'templateDetail')
+ * @param {string} props.elementID OPTIONAL: the element ID (e.g. storynode or template ID)
+ * @returns {object} error, isPending, element, children, addables, currentPage
+ */
 const usePage = (props) => {
 
     const { page, elementID } = props ?? {};
@@ -20,30 +26,35 @@ const usePage = (props) => {
             setIsPending(true);
             try {
                 await pageDispatch({ type: 'SET_PAGE', payload: page });
-                let children, element, addables;
+                let fetchedChildren, fetchedElement, fetchedAddables;
                 if (page === 'stories') {
-                    element = '';
-                    children = await apiService.fetchElements('storynode', 'type=root&archived=false') ?? [];
-                    addables = await apiService.fetchElements('template', `type=root`) ?? [];
+                    fetchedElement = '';
+                    fetchedChildren = await apiService.fetchElements('storynode', 'type=root&archived=false') ?? [];
+                    fetchedAddables = await apiService.fetchElements('template', `type=root`) ?? [];
                 }
                 if (page === 'templates') {
-                    element = '';
-                    children = await apiService.fetchElements('template', 'type=root') ?? [];
-                    addables = [];
+                    fetchedElement = '';
+                    fetchedChildren = await apiService.fetchElements('template', 'type=root') ?? [];
+                    fetchedAddables = [];
+                }
+                if (page === 'archive') {
+                    fetchedElement = '';
+                    fetchedChildren = await apiService.fetchElements('storynode', 'type=root&archived=true') ?? [];
+                    fetchedAddables = [];
                 }
                 if (page === 'storynodeDetail') {
-                    element = await apiService.fetchElement('storynode', elementID) ?? null;
-                    children = await apiService.fetchChildren('storynode', elementID) ?? [];
-                    addables = await apiService.fetchElements('template', `type=branch`) ?? [];
+                    fetchedElement = await apiService.fetchElement('storynode', elementID) ?? null;
+                    fetchedChildren = await apiService.fetchChildren('storynode', elementID) ?? [];
+                    fetchedAddables = await apiService.fetchElements('template', `type=branch`) ?? [];
                 }
                 if (page === 'templateDetail') {
-                    element = await apiService.fetchElement('template', elementID) ?? null;
-                    children = await apiService.fetchChildren('template', elementID) ?? [];
-                    addables = [];
+                    fetchedElement = await apiService.fetchElement('template', elementID) ?? null;
+                    fetchedChildren = await apiService.fetchChildren('template', elementID) ?? [];
+                    fetchedAddables = [];
                 }
-                await elementDispatch({ type: 'SET_CHILDREN', payload: children });
-                await elementDispatch({ type: 'SET_ELEMENT', payload: element });
-                await addablesDispatch({ type: 'SET_ADDABLES', payload: addables });
+                await elementDispatch({ type: 'SET_CHILDREN', payload: fetchedChildren });
+                await elementDispatch({ type: 'SET_ELEMENT', payload: fetchedElement });
+                await addablesDispatch({ type: 'SET_ADDABLES', payload: fetchedAddables });
                 setError(null);
                 setIsPending(false);
             } catch (error) {

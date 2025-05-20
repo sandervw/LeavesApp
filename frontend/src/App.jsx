@@ -2,7 +2,7 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route, Navigate, Form } from 'react-router-dom';
 import { DndContext } from '@dnd-kit/core';
 import { PointerSensor, useSensor } from '@dnd-kit/core';
-import { customCollisionDetectionAlgorithm, handleDragEnd } from './services/dndService';
+import { customCollisionDetectionAlgorithm, handleDragEnd } from './config/dndConfig';
 import AuthContainer from './components/wrapper/AuthContainer';
 import Landing from './pages/publicPages/Landing';
 import Stories from './pages/protectedPages/Stories';

@@ -14,8 +14,8 @@ const Stories = () => {
         : isPending
             ? <div className='loading container'>Loading...</div>
             : <div className='container content'>
-                    <ElementList elements={children} kind='storynode' listType='roots' />
-                </div>
+                <ElementList elements={children} kind='storynode' listType='roots' />
+            </div>;
 
 };
 

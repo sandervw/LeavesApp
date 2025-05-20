@@ -14,8 +14,8 @@ const Templates = () => {
         : isPending
             ? <div className='loading container'>Loading...</div>
             : <div className='container content'>
-                    <ElementList elements={children} kind='template' listType='roots' />
-                </div>
+                <ElementList elements={children} kind='template' listType='roots' />
+            </div>;
 };
 
 export default Templates;
