@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+/**
+ * Base cofinguration included with all requests.
+ */
 const options = {
   baseURL: import.meta.env.VITE_BASEAPIURL,
   withCredentials: true,

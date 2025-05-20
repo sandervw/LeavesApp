@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArchiveButton, DownloadButton, ReturnButton } from '../../components/part/common/Buttons';
+import { ArchiveButton, DownloadButton, ReturnButton, UnarchiveButton } from '../../components/part/common/Buttons';
 import ElementList from '../../components/part/ElementList';
 import ElementFeature from '../../components/part/ElementFeature';
 import Draggable from '../../components/wrapper/Draggable';
@@ -7,6 +7,11 @@ import usePage from '../../hooks/usePage';
 import useElementContext from '../../hooks/useElementContext';
 import useAPI from '../../hooks/useAPI';
 
+/**
+ * Page to display a single story in detail
+ * Renders the story (an ElementFeature component) and children (ElementList)
+ * Uses the usePage hook to fetch the story and its children
+ */
 const StorynodeDetail = () => {
 
     const location = useLocation(); // Grab the element from location state
@@ -15,7 +20,7 @@ const StorynodeDetail = () => {
     const { dispatch: elementDispatch } = useElementContext();
     const { apiCall } = useAPI();
 
-    // Updates the name, text, or word count of the storynode
+    // Updates the basic values (name, text, word counte/limit) of the storynode
     const updateStorynode = async (attr, val) => {
         if (attr === 'wordCount') val = parseInt(val);
         if (attr === 'wordLimit') val = parseInt(val);
@@ -51,7 +56,10 @@ const StorynodeDetail = () => {
                     <div className='box-buttons'>
                         <ReturnButton onClick={navigateParent} />
                         <DownloadButton onClick={downloadStory} />
-                        {element.type === 'root' && <ArchiveButton onClick={toggleArchive} />}
+                        {(element.type === 'root' && !element.archived)
+                            && <ArchiveButton onClick={toggleArchive} />}
+                        {(element.type === 'root' && element.archived)
+                            && <UnarchiveButton onClick={toggleArchive} />}
                     </div>
                     <ElementFeature element={element} onUpdate={updateStorynode} />
                 </Draggable>
