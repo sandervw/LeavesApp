@@ -45,7 +45,7 @@ const Header3Trait = ({trait, value, label, dragHandler, ...props}) => {
 const ParagraphTrait = ({trait, value, label, dragHandler, ...props}) => {
     const handler = useContext(DragHandlerContext);
     return (
-        <div className='inline-trait'>
+        <div className='inline-trait subtrait'>
             {dragHandler && <DraggableButton drag-handle='true' {...handler} />}
             {label && <pre>{label}</pre>}
             <p

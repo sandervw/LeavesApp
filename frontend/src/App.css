@@ -28,6 +28,7 @@
   text-decoration: none;
   /* Set cursor style so that it doesn't blink by default on text */
   user-select: none;
+  margin: 0;
 }
 
 /* MAIN CONTENT STYLES */
@@ -60,11 +61,12 @@
   display: flex;
 }
 .box {
+  margin: 1rem 0;;
   padding-left: 1rem;
   min-width: 20%; /* 20% of the parent element: keeps header from shrinking too much */
 }
 .box.traits {
-  width: 40%;
+  max-width: 40%;
 }
 .box-buttons {
   display: flex;
@@ -93,6 +95,9 @@
 .inline-trait {
   display: flex;
   align-items: center;
+}
+.subtrait {
+  margin-left: 2rem;
 }
 /* Set trash to always appear in bottom-left corner of the screen, regardless of scrolling, over other elements */
 .rubbish-pile {
