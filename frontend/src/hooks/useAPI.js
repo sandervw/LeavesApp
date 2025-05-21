@@ -1,4 +1,4 @@
-import apiService from '../services/apiService';
+import * as apiService from '../services/apiService';
 import { useCallback, useState } from 'react';
 const useAPI = () => {
 
