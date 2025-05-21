@@ -1,4 +1,3 @@
-import React from 'react';
 import Template from './Template';
 import StoryNode from './Storynode';
 import Droppable from '../wrapper/Droppable';
@@ -8,14 +7,13 @@ import useElementContext from '../../hooks/useElementContext';
 import useAddableContext from '../../hooks/useAddableContext';
 
 /**
- * 
+ * Component to display a list of elements (children, roots, addables, etc.)
  * @param {Array} props.elements - The list of elements to be displayed
  * @param {string} props.kind - The kind of elements (e.g., 'storynode', 'template')
  * @param {string} props.listType - three types:
  * * 'children' - for children of a node (can be added to or removed)
  * * 'roots' - for main lists of elements (can be added to, removal requires delete confirmation)
  * * 'static' - for lists of addable elements (can't be removed/added to)
- * @returns {JSX.Element} - The rendered list of elements
  */
 const ElementList = ({ elements, kind, listType }) => {
     const { dispatch: elementDispatch } = useElementContext();

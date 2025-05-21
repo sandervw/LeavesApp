@@ -1,12 +1,17 @@
 import { Header2Trait, ParagraphTrait } from './common/ElementTraits';
 import MarkdownText from './common/MarkdownText';
 
+/**
+ * Compoenent used by the Detail page to display the main features of an element
+ * @param {Object} props.element - The element to be displayed
+ * @param {Function} props.onUpdate - The function to be called when the element is updated
+ */
 const ElementFeature = ({ element, onUpdate }) => {
     const { name, kind, type, wordWeight, wordLimit, wordCount } = element;
 
     return (
         <>
-            <div className='box'>
+            <div className='box traits'>
                 <Header2Trait
                     trait="name"
                     value={name}
@@ -18,7 +23,7 @@ const ElementFeature = ({ element, onUpdate }) => {
                     value={type}
                     label='Type: '
                     contentEditable={false} />
-                {(kind === 'template' && wordWeight)&&
+                {(kind === 'template' && wordWeight) &&
                     <ParagraphTrait
                         trait="wordWeight"
                         value={wordWeight}
@@ -33,12 +38,11 @@ const ElementFeature = ({ element, onUpdate }) => {
                             label='Word Limit: '
                             onBlur={(e) => onUpdate('wordLimit', e.target.innerText)}
                             contentEditable={type === 'root'} />
-                        {type === 'leaf' &&
-                            <ParagraphTrait
-                                trait="wordCount"
-                                value={wordCount}
-                                label='Word Count: '
-                                contentEditable={false} />}
+                        <ParagraphTrait
+                            trait="wordCount"
+                            value={wordCount}
+                            label='Word Count: '
+                            contentEditable={false} />
                     </>}
             </div>
             <div className='box'>

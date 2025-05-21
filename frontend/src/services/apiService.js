@@ -1,63 +1,37 @@
 import API from "../config/apiClient";
 
-const API_URL = import.meta.env.VITE_BASEAPIURL;
+export const authSignup = async (data) => API.post('/auth/signup', data);
 
-class ApiService {
-    constructor() {
-        this.authSignup = this.authSignup.bind(this);
-        this.authLogin = this.authLogin.bind(this);
-        this.authLogout = this.authLogout.bind(this);
-        this.authRefresh = this.authRefresh.bind(this);
-        this.getUser = this.getUser.bind(this);
-        this.verifyEmail = this.verifyEmail.bind(this);
-        this.forgotPassword = this.forgotPassword.bind(this);
-        this.resetPassword = this.resetPassword.bind(this);
-        this.fetchElements = this.fetchElements.bind(this);
-        this.fetchElement = this.fetchElement.bind(this);
-        this.fetchChildren = this.fetchChildren.bind(this);
-        this.upsertElement = this.upsertElement.bind(this);
-        this.createFromTemplate = this.createFromTemplate.bind(this);
-        this.deleteElement = this.deleteElement.bind(this);
-        this.createFile = this.createFile.bind(this);
-    }
+export const authLogin = async (data) => API.post('/auth/login', data);
 
-    async authSignup(data) { return API.post('/auth/signup', data); }
+export const authLogout = async () => API.get('/auth/logout');
 
-    async authLogin(data) { return API.post('/auth/login', data); }
+export const authRefresh = async () => API.get('/auth/refresh');
 
-    async authLogout() { return API.get('/auth/logout'); }
+export const getUser = async () => API.get('/user');
 
-    async authRefresh() { return API.get('/auth/refresh'); }
+export const verifyEmail = async (verificationCode) => API.get(`/auth/email/verify/${verificationCode}`);
 
-    async getUser() { return API.get('/user'); }
+export const forgotPassword = async (email) => API.post('/auth/password/forgot', { email });
 
-    async verifyEmail(verificationCode) { return API.get(`/auth/email/verify/${verificationCode}`); }
+export const resetPassword = async ({ verificationCode, password }) => API.post('/auth/password/reset', { verificationCode, password });
 
-    async forgotPassword(email) { return API.post('/auth/password/forgot', { email }); }
+export const fetchElements = async (kind, query) => {
+    if (query) return API.get(`${kind}/?${query}`);
+    else return API.get(`${kind}/`);
+};
 
-    async resetPassword({ verificationCode, password }) { return API.post('/auth/password/reset', { verificationCode, password }); }
+export const fetchElement = async (kind, id) => API.get(`${kind}/${id}`);
 
-    async fetchElements(kind, query) {
-        if (query) return API.get(`${kind}/?${query}`);
-        else return API.get(`${kind}/`);
-    }
-    
-    async fetchElement(kind, id){ return API.get(`${kind}/${id}`); }
-    
-    async fetchChildren(kind, id){ return API.get(`${kind}/getchildren/${id}`); };
-    
-    async upsertElement(kind, element){ return API.post(`${kind}/`, element); };
-    
-    // Can be used to create a new story, or add a child to an existing story
-    async createFromTemplate(templateId, parentId){ return API.post(`storynode/postfromtemplate/`, {templateId, parentId}); }
-    
-    async deleteElement(kind, id){ return API.delete(`${kind}/${id}`); }
-    
-    async createFile(id){
-        //TODO
-        console.log('createFile', id);
-    }
+export const fetchChildren = async (kind, id) => API.get(`${kind}/getchildren/${id}`);
 
-}
+export const upsertElement = async (kind, element) => API.post(`${kind}/`, element);
 
-export default new ApiService();
+export const createFromTemplate = async (templateId, parentId) => API.post(`storynode/postfromtemplate/`, { templateId, parentId });
+
+export const deleteElement = async (kind, id) => API.delete(`${kind}/${id}`);
+
+export const createFile = async (id) => {
+    //TODO
+    console.log('createFile', id);
+};

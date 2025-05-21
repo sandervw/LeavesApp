@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import useElementContext from './useElementContext';
 import useAddableContext from './useAddableContext';
 import usePageContext from './usePageContext';
-import apiService from '../services/apiService';
+import * as apiService from '../services/apiService';
 
 /**
  * Hook to set story/template state (Detail and children elements), addable state, and current page state

@@ -44,9 +44,6 @@ const ElementReducer = (state, action) => {
     }
 }
 
-// Example use: Type describes the state change, payload represents data to make the change
-// dispatch({type: 'CREATE_CHILD', payload: [{}, {}]})
-
 // ElementContext.Provider can provide values to the components it wraps
 const ElementContextProvider = ({children}) => {
     // Usereducer similar to UseState

@@ -63,6 +63,9 @@
   padding-left: 1rem;
   min-width: 20%; /* 20% of the parent element: keeps header from shrinking too much */
 }
+.box.traits {
+  width: 40%;
+}
 .box-buttons {
   display: flex;
   flex-direction: column;
