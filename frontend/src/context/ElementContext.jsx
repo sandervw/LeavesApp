@@ -20,20 +20,32 @@ const ElementReducer = (state, action) => {
                 if (state.element.type === 'leaf') state.element.type = 'branch';
                 if (state.element.children) state.element.children = [...state.element.children, action.payload._id];
                 else state.element.children = [action.payload._id];
+                state.element.wordcount = state.element.wordcount + action.payload.wordcount;
             }
             return {
                 children: [...state.children, action.payload],
                 element: state.element
             }
         case 'UPDATE_CHILD':
+            if(state.element) state.element.wordcount = state.children.reduce((acc, child) => acc + child.wordcount, 0);
             return {
-                children: state.children.push(action.payload),
+                children: state.children.map(child => {
+                    if (child._id === action.payload._id) {
+                        return {
+                            ...child,
+                            ...action.payload
+                        }
+                    }
+                    return child;
+                }),
                 element: state.element
             }
         case 'DELETE_CHILD':
             if(state.element){
                 state.element.children = state.element.children.filter(child => child !== action.payload._id);
                 if(state.element.children.length === 0 && state.element.type === 'branch') state.element.type = 'leaf';
+                state.element.wordcount = state.element.wordcount - action.payload.wordcount;
+                if (state.element.wordcount < 0) state.element.wordcount = 0;
             }
             return {
                 children: state.children.filter(storynode => storynode._id !== action.payload._id),
