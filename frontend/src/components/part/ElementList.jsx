@@ -23,12 +23,10 @@ const ElementList = ({ elements, kind, listType }) => {
 
     // Updates one of the child elements
     const updateElement = async (attr, val, data) => {
-        console.log('updating element', attr, val, data);
-        
-        await apiCall('upsertElement', kind, { ...data, [attr]: val });
+        const child = await apiCall('upsertElement', kind, { ...data, [attr]: val });
         listType === 'static'
-            ? addableDispatch({ type: 'UPDATE_ADDABLE', payload: { ...data, [attr]: val } })
-            : elementDispatch({ type: 'UPDATE_CHILD', payload: { ...data, [attr]: val } });
+            ? addableDispatch({ type: 'UPDATE_ADDABLE', payload: child })
+            : elementDispatch({ type: 'UPDATE_CHILD', payload: child });
     };
 
     return (
