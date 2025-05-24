@@ -21,27 +21,35 @@ class storynodeService extends TreeService<StorynodeDoc> {
      * @param userId - the userId to filter by
      * @param data - the data to upsert
      */
-    async upsert(userId: mongoId, data: StorynodeDoc){
+    async upsert(userId: mongoId, data: StorynodeDoc) {
         // UPDATE STORYNODE
-        if (data._id){
-            // Set the word count (based on children or text)
+        if (data._id) {
+            // If element has children, set the word count (based on children or text)
             if (data.children && data.children.length > 0) {
                 data.children = data.children.filter(child => child !== null); // Clean up from frontend
                 const children = await Storynode.find({ _id: { $in: data.children }, userId });
                 appAssert(children.length === data.children.length, NOT_FOUND, 'Some children not found');
                 data.wordCount = children.reduce((acc: number, child: StorynodeDoc) => acc + child.wordCount, 0);
             }
-            else data.wordCount = data.text.trim().split(/\s+/).filter(word => word).length;
+            // Else, update child wordCount
+            else if (data.text && data.text.length > 0) data.wordCount = data.text.trim().split(/\s+/).filter(word => word).length;
             const storynode = await Storynode.findOneAndUpdate({ _id: data._id, userId }, { $set: data }, { new: true });
             appAssert(storynode, NOT_FOUND, 'Storynode not found');
+            // If the storynode has a parent, update the parent word count
+            const parent = await Storynode.findOne({ _id: data.parent, userId });
+            if (parent) {
+                const allChildren = await Storynode.find({ _id: { $in: parent.children }, userId });
+                parent.wordCount = allChildren.reduce((acc: number, sibling: StorynodeDoc) => acc + sibling.wordCount, 0);
+                await Storynode.findOneAndUpdate({ _id: parent._id, userId }, { wordCount: parent.wordCount }, { new: true });
+            }
             // If the storynode is a root, set the word limit for its children
-            if(storynode.type === 'root' && storynode.wordLimit){
+            if (storynode.type === 'root' && storynode.wordLimit) {
                 await recursiveUpdateWordLimits(storynode);
             }
             return storynode as StorynodeDoc; // Assert return type here; we know its a doc because of appAssert
         }
         // CREATE STORYNODE
-        else{
+        else {
             data.userId = userId; // Ensure user_id is set in the data
             return await Storynode.create(data);
         }
@@ -54,15 +62,15 @@ class storynodeService extends TreeService<StorynodeDoc> {
      * @param parentId - the id of the parent storynode (if any)
      * @return - the new storynode tree
      */
-    async addFromTemplate(userId: mongoId, templateId: string, parentId?: string | null){
+    async addFromTemplate(userId: mongoId, templateId: string, parentId?: string | null) {
         // ADD NEW CHILD
-        if (parentId){
+        if (parentId) {
             const parent = await Storynode.findOne({ _id: parentId, userId });
             appAssert(parent, NOT_FOUND, 'Parent not found');
             const newChild = await recursiveStorynodeFromTemplate(userId, templateId, parentId);
-            if(parent){
+            if (parent) {
                 parent.children.push(newChild._id);
-                await Storynode.findOneAndUpdate({_id: parent._id, userId}, {children: parent.children}, {new: true});
+                await Storynode.findOneAndUpdate({ _id: parent._id, userId }, { children: parent.children }, { new: true });
             }
             return newChild;
         }
