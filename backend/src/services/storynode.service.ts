@@ -55,6 +55,8 @@ class storynodeService extends TreeService<StorynodeDoc> {
         }
     }
 
+    // TODO: overwrite delete, need to update the parent word count
+
     /**
      * Creates a storynode from a template (or adds a template as a child)
      * @param userId - the userId to assign to the new storynodes
