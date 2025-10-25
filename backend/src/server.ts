@@ -25,7 +25,7 @@ app.use(
         credentials: true, // Allows cookies to be sent with requests (for authentication)
     })
 );
-app.use(cookieParser()); // Parses cookies from request headers (for authentication)
+app.use(cookieParser() as express.RequestHandler); // Parses cookies from request headers (for authentication)
 // ******Note: See cookies.ts - the refresh token is only sent on the auth/refresh path
 app.use((req, res, next) => {
     console.log(req.path, req.method);
