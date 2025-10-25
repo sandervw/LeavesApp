@@ -61,7 +61,7 @@ export const verifyToken = <Payload extends object = AccessTokenPayload>(
         const payload = jwt.verify(
             token,
             secret,
-            { ...defaults, ...verifyOpts }) as Payload;
+            { ...defaults, ...verifyOpts }) as unknown as Payload;
         return { payload };
     } catch (error: unknown) {
         if (error instanceof Error) return { error: error.message };
