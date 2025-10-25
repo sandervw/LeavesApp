@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { TreeDoc } from '../schemas/mongo.schema';
+import { TreeDoc, mongoId } from '../schemas/mongo.schema';
 import appAssert from '../utils/appAssert';
 import { NOT_FOUND } from '../constants/http';
 import { recursiveGetDescendants } from './recursive.service';
@@ -38,7 +38,7 @@ export default class TreeService<T extends TreeDoc> {
      * @param userId - the userId to filter by
      * @param id - the id of the element to find
      */
-    async findById(userId: UserParam, id: string) {
+    async findById(userId: UserParam, id: mongoId) {
         const result = await this.model.findOne({ _id: id, userId });
         appAssert(result, NOT_FOUND, 'No such object exists');
         return result;
@@ -49,7 +49,7 @@ export default class TreeService<T extends TreeDoc> {
      * @param userId - the userId to filter by
      * @param id - the id of the parent element
      */
-    async findChildren(userId: UserParam, id: string) {
+    async findChildren(userId: UserParam, id: mongoId) {
         const parent = await this.model.findOne({ _id: id, userId });
         appAssert(parent, NOT_FOUND, 'Parent element not found');
         const children = await this.model.find({ _id: { $in: parent.children }, userId });
@@ -78,14 +78,14 @@ export default class TreeService<T extends TreeDoc> {
      * @param userId - the userId to filter by
      * @param id - the id of the element to delete
      */
-    async deleteById(userId: UserParam, id: string){
+    async deleteById(userId: UserParam, id: mongoId){
         const toDelete = await this.model.findOne({ _id: id, userId });
         appAssert(toDelete, NOT_FOUND, 'Element not found');
         // First, delete reference to this template from parent template
         if (toDelete.parent) {
             const parent = await this.model.findOne({ _id: toDelete.parent, userId });
             appAssert(parent, NOT_FOUND, 'Parent element not found');
-            parent.children = parent.children.filter((child: string) => (child !== id && child !== null));
+            parent.children = parent.children.filter((child: mongoId) => (child !== id && child !== null));
             if(parent.children.length === 0 && parent.type !== 'root') {
                 // If the parent is branch and has no children, set type to 'leaf'
                 parent.type = 'leaf';

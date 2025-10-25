@@ -9,6 +9,7 @@ import { RefreshTokenPayload, refreshTokenSignOptions, signToken, verifyToken } 
 import { sendMail } from '../utils/emailUtils';
 import { getPasswordResetTemplate, getVerifyEmailTemplate } from '../utils/emailUtils';
 import { APP_ORIGIN } from '../constants/env';
+import { mongoId } from '../schemas/mongo.schema';
 
 export type SignupUserParams = {
     email: string;
@@ -151,7 +152,7 @@ export const refreshAccessToken = async (refreshToken: string) => {
  * finally, deletes the code from the database.
  * @param verificationCode - The verification code to verify
  */
-export const verifyEmail = async (verificationCode: string) => {
+export const verifyEmail = async (verificationCode: mongoId) => {
     const code = await VerificationCodeModel.findOne({
         _id: verificationCode,
         codeType: VerificationCodeType.EMAILVERIFICATION,
@@ -214,7 +215,7 @@ export const forgotPassword = async (email: string) => {
 };
 
 type ResetPasswordParams = {
-    verificationCode: string;
+    verificationCode: mongoId;
     password: string;
 };
 

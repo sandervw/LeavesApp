@@ -35,11 +35,11 @@ const handleZodError = (res: Response, error: z.ZodError) => {
     const errors = error.issues.map((err) => ({
       path: err.path.join("."),
       message: err.message,
+      errorCode: err.code
     }));
   
     return res.status(BAD_REQUEST).json({
-      errors,
-      message: error.message,
+      errors
     });
   };
   
