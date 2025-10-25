@@ -1,11 +1,12 @@
+import { Types } from 'mongoose';
 import { z } from 'zod';
 
 /**
  * Schemas for validating basic data types in controllers.
  */
 export const emailSchema = z.string().email().min(1).max(255);
-export const mongoIdSchema = z.string().min(1).max(24);
-export const optionalMongoIdSchema = z.string().min(1).max(24).nullish();
+export const mongoIdSchema = z.string().regex(/^[0-9a-fA-F]{24}$/, { message: "Invalid ObjectId" }).transform(val => new Types.ObjectId(val));
+export const optionalMongoIdSchema = z.string().regex(/^[0-9a-fA-F]{24}$/, { message: "Invalid ObjectId" }).nullish().transform(val => val ? new Types.ObjectId(val) : null);
 export const usernameSchema = z.string().min(1).max(255);
 export const passwordSchema = z.string().min(6).max(255);
 export const userAgentSchema = z.string().optional();

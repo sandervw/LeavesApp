@@ -41,8 +41,8 @@ export interface TreeDoc extends mongoose.Document<mongoId> {
     name: string;
     type: string; // root, branch, or leaf
     text: string;
-    children: string[]; // Array of ObjectIds referencing child nodes
-    parent: string | null; // ObjectId referencing the parent node
+    children: mongoId[]; // Array of ObjectIds referencing child nodes
+    parent: mongoId | null; // ObjectId referencing the parent node
     userId: mongoId; // User ID to associate with the tree element
 }
 
