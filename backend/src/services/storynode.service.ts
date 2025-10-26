@@ -3,7 +3,7 @@ import { Storynode } from '../models/tree.model';
 import { StorynodeDoc, mongoId } from '../schemas/mongo.schema';
 import appAssert from '../utils/appAssert';
 import { NOT_FOUND } from '../constants/http';
-import { recursiveStorynodeFromTemplate, recursiveUpdateWordLimits } from './recursive.service';
+import { recursiveStorynodeFromTemplate, recursiveUpdateWordLimits, recursiveUpdateParentWordCount } from './recursive.service';
 
 class storynodeService extends TreeService<StorynodeDoc> {
 
@@ -36,11 +36,8 @@ class storynodeService extends TreeService<StorynodeDoc> {
             const storynode = await Storynode.findOneAndUpdate({ _id: data._id, userId }, { $set: data }, { new: true });
             appAssert(storynode, NOT_FOUND, 'Storynode not found');
             // If the storynode has a parent, update the parent word count
-            const parent = await Storynode.findOne({ _id: data.parent, userId });
-            if (parent) {
-                const allChildren = await Storynode.find({ _id: { $in: parent.children }, userId });
-                parent.wordCount = allChildren.reduce((acc: number, sibling: StorynodeDoc) => acc + sibling.wordCount, 0);
-                await Storynode.findOneAndUpdate({ _id: parent._id, userId }, { wordCount: parent.wordCount }, { new: true });
+            if (storynode.parent) {
+                await recursiveUpdateParentWordCount(storynode, userId);
             }
             // If the storynode is a root, set the word limit for its children
             if (storynode.type === 'root' && storynode.wordLimit) {
@@ -51,7 +48,14 @@ class storynodeService extends TreeService<StorynodeDoc> {
         // CREATE STORYNODE
         else {
             data.userId = userId; // Ensure user_id is set in the data
-            return await Storynode.create(data);
+            if (data.text && data.text.length > 0) {
+                data.wordCount = data.text.trim().split(/\s+/).filter(word => word).length;
+            }
+            const newStorynode = await Storynode.create(data);
+            if (newStorynode.parent) {
+                await recursiveUpdateParentWordCount(newStorynode, userId);
+            }
+            return newStorynode;
         }
     }
 
