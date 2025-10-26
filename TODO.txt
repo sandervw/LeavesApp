@@ -1,6 +1,5 @@
-Typescript conversion
-    Fix error handling in recursion and authenticate middleware
-Fix error in searchbar where state doesn't update on delete.
+Fix error in searchbar where state doesn't update on delete/update
+    Same error in link sidebar
 CSS App Layout:
     General improvements
     A subset of fixed styles
