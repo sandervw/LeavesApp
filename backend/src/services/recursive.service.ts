@@ -73,6 +73,23 @@ export const recursiveStorynodeFromTemplate = async (
     return storynode;
 };
 
+/**
+ * Given a storynode, recursively update the word count of all its parents.
+ * @param node - the storynode whose parents will be updated
+ * @param userId - the userId to filter by
+ */
+export const recursiveUpdateParentWordCount = async (node: Readonly<StorynodeDoc>, userId: mongoId): Promise<void> => {
+    if (node.parent) {
+        const parent = await Storynode.findOne({ _id: node.parent, userId });
+        if (parent) {
+            const siblings = await Storynode.find({ _id: { $in: parent.children }, userId });
+            parent.wordCount = siblings.reduce((acc, sibling) => acc + sibling.wordCount, 0);
+            await Storynode.findOneAndUpdate({ _id: parent._id, userId }, { wordCount: parent.wordCount });
+            await recursiveUpdateParentWordCount(parent, userId);
+        }
+    }
+};
+
 // // Function to recursively get only the base nodes (leaves) of a story, given a start Id (inclusive)
 // const recursiveGetLeafs = async (id) => {
 //     let toGet = await Element.findById(id);
