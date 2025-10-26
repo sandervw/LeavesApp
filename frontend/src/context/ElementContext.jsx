@@ -4,6 +4,8 @@ const ElementContext = createContext();
 
 // state represents the previous state of the data, action is the object which is passed into the dispatch function (type and payload)
 const ElementReducer = (state, action) => {
+    console.log(state, action);
+    
     switch (action.type) {
         case 'SET_CHILDREN':
             return {

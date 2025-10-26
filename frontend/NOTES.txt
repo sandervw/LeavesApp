@@ -1,0 +1,22 @@
+// Instead of console.log, use:
+console.table(trees); // Better for arrays/objects
+console.group('LinkSidebar Debug');
+console.log('User:', user);
+console.log('Trees:', trees);
+console.groupEnd();
+
+// Or use debugger statement
+useEffect(() => {
+    debugger; // Pauses execution in browser DevTools
+    const saved = localStorage.getItem('theme');
+    if (saved) setTheme(saved);
+}, []);
+
+// Or, create custom hook
+import { useDebugValue } from 'react';
+
+const useTreelistContext = () => {
+    const value = /* your hook logic */;
+    useDebugValue(value.trees ? `${value.trees.length} trees` : 'No trees');
+    return value;
+};
