@@ -14,9 +14,7 @@ const LinkSidebar = () => {
 
     const toggleExpand = (link) => {
         expand === link && setExpand('');
-        expand !== link && setExpand(link);
-        console.log(trees);
-        
+        expand !== link && setExpand(link);  
     };
 
     useEffect(() => {

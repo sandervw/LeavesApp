@@ -31,6 +31,7 @@ const ElementReducer = (state, action) => {
                 if (child._id === action.payload._id) {
                     return {...child, ...action.payload};
                 }
+                return child;
             });
             if (state.element) state.element.wordCount = state.children.reduce((acc, child) => acc + child.wordCount, 0);
             return {
