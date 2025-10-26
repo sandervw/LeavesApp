@@ -20,7 +20,6 @@ const usePage = (props) => {
     const { currentPage, dispatch: pageDispatch } = usePageContext();
 
     useEffect(() => {
-        console.log('UseEffect called in usePage by page:', page);
         if (!page) return;
         const fetchData = async () => {
             setIsPending(true);

@@ -29,11 +29,10 @@ TokenRefreshClient.interceptors.response.use(
 const API = axios.create(options);
 API.interceptors.response.use(
   (response) => {
-    console.log(`${response.statusText} response:`, response);
     return response.data;
   },
   async (error) => {
-    console.log(error);
+    console.error('Error in apiClient:', error);
     const { config, response } = error;
     const { status, data } = response;
 
