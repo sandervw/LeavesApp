@@ -40,7 +40,7 @@ const useDropHandler = (droppableType) => {
                 else navigate('/storydetail', { state: element.parent });
             }
         } catch (error) {
-            console.error(error.message);
+            console.error('Error in useDropHandler (delete):', error);
             return;
         }
     };
@@ -66,7 +66,7 @@ const useDropHandler = (droppableType) => {
             }
             newChild && elementDispatch({ type: 'CREATE_CHILD', payload: newChild });
         } catch (error) {
-            console.error(error);
+            console.error('Error in useDropHandler (add):', error);
             return;
         }
     };

@@ -11,13 +11,12 @@ const useAPI = () => {
         const apiMethods = {...apiService};
         if (!apiMethods[method]) throw new Error(`Unknown API method: ${method}`);
         try {
-            console.log(`Calling API method: ${method}`);
-            
             const result = await apiMethods[method](...args);
             setError(null);
             setIsPending(false);
             return result;
         } catch (error) {
+            console.error('Error in useAPI:', error);
             setError(error);
             setIsPending(false);
             return;

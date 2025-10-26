@@ -42,7 +42,6 @@ const MarkdownText = (props) => {
         const markdown = editor.storage.markdown.getMarkdown();
         props.update(markdown);
         setText(markdown);
-        console.log('Markdown Content:', markdown);
       }
     },
   });
