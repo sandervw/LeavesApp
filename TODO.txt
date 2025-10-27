@@ -5,4 +5,5 @@ CSS App Layout:
     A subset of fixed styles
     Keep elements modular
 Word Limit Editing
+isComplete
 Import V2 stories from json
