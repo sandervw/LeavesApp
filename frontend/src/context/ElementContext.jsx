@@ -18,9 +18,13 @@ const ElementReducer = (state, action) => {
         case 'CREATE_CHILD':
             if (state.element) {
                 if (state.element.type === 'leaf') state.element.type = 'branch';
-                if (state.element.children) state.element.children = [...state.element.children, action.payload._id];
-                else state.element.children = [action.payload._id];
-                state.element.wordCount = state.element.wordCount + action.payload.wordCount;
+                if (state.element.children) {
+                    state.element.children = [...state.element.children, action.payload._id];
+                    state.element.wordCount = state.element.wordCount + action.payload.wordCount;
+                } else {
+                    state.element.children = [action.payload._id];
+                    state.element.wordCount = action.payload.wordCount;
+                }
             }
             return {
                 children: [...state.children, action.payload],
