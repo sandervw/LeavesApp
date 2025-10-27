@@ -4,3 +4,5 @@ CSS App Layout:
     General improvements
     A subset of fixed styles
     Keep elements modular
+Word Limit Editing
+Import V2 stories from json

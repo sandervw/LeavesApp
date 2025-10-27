@@ -52,7 +52,6 @@ export const recursiveStorynodeFromTemplate = async (
     const storyData = (parentId
         ? { userId, parent: parentId, name: templateData.name, type: templateData.type, text: templateData.text, wordWeight: templateData.wordWeight }
         : { userId, name: templateData.name, type: templateData.type, text: templateData.text, wordWeight: templateData.wordWeight });
-    console.log(storyData);
     let storynode: StorynodeDoc = await Storynode.create(storyData);
     // Then recursively add any children of the template
     if (templateData.children && templateData.children.length > 0) {
@@ -115,7 +114,6 @@ export const recursiveUpdateParentWordCount = async (node: Readonly<StorynodeDoc
 //         : {user_id, name: template.name, type: template.type, text: template.text});
 //     // If the template has a wordWeight, add that to the storynode
 //     if(template.wordWeight) storyData.wordWeight = template.wordWeight;
-//     console.log(storyData);
 //     const storynode = await Storynode.create(storyData);
 //     // Then recursively add any children of the template
 //     if(template && template.children){
@@ -135,6 +133,5 @@ export const recursiveUpdateParentWordCount = async (node: Readonly<StorynodeDoc
 
 // // Function to recursively convert a JSON object to a storynode
 // const recursiveStorynodeFromJSON = async (json, parentid) => {
-//     console.log(json, parentid);
 //     // TODO - implement this
 // }

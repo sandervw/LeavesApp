@@ -85,7 +85,7 @@ export default class TreeService<T extends TreeDoc> {
         if (toDelete.parent) {
             const parent = await this.model.findOne({ _id: toDelete.parent, userId });
             appAssert(parent, NOT_FOUND, 'Parent element not found');
-            parent.children = parent.children.filter((child: mongoId) => (child !== id && child !== null));
+            parent.children = parent.children.filter((child: mongoId) => child && !id.equals(child));
             if(parent.children.length === 0 && parent.type !== 'root') {
                 // If the parent is branch and has no children, set type to 'leaf'
                 parent.type = 'leaf';
