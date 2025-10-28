@@ -7,3 +7,4 @@ CSS App Layout:
 Word Limit Editing
 isComplete
 Import V2 stories from json
+ - Templates: fix parents (write a temporary function to recursively update parent)
