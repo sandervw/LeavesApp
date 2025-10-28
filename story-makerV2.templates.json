@@ -6,6 +6,9 @@
     "name": "Test Story",
     "type": "root",
     "text": "This Story template is a test. It has one Act, one Chapter, one Scene, and any number of Paragraphs.",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [
       "6716d2697a18a9d36f0c099f"
@@ -27,6 +30,9 @@
     "name": "Test Act",
     "type": "branch",
     "text": "The only act in the test story.",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [
       "6716d27d7a18a9d36f0c09ac"
@@ -50,6 +56,9 @@
     "name": "Test Chapter",
     "type": "branch",
     "text": "The only chapter in the test story.",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [
       "6716d2907a18a9d36f0c09b6"
@@ -73,6 +82,9 @@
     "name": "Test Scene",
     "type": "branch",
     "text": "The only scene in the test story.",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -94,6 +106,9 @@
     "name": "The Rite of Spring",
     "type": "root",
     "text": "Structure based on Stravinsky's *The Rite of Spring*. Mostly for Short Stories.",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [
       "6723b582fd9923c6e445f274",
@@ -116,6 +131,9 @@
     "name": "Adoration of the Foe",
     "type": "branch",
     "text": "Introduce the heroes, the enemies, and the Arena; have the heroes succumb to the master foe.",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [
       "6723b747fd9923c6e445f2a4"
@@ -139,6 +157,9 @@
     "name": "The Heroics",
     "type": "branch",
     "text": "Give the heroes a last-ditch chance; present the finale.",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [
       "6723b767fd9923c6e445f2b1"
@@ -162,6 +183,9 @@
     "name": "Adoration - Chapter 1",
     "type": "branch",
     "text": "(Usually 1 Chapter) Introduce the heroes, the enemies, and the Arena; have the heroes succumb to the master foe.",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [
       "6723b7c9fd9923c6e445f2c1",
@@ -191,6 +215,9 @@
     "name": "Heroics - Chapter 1",
     "type": "branch",
     "text": "(Usually 1 Chapter) Give the heroes a last-ditch chance; present the finale.",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [
       "6723badcfd9923c6e445f325",
@@ -219,6 +246,9 @@
     "name": "1. Title Card",
     "type": "branch",
     "text": "**\"Heroes (*bassoon, english horn, clarinet, oboe, flute, etc*) introduce the episode.\"**\n\nExample: all dialogue *(Samurai Jack intro)*\n\nIntroduce heroes 1-by-1 - simple, primal dialogue\n\nHeroes \"flutter/chirp\" at each other\n\nWorry about the conflict *(warn audience - this is the last chance to leave)*\n\nEnd on the foe *(strings)* plucking; hinted at in the dialogue",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -240,6 +270,9 @@
     "name": "2. Arrival of the Foe",
     "type": "branch",
     "text": "**\"The foe (*strings*) of the episode appears; the heroes are surprised; the conflict is set up.\"**\n\nForeshadow final resolution\n\nFocus on foe (*strings*), magic (*brass*), and heroes (*winds*) in that order\n\nOne small texture (*drums*) about midpoint (*save for next part*)\n\nLure the reader in with rising conflict - surrender, surrender, surrender! (*repeat a sentence, with variants*)",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -261,6 +294,9 @@
     "name": "3. Enter the Arena",
     "type": "branch",
     "text": "**\"The foe and heroes arrive at the main setting (*drums*); they skirmish.\"**\n\nOpen with huge textural description (*drums*) of the scene, followed by magic (*brass*)\n\nFocus on vivid descriptions most; the rest, a little of heroes, foe, and magic/action",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -282,6 +318,9 @@
     "name": "4. False Hopes",
     "type": "branch",
     "text": "**\"The heroes think victory is within reach, but struggle to beat their enemy.\"**\n\nSubtle conflict here; false sense of easy victory\n\nOpen with heroes (*winds*) - planning, dialogue, acting, etc\n\nAlternate between heroes and foe (*strings*) for a while\n\n- Foes make huge, lumbering actions\n- Heroes make agile, flighty actions\n\nAnother huge texture (*drums*), introduce rising conflict/magic/tech (*brass*)\n\nA huge fight, then the heroes attempt a cunning action",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -303,6 +342,9 @@
     "name": "5. Trapped, Battle Dance",
     "type": "branch",
     "text": "**\"The heroes are trapped in the arena; forced into direct conflict with the foe.\"**\n\nChanged texture (*drums*) traps the heroes in conflict\n\nAction/magic (*brass*) begins\n\nDifferent elements compete for attention\n\n- Enemy (*strings*) keep up chunga, chunga, chunga rhythm\n- Magic/action/tech (*brass*) call back/forth\n- Heroes (*winds*) chirp a happy tune\n\nAnother changed texture (*drums*) introduces a new threat…",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -324,6 +366,9 @@
     "name": "6. The Master Appears",
     "type": "branch",
     "text": "**\"The great foe, which encapsulates the thematic conflict, arrives.\"**\n\nTexture (*drums*) and action/magic (*brass*) herald the true foe\n\nTeams create huge pileup of conflict; no one will give ground\n\nThe Master foe (*strings*) brings a pause to the conflict\n\nScene ends on a strange hushed note, bleached of color…",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -345,6 +390,9 @@
     "name": "7. The Enemy Triumphs",
     "type": "branch",
     "text": "**\"The heroes are beaten in a desperate direct conflict with the master foe.\"**\n\nHuge, unique textural description (*drum*) brings us into aggressive finale\n\nEnvironmental threats (*bass/cellos*) keep up vulgar rhythm\n\nThe Lackeys (*violas/horns*) surrounding and attacking\n\nThe Master (*trumpets/violins*) glorying in power\n\nWhooping and shrieking, building and layering, to climax\n\nThe heroes are overwhelmed",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -366,6 +414,9 @@
     "name": "8. Introduction",
     "type": "branch",
     "text": "**\"Long scene showing the humiliated heroes.\"**\n\nHeroes (*winds*) have been broken; discuss/show their low point\n\nThe foe (*strings*) control the power; show their actions/magic (*brass*)\n\nMinor texture (*drums*) showing a darker arena; night, stillness, death\n\nEerie, hypnotic, ritualistic scene; lull the audience into uncanny world of no precedent",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -387,6 +438,9 @@
     "name": "9. Foes Revel, Heroes Plot",
     "type": "branch",
     "text": "**\"The enemy basks in triumph, thinking they have won; the heroes secretly plot.\"**\n\nAny ally (*winds*) suggests a last-resort solution\n\nFoes (*plucking strings*) revel in glory\n\nA slow-paced, quiet scene; heroes (*winds*) take turns in speaking/acting Very little texture (*drums*)\n\nMagic/tech/action (*brass*) acts as exclamation-point; leads back to throbbing chords",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -408,6 +462,9 @@
     "name": "10. The Second Conflict",
     "type": "branch",
     "text": "**\"The heroes capitalize on an opportunity and strike against their enemy.\"**\n\n11-note death-rhythm texture (*drums*) commences the action (*brass*)\n\nMost savage battle yet; action, magic, heroes, foes, arena, texture\n\nEnrages foes (*plucking strings*) pursue the heroes",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -429,6 +486,9 @@
     "name": "11. The Relieved Breath",
     "type": "branch",
     "text": "**\"A pause; the heroes celebrate their first small victory.\"**\n\nThe heroes celebrate and take actions/magic (*brass*) to cement their win\n\nFoe (*strings*) still abounds\n\nDescribe the arena texture (*drums*)\n\nMoment of absolute joy; affirming past, present and future\n\nThe main hero (*bassoon*) recognizes The Master foe (*strings*)",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -450,6 +510,9 @@
     "name": "12. The Hero and the Master",
     "type": "branch",
     "text": "**\"The heroes and The Master converse (or trade mock blows) in a prelude to the final battle.\"**\n\nHeroes and foes try action/magic (*brass*)\n\nVictory sways in the balance between the two forces\n\nA Slow dance, neither side willing to show their hand; a \"cold conflict\"\n\nEnds on the muscle (*bass clarinet*) bubbly and excited for the finale",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -471,6 +534,9 @@
     "name": "13. The Finale",
     "type": "branch",
     "text": "**\"A final battle between the heroes and foe, set in the new grand arena, and using all previously foreshadowed magic/actions.\"**\n\nFirst part; 3 simples \"gesture\" combined in various ways\n\n- A texture (*drums*); a long description followed by a short one\n- A long pause, followed by a sudden action/magic (*brass*)\n- 3 short hero (winds) or foe (*strings*) phrases\n\nFollowed by contrasting section; heroes/foes engage in regular combat\n\nAccumulates into huge action by foes (*strings and brass*)\n\nSudden texture change (*gong*) is like shivering of the earth; lustful hunger\n\nTake-no-prisoners game for a while; violent action/magic (*brass*) and texture (*drums*)\n\nScene becomes faster, more compact, louder; heart thumping out-of-sync\n\nFinal rising, drawn-out action (*brass*)\n\nA last trill from the foe (*strings*), then the heroes (*winds*)",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -492,6 +558,9 @@
     "name": "Four-parter",
     "type": "root",
     "text": "Four small scenes, or four parts to a single scene. Setup, Conflict, Drive, and Finale",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [
       "67802254a30741206844dc61"
@@ -513,6 +582,9 @@
     "name": "4-Part Act",
     "type": "branch",
     "text": "Four small scenes, or four parts to a single scene. Setup, Conflict, Drive, and Finale.",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [
       "6780226da30741206844dc76"
@@ -536,6 +608,9 @@
     "name": "Single Chapter",
     "type": "branch",
     "text": "Four small scenes, or four parts to a single scene. Setup, Conflict, Drive, and Finale.\n\n*This may be a single scene: the scene divisions are for organization.*",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [
       "67802281a30741206844dc86",
@@ -562,6 +637,9 @@
     "name": "Setup",
     "type": "branch",
     "text": "**Introduce the Setting, the Hero, and the Plot.**\n\nStart with the DISTURBANCE\n\n- The break in ordinary routine.\n\n- The 'Call to Adventure'.\n\n- The *Motion*.\n\nIntroduce the HERO.\n\nIntroduce the STORY WORLD\n\n- What is the Hero's life?\n\nIntroduce the INTIMIDATING OPPORTUNITY.\n\n(*Possibly*) Hint at the FOE.\n\nCross the threshold into *Conflict*.",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -583,6 +661,9 @@
     "name": "Conflict",
     "type": "branch",
     "text": "**Create problems and enemies.**\n\nEntire time, the Hero is trying to solve the main PROBLEM.\n\n- What is the worst thing that can happen?\n- What is the worst info the HERO can receive?\n\nEstablish a TIMER.\n\nIntroduce the main FOE:\n\n- Make them a *single* person (or, personify).\n- Make them stronger than the HERO.\n- *Why do you love them?*\n\nDefine DEATH; the threat to the HERO (physical, or psychological, or professional).\n\nEstablish a SUPPRESSED CONFLICT (subtext).\n\nIntroduce a APPARENT DEFEAT, leading into *Drive*.",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -604,6 +685,9 @@
     "name": "Drive",
     "type": "branch",
     "text": "**Draw the opponents closer together.**\n\nStarting at the low point, introduce a LAST CHANCE.\n\nMake the PROBLEM progressively worse:\n\n- Stretch the tension.\n- Raise the stakes.\n- Increase the pace.\n\nShow CHARACTER EMOTION:\n\n- The HERO's desperation.\n\nHave another setback, leading the HERO to a SPIRITUAL CRISIS.",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -625,6 +709,9 @@
     "name": "Finale",
     "type": "branch",
     "text": "**End the story with a Knockout blow.**\n\nGive the HERO a SELF-REVELATION.\n\nBring all the threads together.\n\nHave the HERO overcome or succumb-to the challenge.\n\n- Have the FOE do the same.\n\nBring the HERO's PROBLEM to a CLIMAX.\n\nShow the new EQUILIBRIUM.",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -646,6 +733,9 @@
     "name": "The Planets",
     "type": "root",
     "text": "Structure based on Holst's *The Planets*. Mostly for Short Stories.\n\n- Good for Melancholy/Bildungsroman stories\n- A series of self-contained vignettes/scenes; act as foils to one-another; very little contrast",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [
       "67a3ecb9ffde861f65289e0b"
@@ -667,6 +757,9 @@
     "name": "Planets Sole Act",
     "type": "branch",
     "text": "The sole act in The Planets structure.",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [
       "67a3ecceffde861f65289e1b"
@@ -690,6 +783,9 @@
     "name": "Planets Sole Chapter",
     "type": "branch",
     "text": "The sole chapter in The Planets structure.",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [
       "67a3ecf0ffde861f65289e2b",
@@ -719,6 +815,9 @@
     "name": "1 - Battle (Mars)",
     "type": "branch",
     "text": "**Scene of Conflict/Action between Hero(s) and Foe.**\n\nQuiet opening - hero(s) make speech or ready attack\n\nOpen to huge scene; textural description and major battle\n\n- Little Worldbuilding; Violence and Sheer Terror\n\nBack-and-forth fighting in the middle; some triumph, some failure\n\n- Enemy/Foe seems to take the victory; *Experimental, craggy rhythm; clashing keys; pulsing drums*\n\nHero(es) try last, desperate action\n\n- Slow, swelling build; *Huge brass, singing strings, rolling drums*\n\nPOUNDING action - Battle between Good and Evil\n\nCulminate in ultimate, tense showdown between main hero and villain\n\n- Victory swaying, uncertain, hangs in the balance\n\nWith a huge blare, hero strikes final blow",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -740,6 +839,9 @@
     "name": "2 - Rest (Venus)",
     "type": "branch",
     "text": "**Slow, romantic/peaceful scene between two main heroes.**\n\nMostly happy; some sad reflection on last scene battle\n\nThey discuss hopes, future plans (*set up tragedy, or unrealistic desire*)\n\n- Some worldbuilding\n\nOne or more partners brings up awkward/worrying note - one brief, eerie worry (*set up later conflict*)\n\n- Foreshadow loss of this friend/lover\n\nShow Texture/Broad scene - the two characters look over a vista, a view of their home/future\n\n- Dreamy and idyllic, but with one noticeable dark spot\n\nEnd on a good, happy note, a physical touch, an embrace",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -761,6 +863,9 @@
     "name": "3 - Capers (Mercury)",
     "type": "branch",
     "text": "**A flighty, scene of *movement*; conflict, humor, action, fast-talk, etc.**\n\nJump in with quick movement; running, action, fast-talk\n\n- Disjointed, uneven; hero stumbling/set-back, then rebounding right away\n\nHero is struggling, but in a jovial, joking way; a pleasant conflict (*words or action*)\n\nAccelerate quickly into a large conflict, looks like it will get out of hand…\n\nSome makes a quite joke or action, and the jovial atmosphere resumes\n\nOne brief Texture note (timpani)\n\nPlayful, humorous quip or act at the very end (final pluck)",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -782,6 +887,9 @@
     "name": "4 - Prestige (Jupiter)",
     "type": "branch",
     "text": "**The High Point; show the triumph and glory of the hero(s); their proudest moment.**\n\nBegin with huge achievement/success in battle\n\n- A conflict with victory *mostly* assured\n\n- Huge scenery\n\n- Hero is shown triumphantly, gloriously; hero wins\n\nShow victory march/celebration/speech\n\n- Hero is noble, and generous in victory\n\n- **High midpoint of whole story** - happiest moment for all\n\n- One great and noble action to round it out\n\nMore successful action, this time a little breathless\n\n- Hero is swept up in celebration\n\n- For a moment, it looks like they will be carried away\n\n- Another hero (lover/friend) comes in to help\n\nEnds on overall triumph",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -803,6 +911,9 @@
     "name": "5 - Atrophy (Saturn)",
     "type": "branch",
     "text": "**An immediate Low Point following the Pinnacle; the greatest moment of Pathos.**\n\nOpen with short time/worldbuilding, (*Set unsettling tone with Ticking Clock)*\n\nGloomy, muted Description\n\nLow point - hero(s) actions are meaningless\n\n- Angry and Sad emotional highs - lively for a brief moment\n\n- Followed by return to depression\n\nReference the clock again; more description of defeat; build clock speed to second half\n\nSecond half: foes triumph or succeed\n\n- An inexorable, choking sensation\n\nHero must say goodbye to an ally/lover - heartfelt, tearful, melancholy, inevitable \n\nEnd: Lover/Friend passes on, Hero grieves, resolve ticking clock",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -824,6 +935,9 @@
     "name": "6 - Spellcasting (Uranus)",
     "type": "branch",
     "text": "**A battle of mystical, magical, strange character; the hero(s) fight in an upside-down reality.**\n\nOpen with four huge notes of action (*four-brass motif*)\n\nHeroes begin desperate, insane ploy to succeed; everything exaggerated\n\nHeroes and Foes clash\n\n- Comic/Lighthearted in places; Foes treating heroes like a joke\n\nChaotic, willy-wonka scenery - a world gone mad\n\nBuild to climactic, *epic* battle\n\n- Echo moments of Mars; show the hero in their old glory for a moment\n\nFoe seems to achieve victory, mocks the pitiful hero(s)\n\n- Heroes suddenly strike out in suicidal, self-destructive final blow\n\nEnd with Foe sinking quietly into death",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -845,6 +959,9 @@
     "name": "7 - Mystery/Resolution (Neptune)",
     "type": "branch",
     "text": "**Enter the New Equilibrium; hero(s) find themselves in a changed, uncertain reality.**\n\nHeroes talking/acting quietly - they examine the new world\n\n- World is beautiful, but eerie - mystical, but dangerous\n\n- They have now entered… The Twilight Zone\n\nMoments of reflection: all that has been accomplished, all that changed\n\n- A few sad/melancholy moments, looking nostalgically back on happy times\n\nAn entirely new, entirely alien element enters the picture gradually (*choir*)\n\n- *(Could be new text style, changed perspective, changed tone, etc*)\n\nFinal reflection that is simultaneously happy/sad\n\nFinally, the alien element takes over, brings the story to a quiet, uncertain conclusion",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -866,6 +983,9 @@
     "name": "Mother Goose",
     "type": "root",
     "text": "Structure based on Ravel's *Mother Goose*. Mostly for Short Stories\n\n- Good for Adventure - stories that involve travel/movement between scenes",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [
       "67aa237a1d005eb9e15d2d16"
@@ -887,6 +1007,9 @@
     "name": "Mother Goose Act",
     "type": "branch",
     "text": "The only act in the Mother Goose structure.",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [
       "67aa23901d005eb9e15d2d21"
@@ -910,6 +1033,9 @@
     "name": "Mother Goose Chapter",
     "type": "branch",
     "text": "The only chapter in the Mother Goose structure.",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [
       "67aa9c341d005eb9e15d2d2c",
@@ -943,6 +1069,9 @@
     "name": "1 - Prelude",
     "type": "branch",
     "text": "**START WITH THE END.**\n\n- **Come up with all the pieces you want to reference in the main sections first**\n\nOpens with **Main Motive**; encompasses the story (*two flutes and bassoon*)\n\n- Use to show the Hero\n\n\"Once upon a time…\" (*muted horn*)\n\nFlashes/vignettes of the scenes to come; set the tone, show the setting\n\nZoom gradually in; create atmosphere of expectation; lead into…",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -964,6 +1093,9 @@
     "name": "2 - Opening Conflict",
     "type": "branch",
     "text": "**Current state for the Hero, showing their Problem.**\n\n- Conversation with ally; or from ally perspective\n\nHeroes are engaged in some kind of busy activity; keeping up a steady routine\n\nScene is happy/lively at first; gradually turns darker/quieter\n\n- Hero or ally makes a mistake; or, reveals inner problem; or, is drawn into opportunity\n\n- Brief return of **Main Motive**\n\nThe activity ominously dissolves into…",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -985,6 +1117,9 @@
     "name": "3 - Mentor",
     "type": "branch",
     "text": "**A mentor (or, a spinner of fate) enters the story.**\n\n- Acts as the hero's guide.\n\nScene is ancient and serene; the hero has gone to an old place to find this guide\n\nHero pleads with mentor, who is mysterious/aloof\n\nEnds on a question",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -1006,6 +1141,9 @@
     "name": "4 - First Transition",
     "type": "branch",
     "text": "**Introduce next scene.**\n\nThe mentor gets hero to the next stage of the story (coming with, or sending)\n\n- Hero travels in chaotic, short swell of action\n\nEnds softly/hopefully, with brief return of **Main Motive**",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -1027,6 +1165,9 @@
     "name": "5 - New Lover",
     "type": "branch",
     "text": "**Introduce the co-protagonist; a lover, a best friend.**\n\nGently *waltz* into fantastical new setting\n\n- Hero explores the space, and encounters a new lover\n\nBack and forth between hero and friend; they conflict at first (*woodwinds vs bassoon*)\n\nThe two slowly come together, either because of shared foe, or through understanding\n\nA turning point (*cymbal crash*); hero sees friend/lover in a new light (*harp glissando*)\n\nHero and lover work in newfound harmony; completely altered relationship\n\nThe two venture on together...",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -1048,6 +1189,9 @@
     "name": "6 - Second Transition",
     "type": "branch",
     "text": "**Introduce next scene.**\n\nHero and friend/lover travelling in ease\n\n- Return of **Main Motive**\n\nSudden short conflict sends them on unintended path\n\n- Mentor disappears\n\nThey wind up in a strange setting, a mystical land, an unrecognized land…",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -1069,6 +1213,9 @@
     "name": "7 - Wilderness",
     "type": "branch",
     "text": "**Heroes go on a winding course through the wilderness (*oboe*), which throws up obstacles.**\n\n- The land itself is a Foe\n\nChanging text speed/style gives confusing rhythm; a jarring mix of physical and verbal conflict\n\nHuge wilderness textures (*trills/cuckoos of violins*)\n\nFinally, one of the heroes takes charge or takes an action; they seem to find a path out\n\nThe wilderness deals a last, confusing twist\n\nThe heroes exit into…",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -1090,6 +1237,9 @@
     "name": "8 - Third Transition",
     "type": "branch",
     "text": "**Introduce next scene.**\n\nBrief hero conversation/conflict\n\n- Return of **main motive**\n\nTextures hint at the true conflict, the mysterious true foe (*harp/celesta*)\n\nSudden action by the foe puts heroes in desperate situation (*strings falling in chromatic line*)\n\nOminous, mysterious textures lead into…",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -1111,6 +1261,9 @@
     "name": "9 - Mysterious Master Foe",
     "type": "branch",
     "text": "**The Heroes encounter the Master Foe, and do battle.**\n\nOpen with shimmer, colorful textures of the arena; the final battle site\n\nA lively introduction; action, or a riposte of words between heroes and the foe\n\n- The heroes seem beaten\n\nA sudden change in scene/texture (*double tam-tam*) creates a last opportunity for the heroes\n\nOne last exchange and battle between the heroes and foe; musical, many elements converging\n\nEnd on huge crashing finale, as the foe collapses",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -1132,6 +1285,9 @@
     "name": "10 - Fourth Transition",
     "type": "branch",
     "text": "**Introduce next scene.**\n\nElements from previous scenes all make an appearance in the wake of the true foes defeat\n\nThe world shifts and transitions around the heroes\n\nReturn of the mentor (either spiritually, or physically)\n\nHero and lover stand in triumph, in the new setting\n\n- Hint of **Main Motive**\n\nIndicate return to the beginning…",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
@@ -1153,6 +1309,9 @@
     "name": "11 - Future and Finale",
     "type": "branch",
     "text": "**The hero and lover enter a weird, wonderful new future.**\n\nBegin with the **Main Motive** - recomposed, or seen in a new light\n\nThe hero and lover awaken to a new understanding of one another\n\nThey stare at the wonderful new landscape around them\n\n- **Main Motive** echoed here again, once more seen in a new light\n\nCharacters from the other sections gather around\n\nMain character finally achieves acceptance/enlightenment\n\nCulmination of the **Main Motive**; Huge climax\n\n- “They live happily ever after.”",
+    "userId": {
+      "$oid": "68fd4c832e35cb6c5468d078"
+    },
     "kind": "template",
     "children": [],
     "createdAt": {
