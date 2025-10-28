@@ -13,6 +13,14 @@ const TreelistReducer = (state, action) => {
             return {
                 trees: action.payload
             }
+        case 'DELETE_TREE':
+            return {
+                trees: state.trees.filter(tree => tree._id !== action.payload)
+            }
+        case 'CREATE_TREE':
+            return {
+                trees: [...state.trees, action.payload]
+            }
         default:
             return state;
     }
