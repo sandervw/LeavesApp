@@ -1,6 +1,7 @@
 import useElementContext from './useElementContext';
 import useAPI from './useAPI';
 import { useNavigate } from 'react-router-dom';
+import useTreelistContext from './useTreelistContext';
 
 /**
  * Used by droppable components to handle when an item is dropped onto them.
@@ -11,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
  */
 const useDropHandler = (droppableType) => {
     const { element, dispatch: elementDispatch } = useElementContext();
+    const { dispatch: treelistDispatch } = useTreelistContext();
     const { apiCall } = useAPI();
     const navigate = useNavigate();
 
@@ -35,6 +37,7 @@ const useDropHandler = (droppableType) => {
             console.log('Deleting element:', source, data.kind, data);
             await apiCall('deleteElement', data.kind, data._id);
             await elementDispatch({ type: 'DELETE_CHILD', payload: data });
+            treelistDispatch({ type: 'DELETE_TREE', payload: data._id });
             if (source === 'detail') {
                 if (!element.parent) navigate('/');
                 else navigate('/storydetail', { state: element.parent });
@@ -54,6 +57,13 @@ const useDropHandler = (droppableType) => {
             if (droppableType === 'roots') {
                 if (source === 'static') newChild = await apiCall('createFromTemplate', data._id, null);
                 else newChild = await apiCall('upsertElement', data.kind, data);  // source = templateCreate or storynodeCreate
+                // Only update treelist for root level items
+                newChild && treelistDispatch({ type: 'CREATE_TREE', payload: {
+                    _id: newChild._id,
+                    name: newChild.name,
+                    kind: newChild.kind,
+                    archived: newChild.archived
+                }});
             }
             if (droppableType === 'children') {
                 if (element.type === 'leaf') element.type = 'branch';
