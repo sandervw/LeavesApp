@@ -43,11 +43,20 @@
   border: 2px solid;
   border-color: var(--c-txtPrimary);
 }
+
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   grid-column: 1 / -1;
+}
+.navbar div {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.navbar .text-button {
+  margin: 0 0.5rem;
 }
 .sidebar {
   display: flex;
