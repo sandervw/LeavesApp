@@ -163,10 +163,6 @@ li {
   overflow: hidden;
 }
 
-.inline-trait:hover {
-  padding-left: 32px;
-}
-
 .inline-trait:hover .drag-handle {
   width: 24px;
   opacity: 1;
