@@ -2,7 +2,7 @@
 
 | ID  | Title  | Description  | Completed?  |
 |---|---|---|---|
-| 001  | Password Reset  | Reset your login password  | ⬜ |
+| 001  | Password Reset  | Reset your login password  | ✅ |
 | 002  | Landing Page  | Fix and update the landing page  | ⬜ |
 | 002  | Word Limits  | Fix word limits on storynodes for adding/editing  | ⬜ |
 | 003  | Backend Testing  | Set up testing automation for backend API  | ⬜ |
