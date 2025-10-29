@@ -34,7 +34,6 @@ const useDropHandler = (droppableType) => {
     const handleDelete = async (source, data) => {
         try {
             checkError(source, data, 'delete');
-            console.log('Deleting element:', source, data.kind, data);
             await apiCall('deleteElement', data.kind, data._id);
             await elementDispatch({ type: 'DELETE_CHILD', payload: data });
             treelistDispatch({ type: 'DELETE_TREE', payload: data._id });
@@ -51,7 +50,6 @@ const useDropHandler = (droppableType) => {
     const handleAdd = async (source, data) => {
         try {
             checkError(source, data, 'add');
-            console.log(`Adding from ${source} to ${droppableType}`, data);
             if (droppableType === 'static') return; //Prevent adding to static lists
             let newChild;
             if (droppableType === 'roots') {
