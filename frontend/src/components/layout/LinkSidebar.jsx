@@ -1,25 +1,12 @@
-import { useEffect, useState } from 'react';
 import RubbishPile from '../part/RubbishPile';
 import useAuthContext from '../../hooks/useAuthContext';
-import { ThemeToggle } from '../part/ThemeToggle';
 import useTreelistContext from '../../hooks/useTreelistContext';
 import ExpandList from '../part/ExpandList';
 
 const LinkSidebar = () => {
     const { user } = useAuthContext();
-    const [theme, setTheme] = useState('light');
     const { trees } = useTreelistContext();
     const safeTrees = trees || [];
-
-    useEffect(() => {
-        const saved = localStorage.getItem('theme');
-        if (saved) setTheme(saved);
-    }, []);
-
-    useEffect(() => {
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-    }, [theme]);
 
     return (
         !user
@@ -41,7 +28,6 @@ const LinkSidebar = () => {
                         />
                     </ul>
                 </div>
-                <ThemeToggle theme={theme} setTheme={setTheme} />
                 <div className='rubbish-pile'>
                     <RubbishPile />
                 </div>
