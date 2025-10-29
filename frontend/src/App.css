@@ -149,6 +149,30 @@ li {
   color: var(--c-accent);
 }
 
+/* Drag handle visibility */
+.inline-trait {
+  padding-left: 0;
+  transition: padding-left 0.15s ease;
+}
+
+.inline-trait .drag-handle {
+  width: 0;
+  opacity: 0;
+  margin-right: 0;
+  transition: all 0.15s ease;
+  overflow: hidden;
+}
+
+.inline-trait:hover {
+  padding-left: 32px;
+}
+
+.inline-trait:hover .drag-handle {
+  width: 24px;
+  opacity: 1;
+  margin-right: 8px;
+}
+
 /* INPUT STYLES */
 input {
   font: inherit;
