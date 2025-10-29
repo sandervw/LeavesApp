@@ -98,7 +98,7 @@
   align-items: center;
 }
 .subtrait {
-  margin-left: 2rem;
+  margin-left: 1rem;
 }
 /* Set trash to always appear in bottom-left corner of the screen, regardless of scrolling, over other elements */
 .rubbish-pile {

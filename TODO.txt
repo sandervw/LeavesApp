@@ -1,8 +1,0 @@
-Fix error in searchbar where state doesn't update on delete/update
-    Same error in link sidebar
-CSS App Layout:
-    General improvements
-    A subset of fixed styles
-    Keep elements modular
-Word Limit Editing
-isComplete
