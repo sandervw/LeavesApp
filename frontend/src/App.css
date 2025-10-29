@@ -49,11 +49,28 @@
   justify-content: space-between;
   align-items: center;
   grid-column: 1 / -1;
+  position: relative;
 }
-.navbar div {
+/* This styles direct child divs of .navbar */
+.navbar > div { 
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  max-width: 25%;
+}
+/* Center the search bar container */
+.navbar .search {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40%;
+  max-width: 500px;
+}
+/* Handle text overflow in username */
+.navbar .username {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .navbar .text-button {
   margin: 0 0.5rem;
