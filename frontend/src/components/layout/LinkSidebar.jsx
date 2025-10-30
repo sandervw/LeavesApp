@@ -15,15 +15,18 @@ const LinkSidebar = () => {
                 <div className='site-links'>
                     <ul className='links'>
                         <ExpandList
-                            type="Stories"
+                            type="Story"
+                            title="Stories"
                             items={safeTrees.filter((tree) => tree.kind === 'storynode' && !tree.archived)}
                         />
                         <ExpandList
-                            type="Templates"
+                            type="Template"
+                            title="Templates"
                             items={safeTrees.filter((tree) => tree.kind === 'template')}
                         />
                         <ExpandList
-                            type="Archive"
+                            type="Story"
+                            title="Archive"
                             items={safeTrees.filter((tree) => tree.archived)}
                         />
                     </ul>

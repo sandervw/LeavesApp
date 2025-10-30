@@ -38,7 +38,7 @@ const Navbar = () => {
     return (
         user
             ? <header className='navbar container'>
-                <div className='site-header'>
+                <div>
                     <Link to='/'><h1>Leaves</h1></Link>
                 </div>
                 <div className="center-header">
@@ -51,7 +51,7 @@ const Navbar = () => {
                 </div>
             </header>
             : <header className='navbar container'>
-                <div className='site-header'>
+                <div>
                     <Link to='/'><h1>Leaves</h1></Link>
                 </div>
                 <div className="center-header">
