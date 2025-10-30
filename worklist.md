@@ -13,4 +13,5 @@
 | 008  | Deployment Testing  | Verify Azure deployments functionality  | ⬜ |
 | 009  | Production Setup  | Set up Production MongoDB and deploy API/app to PRD  | ⬜ |
 | 010  | User Testing  | Invite Mom/Gerrit for application testing  | ⬜ |
-| 010  | CSS Improvements  | Organize/Improve CSS; fixed style subset; modular elements  | ⬜ |
+| 011  | CSS Improvements  | Organize/Improve CSS; fixed style subset; modular elements  | ⬜ |
+| 012  | Validator Replacement  | Replace Validator dependency in backend API  | ⬜ |
