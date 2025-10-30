@@ -90,7 +90,7 @@
 }
 .box {
   background-color: var(--c-bgPrimary);
-  margin: 1rem 0;;
+  margin: 1rem 0;
   padding-left: 1rem;
   min-width: 20%; /* 20% of the parent element: keeps header from shrinking too much */
 }
@@ -165,7 +165,6 @@ ul, li {
   padding-left: 0;
   margin-left: 0;
   cursor: pointer;
-  transition: color 0.15s;
 }
 /* align items horizontally */
 li {
@@ -202,7 +201,24 @@ li {
   display: flex;
   justify-content: center;
   padding: 2rem;
-  text-align: center;
+  max-width: 600px;
+  line-height: 2;
+}
+
+/* MARKDOWN CONTENT STYLES */
+/* Override global list styles for markdown content */
+.ProseMirror ul, .ProseMirror ol {
+  list-style-position: inside;
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+}
+.ProseMirror ul li {
+  list-style-type: disc;
+  display: list-item;
+}
+.ProseMirror ol li {
+  list-style-type: decimal;
+  display: list-item;
 }
 
 /* INPUT STYLES */
@@ -252,19 +268,11 @@ button.delete-button {
 }
 .icon.expanded {
   transform: rotate(90deg);
-  transition: transform 0.15s;
 }
 svg:hover {
   fill: var(--c-accent);
 }
 
-li:hover {
-  color: var(--c-accent);
-}
-.search {
-  position: relative; /* Needed for absolute positioning of dropdown */
-  width: 40%;
-}
 .dropdown {
   position: absolute;
   top: 100%; /* places it just below the input */

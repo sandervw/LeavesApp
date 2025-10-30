@@ -161,3 +161,4 @@ RESEND_API_KEY=<resend-api-key>
 Testing automation is not yet set up (see worklist.md tasks 003-004).
 
 Planned deployment to Azure DEV environment with MongoDB Atlas (see worklist.md tasks 005-009).
+- When adding styling to the App.css file, always keep your additions to a minimum. Focus on reusing existing .css, and matching existing styles.

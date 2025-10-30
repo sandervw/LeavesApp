@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import InlineSVG from './common/InlineSVG';
 
-const ExpandList = ({ type, items }) => {
+const ExpandList = ({ type, title, items }) => {
 
     
     const [expand, setExpand] = useState('');
@@ -20,14 +20,14 @@ const ExpandList = ({ type, items }) => {
                     alt='expand icon'
                     className={expand === type ? 'icon expanded' : 'icon'}
                     onClick={() => toggleExpand(type)} />
-                <Link to={`/${type.toLowerCase()}`} className='clickable'>{type}</Link>
+                <Link to={`/${title.toLowerCase()}`} className='clickable'>{title}</Link>
             </li>
             {expand === type && items && items.length > 0 && (
                 <ul className='links'>
                     {items.map((item) => (
                         <li key={item._id}>
                             <InlineSVG src='' className={'icon'} />
-                            <Link to={`/${type.toLowerCase()}/detail`} state={item._id} className='clickable'>{item.name}</Link>
+                            <Link to={`/${type.toLowerCase()}detail`} state={item._id} className='clickable'>{item.name}</Link>
                         </li>
                     ))}
                 </ul>

@@ -4,21 +4,26 @@ import { useNavigate } from 'react-router-dom';
 import usePage from '../../hooks/usePage';
 import MarkdownText from '../../components/part/common/MarkdownText';
 
-const landingContent = `# What is Leaves?
+const landingContent = `
+# Leaves - a writing tool
 
-*Leaves* is a writing tool.
+**Grow Templates** in a tree-like structure: a root, branches, *leaves*
 
-It allows you to create reusable templates.
+Drag and drop a template to **Start Writing**
 
-You build your templates in a treelike structure: a root, branches, *leaves*.
+**Compose & Edit** directly within the tool
 
-When your template is ready, you drag and drop it to start a new piece of writing.
+## Features
 
-You compose your writing within the tool.
+1. Reusable outline templates
+2. Tree-based organization
+3. Wordcount limits and tracking
+4. Markdown editing
+5. File downloads
 
-*Leaves* supports other features. Setting word limits. Markdown editing. Downloads.
+## To Begin
 
-To begin, sign in or create an account.
+Sign in or create an account.
 
 Good luck.`;
 
