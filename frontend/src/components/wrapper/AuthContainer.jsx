@@ -9,7 +9,7 @@ const AuthContainer = () => {
             <Outlet />
         )
         : <Navigate
-            to="/login"
+            to="/landing"
             replace
             state={{
                 redirectUrl: window.location.pathname,
