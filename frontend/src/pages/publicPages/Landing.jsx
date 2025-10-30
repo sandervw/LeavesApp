@@ -20,9 +20,15 @@ const Landing = () => {
 
     return (
         <div className='landing-page'>
-            <h1>Welcome to Leaves</h1>
-            <p>Your journey into the world of storytelling begins here.</p>
-            <p>Explore, create, and share your stories with ease.</p>
+            <h1>What is Leaves?</h1>
+            <p>Leaves is a writing tool.</p>
+            <p>It allows you to create reusable templates.</p>
+            <p>You build your templates in a treelike structure: a root, branches, leaves.</p>
+            <p>When your template is ready, you drag and drop it to start a new piece of writing.</p>
+            <p>You compose your writing within the tool.</p>
+            <p>Leaves supports other features. Setting word limits. Markdown editing. Downloads.</p>
+            <p>To begin, sign in or create an account.</p>
+            <p>Good luck.</p>
         </div>
     );
 };
