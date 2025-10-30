@@ -55,7 +55,7 @@ const Navbar = () => {
                     <Link to='/'><h1>Leaves</h1></Link>
                 </div>
                 <div className="center-header">
-                    <h2>Login or Signup to start</h2>
+                    <h2>Login or Signup to Begin</h2>
                 </div>
                 <div>
                     <button className='text-button clickable' onClick={() => Navigate('/login')}>Log In</button>
