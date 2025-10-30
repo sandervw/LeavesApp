@@ -1,4 +1,4 @@
-# List of Tasks, features, updates, and fixes
+# Tasks, features, updates, and fixes
 
 | ID  | Title  | Description  | Completed?  |
 |---|---|---|---|

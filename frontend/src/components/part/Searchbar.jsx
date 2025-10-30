@@ -51,7 +51,7 @@ const Searchbar = () => {
     }
 
     return (
-        <div className='search'>
+        <>
             <input
                 placeholder='Search Stories and Templates'
                 value={searchTerm}
@@ -67,7 +67,7 @@ const Searchbar = () => {
                     </ul>
                 </div>
             )}
-        </div>
+        </>
     );
 };
 

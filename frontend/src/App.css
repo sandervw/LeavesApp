@@ -59,12 +59,14 @@
   max-width: 25%;
 }
 /* Center the search bar container */
-.navbar .search {
+.navbar .center-header {
   position: absolute;
+  display: block;
   left: 50%;
   transform: translateX(-50%);
   width: 40%;
-  max-width: 500px;
+  max-width: 350px;
+  text-align: center;
 }
 /* Handle text overflow in username */
 .navbar .username {
@@ -193,6 +195,14 @@ li {
   width: 24px;
   opacity: 1;
   margin-right: 8px;
+}
+
+/* LANDING PAGE STYLES */
+.landing-page {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
 }
 
 /* INPUT STYLES */

@@ -41,7 +41,9 @@ const Navbar = () => {
                 <div className='site-header'>
                     <Link to='/'><h1>Leaves</h1></Link>
                 </div>
+                <div className="center-header">
                 <Searchbar />
+                </div>
                 <div>
                     <span className='username'>Welcome, {user.username}</span>
                     <button className='text-button clickable' onClick={() => handleLogout()}>Log Out</button>
@@ -52,7 +54,7 @@ const Navbar = () => {
                 <div className='site-header'>
                     <Link to='/'><h1>Leaves</h1></Link>
                 </div>
-                <div>
+                <div className="center-header">
                     <h2>Login or Signup to start</h2>
                 </div>
                 <div>
