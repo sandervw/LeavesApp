@@ -27,6 +27,10 @@ const MarkdownText = (props) => {
         if (newWordCount <= wordCount) {
           setText(newMarkdown);
           setWordCount(newWordCount);
+          // Update word count in real-time on frontend
+          if (props.wordCount) {
+            props.wordCount(newWordCount);
+          }
         } else {
           // Revert to previous content if new text is added
           editor.commands.setContent(text);
@@ -34,6 +38,10 @@ const MarkdownText = (props) => {
       } else {
         setText(newMarkdown);
         setWordCount(newWordCount);
+        // Update word count in real-time on frontend
+        if (props.wordCount) {
+          props.wordCount(newWordCount);
+        }
       }
     },
     onBlur: ({ editor }) => {
