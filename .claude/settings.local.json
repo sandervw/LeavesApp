@@ -5,7 +5,9 @@
       "Bash(netstat:*)",
       "Bash(findstr:*)",
       "Bash(tasklist:*)",
-      "Bash(powershell \"Get-NetTCPConnection -LocalPort 8080 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess\")"
+      "Bash(powershell \"Get-NetTCPConnection -LocalPort 8080 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess\")",
+      "Bash(git checkout:*)",
+      "Bash(npm install:*)"
     ],
     "deny": [],
     "ask": []
