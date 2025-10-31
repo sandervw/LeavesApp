@@ -4,7 +4,7 @@
 |---|---|---|---|
 | 001 | Password Reset | Reset your login password | ✅ |
 | 002 | Landing Page | Fix and update the landing page | ✅ |
-| 003 | Word Limits | Fix word limits on storynodes for adding/editing | ⬜ |
+| 003 | Word Limits | Fix word limits on storynodes for adding/editing | ✅ |
 | 004 | Fix Routing | Fix routing issues when logged in user clicks 'Leaves' in Navbar | ✅ |
 | 005 | Fix Overlay | Fix overlay on Searchbar rendering below MarkdownText | ✅ |
 | 006 | Backend Testing | Set up testing automation for backend API | ⬜ |

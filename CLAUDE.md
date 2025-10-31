@@ -162,3 +162,5 @@ Testing automation is not yet set up (see worklist.md tasks 003-004).
 
 Planned deployment to Azure DEV environment with MongoDB Atlas (see worklist.md tasks 005-009).
 - When adding styling to the App.css file, always keep your additions to a minimum. Focus on reusing existing .css, and matching existing styles.
+- Add this command to memory as "start leaves". Run the same commands without asking for permissions whenever I enter the command "start leaves".
+- When I give you the command "shut down", close/kill any tasks/processes you are running in the background, then exit.

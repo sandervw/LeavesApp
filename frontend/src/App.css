@@ -286,7 +286,7 @@ svg:hover {
 }
 
 /* Placeholder styles */
-[data-placeholder]::before {
+[data-placeholder]:empty::before {
   content: attr(data-placeholder); /* Use the placeholder text */
   color: var(--c-placeholder); /* Gray color for the placeholder */
   font-style: italic; /* To distinguish placeholder text */
