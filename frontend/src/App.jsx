@@ -37,7 +37,8 @@ function App() {
           {/* Protected routes */}
           <Routes>
             <Route path='/' element={<AuthContainer />}>
-              <Route index path='/stories' element={<Stories />} />
+              <Route index element={<Stories />} />
+              <Route path='/stories' element={<Stories />} />
               <Route path='/templates' element={<Templates />} />
               <Route path='/archive' element={<Archive />} />
               <Route path='/storydetail/' element={<StorynodeDetail />} />

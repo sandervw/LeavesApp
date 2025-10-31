@@ -67,6 +67,7 @@
   width: 40%;
   max-width: 350px;
   text-align: center;
+  z-index: 100; /* Ensure dropdown renders above prosemirror editor */
 }
 /* Handle text overflow in username */
 .navbar .username {
@@ -277,7 +278,7 @@ svg:hover {
   position: absolute;
   top: 100%; /* places it just below the input */
   left: 0;
-  z-index: 1000; /* ensure it renders above other elements */
+  z-index: 10000; /* ensure it renders above other elements */
   width: 100%; /* match the width of the input */
   background-color: var(--c-bgPrimary);
   border-radius: 1rem;
