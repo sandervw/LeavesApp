@@ -16,33 +16,36 @@ import useAddableContext from '../../hooks/useAddableContext';
  * * 'static' - for lists of addable elements (can't be removed/added to)
  */
 const ElementList = ({ elements, kind, listType }) => {
-    const { dispatch: elementDispatch } = useElementContext();
+    const { element, dispatch: elementDispatch } = useElementContext();
     const { dispatch: addableDispatch } = useAddableContext();
     const { apiCall } = useAPI();
     const { handleAdd } = useDropHandler(listType);
 
-    // Updates one of the child elements
+    // Updates one of the child elements - wordCount updates locally only, other attributes trigger API call
     const updateElement = async (attr, val, data) => {
-        const child = await apiCall('upsertElement', kind, { ...data, [attr]: val });
+        const child = (attr === 'wordCount')
+            ? { ...data, [attr]: parseInt(val) }
+            : await apiCall('upsertElement', kind, { ...data, [attr]: val });
         listType === 'static'
             ? addableDispatch({ type: 'UPDATE_ADDABLE', payload: child })
             : elementDispatch({ type: 'UPDATE_CHILD', payload: child });
     };
 
-    // Updates element state on frontend only (no API call) - used for real-time word count
-    const updateElementLocal = (attr, val, data) => {
-        if (attr === 'wordCount') val = parseInt(val);
-        const child = { ...data, [attr]: val };
-        listType === 'static'
-            ? addableDispatch({ type: 'UPDATE_ADDABLE', payload: child })
-            : elementDispatch({ type: 'UPDATE_CHILD', payload: child });
-    };
+    // Calculate total word count of all children for word limit enforcement
+    const totalWordCount = elements ? elements.reduce((acc, child) => acc + (child.wordCount || 0), 0) : 0;
+    const parentWordLimit = element?.wordLimit;
 
     return (
         <Droppable id={listType} className='droppable list' function={handleAdd}>
             {elements && elements.map((child) => (
                 kind === 'storynode'
-                    ? <StoryNode key={child._id} storynodeData={child} source={listType} listFunction={updateElement} listFunctionLocal={updateElementLocal} />
+                    ? <StoryNode
+                        key={child._id}
+                        storynodeData={child}
+                        source={listType}
+                        listFunction={updateElement}
+                        parentWordLimit={parentWordLimit}
+                        totalWordCount={totalWordCount} />
                     : <Template key={child._id} templateData={child} source={listType} listFunction={updateElement} />
             ))}
         </Droppable>

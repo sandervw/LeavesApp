@@ -20,18 +20,16 @@ const StorynodeDetail = () => {
     const { dispatch: elementDispatch } = useElementContext();
     const { apiCall } = useAPI();
 
-    // Updates the basic values (name, text, word counte/limit) of the storynode
-    const updateStorynode = async (attr, val) => {
-        if (attr === 'wordCount') val = parseInt(val);
-        if (attr === 'wordLimit') val = parseInt(val);
-        const updatedStorynode = await apiCall('upsertElement', element.kind, { ...element, [attr]: val });
-        elementDispatch({ type: 'SET_ELEMENT', payload: updatedStorynode });
-    };
-
-    // Updates element state on frontend only (no API call) - used for real-time word count
-    const updateElementLocal = (attr, val) => {
-        if (attr === 'wordCount') val = parseInt(val);
-        elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, [attr]: val } });
+    // Updates the element - wordCount updates locally only, other attributes trigger API call
+    const updateElement = async (attr, val) => {
+        if (attr === 'wordCount') {
+            val = parseInt(val);
+            elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, [attr]: val } });
+        } else {
+            if (attr === 'wordLimit') val = parseInt(val);
+            const updatedStorynode = await apiCall('upsertElement', element.kind, { ...element, [attr]: val });
+            elementDispatch({ type: 'SET_ELEMENT', payload: updatedStorynode });
+        }
     };
 
     const navigateParent = async () => {
@@ -67,7 +65,7 @@ const StorynodeDetail = () => {
                         {(element.type === 'root' && element.archived)
                             && <UnarchiveButton onClick={toggleArchive} />}
                     </div>
-                    <ElementFeature element={element} onUpdate={updateStorynode} onUpdateLocal={updateElementLocal} />
+                    <ElementFeature element={element} onUpdate={updateElement} />
                 </Draggable>
                 <ElementList elements={children} kind='storynode' listType='children' />
             </div>;
