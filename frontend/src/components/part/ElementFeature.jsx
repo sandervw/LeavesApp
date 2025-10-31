@@ -36,6 +36,7 @@ const ElementFeature = ({ element, onUpdate }) => {
                             trait="wordLimit"
                             value={wordLimit}
                             label='Word Limit: '
+                            data-placeholder="None"
                             onBlur={(e) => onUpdate('wordLimit', e.target.innerText)}
                             contentEditable={type === 'root'} />
                         <ParagraphTrait

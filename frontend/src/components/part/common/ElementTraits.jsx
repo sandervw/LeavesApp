@@ -48,11 +48,11 @@ const ParagraphTrait = ({trait, value, label, dragHandler, ...props}) => {
         <div className='inline-trait subtrait'>
             {dragHandler && <DraggableButton className='drag-handle' drag-handle='true' {...handler} />}
             {label && <pre>{label}</pre>}
-            <p
+            <div
                 suppressContentEditableWarning={true}
                 id={trait}
                 {...props}
-            >{value}</p>
+            >{value}</div>
         </div>
     );
 }
