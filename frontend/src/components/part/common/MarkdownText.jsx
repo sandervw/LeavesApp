@@ -14,7 +14,7 @@ const MarkdownText = (props) => {
       StarterKit,
       Markdown,
       Placeholder.configure({
-        placeholder: 'Write something here...',
+        placeholder: props.placeholder || 'Write something here...',
       }),
     ],
     content: (props.text ? props.text : ''), // Set initial content if needed
@@ -22,7 +22,10 @@ const MarkdownText = (props) => {
       const newMarkdown = editor.storage.markdown.getMarkdown();
       const newWordCount = newMarkdown.trim().split(/\s+/).filter(word => word).length;
 
-      if (props.locked) {
+      // Check if we should lock the editor (either explicitly locked OR word limit reached)
+      const isLocked = props.locked || (props.wordLimit && wordCount >= props.wordLimit);
+
+      if (isLocked) {
         // Only allow deletions
         if (newWordCount <= wordCount) {
           setText(newMarkdown);

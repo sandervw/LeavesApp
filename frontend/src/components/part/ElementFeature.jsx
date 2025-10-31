@@ -4,10 +4,9 @@ import MarkdownText from './common/MarkdownText';
 /**
  * Compoenent used by the Detail page to display the main features of an element
  * @param {Object} props.element - The element to be displayed
- * @param {Function} props.onUpdate - The function to be called when the element is updated (with API call)
- * @param {Function} props.onUpdateLocal - The function to be called for frontend-only updates (no API call)
+ * @param {Function} props.onUpdate - The function to be called when the element is updated
  */
-const ElementFeature = ({ element, onUpdate, onUpdateLocal }) => {
+const ElementFeature = ({ element, onUpdate }) => {
     const { name, kind, type, wordWeight, wordLimit, wordCount } = element;
 
     return (
@@ -51,7 +50,8 @@ const ElementFeature = ({ element, onUpdate, onUpdateLocal }) => {
                 <MarkdownText
                     text={element.text}
                     update={(val) => onUpdate('text', val)}
-                    wordCount={kind === 'storynode' && type === 'leaf' && onUpdateLocal ? (val) => onUpdateLocal('wordCount', val) : undefined} />
+                    wordCount={kind === 'storynode' && type === 'leaf' && onUpdate ? (val) => onUpdate('wordCount', val) : undefined}
+                    wordLimit={kind === 'storynode' && type === 'leaf' ? wordLimit : undefined} />
             </div>
         </>
     );

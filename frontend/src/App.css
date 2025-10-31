@@ -285,19 +285,18 @@ svg:hover {
   border: 1px solid var(--c-txtPrimary);
 }
 
-/* Placeholder styles */
-[data-placeholder]:empty::before {
-  content: attr(data-placeholder); /* Use the placeholder text */
-  color: var(--c-placeholder); /* Gray color for the placeholder */
-  font-style: italic; /* To distinguish placeholder text */
-  pointer-events: none; /* Ensure it doesn't interfere with user actions */
-  display: block;
-}
+/* Common placeholder styling */
+[data-placeholder]:empty::before,
+.ProseMirror p.is-editor-empty:first-child::before,
 ::placeholder {
   color: var(--c-placeholder);
-  font-style: italic; /* To distinguish placeholder text */
-  pointer-events: none; /* Ensure it doesn't interfere with user actions */
-  display: block;
+  font-style: italic;
+  pointer-events: none;
+}
+/* Content attribute for custom placeholders */
+[data-placeholder]:empty::before,
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
 }
 
 /*MODAL STYLES*/
