@@ -28,6 +28,12 @@ const StorynodeDetail = () => {
         elementDispatch({ type: 'SET_ELEMENT', payload: updatedStorynode });
     };
 
+    // Updates element state on frontend only (no API call) - used for real-time word count
+    const updateElementLocal = (attr, val) => {
+        if (attr === 'wordCount') val = parseInt(val);
+        elementDispatch({ type: 'SET_ELEMENT', payload: { ...element, [attr]: val } });
+    };
+
     const navigateParent = async () => {
         if (!element.parent) navigate('/');
         else navigate('/storydetail', { state: element.parent });
@@ -61,7 +67,7 @@ const StorynodeDetail = () => {
                         {(element.type === 'root' && element.archived)
                             && <UnarchiveButton onClick={toggleArchive} />}
                     </div>
-                    <ElementFeature element={element} onUpdate={updateStorynode} />
+                    <ElementFeature element={element} onUpdate={updateStorynode} onUpdateLocal={updateElementLocal} />
                 </Draggable>
                 <ElementList elements={children} kind='storynode' listType='children' />
             </div>;

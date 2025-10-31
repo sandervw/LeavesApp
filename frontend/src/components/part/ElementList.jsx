@@ -29,11 +29,20 @@ const ElementList = ({ elements, kind, listType }) => {
             : elementDispatch({ type: 'UPDATE_CHILD', payload: child });
     };
 
+    // Updates element state on frontend only (no API call) - used for real-time word count
+    const updateElementLocal = (attr, val, data) => {
+        if (attr === 'wordCount') val = parseInt(val);
+        const child = { ...data, [attr]: val };
+        listType === 'static'
+            ? addableDispatch({ type: 'UPDATE_ADDABLE', payload: child })
+            : elementDispatch({ type: 'UPDATE_CHILD', payload: child });
+    };
+
     return (
         <Droppable id={listType} className='droppable list' function={handleAdd}>
             {elements && elements.map((child) => (
                 kind === 'storynode'
-                    ? <StoryNode key={child._id} storynodeData={child} source={listType} listFunction={updateElement} />
+                    ? <StoryNode key={child._id} storynodeData={child} source={listType} listFunction={updateElement} listFunctionLocal={updateElementLocal} />
                     : <Template key={child._id} templateData={child} source={listType} listFunction={updateElement} />
             ))}
         </Droppable>

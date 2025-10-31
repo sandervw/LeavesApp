@@ -7,6 +7,7 @@ const Storynode = (props) => {
     const navigate = useNavigate();
     const storynodeData = { ...props.storynodeData };
     const listFunction = props.listFunction;
+    const listFunctionLocal = props.listFunctionLocal;
     const source = props.source;
     const locked = props.locked;
 
@@ -33,7 +34,7 @@ const Storynode = (props) => {
                     : <MarkdownText // Word count is only necessary on leaf notes
                         text={storynodeData.text}
                         update={(val) => listFunction('text', val, storynodeData)}
-                        wordCount={(val) => listFunction('wordCount', val, storynodeData)}
+                        wordCount={listFunctionLocal ? (val) => listFunctionLocal('wordCount', val, storynodeData) : undefined}
                         locked={locked} />}
             </div>
         </Draggable>
