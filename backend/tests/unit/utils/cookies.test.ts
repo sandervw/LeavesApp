@@ -1,12 +1,14 @@
 import { describe, it, expect, vi } from 'vitest';
 import { setAuthCookies, clearAuthCookies, getRefreshTokenCookieOptions, getAccessTokenCookieOptions } from '../../../src/utils/cookies';
 
+/* eslint-disable */
+
 describe('Cookies utils', () => {
   describe('setAuthCookies', () => {
     it('Should only set accessToken if no refreshToken provided', () => {
       // Arrange
       const mockCookie = vi.fn();
-      const mockRes: any = { cookie: mockCookie  };
+      const mockRes: any = { cookie: mockCookie };
       mockCookie.mockReturnValue(mockRes); // For chaining
       // Act
       setAuthCookies({ res: mockRes, accessToken: 'access123' });
@@ -15,36 +17,36 @@ describe('Cookies utils', () => {
       expect(mockCookie).toHaveBeenCalledWith('accessToken', 'access123', getAccessTokenCookieOptions());
     });
 
-    it('Should set both cookies when when refreshToken is provided', () => {
+    it('Should call res.cookie with the correct cookie names', () => {
       // Arrange
-      const mockAccessCookie = vi.fn();
-      const mockRefreshCookie = vi.fn();
-      const mockRes: any = { cookie: mockAccessCookie, refreshCookie: mockRefreshCookie  };
-      mockAccessCookie.mockReturnValue(mockRes); // For chaining
+      const mockCookie = vi.fn();
+      const mockRes: any = { cookie: mockCookie };
+      mockCookie.mockReturnValue(mockRes); // For chaining
       // Act
       setAuthCookies({ res: mockRes, accessToken: 'access123', refreshToken: 'refresh456' });
       // Assert
-      expect(mockAccessCookie).toHaveBeenCalledTimes(1);
-      expect(mockAccessCookie).toHaveBeenCalledWith('accessToken', 'access123', getAccessTokenCookieOptions());
-      expect(mockAccessCookie).toHaveBeenCalledTimes(2); // Called again for refresh token
-      expect(mockAccessCookie).toHaveBeenCalledWith('refreshToken', 'refresh456', getRefreshTokenCookieOptions());
-    });
-
-    it('Should call res.cookie with the correct cookie names', () => {
-      
-    });
-
-    it('Should use correct cookie type options', () => {
-      
+      expect(mockCookie).toHaveBeenCalledTimes(2);
+      expect(mockCookie).toHaveBeenNthCalledWith(1, 'accessToken', 'access123', getAccessTokenCookieOptions());
+      expect(mockCookie).toHaveBeenNthCalledWith(2, 'refreshToken', 'refresh456', getRefreshTokenCookieOptions());
     });
 
     it('Should return the response object for chaining', () => {
-      
+
     });
   });
 
   describe('clearAuthCookies', () => {
     it('It should clear both access and refresh token', () => {
+      // Arrange
+      const mockClearCookie = vi.fn();
+      const mockRes: any = { clearCookie: mockClearCookie };
+      mockClearCookie.mockReturnValue(mockRes); // For chaining
+      // Act
+      clearAuthCookies(mockRes);
+      // Assert
+      expect(mockClearCookie).toHaveBeenCalledTimes(2);
+      expect(mockClearCookie).toHaveBeenCalledWith('accessToken');
+      expect(mockClearCookie).toHaveBeenCalledWith('refreshToken');
     });
 
     it('Should return the response object', () => {
