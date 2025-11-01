@@ -5,6 +5,7 @@ import { BAD_REQUEST, NOT_FOUND, UNAUTHORIZED, INTERNAL_SERVER_ERROR } from '../
 import AppErrorCode from '../../../src/constants/appErrorCode';
 
 describe('appAssert', () => {
+
   describe('when condition is truthy', () => {
     it('should not throw an error for true condition', () => {
       expect(() => {
@@ -70,7 +71,6 @@ describe('appAssert', () => {
       } catch (error) {
         expect(error).toBeInstanceOf(AppError);
         expect((error as AppError).statusCode).toBe(UNAUTHORIZED);
-        expect((error as AppError).statusCode).toBe(401);
       }
     });
 

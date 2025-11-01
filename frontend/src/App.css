@@ -2,10 +2,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Baskervville&family=Poppins:wght@200;400;500;600;800&family=VT323&display=swap');
 /* The HTML element - used for defining global vars */
 :root {
-  --c-black: #000000;
-  --c-white: #FFFFFF;
+  /* --c-white: #FFFFFF; */
+  --c-white:#FAF9F5;
+  --c-black: #262624;
+  /* --c-black: #000000; */
   --c-gray: #7b7b7b;
-  --c-accent: #8866bb;
+  --c-accent: #D97757;
   --c-placeholder: var(--c-gray);
   --c-txtPrimary: var(--c-black);
   --c-bgPrimary: var(--c-white);
