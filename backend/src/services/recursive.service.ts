@@ -82,7 +82,7 @@ export const recursiveUpdateParentWordCount = async (node: Readonly<StorynodeDoc
         const parent = await Storynode.findOne({ _id: node.parent, userId });
         if (parent) {
             const siblings = await Storynode.find({ _id: { $in: parent.children }, userId });
-            parent.wordCount = siblings.reduce((acc, sibling) => acc + sibling.wordCount, 0);
+            parent.wordCount = siblings.reduce((acc: number, sibling: StorynodeDoc) => acc + sibling.wordCount, 0);
             await Storynode.findOneAndUpdate({ _id: parent._id, userId }, { wordCount: parent.wordCount });
             await recursiveUpdateParentWordCount(parent, userId);
         }
