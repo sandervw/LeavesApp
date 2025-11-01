@@ -144,7 +144,6 @@ describe('appAssert', () => {
   describe('real-world usage examples', () => {
     it('should validate user exists', () => {
       const user = null;
-
       expect(() => {
         appAssert(user, NOT_FOUND, 'User not found');
       }).toThrow(AppError);
@@ -152,7 +151,6 @@ describe('appAssert', () => {
 
     it('should validate required fields', () => {
       const email = '';
-
       expect(() => {
         appAssert(email, BAD_REQUEST, 'Email is required');
       }).toThrow(AppError);
@@ -160,7 +158,6 @@ describe('appAssert', () => {
 
     it('should validate authentication', () => {
       const isAuthenticated = false;
-
       expect(() => {
         appAssert(isAuthenticated, UNAUTHORIZED, 'Authentication required', AppErrorCode.InvalidAccessToken);
       }).toThrow(AppError);
@@ -168,7 +165,6 @@ describe('appAssert', () => {
 
     it('should pass when validation succeeds', () => {
       const user = { id: 1, name: 'Test User' };
-
       expect(() => {
         appAssert(user, NOT_FOUND, 'User not found');
       }).not.toThrow();
@@ -178,10 +174,8 @@ describe('appAssert', () => {
   describe('type narrowing behavior', () => {
     it('should narrow types after assertion', () => {
       const value: string | null = 'test';
-
       // After this assertion, TypeScript knows value is not null
       appAssert(value, BAD_REQUEST, 'Value is required');
-
       // This should compile without errors
       const uppercased: string = value.toUpperCase();
       expect(uppercased).toBe('TEST');
