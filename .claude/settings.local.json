@@ -8,7 +8,8 @@
       "Bash(powershell \"Get-NetTCPConnection -LocalPort 8080 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess\")",
       "Bash(git checkout:*)",
       "Bash(npm install:*)",
-      "Bash(npm test)"
+      "Bash(npm test)",
+      "Bash(dir \"C:\\Users\\Administrator\\Documents\\PersonalProjects\\LeavesApp\\backend\" /B)"
     ],
     "deny": [],
     "ask": []
