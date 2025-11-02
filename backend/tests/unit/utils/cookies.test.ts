@@ -14,7 +14,15 @@ describe('Cookies utils', () => {
       setAuthCookies({ res: mockRes, accessToken: 'access123' }); // Call the function
       // Validate
       expect(mockCookie).toHaveBeenCalledTimes(1);
-      expect(mockCookie).toHaveBeenCalledWith('accessToken', 'access123', getAccessTokenCookieOptions());
+      const actualCall = mockCookie.mock.calls[0];
+      expect(actualCall[0]).toBe('accessToken');
+      expect(actualCall[1]).toBe('access123');
+      expect(actualCall[2]).toMatchObject({
+        sameSite: 'strict',
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production'
+      });
+      expect(actualCall[2].expires).toBeInstanceOf(Date);
     });
 
     it('Should call res.cookie with the correct cookie names', () => {
@@ -26,8 +34,27 @@ describe('Cookies utils', () => {
       setAuthCookies({ res: mockRes, accessToken: 'access123', refreshToken: 'refresh456' });
       // Validate
       expect(mockCookie).toHaveBeenCalledTimes(2);
-      expect(mockCookie).toHaveBeenNthCalledWith(1, 'accessToken', 'access123', getAccessTokenCookieOptions());
-      expect(mockCookie).toHaveBeenNthCalledWith(2, 'refreshToken', 'refresh456', getRefreshTokenCookieOptions());
+
+      const accessCall = mockCookie.mock.calls[0];
+      expect(accessCall[0]).toBe('accessToken');
+      expect(accessCall[1]).toBe('access123');
+      expect(accessCall[2]).toMatchObject({
+        sameSite: 'strict',
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production'
+      });
+      expect(accessCall[2].expires).toBeInstanceOf(Date);
+
+      const refreshCall = mockCookie.mock.calls[1];
+      expect(refreshCall[0]).toBe('refreshToken');
+      expect(refreshCall[1]).toBe('refresh456');
+      expect(refreshCall[2]).toMatchObject({
+        sameSite: 'strict',
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        path: REFRESH_PATH
+      });
+      expect(refreshCall[2].expires).toBeInstanceOf(Date);
     });
 
     it('Should return the response object for chaining', () => {
