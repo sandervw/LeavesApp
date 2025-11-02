@@ -1,17 +1,17 @@
 import { describe, it, expect, vi } from 'vitest';
 import { setAuthCookies, clearAuthCookies, getRefreshTokenCookieOptions, getAccessTokenCookieOptions } from '../../../src/utils/cookies';
 
-/* eslint-disable */
+/* eslint-disable */ // Disabling eslint for this file as it's a test file.
 
 describe('Cookies utils', () => {
   describe('setAuthCookies', () => {
     it('Should only set accessToken if no refreshToken provided', () => {
       // Arrange
-      const mockCookie = vi.fn();
-      const mockRes: any = { cookie: mockCookie };
+      const mockCookie = vi.fn(); // Mock for res.cookie
+      const mockRes: any = { cookie: mockCookie }; // Mock response object
       mockCookie.mockReturnValue(mockRes); // For chaining
       // Act
-      setAuthCookies({ res: mockRes, accessToken: 'access123' });
+      setAuthCookies({ res: mockRes, accessToken: 'access123' }); // Call the function
       // Assert
       expect(mockCookie).toHaveBeenCalledTimes(1);
       expect(mockCookie).toHaveBeenCalledWith('accessToken', 'access123', getAccessTokenCookieOptions());
@@ -21,7 +21,7 @@ describe('Cookies utils', () => {
       // Arrange
       const mockCookie = vi.fn();
       const mockRes: any = { cookie: mockCookie };
-      mockCookie.mockReturnValue(mockRes); // For chaining
+      mockCookie.mockReturnValue(mockRes); 
       // Act
       setAuthCookies({ res: mockRes, accessToken: 'access123', refreshToken: 'refresh456' });
       // Assert
@@ -31,7 +31,14 @@ describe('Cookies utils', () => {
     });
 
     it('Should return the response object for chaining', () => {
-
+      // Arrange
+      const mockCookie = vi.fn();
+      const mockRes: any = { cookie: mockCookie };
+      mockCookie.mockReturnValue(mockRes); 
+      // Act
+      const result = setAuthCookies({ res: mockRes, accessToken: 'access123', refreshToken: 'refresh456' });
+      // Assert
+      expect(result).toBe(mockRes);
     });
   });
 
@@ -40,24 +47,42 @@ describe('Cookies utils', () => {
       // Arrange
       const mockClearCookie = vi.fn();
       const mockRes: any = { clearCookie: mockClearCookie };
-      mockClearCookie.mockReturnValue(mockRes); // For chaining
+      mockClearCookie.mockReturnValue(mockRes); 
       // Act
       clearAuthCookies(mockRes);
       // Assert
       expect(mockClearCookie).toHaveBeenCalledTimes(2);
       expect(mockClearCookie).toHaveBeenCalledWith('accessToken');
-      expect(mockClearCookie).toHaveBeenCalledWith('refreshToken');
+      expect(mockClearCookie).toHaveBeenNthCalledWith(2, 'refreshToken', { path: '/refresh' });
     });
 
     it('Should return the response object', () => {
+      // Arrange
+      const mockClearCookie = vi.fn();
+      const mockRes: any = { clearCookie: mockClearCookie };
+      mockClearCookie.mockReturnValue(mockRes);
+      // Act
+      const result = clearAuthCookies(mockRes);
+      // Assert
+      expect(result).toBe(mockRes);
     });
   });
 
   describe('getAccessTokenCookieOptions', () => {
     it('Should expire in fifteen minutes', () => {
+      // Arrange
+      const options = getAccessTokenCookieOptions();
+      const expectedExpiry = 15 * 60 * 1000;
+      // Act
+      const result = options.expires as Date;
+      // Assert
+      expect(result).toBeInstanceOf(Date);
+      expect(result.getTime()).toBeGreaterThan(Date.now());
+      expect(result.getTime()).toBeLessThan(Date.now() + expectedExpiry);
     });
 
     it('Should have correct security settings', () => {
+      
     });
 
     it('Should not be restricted to a specific path', () => {
