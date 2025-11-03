@@ -10,7 +10,10 @@
       "Bash(npm install:*)",
       "Bash(npm test)",
       "Bash(dir \"C:\\Users\\Administrator\\Documents\\PersonalProjects\\LeavesApp\\backend\" /B)",
-      "Bash(npm test:*)"
+      "Bash(npm test:*)",
+      "Bash(dir \"C:\\Users\\Administrator\\Documents\\PersonalProjects\\LeavesApp\\backend\\tests\\unit\\services\" /B)",
+      "Bash(cat:*)",
+      "Bash(powershell \"Get-Content ''C:\\Users\\Administrator\\Documents\\PersonalProjects\\LeavesApp\\backend\\tests\\unit\\services\\recursive.service.test.ts''\")"
     ],
     "deny": [],
     "ask": []
