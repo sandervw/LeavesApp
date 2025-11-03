@@ -5,20 +5,6 @@ import appAssert from '../utils/appAssert';
 import { NOT_FOUND } from '../constants/http';
 
 /**
- * Given a template or storynode id, recursively get all descendants of that tree.
- * @param id - the id of the element
- * @returns - an array of all descendants of the element (not including the element itself)
- */
-export const recursiveGetDescendants = async <T extends TreeDoc>(tree: T, model: mongoose.Model<T>) => {
-    let descendents = await model.find({ _id: { $in: tree.children } });
-    for (const child of descendents) {
-        const childDescendents = await recursiveGetDescendants<T>(child, model);
-        descendents = [...descendents, ...childDescendents];
-    }
-    return descendents;
-};
-
-/**
  * Given a storynode, recursively update the word limits of all its children (based on their wordWeights).
  * * @param node - the storynode whose children will be updated
  */
@@ -32,6 +18,37 @@ export const recursiveUpdateWordLimits = async (node: Readonly<StorynodeDoc>): P
             await recursiveUpdateWordLimits(child);
         }
     }
+};
+
+/**
+ * Given a storynode, recursively update the word count of all its parents.
+ * @param node - the storynode whose parents will be updated
+ * @param userId - the userId to filter by
+ */
+export const recursiveUpdateParentWordCount = async (node: Readonly<StorynodeDoc>, userId: mongoId): Promise<void> => {
+    if (node.parent) {
+        const parent = await Storynode.findOne({ _id: node.parent, userId });
+        if (parent) {
+            const siblings = await Storynode.find({ _id: { $in: parent.children }, userId });
+            parent.wordCount = siblings.reduce((acc: number, sibling: StorynodeDoc) => acc + sibling.wordCount, 0);
+            await Storynode.findOneAndUpdate({ _id: parent._id, userId }, { wordCount: parent.wordCount });
+            await recursiveUpdateParentWordCount(parent, userId);
+        }
+    }
+};
+
+/**
+ * Given a template or storynode id, recursively get all descendants of that tree.
+ * @param id - the id of the element
+ * @returns - an array of all descendants of the element (not including the element itself)
+ */
+export const recursiveGetDescendants = async <T extends TreeDoc>(tree: T, model: mongoose.Model<T>) => {
+    let descendents = await model.find({ _id: { $in: tree.children } });
+    for (const child of descendents) {
+        const childDescendents = await recursiveGetDescendants<T>(child, model);
+        descendents = [...descendents, ...childDescendents];
+    }
+    return descendents;
 };
 
 /**
@@ -72,23 +89,6 @@ export const recursiveStorynodeFromTemplate = async (
     return storynode;
 };
 
-/**
- * Given a storynode, recursively update the word count of all its parents.
- * @param node - the storynode whose parents will be updated
- * @param userId - the userId to filter by
- */
-export const recursiveUpdateParentWordCount = async (node: Readonly<StorynodeDoc>, userId: mongoId): Promise<void> => {
-    if (node.parent) {
-        const parent = await Storynode.findOne({ _id: node.parent, userId });
-        if (parent) {
-            const siblings = await Storynode.find({ _id: { $in: parent.children }, userId });
-            parent.wordCount = siblings.reduce((acc: number, sibling: StorynodeDoc) => acc + sibling.wordCount, 0);
-            await Storynode.findOneAndUpdate({ _id: parent._id, userId }, { wordCount: parent.wordCount });
-            await recursiveUpdateParentWordCount(parent, userId);
-        }
-    }
-};
-
 // // Function to recursively get only the base nodes (leaves) of a story, given a start Id (inclusive)
 // const recursiveGetLeafs = async (id) => {
 //     let toGet = await Element.findById(id);
@@ -103,32 +103,6 @@ export const recursiveUpdateParentWordCount = async (node: Readonly<StorynodeDoc
 //         };
 //     }
 //     return blobArr;
-// }
-
-// // Function to recursively convert a template tree to a storynode
-// const recursiveStorynodeFromTemplate = async (user_id, templateId, parentId) => {
-//     // Create a new storynode with the template's data, making sure to give it a parent if supplied
-//     const template = await Template.findOne({_id: templateId, user_id});
-//     const storyData = (parentId
-//         ? {user_id, name: template.name, type: template.type, text: template.text, parent: parentId}
-//         : {user_id, name: template.name, type: template.type, text: template.text});
-//     // If the template has a wordWeight, add that to the storynode
-//     if(template.wordWeight) storyData.wordWeight = template.wordWeight;
-//     const storynode = await Storynode.create(storyData);
-//     // Then recursively add any children of the template
-//     if(template && template.children){
-//         let storyNodeArr = [];
-//         let childArr = template.children;
-//         for (const child of childArr){
-//             let result = await recursiveStorynodeFromTemplate(user_id, child, storynode._id);
-//             // Add the child to the parent's children array
-//             storyNodeArr.push(result._id);
-//         };
-//         // Update the parent with the new children
-//         await Storynode.findOneAndUpdate({_id: storynode._id, user_id}, {children: storyNodeArr});
-//     }
-//     // base case: return the new storynode
-//     return storynode;
 // }
 
 // // Function to recursively convert a JSON object to a storynode
