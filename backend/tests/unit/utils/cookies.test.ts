@@ -5,7 +5,7 @@ import { setAuthCookies, clearAuthCookies, getRefreshTokenCookieOptions, getAcce
 
 describe('Cookies utils', () => {
   describe('setAuthCookies', () => {
-    it('Should only set accessToken if no refreshToken provided', () => {
+    it('should only set accessToken if no refreshToken provided', () => {
       // Setup
       const mockCookie = vi.fn(); // Mock for res.cookie
       const mockRes: any = { cookie: mockCookie }; // Mock response object
@@ -25,7 +25,7 @@ describe('Cookies utils', () => {
       expect(actualCall[2].expires).toBeInstanceOf(Date);
     });
 
-    it('Should call res.cookie with the correct cookie names', () => {
+    it('should call res.cookie with the correct cookie names', () => {
       // Setup
       const mockCookie = vi.fn();
       const mockRes: any = { cookie: mockCookie };
@@ -57,7 +57,7 @@ describe('Cookies utils', () => {
       expect(refreshCall[2].expires).toBeInstanceOf(Date);
     });
 
-    it('Should return the response object for chaining', () => {
+    it('should return the response object for chaining', () => {
       // Setup
       const mockCookie = vi.fn();
       const mockRes: any = { cookie: mockCookie };
@@ -70,7 +70,7 @@ describe('Cookies utils', () => {
   });
 
   describe('clearAuthCookies', () => {
-    it('It should clear both access and refresh token', () => {
+    it('should clear both access and refresh token', () => {
       // Setup
       const mockClearCookie = vi.fn();
       const mockRes: any = { clearCookie: mockClearCookie };
@@ -83,7 +83,7 @@ describe('Cookies utils', () => {
       expect(mockClearCookie).toHaveBeenNthCalledWith(2, 'refreshToken', { path: REFRESH_PATH });
     });
 
-    it('Should return the response object', () => {
+    it('should return the response object', () => {
       // Setup
       const mockClearCookie = vi.fn();
       const mockRes: any = { clearCookie: mockClearCookie };
@@ -96,7 +96,7 @@ describe('Cookies utils', () => {
   });
 
   describe('getAccessTokenCookieOptions', () => {
-    it('Should expire in fifteen minutes', () => {
+    it('should expire in fifteen minutes', () => {
       // Setup
       const before = Date.now();
       const options = getAccessTokenCookieOptions();
@@ -121,7 +121,7 @@ describe('Cookies utils', () => {
       expect(options.secure).toBe(expectedSecure);
     });
 
-    it('Should not be restricted to a specific path', () => {
+    it('should not be restricted to a specific path', () => {
       // Act
       const options = getAccessTokenCookieOptions();
       // Validate
@@ -130,7 +130,7 @@ describe('Cookies utils', () => {
   });
 
   describe('getRefreshTokenCookieOptions', () => {
-    it('Should expire in thirty days', () => {
+    it('should expire in thirty days', () => {
       // Setup
       const before = Date.now();
       const options = getRefreshTokenCookieOptions();
@@ -155,7 +155,7 @@ describe('Cookies utils', () => {
       expect(options.secure).toBe(expectedSecure);
     });
 
-    it('Should be restricted to only the REFRESH_PATH', () => {
+    it('should be restricted to only the REFRESH_PATH', () => {
       // Setup
       const path = REFRESH_PATH;
       // Act
