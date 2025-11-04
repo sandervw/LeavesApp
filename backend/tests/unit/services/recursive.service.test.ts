@@ -1,12 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { 
+import {
   recursiveUpdateWordLimits,
   recursiveUpdateParentWordCount,
   recursiveGetDescendants,
+  recursiveGetTreeDepth,
   recursiveStorynodeFromTemplate } from '../../../src/services/recursive.service';
 import { StorynodeDoc } from '../../../src/schemas/mongo.schema';
 import { Storynode, Template } from '../../../src/models/tree.model';
 import mongoose from 'mongoose';
+import { AppError } from '../../../src/utils/errorUtils';
+import { NOT_FOUND, INTERNAL_SERVER_ERROR } from '../../../src/constants/http';
 
 /* eslint-disable */ // Disabling eslint for this file as it's a test file.
 
@@ -314,7 +317,7 @@ describe('Recursive Service', () => {
   describe('recursiveUpdateParentWordCount', () => {
     it('should handle a storynode with no parent', async () => {
       // Setup
-      const userId = 'user123';
+      const userId = new mongoose.Types.ObjectId();
       const node = {
         _id: 'node1',
         wordCount: 100
@@ -329,7 +332,7 @@ describe('Recursive Service', () => {
 
     it('should handle cases where Storynode.findOne returns null (parent not found)', async () => {
       // Setup
-      const userId = 'user123';
+      const userId = new mongoose.Types.ObjectId();
       const node = {
         _id: 'node1',
         parent: 'parent1',
@@ -346,7 +349,7 @@ describe('Recursive Service', () => {
 
     it('should handle cases where finding the parent\'s children (siblings) returns empty array and filter by userId', async () => {
       // Setup
-      const userId = 'user123';
+      const userId = new mongoose.Types.ObjectId();
       const parentId = 'parent1';
       const node = {
         _id: 'node1',
@@ -506,59 +509,748 @@ describe('Recursive Service', () => {
   });
 
   describe('recursiveGetDescendants', () => {
-    it('Should return an empty array for a storynode with no descendents', () => { });
+    it('Should return an empty array for a storynode with no descendents', async () => {
+      // Setup
+      const node = {
+        _id: 'node1',
+        children: []
+      } as unknown as StorynodeDoc;
+      vi.mocked(Storynode.find).mockResolvedValue([]);
+      // Act
+      const result = await recursiveGetDescendants(node, Storynode);
+      // Validate
+      expect(result).toEqual([]);
+      expect(Storynode.find).toHaveBeenCalledWith({ _id: { $in: [] } });
+    });
 
-    it('Should return all descendents of a given storynode', () => { });
+    it('Should return all descendents of a given storynode', async () => {
+      // Setup
+      const childId = 'child1';
+      const grandchildId = 'grandchild1';
+      const node = {
+        _id: 'parent',
+        children: [childId]
+      } as unknown as StorynodeDoc;
+      const child = {
+        _id: childId,
+        children: [grandchildId]
+      } as unknown as StorynodeDoc;
+      const grandchild = {
+        _id: grandchildId,
+        children: []
+      } as unknown as StorynodeDoc;
+      vi.mocked(Storynode.find).mockResolvedValueOnce([child] as any);
+      vi.mocked(Storynode.find).mockResolvedValueOnce([grandchild] as any);
+      vi.mocked(Storynode.find).mockResolvedValueOnce([]);
+      // Act
+      const result = await recursiveGetDescendants(node, Storynode);
+      // Validate
+      expect(result).toHaveLength(2);
+      expect(result).toContainEqual(child);
+      expect(result).toContainEqual(grandchild);
+    });
 
-    it('Should include deeply nested descendents', () => { });
+    it('Should include deeply nested descendents', async () => {
+      // Setup
+      const child1Id = 'child1';
+      const grandchild1Id = 'grandchild1';
+      const greatGrandchildId = 'greatGrandchild1';
+      const node = {
+        _id: 'root',
+        children: [child1Id]
+      } as unknown as StorynodeDoc;
+      const child1 = {
+        _id: child1Id,
+        children: [grandchild1Id]
+      } as unknown as StorynodeDoc;
+      const grandchild1 = {
+        _id: grandchild1Id,
+        children: [greatGrandchildId]
+      } as unknown as StorynodeDoc;
+      const greatGrandchild = {
+        _id: greatGrandchildId,
+        children: []
+      } as unknown as StorynodeDoc;
+      vi.mocked(Storynode.find).mockResolvedValueOnce([child1] as any);
+      vi.mocked(Storynode.find).mockResolvedValueOnce([grandchild1] as any);
+      vi.mocked(Storynode.find).mockResolvedValueOnce([greatGrandchild] as any);
+      vi.mocked(Storynode.find).mockResolvedValueOnce([]);
+      // Act
+      const result = await recursiveGetDescendants(node, Storynode);
+      // Validate
+      expect(result).toHaveLength(3);
+      expect(result).toContainEqual(child1);
+      expect(result).toContainEqual(grandchild1);
+      expect(result).toContainEqual(greatGrandchild);
+    });
 
-    it('Should work correctly with the Template model', () => { });
+    it('Should work correctly with the Template model', async () => {
+      // Setup
+      const childId = 'templateChild1';
+      const node = {
+        _id: 'templateParent',
+        children: [childId]
+      } as any;
+      const child = {
+        _id: childId,
+        children: []
+      } as any;
+      vi.mocked(Template.find).mockResolvedValueOnce([child] as any);
+      vi.mocked(Template.find).mockResolvedValueOnce([]);
+      // Act
+      const result = await recursiveGetDescendants(node, Template);
+      // Validate
+      expect(result).toHaveLength(1);
+      expect(result).toContainEqual(child);
+      expect(Template.find).toHaveBeenCalledWith({ _id: { $in: [childId] } });
+    });
 
-    it('Should work correctly with the Storynode model', () => { });
+    it('Should work correctly with the Storynode model', async () => {
+      // Setup
+      const childId = 'storynodeChild1';
+      const node = {
+        _id: 'storynodeParent',
+        children: [childId]
+      } as unknown as StorynodeDoc;
+      const child = {
+        _id: childId,
+        children: []
+      } as unknown as StorynodeDoc;
+      vi.mocked(Storynode.find).mockResolvedValueOnce([child] as any);
+      vi.mocked(Storynode.find).mockResolvedValueOnce([]);
+      // Act
+      const result = await recursiveGetDescendants(node, Storynode);
+      // Validate
+      expect(result).toHaveLength(1);
+      expect(result).toContainEqual(child);
+      expect(Storynode.find).toHaveBeenCalledWith({ _id: { $in: [childId] } });
+    });
   });
 
   describe('recursiveGetTreeDepth', () => {
-    it('should return 0 for a root node (no parent)', async () => { });
+    it('should return 0 for a root node (no parent)', async () => {
+      // Setup
+      const userId = new mongoose.Types.ObjectId();
+      const rootNode = {
+        _id: 'root',
+        children: []
+      } as unknown as StorynodeDoc;
+      // Act
+      const result = await recursiveGetTreeDepth(rootNode, Storynode, userId);
+      // Validate
+      expect(result).toBe(0);
+      expect(Storynode.findOne).not.toHaveBeenCalled();
+    });
 
-    it('should return 1 for a direct child of root', async () => { });
+    it('should return 1 for a direct child of root', async () => {
+      // Setup
+      const userId = new mongoose.Types.ObjectId();
+      const rootId = 'root';
+      const childId = 'child';
+      const child = {
+        _id: childId,
+        parent: rootId
+      } as unknown as StorynodeDoc;
+      const root = {
+        _id: rootId,
+        children: [childId]
+      } as unknown as StorynodeDoc;
+      vi.mocked(Storynode.findOne).mockResolvedValueOnce(root as any);
+      // Act
+      const result = await recursiveGetTreeDepth(child, Storynode, userId);
+      // Validate
+      expect(result).toBe(1);
+      expect(Storynode.findOne).toHaveBeenCalledWith({ _id: rootId, userId });
+    });
 
-    it('should return correct depth for deeply nested nodes', async () => { });
+    it('should return correct depth for deeply nested nodes', async () => {
+      // Setup
+      const userId = new mongoose.Types.ObjectId();
+      const rootId = 'root';
+      const parentId = 'parent';
+      const childId = 'child';
+      const grandchildId = 'grandchild';
+      const grandchild = {
+        _id: grandchildId,
+        parent: childId
+      } as unknown as StorynodeDoc;
+      const child = {
+        _id: childId,
+        parent: parentId
+      } as unknown as StorynodeDoc;
+      const parent = {
+        _id: parentId,
+        parent: rootId
+      } as unknown as StorynodeDoc;
+      const root = {
+        _id: rootId
+      } as unknown as StorynodeDoc;
+      vi.mocked(Storynode.findOne).mockResolvedValueOnce(child as any);
+      vi.mocked(Storynode.findOne).mockResolvedValueOnce(parent as any);
+      vi.mocked(Storynode.findOne).mockResolvedValueOnce(root as any);
+      // Act
+      const result = await recursiveGetTreeDepth(grandchild, Storynode, userId);
+      // Validate
+      expect(result).toBe(3);
+    });
 
-    it('should filter by userId when finding parents', async () => { });
+    it('should filter by userId when finding parents', async () => {
+      // Setup
+      const userId = new mongoose.Types.ObjectId();
+      const parentId = 'parent';
+      const childId = 'child';
+      const child = {
+        _id: childId,
+        parent: parentId
+      } as unknown as StorynodeDoc;
+      vi.mocked(Storynode.findOne).mockResolvedValue(null);
+      // Act
+      const result = await recursiveGetTreeDepth(child, Storynode, userId);
+      // Validate
+      expect(result).toBe(0);
+      expect(Storynode.findOne).toHaveBeenCalledWith({ _id: parentId, userId });
+    });
 
-    it('should handle cases where parent is not found (returns null)', async () => { });
+    it('should handle cases where parent is not found (returns null)', async () => {
+      // Setup
+      const userId = new mongoose.Types.ObjectId();
+      const parentId = 'nonexistentParent';
+      const childId = 'child';
+      const child = {
+        _id: childId,
+        parent: parentId
+      } as unknown as StorynodeDoc;
+      vi.mocked(Storynode.findOne).mockResolvedValue(null);
+      // Act
+      const result = await recursiveGetTreeDepth(child, Storynode, userId);
+      // Validate
+      expect(result).toBe(0);
+    });
 
-    it('should throw an error when depth exceeds MAX_TREE_DEPTH', async () => { });
+    it('should throw an error when depth exceeds MAX_TREE_DEPTH', async () => {
+      // Setup
+      const userId = new mongoose.Types.ObjectId();
+      const deepNode = {
+        _id: 'deepNode',
+        parent: 'parent'
+      } as unknown as StorynodeDoc;
+      const parent = {
+        _id: 'parent',
+        parent: 'grandparent'
+      } as unknown as StorynodeDoc;
+      // Mock to always return a parent, causing infinite recursion
+      vi.mocked(Storynode.findOne).mockResolvedValue(parent as any);
+      // Act & Validate
+      try {
+        await recursiveGetTreeDepth(deepNode, Storynode, userId);
+        expect.fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(AppError);
+        expect((error as AppError).statusCode).toBe(INTERNAL_SERVER_ERROR);
+        expect((error as AppError).message).toContain('Maximum tree depth exceeded');
+      }
+    });
 
-    it('should work correctly with the Template model', async () => { });
+    it('should work correctly with the Template model', async () => {
+      // Setup
+      const userId = new mongoose.Types.ObjectId();
+      const rootId = 'templateRoot';
+      const childId = 'templateChild';
+      const child = {
+        _id: childId,
+        parent: rootId
+      } as any;
+      const root = {
+        _id: rootId
+      } as any;
+      vi.mocked(Template.findOne).mockResolvedValueOnce(root as any);
+      // Act
+      const result = await recursiveGetTreeDepth(child, Template, userId);
+      // Validate
+      expect(result).toBe(1);
+      expect(Template.findOne).toHaveBeenCalledWith({ _id: rootId, userId });
+    });
 
-    it('should work correctly with the Storynode model', async () => { });
+    it('should work correctly with the Storynode model', async () => {
+      // Setup
+      const userId = new mongoose.Types.ObjectId();
+      const rootId = 'storynodeRoot';
+      const childId = 'storynodeChild';
+      const child = {
+        _id: childId,
+        parent: rootId
+      } as unknown as StorynodeDoc;
+      const root = {
+        _id: rootId
+      } as unknown as StorynodeDoc;
+      vi.mocked(Storynode.findOne).mockResolvedValueOnce(root as any);
+      // Act
+      const result = await recursiveGetTreeDepth(child, Storynode, userId);
+      // Validate
+      expect(result).toBe(1);
+      expect(Storynode.findOne).toHaveBeenCalledWith({ _id: rootId, userId });
+    });
   });
 
   describe('recursiveStorynodeFromTemplate', () => {
-    it('should create a storynode from a simple (leaf) template', async () => { });
+    it('should create a storynode from a simple (leaf) template', async () => {
+      // Setup
+      const userId = new mongoose.Types.ObjectId();
+      const templateId = new mongoose.Types.ObjectId();
+      const template = {
+        _id: templateId,
+        userId,
+        name: 'Leaf Template',
+        type: 'leaf',
+        text: 'Some text',
+        wordWeight: 50,
+        children: []
+      } as any;
+      const createdStorynode = {
+        _id: new mongoose.Types.ObjectId(),
+        userId,
+        name: 'Leaf Template',
+        type: 'leaf',
+        text: 'Some text',
+        wordWeight: 50,
+        children: []
+      } as unknown as StorynodeDoc;
+      vi.mocked(Template.findOne).mockResolvedValue(template);
+      vi.mocked(Storynode.create).mockResolvedValue(createdStorynode as any);
+      // Act
+      const result = await recursiveStorynodeFromTemplate(userId, templateId);
+      // Validate
+      expect(Template.findOne).toHaveBeenCalledWith({ _id: templateId, userId });
+      expect(Storynode.create).toHaveBeenCalledWith({
+        userId,
+        name: template.name,
+        type: template.type,
+        text: template.text,
+        wordWeight: template.wordWeight
+      });
+      expect(result).toEqual(createdStorynode);
+    });
 
-    it('should create a storynode from a template with a single child', async () => { });
+    it('should create a storynode from a template with a single child', async () => {
+      // Setup
+      const userId = new mongoose.Types.ObjectId();
+      const templateId = new mongoose.Types.ObjectId();
+      const childTemplateId = new mongoose.Types.ObjectId();
+      const parentTemplate = {
+        _id: templateId,
+        userId,
+        name: 'Parent Template',
+        type: 'branch',
+        text: 'Parent text',
+        wordWeight: 100,
+        children: [childTemplateId]
+      } as any;
+      const childTemplate = {
+        _id: childTemplateId,
+        userId,
+        name: 'Child Template',
+        type: 'leaf',
+        text: 'Child text',
+        wordWeight: 50,
+        children: []
+      } as any;
+      const parentStorynodeId = new mongoose.Types.ObjectId();
+      const childStorynodeId = new mongoose.Types.ObjectId();
+      const parentStorynode = {
+        _id: parentStorynodeId,
+        userId,
+        name: 'Parent Template',
+        type: 'branch',
+        text: 'Parent text',
+        wordWeight: 100,
+        children: []
+      } as unknown as StorynodeDoc;
+      const childStorynode = {
+        _id: childStorynodeId,
+        userId,
+        name: 'Child Template',
+        type: 'leaf',
+        text: 'Child text',
+        wordWeight: 50,
+        children: []
+      } as unknown as StorynodeDoc;
+      const updatedParent = {
+        ...parentStorynode,
+        children: [childStorynodeId]
+      } as unknown as StorynodeDoc;
+      vi.mocked(Template.findOne).mockResolvedValueOnce(parentTemplate);
+      vi.mocked(Template.findOne).mockResolvedValueOnce(childTemplate);
+      vi.mocked(Storynode.create).mockResolvedValueOnce(parentStorynode as any);
+      vi.mocked(Storynode.create).mockResolvedValueOnce(childStorynode as any);
+      vi.mocked(Storynode.findOneAndUpdate).mockResolvedValue(updatedParent as any);
+      // Act
+      const result = await recursiveStorynodeFromTemplate(userId, templateId);
+      // Validate
+      expect(Storynode.create).toHaveBeenCalledTimes(2);
+      expect(Storynode.findOneAndUpdate).toHaveBeenCalledWith(
+        { _id: parentStorynodeId, userId },
+        { children: [childStorynodeId] },
+        { new: true }
+      );
+      expect(result).toEqual(updatedParent);
+    });
 
-    it('should create a storynode tree from a template with multiple descendents', async () => { });
+    it('should create a storynode tree from a template with multiple descendents', async () => {
+      // Setup
+      const userId = new mongoose.Types.ObjectId();
+      const rootTemplateId = new mongoose.Types.ObjectId();
+      const child1TemplateId = new mongoose.Types.ObjectId();
+      const child2TemplateId = new mongoose.Types.ObjectId();
+      const rootTemplate = {
+        _id: rootTemplateId,
+        userId,
+        name: 'Root',
+        type: 'root',
+        text: 'Root text',
+        children: [child1TemplateId, child2TemplateId]
+      } as any;
+      const child1Template = {
+        _id: child1TemplateId,
+        userId,
+        name: 'Child 1',
+        type: 'branch',
+        text: 'Child 1 text',
+        children: []
+      } as any;
+      const child2Template = {
+        _id: child2TemplateId,
+        userId,
+        name: 'Child 2',
+        type: 'branch',
+        text: 'Child 2 text',
+        children: []
+      } as any;
+      const rootStorynodeId = new mongoose.Types.ObjectId();
+      const child1StorynodeId = new mongoose.Types.ObjectId();
+      const child2StorynodeId = new mongoose.Types.ObjectId();
+      const rootStorynode = {
+        _id: rootStorynodeId,
+        userId,
+        name: 'Root',
+        children: []
+      } as unknown as StorynodeDoc;
+      const child1Storynode = {
+        _id: child1StorynodeId,
+        userId,
+        name: 'Child 1',
+        children: []
+      } as unknown as StorynodeDoc;
+      const child2Storynode = {
+        _id: child2StorynodeId,
+        userId,
+        name: 'Child 2',
+        children: []
+      } as unknown as StorynodeDoc;
+      const updatedRoot = {
+        ...rootStorynode,
+        children: [child1StorynodeId, child2StorynodeId]
+      } as unknown as StorynodeDoc;
+      vi.mocked(Template.findOne).mockResolvedValueOnce(rootTemplate);
+      vi.mocked(Template.findOne).mockResolvedValueOnce(child1Template);
+      vi.mocked(Template.findOne).mockResolvedValueOnce(child2Template);
+      vi.mocked(Storynode.create).mockResolvedValueOnce(rootStorynode as any);
+      vi.mocked(Storynode.create).mockResolvedValueOnce(child1Storynode as any);
+      vi.mocked(Storynode.create).mockResolvedValueOnce(child2Storynode as any);
+      vi.mocked(Storynode.findOneAndUpdate).mockResolvedValue(updatedRoot as any);
+      // Act
+      const result = await recursiveStorynodeFromTemplate(userId, rootTemplateId);
+      // Validate
+      expect(Storynode.create).toHaveBeenCalledTimes(3);
+      expect(Storynode.findOneAndUpdate).toHaveBeenCalledWith(
+        { _id: rootStorynodeId, userId },
+        { children: [child1StorynodeId, child2StorynodeId] },
+        { new: true }
+      );
+      expect(result.children).toHaveLength(2);
+    });
 
-    it('should create a storynode with a given parentId', async () => { });
+    it('should create a storynode with a given parentId', async () => {
+      // Setup
+      const userId = new mongoose.Types.ObjectId();
+      const templateId = new mongoose.Types.ObjectId();
+      const parentId = new mongoose.Types.ObjectId();
+      const template = {
+        _id: templateId,
+        userId,
+        name: 'Child Template',
+        type: 'leaf',
+        text: 'Some text',
+        wordWeight: 50,
+        children: []
+      } as any;
+      const createdStorynode = {
+        _id: new mongoose.Types.ObjectId(),
+        userId,
+        parent: parentId,
+        name: 'Child Template',
+        type: 'leaf',
+        text: 'Some text',
+        wordWeight: 50,
+        children: []
+      } as unknown as StorynodeDoc;
+      vi.mocked(Template.findOne).mockResolvedValue(template);
+      vi.mocked(Storynode.create).mockResolvedValue(createdStorynode as any);
+      // Act
+      const result = await recursiveStorynodeFromTemplate(userId, templateId, parentId);
+      // Validate
+      expect(Storynode.create).toHaveBeenCalledWith({
+        userId,
+        parent: parentId,
+        name: template.name,
+        type: template.type,
+        text: template.text,
+        wordWeight: template.wordWeight
+      });
+      expect(result.parent).toEqual(parentId);
+    });
 
-    it('should reflect the new storynodes in the database', async () => { });
+    it('should reflect the new storynodes in the database', async () => {
+      // Setup
+      const userId = new mongoose.Types.ObjectId();
+      const templateId = new mongoose.Types.ObjectId();
+      const template = {
+        _id: templateId,
+        userId,
+        name: 'Test Template',
+        type: 'leaf',
+        text: 'Test text',
+        children: []
+      } as any;
+      const createdStorynode = {
+        _id: new mongoose.Types.ObjectId(),
+        userId,
+        name: 'Test Template',
+        type: 'leaf',
+        text: 'Test text',
+        children: []
+      } as unknown as StorynodeDoc;
+      vi.mocked(Template.findOne).mockResolvedValue(template);
+      vi.mocked(Storynode.create).mockResolvedValue(createdStorynode as any);
+      // Act
+      await recursiveStorynodeFromTemplate(userId, templateId);
+      // Validate
+      expect(Storynode.create).toHaveBeenCalledTimes(1);
+      expect(Storynode.create).toHaveBeenCalledWith(expect.objectContaining({
+        userId,
+        name: template.name,
+        type: template.type,
+        text: template.text
+      }));
+    });
 
-    it('should assign the correct userId to all created storynodes', async () => { });
+    it('should assign the correct userId to all created storynodes', async () => {
+      // Setup
+      const userId = new mongoose.Types.ObjectId();
+      const templateId = new mongoose.Types.ObjectId();
+      const childTemplateId = new mongoose.Types.ObjectId();
+      const parentTemplate = {
+        _id: templateId,
+        userId,
+        name: 'Parent',
+        type: 'branch',
+        children: [childTemplateId]
+      } as any;
+      const childTemplate = {
+        _id: childTemplateId,
+        userId,
+        name: 'Child',
+        type: 'leaf',
+        children: []
+      } as any;
+      const parentStorynode = {
+        _id: new mongoose.Types.ObjectId(),
+        userId,
+        name: 'Parent',
+        children: []
+      } as unknown as StorynodeDoc;
+      const childStorynode = {
+        _id: new mongoose.Types.ObjectId(),
+        userId,
+        name: 'Child',
+        children: []
+      } as unknown as StorynodeDoc;
+      vi.mocked(Template.findOne).mockResolvedValueOnce(parentTemplate);
+      vi.mocked(Template.findOne).mockResolvedValueOnce(childTemplate);
+      vi.mocked(Storynode.create).mockResolvedValueOnce(parentStorynode as any);
+      vi.mocked(Storynode.create).mockResolvedValueOnce(childStorynode as any);
+      vi.mocked(Storynode.findOneAndUpdate).mockResolvedValue(parentStorynode as any);
+      // Act
+      await recursiveStorynodeFromTemplate(userId, templateId);
+      // Validate
+      const createCalls = vi.mocked(Storynode.create).mock.calls;
+      createCalls.forEach(call => {
+        expect(call[0]).toHaveProperty('userId', userId);
+      });
+    });
 
-    it('should handle the case where a template is not found', async () => { });
+    it('should handle the case where a template is not found', async () => {
+      // Setup
+      const userId = new mongoose.Types.ObjectId();
+      const templateId = new mongoose.Types.ObjectId();
+      vi.mocked(Template.findOne).mockResolvedValue(null);
+      // Act & Validate
+      try {
+        await recursiveStorynodeFromTemplate(userId, templateId);
+        expect.fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(AppError);
+        expect((error as AppError).statusCode).toBe(NOT_FOUND);
+        expect((error as AppError).message).toBe('Template not found');
+      }
+    });
 
-    it('should handle the case where a template is invalid', async () => { });
+    it('should handle the case where a template is invalid', async () => {
+      // Setup
+      const userId = new mongoose.Types.ObjectId();
+      const templateId = new mongoose.Types.ObjectId();
+      vi.mocked(Template.findOne).mockResolvedValue(null);
+      // Act & Validate
+      try {
+        await recursiveStorynodeFromTemplate(userId, templateId);
+        expect.fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(AppError);
+        expect((error as AppError).statusCode).toBe(NOT_FOUND);
+        expect((error as AppError).message).toBe('Template not found');
+      }
+    });
 
-    it('should handle a template assigned to a different user', async () => { });
+    it('should handle a template assigned to a different user', async () => {
+      // Setup
+      const userId = new mongoose.Types.ObjectId();
+      const differentUserId = new mongoose.Types.ObjectId();
+      const templateId = new mongoose.Types.ObjectId();
+      // Template.findOne with userId filter will return null for different user
+      vi.mocked(Template.findOne).mockResolvedValue(null);
+      // Act & Validate
+      try {
+        await recursiveStorynodeFromTemplate(userId, templateId);
+        expect.fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(AppError);
+        expect((error as AppError).statusCode).toBe(NOT_FOUND);
+        expect((error as AppError).message).toBe('Template not found');
+      }
+      expect(Template.findOne).toHaveBeenCalledWith({ _id: templateId, userId });
+    });
 
-    it('should handle null, undefined, or not-found children', async () => { });
+    it('should handle null, undefined, or not-found children', async () => {
+      // Setup
+      const userId = new mongoose.Types.ObjectId();
+      const templateId = new mongoose.Types.ObjectId();
+      const nonexistentChildId = new mongoose.Types.ObjectId();
+      const parentTemplate = {
+        _id: templateId,
+        userId,
+        name: 'Parent',
+        type: 'branch',
+        children: [nonexistentChildId]
+      } as any;
+      const parentStorynode = {
+        _id: new mongoose.Types.ObjectId(),
+        userId,
+        name: 'Parent',
+        children: []
+      } as unknown as StorynodeDoc;
+      vi.mocked(Template.findOne).mockResolvedValueOnce(parentTemplate);
+      vi.mocked(Template.findOne).mockResolvedValueOnce(null); // Child not found
+      vi.mocked(Storynode.create).mockResolvedValue(parentStorynode as any);
+      // Act & Validate
+      try {
+        await recursiveStorynodeFromTemplate(userId, templateId);
+        expect.fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(AppError);
+        expect((error as AppError).statusCode).toBe(NOT_FOUND);
+        expect((error as AppError).message).toBe('Template not found');
+      }
+    });
 
-    it('should handle a storynode-not-found error after creation', async () => { });
+    it('should handle a storynode-not-found error after creation', async () => {
+      // Setup
+      const userId = new mongoose.Types.ObjectId();
+      const templateId = new mongoose.Types.ObjectId();
+      const childTemplateId = new mongoose.Types.ObjectId();
+      const parentTemplate = {
+        _id: templateId,
+        userId,
+        name: 'Parent',
+        type: 'branch',
+        children: [childTemplateId]
+      } as any;
+      const childTemplate = {
+        _id: childTemplateId,
+        userId,
+        name: 'Child',
+        type: 'leaf',
+        children: []
+      } as any;
+      const parentStorynode = {
+        _id: new mongoose.Types.ObjectId(),
+        userId,
+        name: 'Parent',
+        children: []
+      } as unknown as StorynodeDoc;
+      const childStorynode = {
+        _id: new mongoose.Types.ObjectId(),
+        userId,
+        name: 'Child',
+        children: []
+      } as unknown as StorynodeDoc;
+      vi.mocked(Template.findOne).mockResolvedValueOnce(parentTemplate);
+      vi.mocked(Template.findOne).mockResolvedValueOnce(childTemplate);
+      vi.mocked(Storynode.create).mockResolvedValueOnce(parentStorynode as any);
+      vi.mocked(Storynode.create).mockResolvedValueOnce(childStorynode as any);
+      vi.mocked(Storynode.findOneAndUpdate).mockResolvedValue(null); // Simulate not found after creation
+      // Act & Validate
+      try {
+        await recursiveStorynodeFromTemplate(userId, templateId);
+        expect.fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(AppError);
+        expect((error as AppError).statusCode).toBe(NOT_FOUND);
+        expect((error as AppError).message).toBe('Storynode not found after update');
+      }
+    });
 
-    it('should verify that the created storynodes have correct properties copied from the template', async () => { });
+    it('should verify that the created storynodes have correct properties copied from the template', async () => {
+      // Setup
+      const userId = new mongoose.Types.ObjectId();
+      const templateId = new mongoose.Types.ObjectId();
+      const template = {
+        _id: templateId,
+        userId,
+        name: 'Specific Name',
+        type: 'leaf',
+        text: 'Specific text content',
+        wordWeight: 75,
+        children: []
+      } as any;
+      const createdStorynode = {
+        _id: new mongoose.Types.ObjectId(),
+        userId,
+        name: 'Specific Name',
+        type: 'leaf',
+        text: 'Specific text content',
+        wordWeight: 75,
+        children: []
+      } as unknown as StorynodeDoc;
+      vi.mocked(Template.findOne).mockResolvedValue(template);
+      vi.mocked(Storynode.create).mockResolvedValue(createdStorynode as any);
+      // Act
+      const result = await recursiveStorynodeFromTemplate(userId, templateId);
+      // Validate
+      expect(result.name).toBe(template.name);
+      expect(result.type).toBe(template.type);
+      expect(result.text).toBe(template.text);
+      expect(result.wordWeight).toBe(template.wordWeight);
+      expect(result.userId).toBe(userId);
+    });
   });
 
 });
