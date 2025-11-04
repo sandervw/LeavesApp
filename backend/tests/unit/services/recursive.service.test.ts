@@ -93,7 +93,7 @@ describe('Recursive Service', () => {
 
     it('should verify that the created storynodes have correct properties copied from the template', async () => { });
 
-    
+    it('should ')
   });
 
 });
