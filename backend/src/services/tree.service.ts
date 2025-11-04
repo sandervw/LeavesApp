@@ -67,7 +67,7 @@ export default class TreeService<T extends TreeDoc> {
     data.userId = userId; // Ensure user_id is set in the data
     if (data._id) {
       if (data.children) {
-        data.children = data.children.filter(Boolean); // Clean up from frontend
+        data.children = data.children.filter(Boolean); // Remove null/undefined
       }
       const result = await this.model.findOneAndUpdate({ _id: data._id, userId }, { $set: data }, { new: true });
       appAssert(result, NOT_FOUND, 'Element not found');

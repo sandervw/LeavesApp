@@ -27,7 +27,7 @@ class storynodeService extends TreeService<StorynodeDoc> {
     if (data._id) {
       // If element has children, set the word count (based on children or text)
       if (data.children && data.children.length > 0) {
-        data.children = data.children.filter(child => child !== null); // Clean up from frontend
+        data.children = data.children.filter(Boolean); // Clean up null/undefined from frontend
         const children = await Storynode.find({ _id: { $in: data.children }, userId });
         appAssert(children.length === data.children.length, NOT_FOUND, 'Some children not found');
         data.wordCount = children.reduce((acc: number, child: StorynodeDoc) => acc + child.wordCount, 0);
