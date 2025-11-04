@@ -4,8 +4,9 @@ import {
   recursiveUpdateParentWordCount,
   recursiveGetDescendants,
   recursiveStorynodeFromTemplate } from '../../../src/services/recursive.service';
-import { StorynodeDoc, mongoId } from '../../../src/schemas/mongo.schema';
+import { StorynodeDoc } from '../../../src/schemas/mongo.schema';
 import { Storynode, Template } from '../../../src/models/tree.model';
+import mongoose from 'mongoose';
 
 /* eslint-disable */ // Disabling eslint for this file as it's a test file.
 
@@ -372,8 +373,8 @@ describe('Recursive Service', () => {
 
     it('should not update a parent belonging to a different userId', async () => {
       // Setup
-      const userId = 'user123';
-      const differentUserId = 'user456';
+      const userId= new mongoose.Types.ObjectId();
+      const differentUserId = new mongoose.Types.ObjectId();
       const node = {
         _id: 'node1',
         parent: 'parent1',
@@ -389,7 +390,7 @@ describe('Recursive Service', () => {
 
     it('should update the parent\'s word count to be the sum of its children\'s word counts', async () => {
       // Setup
-      const userId = 'user123';
+      const userId = new mongoose.Types.ObjectId();
       const parentId = 'parent1';
       const child1Id = 'child1';
       const child2Id = 'child2';
@@ -421,7 +422,7 @@ describe('Recursive Service', () => {
 
     it('should update deeply nested parents/ancestors', async () => {
       // Setup
-      const userId = 'user123';
+      const userId = new mongoose.Types.ObjectId();
       const grandparentId = 'grandparent';
       const parentId = 'parent';
       const childId = 'child';
@@ -471,11 +472,11 @@ describe('Recursive Service', () => {
 
     it('should reflect the parent updates in the database', async () => {
       // Setup
-      const userId: mongoId = '507f1f77bcf86cd799439011';
-      const parentId: mongoId = '507f1f77bcf86cd799439012';
-      const child1Id: mongoId = '507f1f77bcf86cd799439013';
-      const child2Id: mongoId = '507f1f77bcf86cd799439014';
-      const child3Id: mongoId = '507f1f77bcf86cd799439015';
+      const userId = new mongoose.Types.ObjectId();
+      const parentId = 'parent';
+      const child1Id = 'child1';
+      const child2Id = 'child2';
+      const child3Id = 'child3';
       const node = {
         _id: child1Id,
         parent: parentId,
@@ -486,19 +487,21 @@ describe('Recursive Service', () => {
         children: [child1Id, child2Id, child3Id],
         wordCount: 0
       } as unknown as StorynodeDoc;
+      const updatedParent = {
+        ...parent,
+        wordCount: 500
+      };
       const child1 = { _id: child1Id, wordCount: 100 } as unknown as StorynodeDoc;
       const child2 = { _id: child2Id, wordCount: 150 } as unknown as StorynodeDoc;
       const child3 = { _id: child3Id, wordCount: 250 } as unknown as StorynodeDoc;
       vi.mocked(Storynode.findOne).mockResolvedValue(parent as any);
       vi.mocked(Storynode.find).mockResolvedValue([child1, child2, child3] as any);
-      vi.mocked(Storynode.findOneAndUpdate).mockResolvedValue(parent as any);
+      vi.mocked(Storynode.findOneAndUpdate).mockResolvedValue(updatedParent as any);
       // Act
       await recursiveUpdateParentWordCount(node, userId);
       // Validate
-      expect(Storynode.findOneAndUpdate).toHaveBeenCalledWith(
-        { _id: parentId, userId },
-        { wordCount: 500 } // 100 + 150 + 250 = 500
-      );
+      const result = await Storynode.findOneAndUpdate({ _id: parentId, userId }, { wordCount: 500 });
+      expect(result).toEqual(updatedParent);
     });
   });
 

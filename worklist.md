@@ -17,4 +17,4 @@
 | 013 | User Testing | Invite Mom/Gerrit for application testing | ⬜ |
 | 014 | CSS Improvements | Organize/Improve CSS; fixed style subset; modular elements | ⬜ |
 | 015 | Validator Replacement | Replace Validator dependency in backend API | ⬜ |
-| 016 | Tree Depth | Add fields for tree depth to all models (replace repeat logic in tree.service.ts, recursive.service.ts) | ⬜ |
+| 016 | Tree Depth | Add fields for tree depth (replace repeat logic in tree.service.ts, recursive.service.ts) | ⬜ |
