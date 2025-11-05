@@ -59,9 +59,7 @@ describe('Controller Schemas', () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.data).toBeInstanceOf(Types.ObjectId);
-        expect(result).not.toBeNull();
-        expect(result.data).not.toBeNull();
-        expect(result.data.toString()).toBe(validIdString);
+        expect(result.data!.toString()).toBe(validIdString);
       }
     });
 

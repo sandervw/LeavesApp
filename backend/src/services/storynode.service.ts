@@ -3,7 +3,7 @@ import { Storynode } from '../models/tree.model';
 import { StorynodeDoc, mongoId } from '../schemas/mongo.schema';
 import appAssert from '../utils/appAssert';
 import { INTERNAL_SERVER_ERROR, NOT_FOUND } from '../constants/http';
-import { recursiveStorynodeFromTemplate, recursiveUpdateWordLimits, recursiveUpdateParentWordCount, recursiveGetTreeDepth } from './recursive.service';
+import { recursiveStorynodeFromTemplate, recursiveUpdateWordLimits, recursiveUpdateParentWordCount } from './recursive.service';
 import { MAX_TREE_DEPTH } from '../constants/env';
 
 class storynodeService extends TreeService<StorynodeDoc> {
@@ -18,7 +18,7 @@ class storynodeService extends TreeService<StorynodeDoc> {
 
   /**
    * Upserts a storynode (creates or updates it).
-   * Note: this also updates the word count (of storynode) and word limits of childrne (roots only).
+   * Note: this also updates the word count (of storynode) and word limits of children (roots only).
    * @param userId - the userId to filter by
    * @param data - the data to upsert
    */
@@ -52,11 +52,13 @@ class storynodeService extends TreeService<StorynodeDoc> {
       if (data.text && data.text.length > 0) {
         data.wordCount = data.text.trim().split(/\s+/).filter(word => word).length;
       }
-
-      // Before creating, check that the tree has not reached max depth (if applicable)
-      const depth = await recursiveGetTreeDepth<StorynodeDoc>(data, Storynode, userId);
+      // Before creating, set the depth, and ensure max depth is not exceeded
+      const parent = await Storynode.findOne({ _id: data.parent, userId });
+      const depth = parent
+        ? parent.depth + 1
+        : 0;
       appAssert(depth < MAX_TREE_DEPTH, INTERNAL_SERVER_ERROR, `Maximum tree depth exceeded (limit: ${MAX_TREE_DEPTH})`);
-      const newStorynode = await Storynode.create(data);
+      const newStorynode = await Storynode.create({ ...data, depth });
       if (newStorynode.parent) {
         await recursiveUpdateParentWordCount(newStorynode, userId);
       }
@@ -88,21 +90,6 @@ class storynodeService extends TreeService<StorynodeDoc> {
     // Or, send a new storynode
     else return await recursiveStorynodeFromTemplate(userId, templateId);
   }
-
-  // // Creates a storynode from a file
-  // async addFromFile(filename, user_id){
-  //     const json = await readTxtAsJSON(filename);
-  //     let storynode = await Storynode.create({
-  //         user_id,
-  //         name: filename,
-  //         type: 'root',
-  //         text: `imported from ${filename}`,
-  //         children: []
-  //     });
-  //     let children = await recursiveStorynodeFromJSON(json, storynode._id);
-  //     await Storynode.findOneAndUpdate({_id: storynode._id, user_id}, {children});
-  //     return storynode;
-  // }
 
   // // Save a storynode to a file
   // async saveToFile(id, user_id){
