@@ -164,7 +164,7 @@ describe('Storynode Service', () => {
         } catch (error) {
           expect(error).toBeInstanceOf(AppError);
           expect((error as AppError).statusCode).toBe(NOT_FOUND);
-          expect((error as AppError).message).toBe('Storynode not found');
+          expect((error as AppError).message).toBe('Element not found');
         }
       });
 
