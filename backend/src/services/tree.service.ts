@@ -3,7 +3,7 @@ import { TreeDoc, mongoId } from '../schemas/mongo.schema';
 import appAssert from '../utils/appAssert';
 import { INTERNAL_SERVER_ERROR, NOT_FOUND } from '../constants/http';
 import { MAX_TREE_DEPTH } from '../constants/env';
-import { recursiveGetDescendants, recursiveGetTreeDepth } from './recursive.service';
+import { recursiveGetDescendants } from './recursive.service';
 
 type QueryParam = {
   [key: string]: undefined | string | QueryParam | (string | QueryParam)[];
@@ -73,10 +73,13 @@ export default class TreeService<T extends TreeDoc> {
       appAssert(result, NOT_FOUND, 'Element not found');
       return result as T;
     }
-    // Before creating, check that the tree has not reached max depth (if applicable)
-    const depth = await recursiveGetTreeDepth<T>(data, this.model, userId);
+    // Before creating, set the depth, and ensure max depth is not exceeded
+    const parent = await this.model.findOne({ _id: data.parent, userId });
+    const depth = parent
+      ? parent.depth + 1
+      : 0;
     appAssert(depth < MAX_TREE_DEPTH, INTERNAL_SERVER_ERROR, `Maximum tree depth exceeded (limit: ${MAX_TREE_DEPTH})`);
-    return await this.model.create(data);
+    return await this.model.create({ ...data, depth });
   }
 
   /**

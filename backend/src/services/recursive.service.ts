@@ -67,9 +67,16 @@ export const recursiveStorynodeFromTemplate = async (
   // Create a new storynode with the template's data, making sure to give it a parent if supplied
   const templateData = await Template.findOne({ _id: templateId, userId });
   appAssert(templateData, NOT_FOUND, 'Template not found');
-  const storyData = (parentId
-    ? { userId, parent: parentId, name: templateData.name, type: templateData.type, text: templateData.text, wordWeight: templateData.wordWeight }
-    : { userId, name: templateData.name, type: templateData.type, text: templateData.text, wordWeight: templateData.wordWeight });
+  let storyData;
+  if (parentId) {
+    const parent = await Storynode.findOne({ _id: parentId, userId });
+    appAssert(parent, NOT_FOUND, 'Parent not found');
+    const depth = parent.depth + 1;
+    appAssert(depth < MAX_TREE_DEPTH, INTERNAL_SERVER_ERROR, `Maximum tree depth exceeded (limit: ${MAX_TREE_DEPTH})`);
+    storyData = { userId, parent: parentId, name: templateData.name, type: templateData.type, text: templateData.text, wordWeight: templateData.wordWeight, depth };
+  } else {
+    storyData = { userId, name: templateData.name, type: templateData.type, text: templateData.text, wordWeight: templateData.wordWeight, depth: 0 };
+  }
   let storynode: StorynodeDoc = await Storynode.create(storyData);
   // Then recursively add any children of the template
   if (templateData.children && templateData.children.length > 0) {
@@ -88,31 +95,6 @@ export const recursiveStorynodeFromTemplate = async (
   }
   // base case: return the new storynode
   return storynode;
-};
-
-/**
- * Given a tree node, recursively calculate its depth in the tree by traversing up to the root.
- * @param tree - the tree node to calculate depth for
- * @param model - the mongoose model to use for queries
- * @param userId - the userId to filter by
- * @param currentDepth - the current depth (defaults to 0)
- * @returns - the depth of the tree node (0 for root, 1 for children of root, etc.)
- * @throws - Error if depth exceeds 25 (potential circular reference or excessive nesting)
- */
-export const recursiveGetTreeDepth = async <T extends TreeDoc>(
-  tree: T,
-  model: mongoose.Model<T>,
-  userId: mongoId,
-  currentDepth: number = 0
-): Promise<number> => {
-  appAssert(currentDepth < MAX_TREE_DEPTH, INTERNAL_SERVER_ERROR, `Maximum tree depth exceeded (limit: ${MAX_TREE_DEPTH})`);
-  if (tree.parent) {
-    const parent = await model.findOne({ _id: tree.parent, userId });
-    if (parent) {
-      return await recursiveGetTreeDepth<T>(parent, model, userId, currentDepth + 1);
-    }
-  }
-  return currentDepth;
 };
 
 // // Function to recursively get only the base nodes (leaves) of a story, given a start Id (inclusive)
