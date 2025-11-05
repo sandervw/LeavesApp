@@ -91,6 +91,17 @@ class storynodeService extends TreeService<StorynodeDoc> {
     else return await recursiveStorynodeFromTemplate(userId, templateId);
   }
 
+  // /**
+  //  * Updates the depths of all root storynodes and their descendants.
+  //  * @param userId - the userId to filter by
+  //  */
+  // async updateDepth(userId: mongoId) {
+  //   const storynodes = await Storynode.find({ kind: 'storynode', type: 'root', userId });
+  //   appAssert(storynodes, NOT_FOUND, 'Storynodes not found');
+  //   await Promise.all(storynodes.map(storynode => recursiveUpdateDepth(storynode._id, storynode.depth)));
+  //   return { success: true };
+  // }
+
   // // Save a storynode to a file
   // async saveToFile(id, user_id){
   //     if(!id || !mongoose.Types.ObjectId.isValid(id)) throw new Error('Not a valid ID');

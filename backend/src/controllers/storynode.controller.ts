@@ -39,6 +39,11 @@ export const postFromTemplateController = catchErrors(async (req, res) => {
   return res.status(CREATED).json(newTree);
 });
 
+// export const patchDepthController = catchErrors(async (req, res) => {
+//   const result = await storynodeService.updateDepth(req.userId);
+//   return res.status(OK).json(result);
+// });
+
 // export const postToFileController = catchErrors( async (req, res) => {
 //     // TODO
 // });
