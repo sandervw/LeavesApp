@@ -9,8 +9,7 @@ import { NOT_FOUND, INTERNAL_SERVER_ERROR } from '../../../src/constants/http';
 
 // Mock recursive service
 vi.mock('../../../src/services/recursive.service', () => ({
-  recursiveGetDescendants: vi.fn(),
-  recursiveGetTreeDepth: vi.fn()
+  recursiveGetDescendants: vi.fn()
 }));
 
 // Mock environment constants
@@ -276,22 +275,21 @@ describe('Tree Service', () => {
   describe('upsert', () => {
     it('should create a new element when _id is not provided', async () => {
       // Setup
-      const { recursiveGetTreeDepth } = await import('../../../src/services/recursive.service');
       const data = {
         name: 'New Element',
         type: 'leaf',
-        text: 'Some text'
+        text: 'Some text',
+        depth: 0
       } as TreeDoc;
       const createdElement = {
-        ...data
+        ...data,
+        depth: 0
       };
-      vi.mocked(recursiveGetTreeDepth).mockResolvedValue(5);
       mockModel.create.mockResolvedValue(createdElement);
       // Act
       const result = await treeService.upsert(userId, data);
       // Validate
-      expect(recursiveGetTreeDepth).toHaveBeenCalledWith(data, mockModel, userId);
-      expect(mockModel.create).toHaveBeenCalledWith({ ...data, userId });
+      expect(mockModel.create).toHaveBeenCalledWith({ ...data, userId, depth: 0 });
       expect(result).toEqual(createdElement);
     });
 
@@ -319,19 +317,18 @@ describe('Tree Service', () => {
 
     it('should ensure userId is set on create', async () => {
       // Setup
-      const { recursiveGetTreeDepth } = await import('../../../src/services/recursive.service');
       const data = {
         name: 'New Element',
-        type: 'leaf'
+        type: 'leaf',
+        depth: 0
       } as TreeDoc;
-      const createdElement = { ...data };
-      vi.mocked(recursiveGetTreeDepth).mockResolvedValue(5);
+      const createdElement = { ...data, depth: 0 };
       mockModel.create.mockResolvedValue(createdElement);
       // Act
       await treeService.upsert(userId, data);
       // Validate
       expect(data.userId).toEqual(userId);
-      expect(mockModel.create).toHaveBeenCalledWith({ ...data, userId });
+      expect(mockModel.create).toHaveBeenCalledWith({ ...data, userId, depth: 0 });
     });
 
     it('should filter null values from children array before update', async () => {
@@ -358,29 +355,42 @@ describe('Tree Service', () => {
 
     it('should check tree depth before creating new element', async () => {
       // Setup
-      const { recursiveGetTreeDepth } = await import('../../../src/services/recursive.service');
+      const parentId = new mongoose.Types.ObjectId();
+      const parent = {
+        _id: parentId,
+        userId,
+        name: 'Parent',
+        depth: 9 // Parent at depth 9, child will be at depth 10
+      };
       const data = {
         name: 'New Element',
         type: 'leaf',
-        parent: new mongoose.Types.ObjectId()
+        parent: parentId
       } as TreeDoc;
-      const createdElement = { ...data };
-      vi.mocked(recursiveGetTreeDepth).mockResolvedValue(10);
+      const createdElement = { ...data, depth: 10 };
+      mockModel.findOne.mockResolvedValue(parent);
       mockModel.create.mockResolvedValue(createdElement);
       // Act
       await treeService.upsert(userId, data);
       // Validate
-      expect(recursiveGetTreeDepth).toHaveBeenCalledWith(data, mockModel, userId);
+      expect(mockModel.create).toHaveBeenCalledWith(expect.objectContaining({ depth: 10 }));
     });
 
     it('should throw INTERNAL_SERVER_ERROR if tree depth exceeds MAX_TREE_DEPTH', async () => {
       // Setup
-      const { recursiveGetTreeDepth } = await import('../../../src/services/recursive.service');
+      const parentId = new mongoose.Types.ObjectId();
+      const parent = {
+        _id: parentId,
+        userId,
+        name: 'Deep Parent',
+        depth: 25 // Parent at max depth, child would be at 26
+      };
       const data = {
         name: 'New Element',
-        type: 'leaf'
+        type: 'leaf',
+        parent: parentId
       } as TreeDoc;
-      vi.mocked(recursiveGetTreeDepth).mockResolvedValue(26);
+      mockModel.findOne.mockResolvedValue(parent);
       // Act & Validate
       try {
         await treeService.upsert(userId, data);
@@ -414,13 +424,12 @@ describe('Tree Service', () => {
 
     it('should return the created/updated element', async () => {
       // Setup
-      const { recursiveGetTreeDepth } = await import('../../../src/services/recursive.service');
       const data = {
         name: 'New Element',
-        type: 'leaf'
+        type: 'leaf',
+        depth: 0
       } as TreeDoc;
-      const createdElement = { ...data };
-      vi.mocked(recursiveGetTreeDepth).mockResolvedValue(5);
+      const createdElement = { ...data, depth: 0 };
       mockModel.create.mockResolvedValue(createdElement);
       // Act
       const result = await treeService.upsert(userId, data);
