@@ -2,15 +2,13 @@ import TreeService from './tree.service';
 import { Storynode } from '../models/tree.model';
 import { StorynodeDoc, mongoId } from '../schemas/mongo.schema';
 import appAssert from '../utils/appAssert';
-import { INTERNAL_SERVER_ERROR, NOT_FOUND } from '../constants/http';
+import { NOT_FOUND } from '../constants/http';
 import { recursiveStorynodeFromTemplate, recursiveUpdateWordLimits, recursiveUpdateParentWordCount } from './recursive.service';
-import { MAX_TREE_DEPTH } from '../constants/env';
 
 class storynodeService extends TreeService<StorynodeDoc> {
 
   constructor() {
     super(Storynode);
-    this.upsert = this.upsert.bind(this);
     this.addFromTemplate = this.addFromTemplate.bind(this);
     // this.addFromFile = this.addFromFile.bind(this);
     // this.saveToFile = this.saveToFile.bind(this);
@@ -33,9 +31,10 @@ class storynodeService extends TreeService<StorynodeDoc> {
         data.wordCount = children.reduce((acc: number, child: StorynodeDoc) => acc + child.wordCount, 0);
       }
       // Else, update child wordCount
-      else if (data.text && data.text.length > 0) data.wordCount = data.text.trim().split(/\s+/).filter(word => word).length;
-      const storynode = await Storynode.findOneAndUpdate({ _id: data._id, userId }, { $set: data }, { new: true });
-      appAssert(storynode, NOT_FOUND, 'Storynode not found');
+      else if (data.text && data.text.length > 0) {
+        data.wordCount = data.text.trim().split(/\s+/).filter(word => word).length;
+      }
+      const storynode = await super.upsert(userId, data);
       // If the storynode has a parent, update the parent word count
       if (storynode.parent) {
         await recursiveUpdateParentWordCount(storynode, userId);
@@ -48,17 +47,10 @@ class storynodeService extends TreeService<StorynodeDoc> {
     }
     // CREATE STORYNODE
     else {
-      data.userId = userId; // Ensure user_id is set in the data
       if (data.text && data.text.length > 0) {
         data.wordCount = data.text.trim().split(/\s+/).filter(word => word).length;
       }
-      // Before creating, set the depth, and ensure max depth is not exceeded
-      const parent = await Storynode.findOne({ _id: data.parent, userId });
-      const depth = parent
-        ? parent.depth + 1
-        : 0;
-      appAssert(depth < MAX_TREE_DEPTH, INTERNAL_SERVER_ERROR, `Maximum tree depth exceeded (limit: ${MAX_TREE_DEPTH})`);
-      const newStorynode = await Storynode.create({ ...data, depth });
+      const newStorynode = await super.upsert(userId, data);
       if (newStorynode.parent) {
         await recursiveUpdateParentWordCount(newStorynode, userId);
       }

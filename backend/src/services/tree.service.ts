@@ -8,7 +8,6 @@ import { recursiveGetDescendants } from './recursive.service';
 type QueryParam = {
   [key: string]: undefined | string | QueryParam | (string | QueryParam)[];
 };
-type UserParam = mongoose.Types.ObjectId;
 
 export default class TreeService<T extends TreeDoc> {
 
@@ -28,7 +27,7 @@ export default class TreeService<T extends TreeDoc> {
    * @param userId - the userId to filter by
    * @param query - an optional query to filter
    */
-  async find(userId: UserParam, query?: QueryParam) {
+  async find(userId: mongoId, query?: QueryParam) {
     const result = await this.model.find({ userId, ...query }).sort({ createdAt: -1 });
     appAssert(result, NOT_FOUND, 'No elements found');
     return result;
@@ -39,7 +38,7 @@ export default class TreeService<T extends TreeDoc> {
    * @param userId - the userId to filter by
    * @param id - the id of the element to find
    */
-  async findById(userId: UserParam, id: mongoId) {
+  async findById(userId: mongoId, id: mongoId) {
     const result = await this.model.findOne({ _id: id, userId });
     appAssert(result, NOT_FOUND, 'No such object exists');
     return result;
@@ -50,7 +49,7 @@ export default class TreeService<T extends TreeDoc> {
    * @param userId - the userId to filter by
    * @param id - the id of the parent element
    */
-  async findChildren(userId: UserParam, id: mongoId) {
+  async findChildren(userId: mongoId, id: mongoId) {
     const parent = await this.model.findOne({ _id: id, userId });
     appAssert(parent, NOT_FOUND, 'Parent element not found');
     const children = await this.model.find({ _id: { $in: parent.children }, userId });
@@ -63,7 +62,7 @@ export default class TreeService<T extends TreeDoc> {
    * @param userId - the user to associate the element with
    * @param data - the element to create or update
    */
-  async upsert(userId: UserParam, data: T) {
+  async upsert(userId: mongoId, data: T) {
     data.userId = userId; // Ensure user_id is set in the data
     if (data._id) {
       if (data.children) {
@@ -87,7 +86,7 @@ export default class TreeService<T extends TreeDoc> {
    * @param userId - the userId to filter by
    * @param id - the id of the element to delete
    */
-  async deleteById(userId: UserParam, id: mongoId) {
+  async deleteById(userId: mongoId, id: mongoId) {
     const toDelete = await this.model.findOne({ _id: id, userId });
     appAssert(toDelete, NOT_FOUND, 'Element not found');
     // First, delete reference to this template from parent template
