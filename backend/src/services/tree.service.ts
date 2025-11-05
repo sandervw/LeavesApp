@@ -64,21 +64,40 @@ export default class TreeService<T extends TreeDoc> {
    */
   async upsert(userId: mongoId, data: T) {
     data.userId = userId; // Ensure user_id is set in the data
+
+    // Clean children array (common operation)
+    if (data.children) {
+      data.children = data.children.filter(Boolean); // Remove null/undefined
+    }
+
     if (data._id) {
-      if (data.children) {
-        data.children = data.children.filter(Boolean); // Remove null/undefined
-      }
       const result = await this.model.findOneAndUpdate({ _id: data._id, userId }, { $set: data }, { new: true });
       appAssert(result, NOT_FOUND, 'Element not found');
-      return result as T;
+      return result;
     }
+
     // Before creating, set the depth, and ensure max depth is not exceeded
-    const parent = await this.model.findOne({ _id: data.parent, userId });
-    const depth = parent
-      ? parent.depth + 1
-      : 0;
-    appAssert(depth < MAX_TREE_DEPTH, INTERNAL_SERVER_ERROR, `Maximum tree depth exceeded (limit: ${MAX_TREE_DEPTH})`);
+    const depth = await this.calculateDepth(userId, data.parent || undefined);
     return await this.model.create({ ...data, depth });
+  }
+
+  /**
+   * Calculate the depth for a new node based on its parent
+   * @param userId - the userId to filter by
+   * @param parentId - the id of the parent node (if any)
+   * @returns the depth value for the new node
+   */
+  private async calculateDepth(userId: mongoId, parentId?: mongoId): Promise<number> {
+    if (!parentId) return 0;
+
+    const parent = await this.model.findOne({ _id: parentId, userId });
+    const depth = parent ? parent.depth + 1 : 0;
+    appAssert(
+      depth < MAX_TREE_DEPTH,
+      INTERNAL_SERVER_ERROR,
+      `Maximum tree depth exceeded (limit: ${MAX_TREE_DEPTH})`
+    );
+    return depth;
   }
 
   /**

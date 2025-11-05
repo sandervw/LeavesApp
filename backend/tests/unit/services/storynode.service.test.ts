@@ -25,8 +25,14 @@ vi.mock('../../../src/models/tree.model', () => ({
 // Mock recursive service
 vi.mock('../../../src/services/recursive.service', () => ({
   recursiveUpdateWordLimits: vi.fn(),
-  recursiveUpdateParentWordCount: vi.fn(),
   recursiveStorynodeFromTemplate: vi.fn()
+}));
+
+// Mock word count utilities
+vi.mock('../../../src/utils/wordCount', () => ({
+  calculateWordCount: vi.fn((text: string) => text.trim().split(/\s+/).filter(word => word).length),
+  calculateChildrenWordCount: vi.fn((children: any[]) => children.reduce((acc, child) => acc + child.wordCount, 0)),
+  updateParentWordCounts: vi.fn()
 }));
 
 // Mock environment constants
@@ -47,7 +53,6 @@ describe('Storynode Service', () => {
     describe('Update existing storynode', () => {
       it('should update storynode with valid _id', async () => {
         // Setup
-        const { recursiveUpdateParentWordCount, recursiveUpdateWordLimits } = await import('../../../src/services/recursive.service');
         const storynodeId = new mongoose.Types.ObjectId();
         const data = {
           _id: storynodeId,
@@ -170,7 +175,7 @@ describe('Storynode Service', () => {
 
       it('should update parent wordCount if storynode has parent', async () => {
         // Setup
-        const { recursiveUpdateParentWordCount } = await import('../../../src/services/recursive.service');
+        const { updateParentWordCounts } = await import('../../../src/utils/wordCount');
         const storynodeId = new mongoose.Types.ObjectId();
         const parentId = new mongoose.Types.ObjectId();
         const data = {
@@ -183,7 +188,7 @@ describe('Storynode Service', () => {
         // Act
         await storynodeService.upsert(userId, data);
         // Validate
-        expect(recursiveUpdateParentWordCount).toHaveBeenCalledWith(updatedStorynode, userId);
+        expect(updateParentWordCounts).toHaveBeenCalledWith(updatedStorynode, userId);
       });
 
       it('should update children word limits if storynode is root with wordLimit', async () => {
@@ -350,7 +355,7 @@ describe('Storynode Service', () => {
 
       it('should update parent wordCount if new storynode has parent', async () => {
         // Setup
-        const { recursiveUpdateParentWordCount } = await import('../../../src/services/recursive.service');
+        const { updateParentWordCounts } = await import('../../../src/utils/wordCount');
         const parentId = new mongoose.Types.ObjectId();
         const parent = {
           _id: parentId,
@@ -370,12 +375,12 @@ describe('Storynode Service', () => {
         // Act
         await storynodeService.upsert(userId, data);
         // Validate
-        expect(recursiveUpdateParentWordCount).toHaveBeenCalledWith(createdStorynode, userId);
+        expect(updateParentWordCounts).toHaveBeenCalledWith(createdStorynode, userId);
       });
 
       it('should handle creation without parent', async () => {
         // Setup
-        const { recursiveUpdateParentWordCount } = await import('../../../src/services/recursive.service');
+        const { updateParentWordCounts } = await import('../../../src/utils/wordCount');
         const data = {
           name: 'Root Node',
           type: 'root'
@@ -386,7 +391,7 @@ describe('Storynode Service', () => {
         // Act
         await storynodeService.upsert(userId, data);
         // Validate
-        expect(recursiveUpdateParentWordCount).not.toHaveBeenCalled();
+        expect(updateParentWordCounts).not.toHaveBeenCalled();
         expect(Storynode.create).toHaveBeenCalled();
       });
 
