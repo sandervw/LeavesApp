@@ -113,6 +113,24 @@ export const recursiveStorynodeFromTemplate = async (
 //     return blobArr;
 // }
 
+// /**
+//  * Given a storynode id, recursively update the depth of that storynode and all its descendants.
+//  * @param storynodeId - the id of the storynode to update
+//  * @param depth - the depth value to set
+//  */
+// export const recursiveUpdateDepth = async (storynodeId: mongoId, depth: number): Promise<void> => {
+//   const storynode = await Storynode.findOne({ _id: storynodeId });
+//   if (!storynode) return;
+
+//   await Storynode.findOneAndUpdate({ _id: storynodeId }, { depth });
+
+//   if (storynode.children && storynode.children.length > 0) {
+//     for (const childId of storynode.children) {
+//       await recursiveUpdateDepth(childId, depth + 1);
+//     }
+//   }
+// };
+
 // // Function to recursively convert a JSON object to a storynode
 // const recursiveStorynodeFromJSON = async (json, parentid) => {
 //     // TODO - implement this

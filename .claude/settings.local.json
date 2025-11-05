@@ -16,7 +16,12 @@
       "Bash(powershell \"Get-Content ''C:\\Users\\Administrator\\Documents\\PersonalProjects\\LeavesApp\\backend\\tests\\unit\\services\\recursive.service.test.ts''\")",
       "Bash(dir \"C:\\Users\\Administrator\\Documents\\PersonalProjects\\LeavesApp\\backend\\src\\schemas\" /B)",
       "Bash(mkdir:*)",
-      "Bash(npm run test:*)"
+      "Bash(npm run test:*)",
+      "Bash(powershell \"Get-NetTCPConnection -LocalPort 5173 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess\")",
+      "Bash(powershell \"Get-NetTCPConnection -LocalPort 5174 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess\")",
+      "Bash(taskkill:*)",
+      "Bash(powershell \"Stop-Process -Id 21260 -Force\")",
+      "Bash(powershell \"Stop-Process -Id 22244 -Force\")"
     ],
     "deny": [],
     "ask": []
