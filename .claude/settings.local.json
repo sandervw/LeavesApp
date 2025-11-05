@@ -15,7 +15,8 @@
       "Bash(cat:*)",
       "Bash(powershell \"Get-Content ''C:\\Users\\Administrator\\Documents\\PersonalProjects\\LeavesApp\\backend\\tests\\unit\\services\\recursive.service.test.ts''\")",
       "Bash(dir \"C:\\Users\\Administrator\\Documents\\PersonalProjects\\LeavesApp\\backend\\src\\schemas\" /B)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(npm run test:*)"
     ],
     "deny": [],
     "ask": []

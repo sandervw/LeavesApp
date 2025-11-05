@@ -26,8 +26,7 @@ vi.mock('../../../src/models/tree.model', () => ({
 vi.mock('../../../src/services/recursive.service', () => ({
   recursiveUpdateWordLimits: vi.fn(),
   recursiveUpdateParentWordCount: vi.fn(),
-  recursiveStorynodeFromTemplate: vi.fn(),
-  recursiveGetTreeDepth: vi.fn()
+  recursiveStorynodeFromTemplate: vi.fn()
 }));
 
 // Mock environment constants
@@ -274,83 +273,69 @@ describe('Storynode Service', () => {
     describe('Create new storynode', () => {
       it('should create new storynode when _id is not provided', async () => {
         // Setup
-        const { recursiveGetTreeDepth } = await import('../../../src/services/recursive.service');
         const data = {
           name: 'New Storynode',
           type: 'leaf',
-          text: 'Some text'
+          text: 'Some text',
+          depth: 0
         } as StorynodeDoc;
-        const createdStorynode = { ...data, _id: new mongoose.Types.ObjectId(), userId, wordCount: 2 };
-        vi.mocked(recursiveGetTreeDepth).mockResolvedValue(5);
+        const createdStorynode = { ...data, _id: new mongoose.Types.ObjectId(), userId, wordCount: 2, depth: 0 };
         vi.mocked(Storynode.create).mockResolvedValue(createdStorynode as any);
         // Act
         const result = await storynodeService.upsert(userId, data);
         // Validate
-        expect(Storynode.create).toHaveBeenCalledWith({ ...data, userId, wordCount: 2 });
+        expect(Storynode.create).toHaveBeenCalledWith({ ...data, userId, wordCount: 2, depth: 0 });
         expect(result).toEqual(createdStorynode);
       });
 
       it('should calculate wordCount from text on create', async () => {
         // Setup
-        const { recursiveGetTreeDepth } = await import('../../../src/services/recursive.service');
         const data = {
           name: 'New Storynode',
           type: 'leaf',
-          text: 'This has five total words'
+          text: 'This has five total words',
+          depth: 0
         } as StorynodeDoc;
-        const createdStorynode = { ...data, userId };
-        vi.mocked(recursiveGetTreeDepth).mockResolvedValue(5);
+        const createdStorynode = { ...data, userId, wordCount: 5, depth: 0 };
         vi.mocked(Storynode.create).mockResolvedValue(createdStorynode as any);
         // Act
         await storynodeService.upsert(userId, data);
         // Validate
         expect(data.wordCount).toBe(5);
-        expect(Storynode.create).toHaveBeenCalledWith({ ...data, userId, wordCount: 5 });
+        expect(Storynode.create).toHaveBeenCalledWith({ ...data, userId, wordCount: 5, depth: 0 });
       });
 
       it('should ensure userId is set', async () => {
         // Setup
-        const { recursiveGetTreeDepth } = await import('../../../src/services/recursive.service');
         const data = {
           name: 'New Storynode',
-          type: 'leaf'
+          type: 'leaf',
+          depth: 0
         } as StorynodeDoc;
-        const createdStorynode = { ...data, userId };
-        vi.mocked(recursiveGetTreeDepth).mockResolvedValue(5);
+        const createdStorynode = { ...data, userId, depth: 0 };
         vi.mocked(Storynode.create).mockResolvedValue(createdStorynode as any);
         // Act
         await storynodeService.upsert(userId, data);
         // Validate
         expect(data.userId).toEqual(userId);
-        expect(Storynode.create).toHaveBeenCalledWith({ ...data, userId });
+        expect(Storynode.create).toHaveBeenCalledWith({ ...data, userId, depth: 0 });
       });
 
-      it('should check tree depth before creating', async () => {
+      it('should throw INTERNAL_SERVER_ERROR if depth exceeds MAX_TREE_DEPTH', async () => {
         // Setup
-        const { recursiveGetTreeDepth } = await import('../../../src/services/recursive.service');
         const parentId = new mongoose.Types.ObjectId();
+        const parent = {
+          _id: parentId,
+          userId,
+          name: 'Deep Parent',
+          depth: 25 // Parent at max depth, child would be at 26
+        };
         const data = {
           name: 'New Storynode',
           type: 'leaf',
           parent: parentId
         } as StorynodeDoc;
-        const createdStorynode = { ...data, userId };
-        vi.mocked(recursiveGetTreeDepth).mockResolvedValue(10);
-        vi.mocked(Storynode.create).mockResolvedValue(createdStorynode as any);
-        // Act
-        await storynodeService.upsert(userId, data);
-        // Validate
-        expect(recursiveGetTreeDepth).toHaveBeenCalledWith(data, Storynode, userId);
-      });
-
-      it('should throw INTERNAL_SERVER_ERROR if depth exceeds MAX_TREE_DEPTH', async () => {
-        // Setup
-        const { recursiveGetTreeDepth } = await import('../../../src/services/recursive.service');
-        const data = {
-          name: 'New Storynode',
-          type: 'leaf'
-        } as StorynodeDoc;
-        vi.mocked(recursiveGetTreeDepth).mockResolvedValue(26);
+        vi.mocked(Storynode.findOne).mockResolvedValue(parent as any);
         // Act & Validate
         try {
           await storynodeService.upsert(userId, data);
@@ -365,16 +350,22 @@ describe('Storynode Service', () => {
 
       it('should update parent wordCount if new storynode has parent', async () => {
         // Setup
-        const { recursiveGetTreeDepth, recursiveUpdateParentWordCount } = await import('../../../src/services/recursive.service');
+        const { recursiveUpdateParentWordCount } = await import('../../../src/services/recursive.service');
         const parentId = new mongoose.Types.ObjectId();
+        const parent = {
+          _id: parentId,
+          userId,
+          name: 'Parent',
+          depth: 0
+        };
         const data = {
           name: 'Child Node',
           type: 'leaf',
           parent: parentId,
           text: 'Some text'
         } as StorynodeDoc;
-        const createdStorynode = { ...data, userId, wordCount: 2 };
-        vi.mocked(recursiveGetTreeDepth).mockResolvedValue(5);
+        const createdStorynode = { ...data, userId, wordCount: 2, depth: 1 };
+        vi.mocked(Storynode.findOne).mockResolvedValue(parent as any);
         vi.mocked(Storynode.create).mockResolvedValue(createdStorynode as any);
         // Act
         await storynodeService.upsert(userId, data);
@@ -384,13 +375,13 @@ describe('Storynode Service', () => {
 
       it('should handle creation without parent', async () => {
         // Setup
-        const { recursiveGetTreeDepth, recursiveUpdateParentWordCount } = await import('../../../src/services/recursive.service');
+        const { recursiveUpdateParentWordCount } = await import('../../../src/services/recursive.service');
         const data = {
           name: 'Root Node',
           type: 'root'
         } as StorynodeDoc;
-        const createdStorynode = { ...data, userId };
-        vi.mocked(recursiveGetTreeDepth).mockResolvedValue(0);
+        const createdStorynode = { ...data, userId, depth: 0 };
+        vi.mocked(Storynode.findOne).mockResolvedValue(null);
         vi.mocked(Storynode.create).mockResolvedValue(createdStorynode as any);
         // Act
         await storynodeService.upsert(userId, data);
@@ -401,14 +392,13 @@ describe('Storynode Service', () => {
 
       it('should count words correctly on creation', async () => {
         // Setup
-        const { recursiveGetTreeDepth } = await import('../../../src/services/recursive.service');
         const data = {
           name: 'New Node',
           type: 'leaf',
           text: '  one   two  three  '
         } as StorynodeDoc;
-        const createdStorynode = { ...data, userId };
-        vi.mocked(recursiveGetTreeDepth).mockResolvedValue(5);
+        const createdStorynode = { ...data, userId, wordCount: 3, depth: 0 };
+        vi.mocked(Storynode.findOne).mockResolvedValue(null);
         vi.mocked(Storynode.create).mockResolvedValue(createdStorynode as any);
         // Act
         await storynodeService.upsert(userId, data);
