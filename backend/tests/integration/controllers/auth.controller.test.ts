@@ -31,7 +31,7 @@ describe('Auth Controller Tests', () => {
     vi.clearAllMocks();
   });
 
-  describe('Signup Controller', () => {
+  describe('Signup', () => {
     it('should signup a new user with valid email, username, and password', async () => {
       const response = await request(app)
         .post('/auth/signup')
@@ -75,7 +75,7 @@ describe('Auth Controller Tests', () => {
     });
   });
 
-  describe('Login Controller', () => {
+  describe('Login', () => {
     it('Should login an existing user with valid email and password', async () => {
       await UserModel.create({
         email: 'login@example.com',
@@ -121,7 +121,7 @@ describe('Auth Controller Tests', () => {
     });
   });
 
-  describe('Logout Controller', () => {
+  describe('Logout', () => {
     it('Should logout a user with a valid access token', async () => {
       const signupResponse = await request(app)
         .post('/auth/signup')
@@ -140,7 +140,7 @@ describe('Auth Controller Tests', () => {
     });
   });
 
-  describe('Refresh Controller', () => {
+  describe('Refresh', () => {
     it('Should refresh access token with valid refresh token', async () => {
       const signupResponse = await request(app)
         .post('/auth/signup')
@@ -192,7 +192,7 @@ describe('Auth Controller Tests', () => {
     });
   });
 
-  describe('Verify Email Controller', () => {
+  describe('Verify Email', () => {
     it('Should verify email with valid code', async () => {
       const user = await UserModel.create({
         email: 'verify@example.com',
@@ -234,7 +234,7 @@ describe('Auth Controller Tests', () => {
     });
   });
 
-  describe('Forgot Password Controller', () => {
+  describe('Forgot Password', () => {
     it('Should send a password reset email for a valid user', async () => {
       await UserModel.create({
         email: 'forgot@example.com',
@@ -256,7 +256,7 @@ describe('Auth Controller Tests', () => {
     });
   });
 
-  describe('Reset Password Controller', () => {
+  describe('Reset Password', () => {
     it('Should reset password for a valid user', async () => {
       const user = await UserModel.create({
         email: 'reset@example.com',
