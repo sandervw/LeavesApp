@@ -26,7 +26,7 @@ export type SignupUserParams = {
  * @returns The created user and the access and refresh tokens
  */
 export const signupUser = async (userData: SignupUserParams) => {
-  // Verify existing user doens't exist
+  // Verify existing user doesn't exist
   const existingUser = await UserModel.exists({ $or: [{ email: userData.email }, { username: userData.username }] });
   appAssert(!existingUser, CONFLICT, 'Email/Username already in use');
   // Create user
@@ -159,7 +159,7 @@ export const verifyEmail = async (verificationCode: mongoId) => {
   });
   appAssert(code, NOT_FOUND, 'Invalid or expired code'); // Code expired or invalid
   const user = await UserModel.findById(code.userId);
-  appAssert(user, UNAUTHORIZED, 'User not found');
+  appAssert(user, NOT_FOUND, 'User not found');
   user.verified = true;
   await user.save();
   await code.deleteOne(); // Delete code from database
