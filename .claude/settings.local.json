@@ -20,8 +20,7 @@
       "Bash(powershell \"Get-NetTCPConnection -LocalPort 5173 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess\")",
       "Bash(powershell \"Get-NetTCPConnection -LocalPort 5174 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess\")",
       "Bash(taskkill:*)",
-      "Bash(powershell \"Stop-Process -Id 21260 -Force\")",
-      "Bash(powershell \"Stop-Process -Id 22244 -Force\")"
+      "Bash(powershell \"Stop-Process -Id:* -Force\")"
     ],
     "deny": [],
     "ask": []
