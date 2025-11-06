@@ -16,4 +16,5 @@
 | 012 | Production Setup    | Set up Production MongoDB and deploy API/app to PRD                         | ⬜         |
 | 013 | User Testing        | Invite Mom/Gerrit for application testing                                   | ⬜         |
 | 014 | CSS Improvements    | Organize/Improve CSS; fixed style subset; modular elements                  | ⬜         |
+| 015 | New Utils Tests     | Write unit tests for jwt, wordCount, session, and verificationCode utils    | ⬜         |
 | 015 | Next App Stack      | Research options for new backend/front (fullstack? Hono? Express outdated?) | ⬜         |
