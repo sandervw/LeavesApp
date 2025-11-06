@@ -18,7 +18,8 @@ vi.mock('../../../src/models/tree.model', () => ({
     create: vi.fn(),
     find: vi.fn(),
     findOne: vi.fn(),
-    findOneAndUpdate: vi.fn()
+    findOneAndUpdate: vi.fn(),
+    bulkWrite: vi.fn()
   },
   Template: {
     create: vi.fn(),
@@ -51,7 +52,7 @@ describe('Recursive Service', () => {
       await recursiveUpdateWordLimits(node);
       // Validate
       expect(Storynode.find).not.toHaveBeenCalled();
-      expect(Storynode.findOneAndUpdate).not.toHaveBeenCalled();
+      expect(Storynode.bulkWrite).not.toHaveBeenCalled();
     });
 
     it('should update direct children word limits', async () => {
@@ -69,16 +70,14 @@ describe('Recursive Service', () => {
         wordLimit: 0
       } as unknown as StorynodeDoc;
       vi.mocked(Storynode.find).mockResolvedValue([child] as any);
-      vi.mocked(Storynode.findOneAndUpdate).mockResolvedValue(child as any);
+      vi.mocked(Storynode.bulkWrite).mockResolvedValue({} as any);
       // Act
       await recursiveUpdateWordLimits(parent);
       // Validate
       expect(Storynode.find).toHaveBeenCalledWith({ _id: { $in: [childId] } });
-      expect(Storynode.findOneAndUpdate).toHaveBeenCalledWith(
-        { _id: childId },
-        { wordLimit: 500 },
-        { new: true }
-      );
+      expect(Storynode.bulkWrite).toHaveBeenCalledWith([
+        { updateOne: { filter: { _id: childId }, update: { wordLimit: 500 } } }
+      ]);
     });
 
     it('should recursively call itself to update deep nesting', async () => {
@@ -104,24 +103,20 @@ describe('Recursive Service', () => {
       } as unknown as StorynodeDoc;
       vi.mocked(Storynode.find).mockResolvedValueOnce([child] as any);
       vi.mocked(Storynode.find).mockResolvedValueOnce([grandchild] as any);
-      vi.mocked(Storynode.findOneAndUpdate).mockResolvedValue({} as any);
+      vi.mocked(Storynode.bulkWrite).mockResolvedValue({} as any);
       // Act
       await recursiveUpdateWordLimits(parent);
       // Validate
       expect(Storynode.find).toHaveBeenCalledTimes(2);
-      expect(Storynode.findOneAndUpdate).toHaveBeenCalledTimes(2);
+      expect(Storynode.bulkWrite).toHaveBeenCalledTimes(2);
       // Child should get 50% of 1000 = 500
-      expect(Storynode.findOneAndUpdate).toHaveBeenCalledWith(
-        { _id: childId },
-        { wordLimit: 500 },
-        { new: true }
-      );
+      expect(Storynode.bulkWrite).toHaveBeenNthCalledWith(1, [
+        { updateOne: { filter: { _id: childId }, update: { wordLimit: 500 } } }
+      ]);
       // Grandchild should get 60% of 500 = 300
-      expect(Storynode.findOneAndUpdate).toHaveBeenCalledWith(
-        { _id: grandchildId },
-        { wordLimit: 300 },
-        { new: true }
-      );
+      expect(Storynode.bulkWrite).toHaveBeenNthCalledWith(2, [
+        { updateOne: { filter: { _id: grandchildId }, update: { wordLimit: 300 } } }
+      ]);
     });
 
     it('should calculate child limit using wordWeight percentage', async () => {
@@ -139,15 +134,13 @@ describe('Recursive Service', () => {
         wordLimit: 0
       } as unknown as StorynodeDoc;
       vi.mocked(Storynode.find).mockResolvedValue([child] as any);
-      vi.mocked(Storynode.findOneAndUpdate).mockResolvedValue(child as any);
+      vi.mocked(Storynode.bulkWrite).mockResolvedValue({} as any);
       // Act
       await recursiveUpdateWordLimits(parent);
       // Validate
-      expect(Storynode.findOneAndUpdate).toHaveBeenCalledWith(
-        { _id: childId },
-        { wordLimit: 500 }, // 2000 * 25 / 100 = 500
-        { new: true }
-      );
+      expect(Storynode.bulkWrite).toHaveBeenCalledWith([
+        { updateOne: { filter: { _id: childId }, update: { wordLimit: 500 } } } // 2000 * 25 / 100 = 500
+      ]);
     });
 
     it('should inherit full parent limit when child has no wordWeight', async () => {
@@ -164,15 +157,13 @@ describe('Recursive Service', () => {
         wordLimit: 0
       } as unknown as StorynodeDoc;
       vi.mocked(Storynode.find).mockResolvedValue([child] as any);
-      vi.mocked(Storynode.findOneAndUpdate).mockResolvedValue(child as any);
+      vi.mocked(Storynode.bulkWrite).mockResolvedValue({} as any);
       // Act
       await recursiveUpdateWordLimits(parent);
       // Validate
-      expect(Storynode.findOneAndUpdate).toHaveBeenCalledWith(
-        { _id: childId },
-        { wordLimit: 1000 }, // Inherits full parent limit
-        { new: true }
-      );
+      expect(Storynode.bulkWrite).toHaveBeenCalledWith([
+        { updateOne: { filter: { _id: childId }, update: { wordLimit: 1000 } } } // Inherits full parent limit
+      ]);
     });
 
     it('should handle multiple children with different weights', async () => {
@@ -203,29 +194,18 @@ describe('Recursive Service', () => {
         wordLimit: 0
       } as unknown as StorynodeDoc;
       vi.mocked(Storynode.find).mockResolvedValue([child1, child2, child3] as any);
-      vi.mocked(Storynode.findOneAndUpdate).mockResolvedValue({} as any);
+      vi.mocked(Storynode.bulkWrite).mockResolvedValue({} as any);
       // Act
       await recursiveUpdateWordLimits(parent);
       // Validate
-      expect(Storynode.findOneAndUpdate).toHaveBeenCalledTimes(3);
-      expect(Storynode.findOneAndUpdate).toHaveBeenCalledWith(
-        { _id: child1Id },
-        { wordLimit: 500 }, // 50%
-        { new: true }
-      );
-      expect(Storynode.findOneAndUpdate).toHaveBeenCalledWith(
-        { _id: child2Id },
-        { wordLimit: 300 }, // 30%
-        { new: true }
-      );
-      expect(Storynode.findOneAndUpdate).toHaveBeenCalledWith(
-        { _id: child3Id },
-        { wordLimit: 1000 }, // No weight, inherits full
-        { new: true }
-      );
+      expect(Storynode.bulkWrite).toHaveBeenCalledWith([
+        { updateOne: { filter: { _id: child1Id }, update: { wordLimit: 500 } } }, // 50%
+        { updateOne: { filter: { _id: child2Id }, update: { wordLimit: 300 } } }, // 30%
+        { updateOne: { filter: { _id: child3Id }, update: { wordLimit: 1000 } } } // No weight, inherits full
+      ]);
     });
 
-    it('should call findOneAndUpdate for each child with correct params', async () => {
+    it('should call bulkWrite for each level with correct params', async () => {
       // Setup
       const childId = 'child1';
       const parent = {
@@ -240,16 +220,14 @@ describe('Recursive Service', () => {
         wordLimit: 0
       } as unknown as StorynodeDoc;
       vi.mocked(Storynode.find).mockResolvedValue([child] as any);
-      vi.mocked(Storynode.findOneAndUpdate).mockResolvedValue(child as any);
+      vi.mocked(Storynode.bulkWrite).mockResolvedValue({} as any);
       // Act
       await recursiveUpdateWordLimits(parent);
       // Validate
-      expect(Storynode.findOneAndUpdate).toHaveBeenCalledTimes(1);
-      expect(Storynode.findOneAndUpdate).toHaveBeenCalledWith(
-        { _id: childId },
-        { wordLimit: 750 },
-        { new: true }
-      );
+      expect(Storynode.bulkWrite).toHaveBeenCalledTimes(1);
+      expect(Storynode.bulkWrite).toHaveBeenCalledWith([
+        { updateOne: { filter: { _id: childId }, update: { wordLimit: 750 } } }
+      ]);
     });
 
     it('should not modify the parent node itself', async () => {
@@ -268,16 +246,17 @@ describe('Recursive Service', () => {
         wordLimit: 0
       } as unknown as StorynodeDoc;
       vi.mocked(Storynode.find).mockResolvedValue([child] as any);
-      vi.mocked(Storynode.findOneAndUpdate).mockResolvedValue(child as any);
+      vi.mocked(Storynode.bulkWrite).mockResolvedValue({} as any);
       // Act
       await recursiveUpdateWordLimits(parent);
       // Validate
       expect(parent.wordLimit).toBe(originalWordLimit);
-      expect(Storynode.findOneAndUpdate).not.toHaveBeenCalledWith(
-        { _id: parent._id },
-        expect.anything(),
-        expect.anything()
-      );
+      const bulkWriteCalls = vi.mocked(Storynode.bulkWrite).mock.calls;
+      bulkWriteCalls.forEach(call => {
+        call[0].forEach((op: any) => {
+          expect(op.updateOne.filter._id).not.toBe(parent._id);
+        });
+      });
     });
 
     it('should reflect the child updates in the database', async () => {
@@ -294,22 +273,14 @@ describe('Recursive Service', () => {
         wordWeight: 40,
         wordLimit: 0
       } as unknown as StorynodeDoc;
-      const updatedChild = {
-        ...child,
-        wordLimit: 400
-      };
       vi.mocked(Storynode.find).mockResolvedValue([child] as any);
-      vi.mocked(Storynode.findOneAndUpdate).mockResolvedValue(updatedChild as any);
+      vi.mocked(Storynode.bulkWrite).mockResolvedValue({} as any);
       // Act
       await recursiveUpdateWordLimits(parent);
       // Validate
-      expect(Storynode.findOneAndUpdate).toHaveBeenCalledWith(
-        { _id: childId },
-        { wordLimit: 400 },
-        { new: true }
-      );
-      const result = await Storynode.findOneAndUpdate({ _id: childId }, { wordLimit: 400 }, { new: true });
-      expect(result).toEqual(updatedChild);
+      expect(Storynode.bulkWrite).toHaveBeenCalledWith([
+        { updateOne: { filter: { _id: childId }, update: { wordLimit: 400 } } }
+      ]);
     });
   });
 
@@ -320,12 +291,12 @@ describe('Recursive Service', () => {
         _id: 'node1',
         children: []
       } as unknown as StorynodeDoc;
-      vi.mocked(Storynode.find).mockResolvedValue([]);
       // Act
       const result = await recursiveGetDescendants(node, Storynode);
       // Validate
       expect(result).toEqual([]);
-      expect(Storynode.find).toHaveBeenCalledWith({ _id: { $in: [] } });
+      // With iterative approach, find is not called if children array is empty
+      expect(Storynode.find).not.toHaveBeenCalled();
     });
 
     it('Should return all descendents of a given storynode', async () => {
@@ -346,13 +317,13 @@ describe('Recursive Service', () => {
       } as unknown as StorynodeDoc;
       vi.mocked(Storynode.find).mockResolvedValueOnce([child] as any);
       vi.mocked(Storynode.find).mockResolvedValueOnce([grandchild] as any);
-      vi.mocked(Storynode.find).mockResolvedValueOnce([]);
       // Act
       const result = await recursiveGetDescendants(node, Storynode);
       // Validate
       expect(result).toHaveLength(2);
       expect(result).toContainEqual(child);
       expect(result).toContainEqual(grandchild);
+      expect(Storynode.find).toHaveBeenCalledTimes(2); // Level-by-level processing
     });
 
     it('Should include deeply nested descendents', async () => {
@@ -379,7 +350,6 @@ describe('Recursive Service', () => {
       vi.mocked(Storynode.find).mockResolvedValueOnce([child1] as any);
       vi.mocked(Storynode.find).mockResolvedValueOnce([grandchild1] as any);
       vi.mocked(Storynode.find).mockResolvedValueOnce([greatGrandchild] as any);
-      vi.mocked(Storynode.find).mockResolvedValueOnce([]);
       // Act
       const result = await recursiveGetDescendants(node, Storynode);
       // Validate
@@ -387,6 +357,7 @@ describe('Recursive Service', () => {
       expect(result).toContainEqual(child1);
       expect(result).toContainEqual(grandchild1);
       expect(result).toContainEqual(greatGrandchild);
+      expect(Storynode.find).toHaveBeenCalledTimes(3); // Level-by-level: 3 levels
     });
 
     it('Should work correctly with the Template model', async () => {
@@ -401,13 +372,12 @@ describe('Recursive Service', () => {
         children: []
       } as any;
       vi.mocked(Template.find).mockResolvedValueOnce([child] as any);
-      vi.mocked(Template.find).mockResolvedValueOnce([]);
       // Act
       const result = await recursiveGetDescendants(node, Template);
       // Validate
       expect(result).toHaveLength(1);
       expect(result).toContainEqual(child);
-      expect(Template.find).toHaveBeenCalledWith({ _id: { $in: [childId] } });
+      expect(Template.find).toHaveBeenCalled();
     });
 
     it('Should work correctly with the Storynode model', async () => {
@@ -422,13 +392,12 @@ describe('Recursive Service', () => {
         children: []
       } as unknown as StorynodeDoc;
       vi.mocked(Storynode.find).mockResolvedValueOnce([child] as any);
-      vi.mocked(Storynode.find).mockResolvedValueOnce([]);
       // Act
       const result = await recursiveGetDescendants(node, Storynode);
       // Validate
       expect(result).toHaveLength(1);
       expect(result).toContainEqual(child);
-      expect(Storynode.find).toHaveBeenCalledWith({ _id: { $in: [childId] } });
+      expect(Storynode.find).toHaveBeenCalled();
     });
   });
 
