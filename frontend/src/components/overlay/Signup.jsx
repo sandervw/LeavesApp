@@ -16,9 +16,9 @@ const Signup = ({ hideModal }) => {
         e.preventDefault();
         const user = await apiCall('authSignup', { email, username, password });
         if(user){
-            Navigate('/');
             localStorage.setItem('user', JSON.stringify(user)); // save user to local storage
             dispatch({ type: 'LOGIN', payload: user });
+            Navigate('/');
         }
     };
 

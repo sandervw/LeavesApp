@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { renderHook } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import { renderHook, act } from '@testing-library/react';
 import useElementContext from '../../src/hooks/useElementContext';
 import { ElementContextProvider } from '../../src/context/ElementContext';
 import { mockTemplate, mockStorynode } from '../utils/mockData';
@@ -33,7 +33,7 @@ describe('useElementContext hook', () => {
   describe('Error handling', () => {
     it('should throw error when used outside ElementContextProvider', () => {
       // Suppress console.error for this test
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => { });
 
       expect(() => {
         renderHook(() => useElementContext());
@@ -52,7 +52,9 @@ describe('useElementContext hook', () => {
       const { result } = renderHook(() => useElementContext(), { wrapper });
 
       const template = mockTemplate();
-      result.current.dispatch({ type: 'SET_ELEMENT', payload: template });
+      act(() => {
+        result.current.dispatch({ type: 'SET_ELEMENT', payload: template });
+      });
 
       expect(result.current.element).toBeDefined();
       expect(result.current.element._id).toBe(template._id);
@@ -67,7 +69,9 @@ describe('useElementContext hook', () => {
       const { result } = renderHook(() => useElementContext(), { wrapper });
 
       const children = [mockTemplate({ _id: 'child1' }), mockTemplate({ _id: 'child2' })];
-      result.current.dispatch({ type: 'SET_CHILDREN', payload: children });
+      act(() => {
+        result.current.dispatch({ type: 'SET_CHILDREN', payload: children });
+      });
 
       expect(result.current.children).toBeDefined();
       expect(result.current.children.length).toBe(2);
@@ -83,12 +87,16 @@ describe('useElementContext hook', () => {
 
       // Set up initial state with parent element and empty children
       const parent = mockStorynode({ type: 'root', children: [], wordCount: 0 });
-      result.current.dispatch({ type: 'SET_ELEMENT', payload: parent });
-      result.current.dispatch({ type: 'SET_CHILDREN', payload: [] });
+      act(() => {
+        result.current.dispatch({ type: 'SET_ELEMENT', payload: parent });
+        result.current.dispatch({ type: 'SET_CHILDREN', payload: [] });
+      });
 
       // Create a child
       const child = mockStorynode({ _id: 'child1', wordCount: 100 });
-      result.current.dispatch({ type: 'CREATE_CHILD', payload: child });
+      act(() => {
+        result.current.dispatch({ type: 'CREATE_CHILD', payload: child });
+      });
 
       expect(result.current.children.length).toBe(1);
       expect(result.current.children[0]._id).toBe('child1');
@@ -104,11 +112,15 @@ describe('useElementContext hook', () => {
 
       // Set up initial children
       const child = mockStorynode({ _id: 'child1', name: 'Original Name', wordCount: 50 });
-      result.current.dispatch({ type: 'SET_CHILDREN', payload: [child] });
+      act(() => {
+        result.current.dispatch({ type: 'SET_CHILDREN', payload: [child] });
+      });
 
       // Update the child
       const updatedChild = { ...child, name: 'Updated Name', wordCount: 100 };
-      result.current.dispatch({ type: 'UPDATE_CHILD', payload: updatedChild });
+      act(() => {
+        result.current.dispatch({ type: 'UPDATE_CHILD', payload: updatedChild });
+      });
 
       expect(result.current.children[0].name).toBe('Updated Name');
       expect(result.current.children[0].wordCount).toBe(100);
@@ -130,11 +142,15 @@ describe('useElementContext hook', () => {
         wordCount: 150,
       });
 
-      result.current.dispatch({ type: 'SET_ELEMENT', payload: parent });
-      result.current.dispatch({ type: 'SET_CHILDREN', payload: [child1, child2] });
+      act(() => {
+        result.current.dispatch({ type: 'SET_ELEMENT', payload: parent });
+        result.current.dispatch({ type: 'SET_CHILDREN', payload: [child1, child2] });
+      });
 
       // Delete a child
-      result.current.dispatch({ type: 'DELETE_CHILD', payload: child1 });
+      act(() => {
+        result.current.dispatch({ type: 'DELETE_CHILD', payload: child1 });
+      });
 
       expect(result.current.children.length).toBe(1);
       expect(result.current.children[0]._id).toBe('child2');

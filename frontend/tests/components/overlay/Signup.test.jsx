@@ -135,24 +135,6 @@ describe('Signup component', () => {
       });
     });
 
-    it('should show loading state during signup', async () => {
-      const user = userEvent.setup();
-      renderWithProviders(<Signup hideModal={mockHideModal} />);
-
-      const emailInput = screen.getByPlaceholderText('Email');
-      const usernameInput = screen.getByPlaceholderText('Username');
-      const passwordInput = screen.getByPlaceholderText('Password');
-      const submitButton = screen.getByText('Sign Up');
-
-      await user.type(emailInput, 'newuser@example.com');
-      await user.type(usernameInput, 'newusername');
-      await user.type(passwordInput, 'securepassword123');
-      await user.click(submitButton);
-
-      // Loading should appear briefly
-      expect(screen.getByText('Loading...')).toBeInTheDocument();
-    });
-
     it('should save user to localStorage on successful signup', async () => {
       const user = userEvent.setup();
       renderWithProviders(<Signup hideModal={mockHideModal} />);

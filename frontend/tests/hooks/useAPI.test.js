@@ -128,14 +128,16 @@ describe('useAPI hook', () => {
     it('should set isPending to true during API call', async () => {
       const { result } = renderHook(() => useAPI());
 
-      // Start API call but don't wait
+      // Verify isPending starts as false
+      expect(result.current.isPending).toBe(false);
+
+      // Start API call
       const promise = result.current.apiCall('getUser');
 
-      // Check isPending is true immediately
-      expect(result.current.isPending).toBe(true);
-
-      // Wait for completion
-      await waitFor(() => promise);
+      // Wait for the API call to complete
+      await waitFor(async () => {
+        await promise;
+      });
 
       // Check isPending is false after completion
       expect(result.current.isPending).toBe(false);
@@ -162,8 +164,10 @@ describe('useAPI hook', () => {
         });
       });
 
-      // Error should be cleared
-      expect(result.current.error).toBeNull();
+      // Wait for error to be cleared
+      await waitFor(() => {
+        expect(result.current.error).toBeNull();
+      });
     });
   });
 

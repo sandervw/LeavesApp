@@ -16,7 +16,7 @@ export const handlers = [
       );
     }
 
-    return HttpResponse.json(mockUser, { status: 201 });
+    return HttpResponse.json(mockUser(), { status: 201 });
   }),
 
   http.post(`${BASE_URL}/auth/login`, async ({ request }) => {
@@ -24,7 +24,7 @@ export const handlers = [
     const { email, password } = body;
 
     if (email === 'test@example.com' && password === 'password123') {
-      return HttpResponse.json(mockUser, { status: 200 });
+      return HttpResponse.json(mockUser(), { status: 200 });
     }
 
     return HttpResponse.json(
@@ -38,7 +38,7 @@ export const handlers = [
   }),
 
   http.get(`${BASE_URL}/auth/refresh`, () => {
-    return HttpResponse.json(mockUser, { status: 200 });
+    return HttpResponse.json(mockUser(), { status: 200 });
   }),
 
   http.get(`${BASE_URL}/auth/email/verify/:code`, ({ params }) => {
@@ -91,20 +91,20 @@ export const handlers = [
 
   // User endpoint
   http.get(`${BASE_URL}/user`, () => {
-    return HttpResponse.json(mockUser, { status: 200 });
+    return HttpResponse.json(mockUser(), { status: 200 });
   }),
 
   // Template endpoints
   http.get(`${BASE_URL}/template`, () => {
     // Return different data based on query params if needed
-    return HttpResponse.json([mockTemplate], { status: 200 });
+    return HttpResponse.json([mockTemplate()], { status: 200 });
   }),
 
   http.get(`${BASE_URL}/template/:id`, ({ params }) => {
     const { id } = params;
 
     if (id === 'template123') {
-      return HttpResponse.json(mockTemplate, { status: 200 });
+      return HttpResponse.json(mockTemplate(), { status: 200 });
     }
 
     return HttpResponse.json(
@@ -139,11 +139,11 @@ export const handlers = [
 
     // Update existing
     if (_id) {
-      return HttpResponse.json({ ...mockTemplate, ...body }, { status: 200 });
+      return HttpResponse.json({ ...mockTemplate(), ...body }, { status: 200 });
     }
 
     // Create new
-    return HttpResponse.json({ ...mockTemplate, ...body, _id: 'new-template-id' }, { status: 201 });
+    return HttpResponse.json({ ...mockTemplate(), ...body, _id: 'new-template-id' }, { status: 201 });
   }),
 
   http.delete(`${BASE_URL}/template/:id`, ({ params }) => {
@@ -163,14 +163,14 @@ export const handlers = [
   http.get(`${BASE_URL}/storynode`, () => {
 
     // Return different data based on query params if needed
-    return HttpResponse.json([mockStorynode], { status: 200 });
+    return HttpResponse.json([mockStorynode()], { status: 200 });
   }),
 
   http.get(`${BASE_URL}/storynode/:id`, ({ params }) => {
     const { id } = params;
 
     if (id === 'storynode123') {
-      return HttpResponse.json(mockStorynode, { status: 200 });
+      return HttpResponse.json(mockStorynode(), { status: 200 });
     }
 
     return HttpResponse.json(
@@ -205,11 +205,11 @@ export const handlers = [
 
     // Update existing
     if (_id) {
-      return HttpResponse.json({ ...mockStorynode, ...body }, { status: 200 });
+      return HttpResponse.json({ ...mockStorynode(), ...body }, { status: 200 });
     }
 
     // Create new
-    return HttpResponse.json({ ...mockStorynode, ...body, _id: 'new-storynode-id' }, { status: 201 });
+    return HttpResponse.json({ ...mockStorynode(), ...body, _id: 'new-storynode-id' }, { status: 201 });
   }),
 
   http.post(`${BASE_URL}/storynode/postfromtemplate`, async ({ request }) => {
@@ -224,7 +224,7 @@ export const handlers = [
     }
 
     return HttpResponse.json(
-      { ...mockStorynode, _id: 'new-storynode-from-template', name: 'Story from Template' },
+      { ...mockStorynode(), _id: 'new-storynode-from-template', name: 'Story from Template' },
       { status: 201 }
     );
   }),
