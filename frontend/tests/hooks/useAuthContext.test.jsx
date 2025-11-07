@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { renderHook } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import { renderHook, act } from '@testing-library/react';
 import useAuthContext from '../../src/hooks/useAuthContext';
 import { AuthContextProvider } from '../../src/context/AuthContext';
 import { mockUser } from '../utils/mockData';
@@ -50,7 +50,7 @@ describe('useAuthContext hook', () => {
   describe('Error handling', () => {
     it('should throw error when used outside AuthContextProvider', () => {
       // Suppress console.error for this test
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => { });
 
       expect(() => {
         renderHook(() => useAuthContext());
@@ -80,7 +80,9 @@ describe('useAuthContext hook', () => {
       const { result } = renderHook(() => useAuthContext(), { wrapper });
 
       const user = mockUser();
-      result.current.dispatch({ type: 'LOGIN', payload: user });
+      act(() => {
+        result.current.dispatch({ type: 'LOGIN', payload: user });
+      });
 
       expect(result.current.user).toBeDefined();
       expect(result.current.user.email).toBe(user.email);
@@ -99,7 +101,9 @@ describe('useAuthContext hook', () => {
 
       expect(result.current.user).toBeDefined();
 
-      result.current.dispatch({ type: 'LOGOUT' });
+      act(() => {
+        result.current.dispatch({ type: 'LOGOUT' });
+      });
 
       expect(result.current.user).toBeNull();
     });

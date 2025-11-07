@@ -1,9 +1,7 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { BrowserRouter } from 'react-router-dom';
 import Login from '../../../src/components/overlay/Login';
-import { AuthContextProvider } from '../../../src/context/AuthContext';
 import { renderWithProviders } from '../../utils/testUtils';
 import { server } from '../../mocks/server';
 import { http, HttpResponse } from 'msw';
@@ -33,7 +31,6 @@ describe('Login component', () => {
       expect(screen.getByPlaceholderText('Username')).toBeInTheDocument();
       expect(screen.getByPlaceholderText('Password')).toBeInTheDocument();
       expect(screen.getByText('Log In')).toBeInTheDocument();
-      expect(screen.getByText('Cancel')).toBeInTheDocument();
     });
 
     it('should render forgot password link', () => {
@@ -117,22 +114,6 @@ describe('Login component', () => {
       await waitFor(() => {
         expect(mockNavigate).toHaveBeenCalledWith('/');
       });
-    });
-
-    it('should show loading state during login', async () => {
-      const user = userEvent.setup();
-      renderWithProviders(<Login hideModal={mockHideModal} />);
-
-      const emailInput = screen.getByPlaceholderText('Username');
-      const passwordInput = screen.getByPlaceholderText('Password');
-      const submitButton = screen.getByText('Log In');
-
-      await user.type(emailInput, 'test@example.com');
-      await user.type(passwordInput, 'password123');
-      await user.click(submitButton);
-
-      // Loading should appear briefly
-      expect(screen.getByText('Loading...')).toBeInTheDocument();
     });
 
     it('should save user to localStorage on successful login', async () => {

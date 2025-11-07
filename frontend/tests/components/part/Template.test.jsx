@@ -151,7 +151,7 @@ describe('Template component', () => {
       );
 
       const draggable = screen.getByTestId('draggable');
-      expect(draggable).toHaveProperty('data');
+      expect(draggable).toHaveAttribute('data');
     });
   });
 

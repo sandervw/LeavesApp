@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { renderHook } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import { renderHook, act } from '@testing-library/react';
 import useAddableContext from '../../src/hooks/useAddableContext';
 import { AddableContextProvider } from '../../src/context/AddableContext';
 import { mockAddable } from '../utils/mockData';
@@ -32,7 +32,7 @@ describe('useAddableContext hook', () => {
   describe('Error handling', () => {
     it('should throw error when used outside AddableContextProvider', () => {
       // Suppress console.error for this test
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => { });
 
       expect(() => {
         renderHook(() => useAddableContext());
@@ -55,7 +55,9 @@ describe('useAddableContext hook', () => {
         mockAddable({ _id: 'addable2', name: 'Addable 2' }),
       ];
 
-      result.current.dispatch({ type: 'SET_ADDABLES', payload: addables });
+      act(() => {
+        result.current.dispatch({ type: 'SET_ADDABLES', payload: addables });
+      });
 
       expect(result.current.addables).toBeDefined();
       expect(result.current.addables.length).toBe(2);
@@ -74,11 +76,15 @@ describe('useAddableContext hook', () => {
         mockAddable({ _id: 'addable1', name: 'Original Name' }),
         mockAddable({ _id: 'addable2', name: 'Addable 2' }),
       ];
-      result.current.dispatch({ type: 'SET_ADDABLES', payload: addables });
+      act(() => {
+        result.current.dispatch({ type: 'SET_ADDABLES', payload: addables });
+      });
 
       // Update the first addable
       const updatedAddable = { _id: 'addable1', name: 'Updated Name', text: 'New text' };
-      result.current.dispatch({ type: 'UPDATE_ADDABLE', payload: updatedAddable });
+      act(() => {
+        result.current.dispatch({ type: 'UPDATE_ADDABLE', payload: updatedAddable });
+      });
 
       expect(result.current.addables[0].name).toBe('Updated Name');
       expect(result.current.addables[0].text).toBe('New text');
@@ -97,11 +103,15 @@ describe('useAddableContext hook', () => {
       const addables = [
         mockAddable({ _id: 'addable1', name: 'Addable 1' }),
       ];
-      result.current.dispatch({ type: 'SET_ADDABLES', payload: addables });
+      act(() => {
+        result.current.dispatch({ type: 'SET_ADDABLES', payload: addables });
+      });
 
       // Try to update non-existent addable
       const updatedAddable = { _id: 'nonexistent', name: 'Updated Name' };
-      result.current.dispatch({ type: 'UPDATE_ADDABLE', payload: updatedAddable });
+      act(() => {
+        result.current.dispatch({ type: 'UPDATE_ADDABLE', payload: updatedAddable });
+      });
 
       // Should still have 1 addable with original data
       expect(result.current.addables.length).toBe(1);
@@ -121,18 +131,24 @@ describe('useAddableContext hook', () => {
         mockAddable({ _id: 'addable1', name: 'Addable 1', text: 'Text 1' }),
         mockAddable({ _id: 'addable2', name: 'Addable 2', text: 'Text 2' }),
       ];
-      result.current.dispatch({ type: 'SET_ADDABLES', payload: addables });
+      act(() => {
+        result.current.dispatch({ type: 'SET_ADDABLES', payload: addables });
+      });
 
       // Update first addable
-      result.current.dispatch({
-        type: 'UPDATE_ADDABLE',
-        payload: { _id: 'addable1', name: 'Updated 1', text: 'New Text 1' },
+      act(() => {
+        result.current.dispatch({
+          type: 'UPDATE_ADDABLE',
+          payload: { _id: 'addable1', name: 'Updated 1', text: 'New Text 1' },
+        });
       });
 
       // Update second addable
-      result.current.dispatch({
-        type: 'UPDATE_ADDABLE',
-        payload: { _id: 'addable2', name: 'Updated 2', text: 'New Text 2' },
+      act(() => {
+        result.current.dispatch({
+          type: 'UPDATE_ADDABLE',
+          payload: { _id: 'addable2', name: 'Updated 2', text: 'New Text 2' },
+        });
       });
 
       expect(result.current.addables[0].name).toBe('Updated 1');
@@ -156,12 +172,16 @@ describe('useAddableContext hook', () => {
         type: 'root',
         children: ['child1'],
       });
-      result.current.dispatch({ type: 'SET_ADDABLES', payload: [addable] });
+      act(() => {
+        result.current.dispatch({ type: 'SET_ADDABLES', payload: [addable] });
+      });
 
       // Update only the name
-      result.current.dispatch({
-        type: 'UPDATE_ADDABLE',
-        payload: { _id: 'addable1', name: 'Updated Name' },
+      act(() => {
+        result.current.dispatch({
+          type: 'UPDATE_ADDABLE',
+          payload: { _id: 'addable1', name: 'Updated Name' },
+        });
       });
 
       // Other properties should remain

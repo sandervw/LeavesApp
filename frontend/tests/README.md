@@ -59,6 +59,9 @@ npm run test:ui
 
 # Generate coverage report
 npm run test:coverage
+
+# Run tests in a specific file
+npm test -- useAPI.test.js
 ```
 
 ---
