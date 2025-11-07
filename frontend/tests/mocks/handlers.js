@@ -1,44 +1,7 @@
 import { http, HttpResponse } from 'msw';
+import { mockUser, mockTemplate, mockStorynode } from '../utils/mockData';
 
 const BASE_URL = 'http://localhost:8080';
-
-// Mock user data
-const mockUser = {
-  _id: 'user123',
-  email: 'test@example.com',
-  createdAt: '2024-01-01T00:00:00.000Z',
-  verified: true,
-};
-
-// Mock template data
-const mockTemplate = {
-  _id: 'template123',
-  name: 'Test Template',
-  type: 'root',
-  text: 'Test template text',
-  children: [],
-  parent: null,
-  userId: 'user123',
-  kind: 'Template',
-  wordWeight: 100,
-};
-
-// Mock storynode data
-const mockStorynode = {
-  _id: 'storynode123',
-  name: 'Test Story',
-  type: 'root',
-  text: 'Test story text',
-  children: [],
-  parent: null,
-  userId: 'user123',
-  kind: 'Storynode',
-  isComplete: false,
-  wordWeight: 100,
-  wordLimit: 1000,
-  wordCount: 50,
-  archived: false,
-};
 
 export const handlers = [
   // Auth endpoints
