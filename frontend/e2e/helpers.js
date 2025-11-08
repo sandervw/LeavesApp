@@ -314,15 +314,9 @@ export async function logout(page) {
  * @returns {Promise<boolean>} True if authenticated, false otherwise
  */
 export async function isAuthenticated(page) {
-  // TODO: Implement authentication check
-  // Check for presence of refresh token cookie
-  // Optionally verify by calling /auth/user endpoint
-
-  // const cookies = await page.context().cookies();
-  // const refreshToken = cookies.find(c => c.name === 'refreshToken');
-  // return !!refreshToken;
-
-  return false;
+  // Check for presence of user in localStorage (which indicates authentication)
+  const user = await page.evaluate(() => localStorage.getItem('user'));
+  return !!user;
 }
 
 /**
