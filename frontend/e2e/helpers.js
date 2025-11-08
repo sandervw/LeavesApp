@@ -24,27 +24,28 @@ export async function setupAuthenticatedUser(page, options = {}) {
   const timestamp = Date.now();
   const email = options.email || `test-user-${timestamp}@example.com`;
   const password = options.password || 'TestPassword123!';
+  const username = options.username || `testuser-${timestamp}`;
 
-  // TODO: Navigate to signup page
-  // await page.goto('/signup');
+  // Navigate to signup page
+  await page.goto('/signup');
 
-  // TODO: Fill signup form
-  // await page.fill('[name="email"]', email);
-  // await page.fill('[name="password"]', password);
-  // await page.fill('[name="confirmPassword"]', password);
+  // Fill signup form using placeholder selectors
+  await page.getByPlaceholder('Email').fill(email);
+  await page.getByPlaceholder('Username').fill(username);
+  await page.getByPlaceholder('Password').fill(password);
 
-  // TODO: Submit signup form
-  // await page.click('button[type="submit"]');
+  // Submit signup form
+  await page.locator('form').getByRole('button', { name: 'Sign Up' }).click();
 
-  // TODO: Wait for successful signup and redirect
-  // await page.waitForURL('/stories');
+  // Wait for successful signup and redirect
+  await page.waitForURL('/');
 
-  // TODO: Verify authentication cookies are set
-  // const cookies = await page.context().cookies();
-  // const refreshToken = cookies.find(c => c.name === 'refreshToken');
-  // expect(refreshToken).toBeTruthy();
+  // Verify authentication cookies are set
+  const cookies = await page.context().cookies();
+  const refreshToken = cookies.find((c) => c.name === 'refreshToken');
+  expect(refreshToken).toBeTruthy();
 
-  // TODO: Extract userId from API response or local storage
+  // Extract userId from API response or local storage
   const userId = null; // Placeholder
 
   return {
@@ -298,13 +299,17 @@ export async function waitForApiResponse(page, urlPattern, options = {}) {
  * @returns {Promise<void>}
  */
 export async function logout(page) {
-  // TODO: Implement logout
-  // Click logout button in navbar
-  // Wait for redirect to landing page
-  // Verify authentication cookies are cleared
+  // Click logout button in navbar using role selector
+  const logoutButton = page.getByRole('button', { name: /logout|log out|sign out/i });
+  await logoutButton.click();
 
-  // await page.click('[data-testid="logout-button"]');
-  // await page.waitForURL('/');
+  // Wait for redirect to landing page
+  await page.waitForURL('/');
+
+  // Verify authentication cookies are cleared
+  const cookies = await page.context().cookies();
+  const refreshToken = cookies.find((c) => c.name === 'refreshToken');
+  expect(refreshToken).toBeFalsy();
 }
 
 /**
@@ -328,18 +333,18 @@ export async function isAuthenticated(page) {
  * @returns {Promise<void>}
  */
 export async function login(page, email, password) {
-  // TODO: Navigate to login page
-  // await page.goto('/login');
+  // Navigate to login page
+  await page.goto('/login');
 
-  // TODO: Fill login form
-  // await page.fill('[name="email"]', email);
-  // await page.fill('[name="password"]', password);
+  // Fill login form using placeholder selectors
+  await page.getByPlaceholder('Username').fill(email);
+  await page.getByPlaceholder('Password').fill(password);
 
-  // TODO: Submit form
-  // await page.click('button[type="submit"]');
+  // Submit form
+  await page.locator('form').getByRole('button', { name: 'Log In' }).click();
 
-  // TODO: Wait for redirect to stories page
-  // await page.waitForURL('/stories');
+  // Wait for redirect to stories page
+  await page.waitForURL('/stories');
 }
 
 /**
