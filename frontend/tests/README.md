@@ -1,77 +1,35 @@
 # Frontend Testing Guide
 
-Testing infrastructure for the Leaves frontend: built with React, Vite, and Vitest.
+Testing infrastructure for the Leaves frontend: React, Vite, and Vitest.
 
-## Table of Contents
-
-1. [Overview](#overview)
-2. [Testing Stack](#testing-stack)
-3. [Running Tests](#running-tests)
-4. [Test Structure](#test-structure)
-5. [Testing Patterns](#testing-patterns)
-6. [MSW (Mock Service Worker)](#msw-mock-service-worker)
-7. [Testing Utilities](#testing-utilities)
-8. [Writing New Tests](#writing-new-tests)
-9. [Testing Scenarios](#testing-scenarios)
-10. [Best Practices](#best-practices)
-11. [Contributing](#contributing)
-
----
-
-## Overview
+## Quick Reference
 
 - **Unit tests** for custom hooks
 - **Integration tests** for context providers
 - **API mocking** with Mock Service Worker (MSW)
 - **Component testing** with React Testing Library
 
----
-
 ## Testing Stack
 
-### Testing Libraries
+**Libraries:** Vitest, @testing-library/react, @testing-library/user-event, @testing-library/jest-dom, MSW, jsdom
 
-- **Vitest** - Unit test framework
-- **@testing-library/react** - Component testing utils
-- **@testing-library/user-event** - User interaction simulation
-- **@testing-library/jest-dom** - Custom DOM matchers
-- **MSW (Mock Service Worker)** - API mocking
-- **jsdom** - DOM implementation for Node.js
-
-### Development Tools
-
-- **@vitest/ui** - Test UI
-- **@vitest/coverage-v8** - Code coverage
-
----
+**Tools:** @vitest/ui, @vitest/coverage-v8
 
 ## Running Tests
 
 ```bash
-# Run all tests
-npm test
-
-# Run tests in watch mode (re-runs on file changes)
-npm run test:watch
-
-# Run tests with interactive UI
-npm run test:ui
-
-# Generate coverage report
-npm run test:coverage
-
-# Run tests in a specific file
-npm test -- useAPI.test.js
+npm test                          # Run all tests
+npm run test:watch               # Re-run on file changes
+npm run test:ui                  # Interactive UI
+npm run test:coverage            # Coverage report
+npm test -- useAPI.test.js       # Specific file
 ```
-
----
 
 ## Test Structure
 
 ```
 frontend/tests/
 ├── setup.js                      # Global test setup
-├── README.md                     # This file
 ├── mocks/
 │   ├── handlers.js              # MSW request handlers
 │   └── server.js                # MSW server setup
@@ -79,35 +37,33 @@ frontend/tests/
 │   ├── testUtils.jsx            # Custom render functions
 │   └── mockData.js              # Mock data generators
 ├── hooks/
-│   ├── useAPI.test.js           # useAPI hook tests
-│   ├── useAuthContext.test.js   # useAuthContext hook tests
+│   ├── useAPI.test.js
+│   ├── useAuthContext.test.js
 │   ├── useElementContext.test.js
 │   ├── useTreelistContext.test.js
 │   └── useAddableContext.test.js
 ├── context/
-│   ├── AuthContext.test.jsx     # AuthContext integration tests
+│   ├── AuthContext.test.jsx
 │   ├── ElementContext.test.jsx
 │   ├── TreelistContext.test.jsx
 │   └── AddableContext.test.jsx
 └── components/
     ├── overlay/
-    │   ├── Login.test.jsx       # Login component tests
-    │   └── Signup.test.jsx      # Signup component tests
+    │   ├── Login.test.jsx
+    │   └── Signup.test.jsx
     ├── part/
-    │   ├── Template.test.jsx    # Template component tests
-    │   └── Storynode.test.jsx   # Storynode component tests
+    │   ├── Template.test.jsx
+    │   └── Storynode.test.jsx
     └── wrapper/
-        ├── Draggable.test.jsx   # Draggable wrapper tests
-        └── Droppable.test.jsx   # Droppable wrapper tests
+        ├── Draggable.test.jsx
+        └── Droppable.test.jsx
 ```
-
----
 
 ## Testing Patterns
 
 ### Unit Tests (Hooks)
 
-Hook tests use `renderHook` from React Testing Library:
+Use `renderHook` from React Testing Library:
 
 ```javascript
 import { renderHook } from "@testing-library/react";
@@ -128,7 +84,7 @@ it("should return auth context value", () => {
 
 ### Integration Tests (Contexts)
 
-Context tests verify state management and propagation:
+Verify state management and propagation:
 
 ```javascript
 import { render, screen, waitFor } from "@testing-library/react";
@@ -145,14 +101,13 @@ it("should update state on LOGIN action", async () => {
       <TestComponent />
     </AuthContextProvider>
   );
-
   // Test login logic...
 });
 ```
 
 ### Component Tests
 
-Component tests use custom `renderWithProviders` utility:
+Use custom `renderWithProviders` utility:
 
 ```javascript
 import { renderWithProviders } from "../../utils/testUtils";
@@ -166,15 +121,9 @@ it("should render login form", () => {
 });
 ```
 
----
-
 ## MSW (Mock Service Worker)
 
-MSW intercepts network requests; provides API mocking.
-
-All API handlers defined in `tests/mocks/handlers.js`:
-
-Can override handlers for specific tests:
+MSW intercepts network requests for API mocking. All handlers defined in `tests/mocks/handlers.js`. Override handlers for specific tests:
 
 ```javascript
 import { server } from "../../mocks/server";
@@ -186,19 +135,15 @@ it("should handle server errors", async () => {
       return HttpResponse.json({ message: "Server error" }, { status: 500 });
     })
   );
-
   // Test error handling...
 });
 ```
 
----
-
 ## Testing Utilities
 
-**`renderWithProviders`** - Wraps components with all necessary context providers:
+**`renderWithProviders`** - Wraps components with context providers.
 
 Options:
-
 - `providerProps.authState` - Initial auth state
 - `providerProps.elementState` - Initial element state
 - `providerProps.treelistState` - Initial treelist state
@@ -207,11 +152,7 @@ Options:
 - `withRouter` - Wrap with BrowserRouter (default: true)
 - `withDnd` - Wrap with DndContext (default: false)
 
-**`Mock Data Generators`** - Utility functions for generating mock data.
-
-Located in `tests/utils/mockData.js`:
-
----
+**`Mock Data Generators`** - Utility functions in `tests/utils/mockData.js`.
 
 ## Writing New Tests
 
@@ -244,19 +185,15 @@ describe("MyComponent", () => {
 });
 ```
 
-### Step 4: Test Coverage
-
-Test the following areas:
+### Step 4: Test Coverage Areas
 
 - **Rendering** - Component renders correctly
-- **Props** - Component handles different props
+- **Props** - Handles different props
 - **User interaction** - Click, type, submit events
-- **State changes** - Component state updates correctly
+- **State changes** - Updates correctly
 - **API calls** - Network requests and responses
-- **Error handling** - Component handles errors gracefully
-- **Edge cases** - Empty states, loading states, etc.
-
----
+- **Error handling** - Handles errors gracefully
+- **Edge cases** - Empty/loading states
 
 ## Testing Scenarios
 
@@ -280,21 +217,18 @@ it("should submit form with user input", async () => {
 });
 ```
 
-### sync Operations
+### Async Operations
 
 ```javascript
 it("should show loading state then data", async () => {
   renderWithProviders(<DataComponent />);
 
-  // Initially shows loading
   expect(screen.getByText("Loading...")).toBeInTheDocument();
 
-  // Wait for data to load
   await waitFor(() => {
     expect(screen.getByText("Data loaded")).toBeInTheDocument();
   });
 
-  // Loading should be gone
   expect(screen.queryByText("Loading...")).not.toBeInTheDocument();
 });
 ```
@@ -359,41 +293,21 @@ it("should display error message on API failure", async () => {
 });
 ```
 
----
-
 ## Best Practices
 
-**`1. Use Testing Library Queries Wisely`**
+1. **Use Testing Library Queries Wisely** - Query priority order matters for accessibility.
 
-**`2. Test User Behavior, Not Implementation`**
+2. **Test User Behavior, Not Implementation** - Test what users see and do, not internal state, private methods, or implementation details.
 
-**`3. Avoid Testing Library Implementation Details`**
+3. **Use waitFor for Async Updates** - Necessary when testing asynchronous operations and state changes.
 
-Don't test:
+4. **Clean Up Between Tests** - Vitest automatically cleans up via `tests/setup.js`.
 
-- Internal component state
-- Private methods
-- Implementation details that users don't interact with
+5. **Mock External Dependencies** - Mock APIs, routing, and other external services.
 
-Do test:
+6. **Use Descriptive Test Names** - Names should clearly describe what is being tested.
 
-- What users see
-- What users can do
-- What happens when users interact
-
-**`4. Use waitFor for Async Updates`**
-
-**`5. Clean Up Between Tests`**
-
-Vitest automatically cleans up between tests with the setup in `tests/setup.js`:
-
-**`6. Mock External Dependencies`**
-
-**`7. Use Descriptive Test Names`**
-
-**`8. Group Related Tests`**
-
----
+7. **Group Related Tests** - Use `describe` blocks to organize tests logically.
 
 ## Contributing
 
