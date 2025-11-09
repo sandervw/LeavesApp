@@ -53,7 +53,7 @@ export const recursiveGetDescendants = async <T extends TreeDoc>(tree: T, model:
  * @param userId - the userId to assign to the new storynodes
  * @param templateId - the id of the template to create the storynode tree from
  * @param parentId - the id of the parent storynode (if any)
- * @return - the new storynode tree
+ * @returns - the new storynode tree
  */
 export const recursiveStorynodeFromTemplate = async (
   userId: mongoId,

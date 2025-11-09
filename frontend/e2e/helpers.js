@@ -17,7 +17,7 @@ import { expect } from '@playwright/test';
  * @returns {Promise<{email: string, password: string, userId: string}>} User credentials and ID
  *
  * @example
- * const user = await setupAuthenticatedUser(page);
+ * await setupAuthenticatedUser(page);
  * // User is now logged in and ready for testing
  */
 export async function setupAuthenticatedUser(page, options = {}) {
