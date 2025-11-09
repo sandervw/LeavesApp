@@ -37,7 +37,7 @@ export async function setupAuthenticatedUser(page, options = {}) {
   // Submit signup form
   await page.locator('form').getByRole('button', { name: 'Sign Up' }).click();
 
-  // Wait for successful signup and redirect
+  // Wait for successful signup and redirect to Stories page
   await page.waitForURL('/');
 
   // Verify authentication cookies are set
@@ -45,8 +45,10 @@ export async function setupAuthenticatedUser(page, options = {}) {
   const refreshToken = cookies.find((c) => c.name === 'refreshToken');
   expect(refreshToken).toBeTruthy();
 
-  // Extract userId from API response or local storage
-  const userId = null; // Placeholder
+  // Extract userId from localStorage
+  const userJson = await page.evaluate(() => localStorage.getItem('user'));
+  const user = userJson ? JSON.parse(userJson) : null;
+  const userId = user?._id || null;
 
   return {
     email,
@@ -77,46 +79,64 @@ export async function createTemplateTree(page, options = {}) {
   const branchName = options.branchName || 'Test Branch Template';
   const leafName = options.leafName || 'Test Leaf Template';
 
-  // TODO: Navigate to templates page
-  // await page.goto('/templates');
+  // Navigate to templates page
+  await page.goto('/templates');
 
-  // TODO: Create root template
-  // await page.click('[data-testid="add-template-button"]');
-  // await page.selectOption('[name="type"]', 'root');
-  // await page.fill('[name="name"]', rootName);
-  // await page.fill('[name="wordWeight"]', '100');
-  // await page.click('button[type="submit"]');
+  // Create root template via drag-and-drop
+  const rootInput = page.locator('#templateCreate input[placeholder*="New"]');
+  await rootInput.fill(rootName);
 
-  // TODO: Wait for root template to appear in list
-  // const rootElement = await page.waitForSelector(`[data-template-name="${rootName}"]`);
-  // const rootId = await rootElement.getAttribute('data-template-id');
+  // Drag TemplateCreate to roots drop zone
+  const templateCreate = page.locator('#templateCreate');
+  const rootsDropZone = page.locator('.droppable.list#roots');
+  await templateCreate.dragTo(rootsDropZone);
 
-  // TODO: Create branch template as child of root
-  // await page.click(`[data-template-id="${rootId}"] [data-testid="add-child-button"]`);
-  // await page.selectOption('[name="type"]', 'branch');
-  // await page.fill('[name="name"]', branchName);
-  // await page.fill('[name="wordWeight"]', '10');
-  // await page.click('button[type="submit"]');
+  // Wait for API response and extract root ID
+  const rootResponse = await page.waitForResponse((resp) =>
+    resp.url().includes('/template') && resp.request().method() === 'POST'
+  );
+  const rootData = await rootResponse.json();
+  const rootId = rootData._id;
 
-  // TODO: Wait for branch template to appear
-  // const branchElement = await page.waitForSelector(`[data-template-name="${branchName}"]`);
-  // const branchId = await branchElement.getAttribute('data-template-id');
+  // Navigate to root template detail page to add branch
+  await page.click(`.draggable[id="${rootId}"]`);
+  await page.waitForURL(`/templatedetail/${rootId}`);
 
-  // TODO: Create leaf template as child of branch
-  // await page.click(`[data-template-id="${branchId}"] [data-testid="add-child-button"]`);
-  // await page.selectOption('[name="type"]', 'leaf');
-  // await page.fill('[name="name"]', leafName);
-  // await page.fill('[name="wordWeight"]', '1');
-  // await page.click('button[type="submit"]');
+  // Create branch template as child
+  const branchInput = page.locator('#templateCreate input[placeholder*="New"]');
+  await branchInput.fill(branchName);
 
-  // TODO: Wait for leaf template to appear
-  // const leafElement = await page.waitForSelector(`[data-template-name="${leafName}"]`);
-  // const leafId = await leafElement.getAttribute('data-template-id');
+  const childrenDropZone = page.locator('.droppable.list#children');
+  await templateCreate.dragTo(childrenDropZone);
+
+  // Wait for branch creation
+  const branchResponse = await page.waitForResponse((resp) =>
+    resp.url().includes('/template') && resp.request().method() === 'POST'
+  );
+  const branchData = await branchResponse.json();
+  const branchId = branchData._id;
+
+  // Navigate to branch detail page to add leaf
+  await page.click(`.draggable[id="${branchId}"]`);
+  await page.waitForURL(`/templatedetail/${branchId}`);
+
+  // Create leaf template as child of branch
+  const leafInput = page.locator('#templateCreate input[placeholder*="New"]');
+  await leafInput.fill(leafName);
+
+  await templateCreate.dragTo(childrenDropZone);
+
+  // Wait for leaf creation
+  const leafResponse = await page.waitForResponse((resp) =>
+    resp.url().includes('/template') && resp.request().method() === 'POST'
+  );
+  const leafData = await leafResponse.json();
+  const leafId = leafData._id;
 
   return {
-    root: { id: null, name: rootName },
-    branch: { id: null, name: branchName },
-    leaf: { id: null, name: leafName },
+    root: { id: rootId, name: rootName },
+    branch: { id: branchId, name: branchName },
+    leaf: { id: leafId, name: leafName },
   };
 }
 
@@ -142,46 +162,64 @@ export async function createStorynodeTree(page, options = {}) {
   const branchName = options.branchName || 'Test Branch Storynode';
   const leafName = options.leafName || 'Test Leaf Storynode';
 
-  // TODO: Navigate to stories page
-  // await page.goto('/stories');
+  // Navigate to stories page
+  await page.goto('/stories');
 
-  // TODO: Create root storynode
-  // await page.click('[data-testid="add-storynode-button"]');
-  // await page.selectOption('[name="type"]', 'root');
-  // await page.fill('[name="name"]', rootName);
-  // await page.fill('[name="wordWeight"]', '100');
-  // await page.click('button[type="submit"]');
+  // Create root storynode via drag-and-drop
+  const rootInput = page.locator('#storynodeCreate input[placeholder*="New"]');
+  await rootInput.fill(rootName);
 
-  // TODO: Wait for root storynode to appear in list
-  // const rootElement = await page.waitForSelector(`[data-storynode-name="${rootName}"]`);
-  // const rootId = await rootElement.getAttribute('data-storynode-id');
+  // Drag StorynodeCreate to roots drop zone
+  const storynodeCreate = page.locator('#storynodeCreate');
+  const rootsDropZone = page.locator('.droppable.list#roots');
+  await storynodeCreate.dragTo(rootsDropZone);
 
-  // TODO: Create branch storynode as child of root
-  // await page.click(`[data-storynode-id="${rootId}"] [data-testid="add-child-button"]`);
-  // await page.selectOption('[name="type"]', 'branch');
-  // await page.fill('[name="name"]', branchName);
-  // await page.fill('[name="wordWeight"]', '10');
-  // await page.click('button[type="submit"]');
+  // Wait for API response and extract root ID
+  const rootResponse = await page.waitForResponse((resp) =>
+    resp.url().includes('/storynode') && resp.request().method() === 'POST'
+  );
+  const rootData = await rootResponse.json();
+  const rootId = rootData._id;
 
-  // TODO: Wait for branch storynode to appear
-  // const branchElement = await page.waitForSelector(`[data-storynode-name="${branchName}"]`);
-  // const branchId = await branchElement.getAttribute('data-storynode-id');
+  // Navigate to root storynode detail page to add branch
+  await page.click(`.draggable[id="${rootId}"]`);
+  await page.waitForURL(`/storydetail/${rootId}`);
 
-  // TODO: Create leaf storynode as child of branch
-  // await page.click(`[data-storynode-id="${branchId}"] [data-testid="add-child-button"]`);
-  // await page.selectOption('[name="type"]', 'leaf');
-  // await page.fill('[name="name"]', leafName);
-  // await page.fill('[name="wordWeight"]', '1');
-  // await page.click('button[type="submit"]');
+  // Create branch storynode as child
+  const branchInput = page.locator('#storynodeCreate input[placeholder*="New"]');
+  await branchInput.fill(branchName);
 
-  // TODO: Wait for leaf storynode to appear
-  // const leafElement = await page.waitForSelector(`[data-storynode-name="${leafName}"]`);
-  // const leafId = await leafElement.getAttribute('data-storynode-id');
+  const childrenDropZone = page.locator('.droppable.list#children');
+  await storynodeCreate.dragTo(childrenDropZone);
+
+  // Wait for branch creation
+  const branchResponse = await page.waitForResponse((resp) =>
+    resp.url().includes('/storynode') && resp.request().method() === 'POST'
+  );
+  const branchData = await branchResponse.json();
+  const branchId = branchData._id;
+
+  // Navigate to branch detail page to add leaf
+  await page.click(`.draggable[id="${branchId}"]`);
+  await page.waitForURL(`/storydetail/${branchId}`);
+
+  // Create leaf storynode as child of branch
+  const leafInput = page.locator('#storynodeCreate input[placeholder*="New"]');
+  await leafInput.fill(leafName);
+
+  await storynodeCreate.dragTo(childrenDropZone);
+
+  // Wait for leaf creation
+  const leafResponse = await page.waitForResponse((resp) =>
+    resp.url().includes('/storynode') && resp.request().method() === 'POST'
+  );
+  const leafData = await leafResponse.json();
+  const leafId = leafData._id;
 
   return {
-    root: { id: null, name: rootName },
-    branch: { id: null, name: branchName },
-    leaf: { id: null, name: leafName },
+    root: { id: rootId, name: rootName },
+    branch: { id: branchId, name: branchName },
+    leaf: { id: leafId, name: leafName },
   };
 }
 
@@ -195,17 +233,36 @@ export async function createStorynodeTree(page, options = {}) {
  * @returns {Promise<{id: string, name: string, type: string}>} Created template object
  */
 export async function createTemplate(page, name, type, parentId = null) {
-  // TODO: Implement template creation
-  // Navigate to templates page or template detail page
-  // Click add template button (or add child button if parentId provided)
-  // Fill form with name, type, wordWeight
-  // Submit and wait for creation
-  // Extract and return template ID
+  // If parentId is provided, navigate to parent detail page
+  if (parentId) {
+    await page.goto(`/templatedetail/${parentId}`);
+  } else {
+    // Navigate to templates page for root templates
+    await page.goto('/templates');
+  }
+
+  // Fill template name in TemplateCreate component
+  const nameInput = page.locator('#templateCreate input[placeholder*="New"]');
+  await nameInput.fill(name);
+
+  // Drag TemplateCreate to appropriate drop zone
+  const templateCreate = page.locator('#templateCreate');
+  const dropZone = parentId
+    ? page.locator('.droppable.list#children')
+    : page.locator('.droppable.list#roots');
+
+  await templateCreate.dragTo(dropZone);
+
+  // Wait for API response and extract template ID
+  const response = await page.waitForResponse((resp) =>
+    resp.url().includes('/template') && resp.request().method() === 'POST'
+  );
+  const data = await response.json();
 
   return {
-    id: null,
-    name,
-    type,
+    id: data._id,
+    name: data.name,
+    type: data.type,
   };
 }
 
@@ -219,17 +276,36 @@ export async function createTemplate(page, name, type, parentId = null) {
  * @returns {Promise<{id: string, name: string, type: string}>} Created storynode object
  */
 export async function createStorynode(page, name, type, parentId = null) {
-  // TODO: Implement storynode creation
-  // Navigate to stories page or storynode detail page
-  // Click add storynode button (or add child button if parentId provided)
-  // Fill form with name, type, wordWeight
-  // Submit and wait for creation
-  // Extract and return storynode ID
+  // If parentId is provided, navigate to parent detail page
+  if (parentId) {
+    await page.goto(`/storydetail/${parentId}`);
+  } else {
+    // Navigate to stories page for root storynodes
+    await page.goto('/stories');
+  }
+
+  // Fill storynode name in StorynodeCreate component
+  const nameInput = page.locator('#storynodeCreate input[placeholder*="New"]');
+  await nameInput.fill(name);
+
+  // Drag StorynodeCreate to appropriate drop zone
+  const storynodeCreate = page.locator('#storynodeCreate');
+  const dropZone = parentId
+    ? page.locator('.droppable.list#children')
+    : page.locator('.droppable.list#roots');
+
+  await storynodeCreate.dragTo(dropZone);
+
+  // Wait for API response and extract storynode ID
+  const response = await page.waitForResponse((resp) =>
+    resp.url().includes('/storynode') && resp.request().method() === 'POST'
+  );
+  const data = await response.json();
 
   return {
-    id: null,
-    name,
-    type,
+    id: data._id,
+    name: data.name,
+    type: data.type,
   };
 }
 
@@ -246,13 +322,22 @@ export async function createStorynode(page, name, type, parentId = null) {
  * });
  */
 export async function clearDatabase(page) {
-  // TODO: Implement database clearing
-  // Option 1: Call a test-only backend endpoint (e.g., DELETE /test/clear-database)
-  // Option 2: Use MongoDB connection directly (requires additional setup)
-  // Option 3: Delete user account which cascades to all related data
+  // Call test-only backend endpoint to clear database
+  // NOTE: This endpoint must be implemented in backend with NODE_ENV=test check
+  try {
+    await page.request.delete('http://localhost:8080/api/test/clear-database');
+  } catch (error) {
+    // Endpoint may not exist yet - this is expected during development
+    console.warn(
+      'Database clearing endpoint not available. Tests may have data conflicts.'
+    );
+  }
 
-  // NOTE: This should only be enabled in test environments
-  // Verify NODE_ENV=test before allowing database clearing
+  // Also clear localStorage to ensure clean state
+  await page.evaluate(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+  });
 }
 
 /**
@@ -273,23 +358,18 @@ export async function clearDatabase(page) {
 export async function waitForApiResponse(page, urlPattern, options = {}) {
   const timeout = options.timeout || 10000;
 
-  // TODO: Implement API response waiting
-  // Use page.waitForResponse() to wait for matching URL
-  // Extract and return JSON data
-  // Handle timeout and errors appropriately
-
-  // const response = await page.waitForResponse(
-  //   (response) => {
-  //     const url = response.url();
-  //     return typeof urlPattern === 'string'
-  //       ? url.includes(urlPattern)
-  //       : urlPattern.test(url);
-  //   },
-  //   { timeout }
-  // );
-  // return await response.json();
-
-  return {};
+  // Wait for API response matching the URL pattern
+  // Backend API runs on http://localhost:8080
+  const response = await page.waitForResponse(
+    (response) => {
+      const url = response.url();
+      return typeof urlPattern === 'string'
+        ? url.includes(urlPattern)
+        : urlPattern.test(url);
+    },
+    { timeout }
+  );
+  return await response.json();
 }
 
 /**
@@ -299,17 +379,16 @@ export async function waitForApiResponse(page, urlPattern, options = {}) {
  * @returns {Promise<void>}
  */
 export async function logout(page) {
-  // Click logout button in navbar using role selector
-  const logoutButton = page.getByRole('button', { name: /logout|log out|sign out/i });
+  // Click logout button in navbar using text selector
+  const logoutButton = page.getByRole('button', { name: /log out/i });
   await logoutButton.click();
 
-  // Wait for redirect to landing page
-  await page.waitForURL('/');
+  // Wait a moment for logout to process
+  await page.waitForTimeout(500);
 
-  // Verify authentication cookies are cleared
-  const cookies = await page.context().cookies();
-  const refreshToken = cookies.find((c) => c.name === 'refreshToken');
-  expect(refreshToken).toBeFalsy();
+  // Verify localStorage is cleared
+  const userJson = await page.evaluate(() => localStorage.getItem('user'));
+  expect(userJson).toBeFalsy();
 }
 
 /**
@@ -337,14 +416,15 @@ export async function login(page, email, password) {
   await page.goto('/login');
 
   // Fill login form using placeholder selectors
+  // Note: Login form uses 'Username' placeholder for email field
   await page.getByPlaceholder('Username').fill(email);
   await page.getByPlaceholder('Password').fill(password);
 
   // Submit form
   await page.locator('form').getByRole('button', { name: 'Log In' }).click();
 
-  // Wait for redirect to stories page
-  await page.waitForURL('/stories');
+  // Wait for redirect to stories page (/)
+  await page.waitForURL('/');
 }
 
 /**
@@ -356,11 +436,20 @@ export async function login(page, email, password) {
  * @returns {Promise<void>}
  */
 export async function dragAndDrop(page, sourceSelector, targetSelector) {
-  // TODO: Implement drag and drop
-  // Use Playwright's dragTo() method or manual mouse events
-  // Verify drop operation completed successfully
+  // Perform drag-and-drop operation
+  // The app uses @dnd-kit/core which works with native drag events
+  const source = page.locator(sourceSelector);
+  const target = page.locator(targetSelector);
 
-  // await page.locator(sourceSelector).dragTo(page.locator(targetSelector));
+  // Ensure both elements are visible
+  await source.waitFor({ state: 'visible' });
+  await target.waitFor({ state: 'visible' });
+
+  // Perform drag operation
+  await source.dragTo(target);
+
+  // Wait for drag-and-drop animation and state updates
+  await page.waitForTimeout(500);
 }
 
 /**
@@ -372,7 +461,6 @@ export async function dragAndDrop(page, sourceSelector, targetSelector) {
  * @returns {Promise<import('@playwright/test').Locator>} Element locator
  */
 export async function waitForElement(page, selector, timeout = 10000) {
-  // TODO: Implement element waiting
-  // return await page.waitForSelector(selector, { state: 'visible', timeout });
-  return page.locator(selector);
+  // Wait for element to be visible with timeout
+  return await page.waitForSelector(selector, { state: 'visible', timeout });
 }

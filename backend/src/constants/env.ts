@@ -9,7 +9,8 @@ const getEnv = (key: string, defaultValue?: string): string => {
 
 export const NODE_ENV = getEnv("NODE_ENV", "development");
 export const PORT = getEnv('PORT', '8080');
-export const MONGO_URI = getEnv('MONGO_URI');
+// MONGO_URI is optional in test mode (will use MongoDB Memory Server)
+export const MONGO_URI = NODE_ENV === "test" ? (process.env.MONGO_URI || "") : getEnv('MONGO_URI');
 export const JWT_SECRET = getEnv('JWT_SECRET');
 export const APP_ORIGIN = getEnv("APP_ORIGIN");
 export const JWT_REFRESH_SECRET = getEnv("JWT_REFRESH_SECRET");

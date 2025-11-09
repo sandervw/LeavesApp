@@ -18,7 +18,16 @@
       "Bash(timeout /t 2 /nobreak)",
       "Bash(cmd /c \"taskkill /F /PID 12240\")",
       "Bash(powershell -Command \"Stop-Process -Id 12240 -Force\")",
-      "Bash(npx playwright test:*)"
+      "Bash(npx playwright test:*)",
+      "Bash(timeout /t 10 /nobreak)",
+      "Bash(set NODE_ENV=test)",
+      "Bash(ping:*)",
+      "Bash(nul)",
+      "Bash(cmd /c \"cd backend && set NODE_ENV=test && npm run dev\")",
+      "Bash(npm run build:*)",
+      "Bash(node test-mongo-memory.js:*)",
+      "Bash(del C:UsersAdministratorDocumentsPersonalProjectsLeavesAppbackendtest-mongo-memory.js)",
+      "Bash(if exist test-mongo-memory.js del test-mongo-memory.js)"
     ],
     "deny": [],
     "ask": []
