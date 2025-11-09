@@ -94,6 +94,15 @@ export default defineConfig({
       timeout: 120 * 1000,
       reuseExistingServer: !process.env.CI,
       cwd: '../backend',
+      env: {
+        NODE_ENV: 'test',
+        MONGO_URI: '', // Empty string to trigger MongoDB Memory Server usage
+        JWT_SECRET: process.env.JWT_SECRET || 'test-jwt-secret',
+        JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET || 'test-refresh-secret',
+        APP_ORIGIN: 'http://localhost:5173',
+        EMAIL_SENDER: process.env.EMAIL_SENDER || 'test@example.com',
+        RESEND_API_KEY: process.env.RESEND_API_KEY || 'test-api-key',
+      },
     },
   ],
 
