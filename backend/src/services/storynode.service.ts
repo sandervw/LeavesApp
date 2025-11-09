@@ -5,13 +5,11 @@ import appAssert from '../utils/appAssert';
 import { NOT_FOUND } from '../constants/http';
 import { recursiveStorynodeFromTemplate, recursiveUpdateWordLimits } from './recursive.service';
 
-class storynodeService extends TreeService<StorynodeDoc> {
+class StorynodeService extends TreeService<StorynodeDoc> {
 
   constructor() {
     super(Storynode);
     this.addFromTemplate = this.addFromTemplate.bind(this);
-    // this.addFromFile = this.addFromFile.bind(this);
-    // this.saveToFile = this.saveToFile.bind(this);
   }
 
   /**
@@ -53,7 +51,7 @@ class storynodeService extends TreeService<StorynodeDoc> {
    * @param userId - the userId to assign to the new storynodes
    * @param templateId - the id of the template to create the storynode tree from
    * @param parentId - the id of the parent storynode (if any)
-   * @return - the new storynode tree
+   * @returns - the new storynode tree
    */
   async addFromTemplate(userId: mongoId, templateId: mongoId, parentId?: mongoId | null) {
     if (!parentId) {
@@ -73,27 +71,6 @@ class storynodeService extends TreeService<StorynodeDoc> {
 
     return newChild;
   }
-
-  // /**
-  //  * Updates the depths of all root storynodes and their descendants.
-  //  * @param userId - the userId to filter by
-  //  */
-  // async updateDepth(userId: mongoId) {
-  //   const storynodes = await Storynode.find({ kind: 'storynode', type: 'root', userId });
-  //   appAssert(storynodes, NOT_FOUND, 'Storynodes not found');
-  //   await Promise.all(storynodes.map(storynode => recursiveUpdateDepth(storynode._id, storynode.depth)));
-  //   return { success: true };
-  // }
-
-  // // Save a storynode to a file
-  // async saveToFile(id, user_id){
-  //     if(!id || !mongoose.Types.ObjectId.isValid(id)) throw new Error('Not a valid ID');
-  //     // Recursively retrieve all the nodes
-  //     const storynode = await Storynode.findOne({ _id: id, user_id });
-  //     let storyLeafs = await recursiveGetLeafs(storynode._id);
-  //     let result = await writeArrayToFile(storyLeafs.map((leaf) => leaf.text), `${storynode.name}.txt`);
-  //     res.status(200).json({success: result});
-  // }
 
   /**
    * Calculate word count from a text string
@@ -161,4 +138,4 @@ class storynodeService extends TreeService<StorynodeDoc> {
 
 }
 
-export default new storynodeService();
+export default new StorynodeService();

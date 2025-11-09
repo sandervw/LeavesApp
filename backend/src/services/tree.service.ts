@@ -20,7 +20,7 @@ export default class TreeService<T extends TreeDoc> {
     this.deleteById = this.deleteById.bind(this);
   }
 
-  private model;
+  private model: mongoose.Model<T>;
 
   /**
    * Returns all the user's elements (matching a query if provided).
@@ -63,7 +63,8 @@ export default class TreeService<T extends TreeDoc> {
    * @param data - the element to create or update
    */
   async upsert(userId: mongoId, data: T) {
-    data.userId = userId; // Ensure user_id is set in the data
+    // Ensure userId is always set to prevent accidental data leakage to other users
+    data.userId = userId;
 
     // Clean children array (common operation)
     if (data.children) {
@@ -117,11 +118,11 @@ export default class TreeService<T extends TreeDoc> {
         // If the parent is branch and has no children, set type to 'leaf'
         parent.type = 'leaf';
       }
-      parent.save();
+      await parent.save();
     }
-    // Next, delete all descendents of this template
-    const descendents = await recursiveGetDescendants<T>(toDelete, this.model);
-    await this.model.deleteMany({ _id: { $in: descendents.map((descendent) => descendent._id) } });
+    // Next, delete all descendants of this template
+    const descendants = await recursiveGetDescendants<T>(toDelete, this.model);
+    await this.model.deleteMany({ _id: { $in: descendants.map((descendant) => descendant._id) } });
     // Finally, delete this template
     return { 'Deleted': await this.model.findByIdAndDelete(id) };
   }

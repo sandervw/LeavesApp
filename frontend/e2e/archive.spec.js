@@ -9,8 +9,6 @@ import { setupAuthenticatedUser, createStorynode, createStorynodeTree, waitForAp
  * - Viewing archived storynodes
  * - Unarchiving storynodes
  * - Filtering archived vs active storynodes
- * - Archive persistence
- * - Cascade archiving with tree structures
  */
 
 test.describe('Archive Operations', () => {

@@ -1,5 +1,5 @@
 import { CREATED, OK } from '../constants/http';
-import templateService from '../services/template.service';
+import TemplateService from '../services/template.service';
 import { catchErrors } from '../utils/errorUtils';
 import { mongoIdSchema, postSchema } from '../schemas/controller.schema';
 
@@ -7,7 +7,7 @@ import { mongoIdSchema, postSchema } from '../schemas/controller.schema';
  * Retrieves all templates for the current user with optional query filters.
  */
 export const getTemplatesController = catchErrors(async (req, res) => {
-    const templates = await templateService.find(req.userId, req.query);
+    const templates = await TemplateService.find(req.userId, req.query);
     return res.status(OK).json(templates);
 });
 
@@ -16,33 +16,33 @@ export const getTemplatesController = catchErrors(async (req, res) => {
  */
 export const getOneTemplateController = catchErrors(async (req, res) => {
     const templateId = mongoIdSchema.parse(req.params.id);
-    const template = await templateService.findById(req.userId, templateId);
+    const template = await TemplateService.findById(req.userId, templateId);
     return res.status(OK).json(template);
 });
-    
+
 /**
  * Retrieves all children of a specific template for the current user.
  */
 export const getTemplateChildrenController = catchErrors(async (req, res) => {
     const templateId = mongoIdSchema.parse(req.params.id);
-    const children = await templateService.findChildren(req.userId, templateId);
+    const children = await TemplateService.findChildren(req.userId, templateId);
     return res.status(OK).json(children);
 });
-    
+
 /**
  * Creates or updates a template for the current user.
  */
 export const postTemplateController = catchErrors(async (req, res) => {
     postSchema.parse(req.body); // Validate the request.
-    const result = await templateService.upsert(req.userId, req.body);
+    const result = await TemplateService.upsert(req.userId, req.body);
     return res.status(CREATED).json(result);
 });
-    
+
 /**
  * Deletes a template by ID for the current user.
  */
 export const deleteTemplateController = catchErrors(async (req, res) => {
     const templateId = mongoIdSchema.parse(req.params.id);
-    const result = await templateService.deleteById(req.userId, templateId);
+    const result = await TemplateService.deleteById(req.userId, templateId);
     return res.status(OK).json(result);
 }); 
