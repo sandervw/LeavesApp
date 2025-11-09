@@ -323,17 +323,19 @@ export async function createStorynode(page, name, type, parentId = null) {
  */
 export async function clearDatabase(page) {
   // Call test-only backend endpoint to clear database
-  // NOTE: This endpoint must be implemented in backend with NODE_ENV=test check
-  try {
-    await page.request.delete('http://localhost:8080/api/test/clear-database');
-  } catch (error) {
-    // Endpoint may not exist yet - this is expected during development
-    console.warn(
-      'Database clearing endpoint not available. Tests may have data conflicts.'
+  // This endpoint is only available when NODE_ENV=test
+  const response = await page.request.delete(
+    'http://localhost:8080/test/clear-database'
+  );
+
+  // Verify the database was cleared successfully
+  if (!response.ok()) {
+    throw new Error(
+      `Failed to clear database: ${response.status()} ${response.statusText()}`
     );
   }
 
-  // Also clear localStorage to ensure clean state
+  // Also clear browser storage to ensure clean state
   await page.evaluate(() => {
     localStorage.clear();
     sessionStorage.clear();

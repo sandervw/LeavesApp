@@ -2,7 +2,7 @@ import 'dotenv/config'; // NEEDS TO BE ON TOP: loads environment variables from 
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors'; // Cross-Origin Resource Sharing: allows api calls from outside of the server domain
-import { APP_ORIGIN } from './constants/env';
+import { APP_ORIGIN, NODE_ENV } from './constants/env';
 import errorHandler from './middleware/errorHandler';
 import authenticate from './middleware/authenticate';
 import { OK } from './constants/http';
@@ -11,6 +11,7 @@ import userRoutes from './routes/user.route';
 import sessionRoutes from './routes/session.route';
 import templateRoutes from './routes/template.route';
 import storynodeRoutes from './routes/storynode.route';
+import testRoutes from './routes/test.route';
 
 // Create express server
 export const app = express();
@@ -37,6 +38,12 @@ app.use('/user', authenticate, userRoutes);
 app.use('/session', authenticate, sessionRoutes);
 app.use('/template', authenticate, templateRoutes);
 app.use('/storynode', authenticate, storynodeRoutes);
+
+// Test routes (only available in test environment)
+if (NODE_ENV === 'test') {
+  app.use('/test', testRoutes);
+}
+
 // TODO: handle unknown routes (404)
 
 
