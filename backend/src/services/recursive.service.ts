@@ -15,6 +15,7 @@ export const recursiveUpdateWordLimits = async (node: Readonly<StorynodeDoc>): P
 
   const children = await Storynode.find({ _id: { $in: node.children } });
   const updates = children.map(child => {
+    // wordWeight is expressed as a percentage (0-100), so divide by 100 to calculate child's limit
     const newLimit = child.wordWeight ? Math.floor(node.wordLimit * child.wordWeight / 100) : node.wordLimit;
     child.wordLimit = newLimit; // Update in-place for recursive calls
     return { updateOne: { filter: { _id: child._id }, update: { wordLimit: newLimit } } };
@@ -33,13 +34,14 @@ export const recursiveUpdateWordLimits = async (node: Readonly<StorynodeDoc>): P
  */
 export const recursiveGetDescendants = async <T extends TreeDoc>(tree: T, model: mongoose.Model<T>) => {
   const descendants: T[] = [];
-  const queue: mongoId[] = [...tree.children];
+  // Initialize queue with tree's children (copy to avoid mutation)
+  const nodesToProcessQueue: mongoId[] = [...tree.children];
 
-  while (queue.length > 0) {
-    const currentLevel = await model.find({ _id: { $in: queue } });
+  while (nodesToProcessQueue.length > 0) {
+    const currentLevel = await model.find({ _id: { $in: nodesToProcessQueue } });
     descendants.push(...currentLevel);
-    queue.length = 0;
-    currentLevel.forEach(node => queue.push(...node.children));
+    nodesToProcessQueue.length = 0;
+    currentLevel.forEach(node => nodesToProcessQueue.push(...node.children));
   }
 
   return descendants;
@@ -59,7 +61,7 @@ export const recursiveStorynodeFromTemplate = async (
   parentId?: mongoId
 ): Promise<StorynodeDoc> => {
   const templateData = await Template.findOne({ _id: templateId, userId });
-  appAssert(templateData, NOT_FOUND, 'Template not found');
+  appAssert(templateData, NOT_FOUND, `Template not found (ID: ${templateId})`);
 
   let depth = 0;
   if (parentId) {
@@ -83,42 +85,3 @@ export const recursiveStorynodeFromTemplate = async (
 
   return storynode;
 };
-
-// // Function to recursively get only the base nodes (leaves) of a story, given a start Id (inclusive)
-// const recursiveGetLeafs = async (id) => {
-//     let toGet = await Element.findById(id);
-//     let blobArr = [];
-//     if(toGet && toGet.type == 'leaf') blobArr.push(toGet);
-//     if(toGet && toGet.children){
-//         let childArr = toGet.children;
-//         for (const child of childArr){
-//             let childNode = await Element.findById(child);
-//             if(childNode.type == 'leaf') blobArr.push(childNode);
-//             else blobArr = [...blobArr, ...await recursiveGetBlobs(child)];
-//         };
-//     }
-//     return blobArr;
-// }
-
-// /**
-//  * Given a storynode id, recursively update the depth of that storynode and all its descendants.
-//  * @param storynodeId - the id of the storynode to update
-//  * @param depth - the depth value to set
-//  */
-// export const recursiveUpdateDepth = async (storynodeId: mongoId, depth: number): Promise<void> => {
-//   const storynode = await Storynode.findOne({ _id: storynodeId });
-//   if (!storynode) return;
-
-//   await Storynode.findOneAndUpdate({ _id: storynodeId }, { depth });
-
-//   if (storynode.children && storynode.children.length > 0) {
-//     for (const childId of storynode.children) {
-//       await recursiveUpdateDepth(childId, depth + 1);
-//     }
-//   }
-// };
-
-// // Function to recursively convert a JSON object to a storynode
-// const recursiveStorynodeFromJSON = async (json, parentid) => {
-//     // TODO - implement this
-// }

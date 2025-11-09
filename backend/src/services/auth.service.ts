@@ -74,8 +74,8 @@ export type LoginUserParams = {
  * Logs in a user and returns the user and authentication tokens.
  * @param email - The email of the user
  * @param password - The password of the user
- * @returns The created user and the access and refresh tokens
- * @returns The created user and the access and refresh tokens
+ * @param userAgent - The user agent string
+ * @returns The authenticated user and the access and refresh tokens
  */
 export const loginUser = async ({ email, password, userAgent }: LoginUserParams) => {
   // Get user by email
@@ -88,7 +88,7 @@ export const loginUser = async ({ email, password, userAgent }: LoginUserParams)
   // Create session (unit of time user is logged in for)
   const session = await SessionModel.create({
     userId: user._id,
-    userAgent: userAgent,
+    userAgent,
   });
   const sessionInfo = { sessionId: session._id };
   // Sign access token and refresh token
@@ -207,8 +207,9 @@ export const forgotPassword = async (email: string) => {
       verificationUrl,
       emailId: data.id
     };
-  } catch (error: any) {
-    console.log("SendPasswordResetError:", error.message);
+  } catch (error) {
+    console.log('Error in auth.service:', error);
+
     return {};
   }
 };
@@ -221,7 +222,7 @@ type ResetPasswordParams = {
 /**
  * Resets the user's password using the verification code and new password.
  * @param verificationCode - The verification code (must be within 1 hour of creation)
- * @param newPassword - The new password to set for the user
+ * @param password - The new password to set for the user
  */
 export const resetPassword = async ({ verificationCode, password }: ResetPasswordParams) => {
   const code = await VerificationCodeModel.findOne({
