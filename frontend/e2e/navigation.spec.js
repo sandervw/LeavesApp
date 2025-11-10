@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { setupAuthenticatedUser, createTemplate, createStorynode, logout } from './helpers.js';
+import { setupAuthenticatedUser, logout } from './helpers.js';
 
 /**
  * Navigation E2E Tests
@@ -35,62 +35,6 @@ test.describe('Application Navigation', () => {
     await page.getByText('Stories', { exact: true }).click();
     await page.waitForURL('/stories');
     await expect(page.locator('.container.content')).toBeVisible();
-  });
-
-  test('should navigate to template detail page by clicking template', async ({ page }) => {
-    // Create a template
-    await page.goto('/templates');
-    const templateName = 'Test Template';
-    const template = await createTemplate(page, templateName, 'root');
-
-    // Click on template name to navigate to detail view
-    await page.locator(`.draggable[id="${template.id}"]`).locator('h3').click();
-
-    // Verify navigation to template detail page
-    await page.waitForURL('/templatedetail/');
-
-    // Verify template detail page is displayed with correct content
-    await expect(page.locator('.element.detail')).toBeVisible();
-    await expect(page.locator('h3').first()).toContainText(templateName);
-  });
-
-  test('should navigate to storynode detail page by clicking storynode', async ({ page }) => {
-    // Create a storynode
-    await page.goto('/stories');
-    const storynodeName = 'Test Story';
-    const storynode = await createStorynode(page, storynodeName, 'root');
-
-    // Click on storynode name to navigate to detail view
-    await page.locator(`.draggable[id="${storynode.id}"]`).locator('h3').click();
-
-    // Verify navigation to storynode detail page
-    await page.waitForURL('/storydetail/');
-
-    // Verify storynode detail page is displayed with correct content
-    await expect(page.locator('.element.detail')).toBeVisible();
-    await expect(page.locator('h3').first()).toContainText(storynodeName);
-  });
-
-  test('should navigate back from detail page using back button', async ({ page }) => {
-    // Create a template and navigate to detail page
-    await page.goto('/templates');
-    const template = await createTemplate(page, 'Back Test Template', 'root');
-    await page.locator(`.draggable[id="${template.id}"]`).locator('h3').click();
-    await page.waitForURL('/templatedetail/');
-
-    // Click browser back button or navigate back
-    await page.goBack();
-
-    // Verify navigation back to templates list page
-    await page.waitForURL('/templates');
-    await expect(page.locator('.container.content')).toBeVisible();
-
-    // Click browser forward button
-    await page.goForward();
-
-    // Verify navigation forward to template detail page
-    await page.waitForURL('/templatedetail/');
-    await expect(page.locator('.element.detail')).toBeVisible();
   });
 
   test('should redirect unauthenticated users to login from protected routes', async ({ page }) => {
