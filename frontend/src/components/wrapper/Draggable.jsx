@@ -29,7 +29,7 @@ const Draggable = (props) => {
 
   return (
     <DragHandlerContext.Provider key={props.id} value={{ ...listeners, ...attributes }}>
-      <div ref={setNodeRef} style={style} className={className}>
+      <div ref={setNodeRef} style={style} className={className} id={props.id}>
         {props.children}
       </div>
     </DragHandlerContext.Provider>

@@ -18,7 +18,7 @@ const Droppable = (props) => {
   
   
   return (
-    <div ref={setNodeRef} className={props.className}>
+    <div ref={setNodeRef} className={props.className} id={props.id}>
       {props.children}
     </div>
   );

@@ -88,10 +88,7 @@ export async function createTemplateTree(page, options = {}) {
   await rootInput.fill(rootName);
 
   // Drag TemplateCreate to roots drop zone
-  const dragHandle = page.locator('aside.sidebar button[drag-handle="true"]').first();
-  const rootsDropZone = page.locator('.content .droppable.list');
-  await rootsDropZone.waitFor({ state: 'visible' });
-  await dragHandle.dragTo(rootsDropZone);
+  await dragAndDrop(page, 'aside.sidebar button.drag-handle', '.content .droppable.list');
 
   // Wait for API response and extract root ID
   const rootResponse = await page.waitForResponse((resp) =>
@@ -109,10 +106,7 @@ export async function createTemplateTree(page, options = {}) {
   await branchInput.waitFor({ state: 'visible' });
   await branchInput.fill(branchName);
 
-  const childrenDropZone = page.locator('.content .droppable.list');
-  await childrenDropZone.waitFor({ state: 'visible' });
-  const dragHandleBranch = page.locator('aside.sidebar button[drag-handle="true"]').first();
-  await dragHandleBranch.dragTo(childrenDropZone);
+  await dragAndDrop(page, 'aside.sidebar button.drag-handle', '.content .droppable.list');
 
   // Wait for branch creation
   const branchResponse = await page.waitForResponse((resp) =>
@@ -130,8 +124,7 @@ export async function createTemplateTree(page, options = {}) {
   await leafInput.waitFor({ state: 'visible' });
   await leafInput.fill(leafName);
 
-  const dragHandleLeaf = page.locator('aside.sidebar button[drag-handle="true"]').first();
-  await dragHandleLeaf.dragTo(childrenDropZone);
+  await dragAndDrop(page, 'aside.sidebar button.drag-handle', '.content .droppable.list');
 
   // Wait for leaf creation
   const leafResponse = await page.waitForResponse((resp) =>
@@ -178,10 +171,7 @@ export async function createStorynodeTree(page, options = {}) {
   await rootInput.fill(rootName);
 
   // Drag StorynodeCreate to roots drop zone
-  const dragHandle = page.locator('aside.sidebar button[drag-handle="true"]').first();
-  const rootsDropZone = page.locator('.content .droppable.list');
-  await rootsDropZone.waitFor({ state: 'visible' });
-  await dragHandle.dragTo(rootsDropZone);
+  await dragAndDrop(page, 'aside.sidebar button.drag-handle', '.content .droppable.list');
 
   // Wait for API response and extract root ID
   const rootResponse = await page.waitForResponse((resp) =>
@@ -199,10 +189,7 @@ export async function createStorynodeTree(page, options = {}) {
   await branchInput.waitFor({ state: 'visible' });
   await branchInput.fill(branchName);
 
-  const childrenDropZone = page.locator('.content .droppable.list');
-  await childrenDropZone.waitFor({ state: 'visible' });
-  const dragHandleBranch = page.locator('aside.sidebar button[drag-handle="true"]').first();
-  await dragHandleBranch.dragTo(childrenDropZone);
+  await dragAndDrop(page, 'aside.sidebar button.drag-handle', '.content .droppable.list');
 
   // Wait for branch creation
   const branchResponse = await page.waitForResponse((resp) =>
@@ -220,8 +207,7 @@ export async function createStorynodeTree(page, options = {}) {
   await leafInput.waitFor({ state: 'visible' });
   await leafInput.fill(leafName);
 
-  const dragHandleLeaf = page.locator('aside.sidebar button[drag-handle="true"]').first();
-  await dragHandleLeaf.dragTo(childrenDropZone);
+  await dragAndDrop(page, 'aside.sidebar button.drag-handle', '.content .droppable.list');
 
   // Wait for leaf creation
   const leafResponse = await page.waitForResponse((resp) =>
@@ -261,10 +247,7 @@ export async function createTemplate(page, name, type, parentId = null) {
   await nameInput.fill(name);
 
   // Drag TemplateCreate to appropriate drop zone
-  const dragHandle = page.locator('aside.sidebar button[drag-handle="true"]').first();
-  const dropZone = page.locator('.content .droppable.list');
-  await dropZone.waitFor({ state: 'visible' });
-  await dragHandle.dragTo(dropZone);
+  await dragAndDrop(page, 'aside.sidebar button.drag-handle', '.content .droppable.list');
 
   // Wait for API response and extract template ID
   const response = await page.waitForResponse((resp) =>
@@ -303,10 +286,7 @@ export async function createStorynode(page, name, type, parentId = null) {
   await nameInput.fill(name);
 
   // Drag StorynodeCreate to appropriate drop zone
-  const dragHandle = page.locator('aside.sidebar button[drag-handle="true"]').first();
-  const dropZone = page.locator('.content .droppable.list');
-  await dropZone.waitFor({ state: 'visible' });
-  await dragHandle.dragTo(dropZone);
+  await dragAndDrop(page, 'aside.sidebar button.drag-handle', '.content .droppable.list');
 
   // Wait for API response and extract storynode ID
   const response = await page.waitForResponse((resp) =>
@@ -450,8 +430,8 @@ export async function login(page, email, password) {
  * @returns {Promise<void>}
  */
 export async function dragAndDrop(page, sourceSelector, targetSelector) {
-  // Perform drag-and-drop operation
-  // The app uses @dnd-kit/core which works with native drag events
+  // Perform drag-and-drop operation manually for @dnd-kit compatibility
+  // The app uses @dnd-kit/core which requires 10px activation distance
   const source = page.locator(sourceSelector);
   const target = page.locator(targetSelector);
 
@@ -459,8 +439,27 @@ export async function dragAndDrop(page, sourceSelector, targetSelector) {
   await source.waitFor({ state: 'visible' });
   await target.waitFor({ state: 'visible' });
 
-  // Perform drag operation
-  await source.dragTo(target);
+  // Get bounding boxes
+  const sourceBox = await source.boundingBox();
+  const targetBox = await target.boundingBox();
+
+  if (!sourceBox || !targetBox) {
+    throw new Error('Could not get bounding boxes for drag and drop');
+  }
+
+  // Calculate center points
+  const sourceCenterX = sourceBox.x + sourceBox.width / 2;
+  const sourceCenterY = sourceBox.y + sourceBox.height / 2;
+  const targetCenterX = targetBox.x + targetBox.width / 2;
+  const targetCenterY = targetBox.y + targetBox.height / 2;
+
+  // Perform manual drag with 10px+ activation distance
+  await page.mouse.move(sourceCenterX, sourceCenterY);
+  await page.mouse.down();
+  // Move more than 10px to activate @dnd-kit drag
+  await page.mouse.move(sourceCenterX + 15, sourceCenterY);
+  await page.mouse.move(targetCenterX, targetCenterY);
+  await page.mouse.up();
 
   // Wait for drag-and-drop animation and state updates
   await page.waitForTimeout(500);
