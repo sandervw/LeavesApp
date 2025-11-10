@@ -2,7 +2,7 @@
 name: code-reviewer
 description: Use this agent when you need to review code files against project coding standards. Call this agent after writing or modifying code files to ensure they conform to the standards defined in @standards\CODING.md. Examples:\n\n<example>\nContext: User has just implemented a new service class and wants to ensure it follows project standards.\nuser: "I just created a new payment.service.ts file. Can you review it?"\nassistant: "I'll use the code-reviewer agent to evaluate your new service file against the coding standards."\n<uses code-reviewer agent with payment.service.ts as input>\n</example>\n\n<example>\nContext: User has completed a feature implementation across multiple files.\nuser: "I've finished implementing the user authentication feature. The changes are in auth.controller.ts, auth.service.ts, and user.model.ts."\nassistant: "Let me use the code-reviewer agent to review these files against the project standards."\n<uses code-reviewer agent with all three files as input>\n</example>\n\n<example>\nContext: User wants proactive code review during development.\nuser: "Here's the new template deletion function:\n\nasync deleteTemplate(id: string) {\n  const result = await Template.findByIdAndDelete(id);\n  return result;\n}"\nassistant: "I'll use the code-reviewer agent to review this function against the coding standards."\n<uses code-reviewer agent to evaluate the function>\n</example>
 tools: Glob, Grep, Read, WebFetch, TodoWrite, WebSearch, BashOutput, KillShell
-model: haiku
+model: sonnet
 color: yellow
 ---
 

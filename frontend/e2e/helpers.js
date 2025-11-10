@@ -83,13 +83,15 @@ export async function createTemplateTree(page, options = {}) {
   await page.goto('/templates');
 
   // Create root template via drag-and-drop
-  const rootInput = page.locator('#templateCreate input[placeholder*="New"]');
+  const rootInput = page.locator('aside.sidebar input[placeholder*="New"]');
+  await rootInput.waitFor({ state: 'visible' });
   await rootInput.fill(rootName);
 
   // Drag TemplateCreate to roots drop zone
-  const templateCreate = page.locator('#templateCreate');
-  const rootsDropZone = page.locator('.droppable.list#roots');
-  await templateCreate.dragTo(rootsDropZone);
+  const dragHandle = page.locator('aside.sidebar button[drag-handle="true"]').first();
+  const rootsDropZone = page.locator('.content .droppable.list');
+  await rootsDropZone.waitFor({ state: 'visible' });
+  await dragHandle.dragTo(rootsDropZone);
 
   // Wait for API response and extract root ID
   const rootResponse = await page.waitForResponse((resp) =>
@@ -103,11 +105,14 @@ export async function createTemplateTree(page, options = {}) {
   await page.waitForURL(`/templatedetail/${rootId}`);
 
   // Create branch template as child
-  const branchInput = page.locator('#templateCreate input[placeholder*="New"]');
+  const branchInput = page.locator('aside.sidebar input[placeholder*="New"]');
+  await branchInput.waitFor({ state: 'visible' });
   await branchInput.fill(branchName);
 
-  const childrenDropZone = page.locator('.droppable.list#children');
-  await templateCreate.dragTo(childrenDropZone);
+  const childrenDropZone = page.locator('.content .droppable.list');
+  await childrenDropZone.waitFor({ state: 'visible' });
+  const dragHandleBranch = page.locator('aside.sidebar button[drag-handle="true"]').first();
+  await dragHandleBranch.dragTo(childrenDropZone);
 
   // Wait for branch creation
   const branchResponse = await page.waitForResponse((resp) =>
@@ -121,10 +126,12 @@ export async function createTemplateTree(page, options = {}) {
   await page.waitForURL(`/templatedetail/${branchId}`);
 
   // Create leaf template as child of branch
-  const leafInput = page.locator('#templateCreate input[placeholder*="New"]');
+  const leafInput = page.locator('aside.sidebar input[placeholder*="New"]');
+  await leafInput.waitFor({ state: 'visible' });
   await leafInput.fill(leafName);
 
-  await templateCreate.dragTo(childrenDropZone);
+  const dragHandleLeaf = page.locator('aside.sidebar button[drag-handle="true"]').first();
+  await dragHandleLeaf.dragTo(childrenDropZone);
 
   // Wait for leaf creation
   const leafResponse = await page.waitForResponse((resp) =>
@@ -166,13 +173,15 @@ export async function createStorynodeTree(page, options = {}) {
   await page.goto('/stories');
 
   // Create root storynode via drag-and-drop
-  const rootInput = page.locator('#storynodeCreate input[placeholder*="New"]');
+  const rootInput = page.locator('aside.sidebar input[placeholder*="New"]');
+  await rootInput.waitFor({ state: 'visible' });
   await rootInput.fill(rootName);
 
   // Drag StorynodeCreate to roots drop zone
-  const storynodeCreate = page.locator('#storynodeCreate');
-  const rootsDropZone = page.locator('.droppable.list#roots');
-  await storynodeCreate.dragTo(rootsDropZone);
+  const dragHandle = page.locator('aside.sidebar button[drag-handle="true"]').first();
+  const rootsDropZone = page.locator('.content .droppable.list');
+  await rootsDropZone.waitFor({ state: 'visible' });
+  await dragHandle.dragTo(rootsDropZone);
 
   // Wait for API response and extract root ID
   const rootResponse = await page.waitForResponse((resp) =>
@@ -186,11 +195,14 @@ export async function createStorynodeTree(page, options = {}) {
   await page.waitForURL(`/storydetail/${rootId}`);
 
   // Create branch storynode as child
-  const branchInput = page.locator('#storynodeCreate input[placeholder*="New"]');
+  const branchInput = page.locator('aside.sidebar input[placeholder*="New"]');
+  await branchInput.waitFor({ state: 'visible' });
   await branchInput.fill(branchName);
 
-  const childrenDropZone = page.locator('.droppable.list#children');
-  await storynodeCreate.dragTo(childrenDropZone);
+  const childrenDropZone = page.locator('.content .droppable.list');
+  await childrenDropZone.waitFor({ state: 'visible' });
+  const dragHandleBranch = page.locator('aside.sidebar button[drag-handle="true"]').first();
+  await dragHandleBranch.dragTo(childrenDropZone);
 
   // Wait for branch creation
   const branchResponse = await page.waitForResponse((resp) =>
@@ -204,10 +216,12 @@ export async function createStorynodeTree(page, options = {}) {
   await page.waitForURL(`/storydetail/${branchId}`);
 
   // Create leaf storynode as child of branch
-  const leafInput = page.locator('#storynodeCreate input[placeholder*="New"]');
+  const leafInput = page.locator('aside.sidebar input[placeholder*="New"]');
+  await leafInput.waitFor({ state: 'visible' });
   await leafInput.fill(leafName);
 
-  await storynodeCreate.dragTo(childrenDropZone);
+  const dragHandleLeaf = page.locator('aside.sidebar button[drag-handle="true"]').first();
+  await dragHandleLeaf.dragTo(childrenDropZone);
 
   // Wait for leaf creation
   const leafResponse = await page.waitForResponse((resp) =>
@@ -242,16 +256,15 @@ export async function createTemplate(page, name, type, parentId = null) {
   }
 
   // Fill template name in TemplateCreate component
-  const nameInput = page.locator('#templateCreate input[placeholder*="New"]');
+  const nameInput = page.locator('aside.sidebar input[placeholder*="New"]');
+  await nameInput.waitFor({ state: 'visible' });
   await nameInput.fill(name);
 
   // Drag TemplateCreate to appropriate drop zone
-  const templateCreate = page.locator('#templateCreate');
-  const dropZone = parentId
-    ? page.locator('.droppable.list#children')
-    : page.locator('.droppable.list#roots');
-
-  await templateCreate.dragTo(dropZone);
+  const dragHandle = page.locator('aside.sidebar button[drag-handle="true"]').first();
+  const dropZone = page.locator('.content .droppable.list');
+  await dropZone.waitFor({ state: 'visible' });
+  await dragHandle.dragTo(dropZone);
 
   // Wait for API response and extract template ID
   const response = await page.waitForResponse((resp) =>
@@ -285,16 +298,15 @@ export async function createStorynode(page, name, type, parentId = null) {
   }
 
   // Fill storynode name in StorynodeCreate component
-  const nameInput = page.locator('#storynodeCreate input[placeholder*="New"]');
+  const nameInput = page.locator('aside.sidebar input[placeholder*="New"]');
+  await nameInput.waitFor({ state: 'visible' });
   await nameInput.fill(name);
 
   // Drag StorynodeCreate to appropriate drop zone
-  const storynodeCreate = page.locator('#storynodeCreate');
-  const dropZone = parentId
-    ? page.locator('.droppable.list#children')
-    : page.locator('.droppable.list#roots');
-
-  await storynodeCreate.dragTo(dropZone);
+  const dragHandle = page.locator('aside.sidebar button[drag-handle="true"]').first();
+  const dropZone = page.locator('.content .droppable.list');
+  await dropZone.waitFor({ state: 'visible' });
+  await dragHandle.dragTo(dropZone);
 
   // Wait for API response and extract storynode ID
   const response = await page.waitForResponse((resp) =>
