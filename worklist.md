@@ -8,7 +8,7 @@
 | 004 | Fix Routing         | Fix routing issues when logged in user clicks 'Leaves' in Navbar            | ✅         |
 | 005 | Fix Overlay         | Fix overlay on Searchbar rendering below MarkdownText                       | ✅         |
 | 006 | Backend Testing     | Set up testing automation for backend API                                   | ✅         |
-| 007 | Frontend Testing    | Set up testing automation for frontend React app                            | ⬜         |
+| 007 | Frontend Testing    | Set up testing automation for frontend React app                            | ✅         |
 | 008 | MongoDB Dev Setup   | Set up MongoDB instance in Azure DEV tenant                                 | ⬜         |
 | 009 | Backend Deployment  | Deploy Backend API to Azure DEV environment                                 | ⬜         |
 | 010 | Frontend Deployment | Deploy Frontend React app to Azure DEV environment                          | ⬜         |
