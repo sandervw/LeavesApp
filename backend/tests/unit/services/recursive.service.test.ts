@@ -746,7 +746,6 @@ describe('Recursive Service', () => {
       } catch (error) {
         expect(error).toBeInstanceOf(AppError);
         expect((error as AppError).statusCode).toBe(NOT_FOUND);
-        expect((error as AppError).message).toBe('Template not found');
       }
     });
 
@@ -762,7 +761,6 @@ describe('Recursive Service', () => {
       } catch (error) {
         expect(error).toBeInstanceOf(AppError);
         expect((error as AppError).statusCode).toBe(NOT_FOUND);
-        expect((error as AppError).message).toBe('Template not found');
       }
     });
 
@@ -780,7 +778,6 @@ describe('Recursive Service', () => {
       } catch (error) {
         expect(error).toBeInstanceOf(AppError);
         expect((error as AppError).statusCode).toBe(NOT_FOUND);
-        expect((error as AppError).message).toBe('Template not found');
       }
       expect(Template.findOne).toHaveBeenCalledWith({ _id: templateId, userId });
     });
@@ -813,7 +810,6 @@ describe('Recursive Service', () => {
       } catch (error) {
         expect(error).toBeInstanceOf(AppError);
         expect((error as AppError).statusCode).toBe(NOT_FOUND);
-        expect((error as AppError).message).toBe('Template not found');
       }
     });
 

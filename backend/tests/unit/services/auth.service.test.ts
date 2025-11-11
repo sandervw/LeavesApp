@@ -31,7 +31,8 @@ vi.mock('../../../src/constants/env', () => ({
   ONE_DAY_MS: 86400000,
   JWT_SECRET: 'test-jwt-secret',
   JWT_REFRESH_SECRET: 'test-jwt-refresh-secret',
-  RESEND_API_KEY: 'test-resend-api-key'
+  RESEND_API_KEY: 'test-resend-api-key',
+  NODE_ENV: 'development'
 }));
 
 describe('Auth Service', () => {
