@@ -249,6 +249,31 @@ npm run test:coverage # Generate coverage report
 
 For detailed testing guidelines, see `backend/tests/README.md`.
 
+### Frontend Testing
+
+The frontend uses Vitest with React Testing Library for component testing.
+
+**Test Framework:**
+- **vitest** - Fast unit test framework (same as backend)
+- **@testing-library/react** - React component testing utilities
+- **@testing-library/user-event** - User interaction simulation
+- **jsdom** - DOM environment for tests
+- **msw** - Mock Service Worker for API mocking
+
+**Testing Commands:**
+```bash
+npm test              # Run all tests
+npm run test:watch    # Run tests in watch mode
+npm run test:ui       # Run tests with Vitest UI
+npm run test:coverage # Generate coverage report
+```
+
+**Testing Patterns:**
+- Component tests use React Testing Library's query methods (getByRole, getByText, etc.)
+- User interactions simulated with @testing-library/user-event
+- API calls mocked using MSW (Mock Service Worker)
+- Test files colocated with components or in dedicated test directories
+
 ## Deployment
 
 Planned deployment to Azure DEV environment with MongoDB Atlas (see worklist.md tasks 005-009).
