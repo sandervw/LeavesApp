@@ -8,7 +8,7 @@ import { CONFLICT, INTERNAL_SERVER_ERROR, NOT_FOUND, UNAUTHORIZED } from '../con
 import { RefreshTokenPayload, refreshTokenSignOptions, signToken, verifyToken } from '../utils/jwt';
 import { sendMail } from '../utils/emailUtils';
 import { getPasswordResetTemplate, getVerifyEmailTemplate } from '../utils/emailUtils';
-import { APP_ORIGIN } from '../constants/env';
+import { APP_ORIGIN, NODE_ENV } from '../constants/env';
 import { mongoId } from '../schemas/mongo.schema';
 
 export type SignupUserParams = {
@@ -35,18 +35,20 @@ export const signupUser = async (userData: SignupUserParams) => {
     username: userData.username,
     password: userData.password,
   });
-  // Create verification code
-  const verificationCode = await VerificationCodeModel.create({
-    userId: user._id,
-    codeType: VerificationCodeType.EMAILVERIFICATION,
-    expiresAt: oneYearFromNow(),
-  });
-  // Send verification email
-  const verificationUrl = `${APP_ORIGIN}/email/verify/${verificationCode._id}`;
-  await sendMail({
-    to: user.email,
-    ...getVerifyEmailTemplate(verificationUrl),
-  });
+  if (NODE_ENV !== 'test') {
+    // Create verification code
+    const verificationCode = await VerificationCodeModel.create({
+      userId: user._id,
+      codeType: VerificationCodeType.EMAILVERIFICATION,
+      expiresAt: oneYearFromNow(),
+    });
+    // Send verification email
+    const verificationUrl = `${APP_ORIGIN}/email/verify/${verificationCode._id}`;
+    await sendMail({
+      to: user.email,
+      ...getVerifyEmailTemplate(verificationUrl),
+    });
+  }
   // Create session (unit of time user is logged in for)
   const session = await SessionModel.create({
     userId: user._id,
