@@ -429,36 +429,39 @@ export async function login(page, email, password) {
  * @param {string} targetSelector - CSS selector for drop target
  * @returns {Promise<void>}
  */
-export async function dragAndDrop(page, sourceSelector, targetSelector) {
-  // Perform drag-and-drop operation manually for @dnd-kit compatibility
-  // The app uses @dnd-kit/core which requires 10px activation distance
-  const source = page.locator(sourceSelector);
-  const target = page.locator(targetSelector);
+export async function dragAndDrop(page, dragSelector, dropSelector) {
+  const drag = page.locator(dragSelector);
+  const drop = page.locator(dropSelector);
 
-  // Ensure both elements are visible
-  await source.waitFor({ state: 'visible' });
-  await target.waitFor({ state: 'visible' });
+  const dragBox = await drag.boundingBox();
+  const dropBox = await drop.boundingBox();
 
-  // Get bounding boxes
-  const sourceBox = await source.boundingBox();
-  const targetBox = await target.boundingBox();
-
-  if (!sourceBox || !targetBox) {
-    throw new Error('Could not get bounding boxes for drag and drop');
-  }
-
-  // Calculate center points
-  const sourceCenterX = sourceBox.x + sourceBox.width / 2;
-  const sourceCenterY = sourceBox.y + sourceBox.height / 2;
-  const targetCenterX = targetBox.x + targetBox.width / 2;
-  const targetCenterY = targetBox.y + targetBox.height / 2;
-
-  // Perform manual drag with 10px+ activation distance
-  await page.mouse.move(sourceCenterX, sourceCenterY);
+  await page.mouse.move(
+    dragBox.x + dragBox.width / 2,
+    dragBox.y + dragBox.height / 2
+  );
   await page.mouse.down();
-  // Move more than 10px to activate @dnd-kit drag
-  await page.mouse.move(sourceCenterX + 15, sourceCenterY);
-  await page.mouse.move(targetCenterX, targetCenterY);
+  // Move more than 10px to activate
+  await page.mouse.move(
+    dragBox.x + dragBox.width / 2 + 15,
+    dragBox.y + dragBox.height / 2
+  );
+  console.log(
+    dragBox.x + dragBox.width / 2 + 15,
+    dragBox.y + dragBox.height / 2
+  );
+  await page.mouse.move(
+    dropBox.x + dropBox.width / 2,
+    dropBox.y + dropBox.height / 2
+  );
+  console.log(
+    dragBox.x + dragBox.width / 2 + 15,
+    dragBox.y + dragBox.height / 2
+  );
+  console.log(
+    dropBox.x + dropBox.width / 2,
+    dropBox.y + dropBox.height / 2
+  );
   await page.mouse.up();
 
   // Wait for drag-and-drop animation and state updates
