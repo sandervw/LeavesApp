@@ -21,7 +21,7 @@ test.describe('Archive Operations', () => {
 
     // Navigate to storynode detail page by clicking on it
     await page.click(`.draggable[id="${storynode.id}"] h3.clickable`);
-    await page.waitForURL('/storydetail/');
+    await page.waitForURL(/\/storydetail/);
 
     // Verify archive button is visible
     const archiveButton = page.getByRole('button', { name: 'archive icon' });
@@ -51,7 +51,7 @@ test.describe('Archive Operations', () => {
 
     // Navigate to detail page and archive it by clicking on it
     await page.click(`.draggable[id="${storynode.id}"] h3.clickable`);
-    await page.waitForURL('/storydetail/');
+    await page.waitForURL(/\/storydetail/);
     const archiveButton = page.getByRole('button', { name: 'archive icon' });
     await archiveButton.click();
     await page.waitForURL('/');
@@ -66,7 +66,7 @@ test.describe('Archive Operations', () => {
 
     // Click on the archived storynode to view it
     await archivedStorynode.locator('h3.clickable').click();
-    await page.waitForURL('/storydetail/');
+    await page.waitForURL(/\/storydetail/);
 
     // Verify unarchive button is visible
     const unarchiveButton = page.getByRole('button', { name: 'unarchive icon' });
@@ -95,7 +95,7 @@ test.describe('Archive Operations', () => {
 
     // Navigate to detail page by clicking on it
     await page.click(`.draggable[id="${storynode.id}"] h3.clickable`);
-    await page.waitForURL('/storydetail/');
+    await page.waitForURL(/\/storydetail/);
 
     // Add text content to the storynode
     const editor = page.locator('.ProseMirror');
@@ -115,7 +115,7 @@ test.describe('Archive Operations', () => {
     await page.goto('/archive');
     const archivedStorynode = page.locator(`.draggable[id="${storynode.id}"]`);
     await archivedStorynode.locator('h3.clickable').click();
-    await page.waitForURL('/storydetail/');
+    await page.waitForURL(/\/storydetail/);
 
     // Verify content is preserved
     await expect(editor).toContainText('This is my story content that should be preserved.');
@@ -128,7 +128,7 @@ test.describe('Archive Operations', () => {
     // Navigate back to the storynode by clicking on it
     await page.goto('/stories');
     await page.click(`.draggable[id="${storynode.id}"] h3.clickable`);
-    await page.waitForURL('/storydetail/');
+    await page.waitForURL(/\/storydetail/);
 
     // Verify content is still preserved after unarchiving
     await expect(editor).toContainText('This is my story content that should be preserved.');
@@ -141,7 +141,7 @@ test.describe('Archive Operations', () => {
 
     // Archive the second storynode by clicking on it
     await page.click(`.draggable[id="${archivedStory.id}"] h3.clickable`);
-    await page.waitForURL('/storydetail/');
+    await page.waitForURL(/\/storydetail/);
     const archiveButton = page.getByRole('button', { name: 'archive icon' });
     await archiveButton.click();
     await page.waitForURL('/');

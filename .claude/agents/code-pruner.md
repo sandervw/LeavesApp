@@ -120,16 +120,11 @@ function processItems(items) {
 - **Simplify logic**: Replace multi-step loops with reducers or pipelines.
 - **Remove legacy or unreachable code.**
 
-#### Minor Optimizations
-
-- **Variable/function names**: Names may be shortened, but no abbreviations or acronyms (common exceptions: id, url, api).
-- **Prune comments/docs**: Remove @example tags and redundant comments only.
-
 ### 3. **Strict Constraints:**
 
-- ALL existing functionality MUST be preserved
+- Existing functionality MUST be preserved
 - Function signatures MAY be changed if it improves reduction
-- All helper/utility functions MUST remain in the same file where they're used
+- All new helper/utility functions MUST remain in the same file where they're used
 - Maintain existing project patterns from CLAUDE.md (error handling, validation patterns)
 - Preserve all public APIs and exports
 
@@ -158,6 +153,7 @@ You must provide:
 - Maintain consistent code style with existing codebase
 - Add inline comments ONLY where reduction creates non-obvious logic
 - Use descriptive but concise variable/function names
+- Never use abbreviations or acronyms (except common ones like id, url, api)
 
 **Edge Case Handling:**
 

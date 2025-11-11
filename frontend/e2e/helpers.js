@@ -86,7 +86,8 @@ export async function createTemplateTree(page, options = {}) {
   const rootInput = page.locator('aside.sidebar input[placeholder*="New"]');
   await rootInput.waitFor({ state: 'visible' });
   await rootInput.fill(rootName);
-  await page.waitForTimeout(100);
+  await rootInput.press('Tab');
+  await page.waitForTimeout(300);
 
   // Set up response listener BEFORE drag-and-drop
   const rootResponsePromise = page.waitForResponse((resp) =>
@@ -109,7 +110,8 @@ export async function createTemplateTree(page, options = {}) {
   const branchInput = page.locator('aside.sidebar input[placeholder*="New"]');
   await branchInput.waitFor({ state: 'visible' });
   await branchInput.fill(branchName);
-  await page.waitForTimeout(100);
+  await branchInput.press('Tab');
+  await page.waitForTimeout(300);
 
   const branchResponsePromise = page.waitForResponse((resp) =>
     resp.url().includes('/template') && resp.request().method() === 'POST'
@@ -130,7 +132,8 @@ export async function createTemplateTree(page, options = {}) {
   const leafInput = page.locator('aside.sidebar input[placeholder*="New"]');
   await leafInput.waitFor({ state: 'visible' });
   await leafInput.fill(leafName);
-  await page.waitForTimeout(100);
+  await leafInput.press('Tab');
+  await page.waitForTimeout(300);
 
   const leafResponsePromise = page.waitForResponse((resp) =>
     resp.url().includes('/template') && resp.request().method() === 'POST'
@@ -179,7 +182,8 @@ export async function createStorynodeTree(page, options = {}) {
   const rootInput = page.locator('aside.sidebar input[placeholder*="New"]');
   await rootInput.waitFor({ state: 'visible' });
   await rootInput.fill(rootName);
-  await page.waitForTimeout(100);
+  await rootInput.press('Tab');
+  await page.waitForTimeout(300);
 
   // Set up response listener BEFORE drag-and-drop
   const rootResponsePromise = page.waitForResponse((resp) =>
@@ -202,7 +206,8 @@ export async function createStorynodeTree(page, options = {}) {
   const branchInput = page.locator('aside.sidebar input[placeholder*="New"]');
   await branchInput.waitFor({ state: 'visible' });
   await branchInput.fill(branchName);
-  await page.waitForTimeout(100);
+  await branchInput.press('Tab');
+  await page.waitForTimeout(300);
 
   const branchResponsePromise = page.waitForResponse((resp) =>
     resp.url().includes('/storynode') && resp.request().method() === 'POST'
@@ -223,7 +228,8 @@ export async function createStorynodeTree(page, options = {}) {
   const leafInput = page.locator('aside.sidebar input[placeholder*="New"]');
   await leafInput.waitFor({ state: 'visible' });
   await leafInput.fill(leafName);
-  await page.waitForTimeout(100);
+  await leafInput.press('Tab');
+  await page.waitForTimeout(300);
 
   const leafResponsePromise = page.waitForResponse((resp) =>
     resp.url().includes('/storynode') && resp.request().method() === 'POST'
@@ -265,9 +271,8 @@ export async function createTemplate(page, name, type, parentId = null) {
   const nameInput = page.locator('aside.sidebar input[placeholder*="New"]');
   await nameInput.waitFor({ state: 'visible' });
   await nameInput.fill(name);
-
-  // Wait for React to process the state update before dragging
-  await page.waitForTimeout(100);
+  await nameInput.press('Tab');
+  await page.waitForTimeout(300);
 
   // Set up response listener BEFORE drag-and-drop to catch immediate responses
   const responsePromise = page.waitForResponse((resp) =>
@@ -309,10 +314,15 @@ export async function createStorynode(page, name, type, parentId = null) {
   // Fill storynode name in StorynodeCreate component
   const nameInput = page.locator('aside.sidebar input[placeholder*="New"]');
   await nameInput.waitFor({ state: 'visible' });
+
+  // Fill the input value
   await nameInput.fill(name);
 
+  // Press Tab to trigger blur and commit the value
+  await nameInput.press('Tab');
+
   // Wait for React to process the state update before dragging
-  await page.waitForTimeout(100);
+  await page.waitForTimeout(300);
 
   // Set up response listener BEFORE drag-and-drop to catch immediate responses
   const responsePromise = page.waitForResponse((resp) =>
