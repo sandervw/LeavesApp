@@ -11,6 +11,7 @@ router.get('/getchildren/:id', controller.getStorynodeChildrenController);
 router.post('/', controller.postStorynodeController);
 router.delete('/:id', controller.deleteStorynodeController);
 router.post('/postfromtemplate/', controller.postFromTemplateController);
+// router.patch('/:id/depth', controller.patchDepthController);
 //router.post('/posttofile/', controller.postToFileController);
 //router.post('/postfromfile/', controller.postFromFileController);
 

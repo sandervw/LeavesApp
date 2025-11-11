@@ -6,7 +6,11 @@
     "dev": "ts-node-dev --files src/server.ts index.d.ts",
     "build": "tsc && shx cp ./package.json ./dist",
     "start": "node server.js",
-    "lint": "eslint . --ext .ts --ignore-pattern dist/"
+    "lint": "eslint . --ext .ts --ignore-pattern dist/",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage"
   },
   "repository": {
     "type": "git",
@@ -38,11 +42,18 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/mongoose": "^5.11.97",
     "@types/node": "^24.8.1",
+    "@types/supertest": "^6.0.3",
     "@types/validator": "^13.15.3",
+    "@vitest/coverage-v8": "^4.0.6",
+    "@vitest/ui": "^4.0.6",
     "eslint": "^9.38.0",
+    "mongodb-memory-server": "^10.3.0",
     "shx": "^0.4.0",
+    "supertest": "^7.1.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.1"
+    "typescript-eslint": "^8.46.1",
+    "vite": "^7.1.12",
+    "vitest": "^4.0.6"
   }
 }

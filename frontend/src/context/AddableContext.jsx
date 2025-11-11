@@ -11,7 +11,7 @@ const AddableReducer = (state, action) => {
             }
         case 'UPDATE_ADDABLE':
             return {
-                addables: state.addables.map(addable => addable._id === action.payload._id ? action.payload : addable),
+                addables: state.addables.map(addable => addable._id === action.payload._id ? { ...addable, ...action.payload } : addable),
             }
         default:
             return state;

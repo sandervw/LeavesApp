@@ -1,17 +1,53 @@
 /* Poppins and Baskervville */
-@import url('https://fonts.googleapis.com/css2?family=Baskervville&family=Poppins:wght@200;400;500;600;800&family=VT323&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Baskervville&family=Poppins:wght@200;400;500;600;800&family=VT323&display=swap");
 /* The HTML element - used for defining global vars */
 :root {
-  --c-black: #000000;
-  --c-white: #FFFFFF;
+  /* --c-white: #FFFFFF; */
+  --c-white: #faf9f5;
+  --c-black: #262624;
+  /* --c-black: #000000; */
   --c-gray: #7b7b7b;
-  --c-accent: #8866bb;
+  --c-accent: var(--c-copper);
   --c-placeholder: var(--c-gray);
   --c-txtPrimary: var(--c-black);
   --c-bgPrimary: var(--c-white);
   background-color: var(--c-bgPrimary);
+  /* === Orange Palette === */
+  --c-copper: #b87333;
+  --c-claude-orange: #d97757;
+  --c-burnt-orange: #c24e00;
+  --c-rust: #b7410e;
+  --c-persimmon: #ec5800;
+  --c-pumpkin: #ff7518;
+  --c-caramelized: #cc6600;
+  --c-terracotta: #d6653b;
+  --c-vermilion: #e34234;
+
+  /* === Brown Palette === */
+  --c-saddle-brown: #8b4513;
+  --c-coffee: #6f4e37;
+  --c-umber: #635147;
+  --c-chestnut: #954535;
+  --c-sepia: #704214;
+  --c-burnt-sienna: #8a3b12;
+  --c-walnut: #5b3924;
+  --c-mahogany: #7b3f00;
+  --c-cocoa: #7b5142;
+  --c-desert-sand: #a9745b;
+
+  /* === Yellow Palette === */
+  --c-goldenrod: #daa520;
+  --c-mustard: #d2a000;
+  --c-honey: #e6b450;
+  --c-ochre: #cc7722;
+  --c-flax: #eedc82;
+  --c-marigold: #fcc200;
+  --c-saffron: #f4c430;
+  --c-amberlight: #ffcc33;
+  --c-dijon: #c6a300;
+  --c-citrine: #e4d00a;
 }
-[data-theme='dark'] {
+[data-theme="dark"] {
   --c-txtPrimary: var(--c-white);
   --c-bgPrimary: var(--c-black);
 }
@@ -21,7 +57,9 @@
   margin: 0 auto;
   text-align: left;
 }
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   /* Arial/sans-serif fallback fonts */
   font-family: "poppins", arial, sans-serif;
   color: var(--c-txtPrimary);
@@ -36,7 +74,8 @@
   display: grid;
   grid-template-columns: 1fr 3fr 1fr;
 }
-.container { /* Used on sidebars, content, etc..  */
+.container {
+  /* Used on sidebars, content, etc..  */
   padding: 1rem;
   border-radius: 1rem;
   margin: 1rem;
@@ -52,7 +91,7 @@
   position: relative;
 }
 /* This styles direct child divs of .navbar */
-.navbar > div { 
+.navbar > div {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -105,8 +144,8 @@
 }
 .draggable {
   border-radius: 1rem;
-  padding: .5rem;
-  margin: .5rem;
+  padding: 0.5rem;
+  margin: 0.5rem;
   border: 2px solid;
   border-color: var(--c-txtPrimary);
   background-color: var(--c-bgPrimary);
@@ -159,9 +198,10 @@
   width: 72px;
   height: 72px;
 }
-ul, li {
+ul,
+li {
   list-style-position: outside; /* Bullet points outside */
-  text-align: left;            /* Align text properly */
+  text-align: left; /* Align text properly */
   list-style-type: none;
   padding-left: 0;
   margin-left: 0;
@@ -208,7 +248,8 @@ li {
 
 /* MARKDOWN CONTENT STYLES */
 /* Override global list styles for markdown content */
-.ProseMirror ul, .ProseMirror ol {
+.ProseMirror ul,
+.ProseMirror ol {
   list-style-position: inside;
   padding-left: 1.5rem;
   margin: 0.5rem 0;

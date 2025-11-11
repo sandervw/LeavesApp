@@ -6,39 +6,39 @@ const secure = process.env.NODE_ENV === 'production';
 export const REFRESH_PATH = '/auth/refresh'; // Only send the refresh token on this path
 
 const defaults: CookieOptions = {
-    sameSite: 'strict', // Helps prevent CSRF attacks
-    httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
-    secure, // Ensures the cookie is only sent over HTTPS (not HTTP)
-}
+  sameSite: 'strict', // Helps prevent CSRF attacks
+  httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
+  secure, // Ensures the cookie is only sent over HTTPS (not HTTP)
+};
 
 export const getAccessTokenCookieOptions = (): CookieOptions => ({
-    ...defaults,
-    expires: fifteenMinutesFromNow()
+  ...defaults,
+  expires: fifteenMinutesFromNow()
 });
 
 export const getRefreshTokenCookieOptions = (): CookieOptions => ({
-    ...defaults,
-    expires: thirtyDaysFromNow(),
-    path: REFRESH_PATH, // FOUND IT!: This is the only path the refresh token will be sent on
+  ...defaults,
+  expires: thirtyDaysFromNow(),
+  path: REFRESH_PATH, // FOUND IT!: This is the only path the refresh token will be sent on
 });
 
 type Params = {
-    res: Response;
-    accessToken: string;
-    refreshToken?: string;
-}
+  res: Response;
+  accessToken: string;
+  refreshToken?: string;
+};
 /**
  * Sets the access (and optional refresh) token(s)a as cookies on the response object.
  */
 export const setAuthCookies = ({ res, accessToken, refreshToken }: Params) => {
-    if (!refreshToken) return res.cookie('accessToken', accessToken, getAccessTokenCookieOptions());
-    return res.cookie('accessToken', accessToken, getAccessTokenCookieOptions())
-        .cookie('refreshToken', refreshToken, getRefreshTokenCookieOptions());
-}
+  if (!refreshToken) return res.cookie('accessToken', accessToken, getAccessTokenCookieOptions());
+  return res.cookie('accessToken', accessToken, getAccessTokenCookieOptions())
+    .cookie('refreshToken', refreshToken, getRefreshTokenCookieOptions());
+};
 
 /**
  * Clears the access and refresh tokens from the cookies on the response object.
  */
 export const clearAuthCookies = (res: Response) => {
-    return res.clearCookie('accessToken').clearCookie('refreshToken', {path: REFRESH_PATH});
-}
+  return res.clearCookie('accessToken').clearCookie('refreshToken', { path: REFRESH_PATH });
+};

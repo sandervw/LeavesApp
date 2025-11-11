@@ -24,6 +24,10 @@ npm install          # Install dependencies
 npm run dev          # Start development server with hot reload
 npm run build        # Compile TypeScript and copy package.json to dist/
 npm run lint         # Run ESLint on TypeScript files
+npm test             # Run all tests with Vitest
+npm run test:watch   # Run tests in watch mode
+npm run test:ui      # Run tests with Vitest UI
+npm run test:coverage # Run tests with coverage report
 ```
 
 ## Architecture Overview
@@ -32,15 +36,25 @@ npm run lint         # Run ESLint on TypeScript files
 
 The backend follows a layered architecture pattern:
 
-1. **server.ts** - Entry point; sets up Express middleware, CORS, routes, and database connection
-2. **routes/** - Front desk; groups routes and directs to correct controller
-3. **controllers/** - Bridge between routes and services; validates input using Zod schemas, returns HTTP responses
-4. **services/** - Core business logic; handles transformations, conversions, database operations
-5. **models/** - Mongoose models defining MongoDB document schemas
-6. **schemas/** - Zod schemas that define and validate shape of incoming/outgoing data
-7. **middleware/** - Chain of responsibilities; authenticate.ts validates JWT tokens, errorHandler.ts provides global error handling
-8. **config/** - Singleton configurations (database connection, Resend email client)
-9. **utils/** - Stateless helper functions (JWT, bcrypt, cookies, date formatting)
+1. **server.ts** - Entry point; imports app from app.ts and starts the server
+2. **app.ts** - Express application setup; configures middleware, CORS, routes, and error handling (separated for testing)
+3. **routes/** - Front desk; groups routes and directs to correct controller
+   - auth.route.ts, user.route.ts, session.route.ts, template.route.ts, storynode.route.ts
+4. **controllers/** - Bridge between routes and services; validates input using Zod schemas, returns HTTP responses
+   - auth.controller.ts, user.controller.ts, session.controller.ts, template.controller.ts, storynode.controller.ts
+5. **services/** - Core business logic using inheritance pattern; handles transformations, conversions, database operations
+   - tree.service.ts (base class with generic CRUD operations)
+   - template.service.ts (extends TreeService)
+   - storynode.service.ts (extends TreeService with additional word count logic)
+   - auth.service.ts (standalone authentication service)
+   - recursive.service.ts (utility functions for tree operations)
+6. **models/** - Mongoose models defining MongoDB document schemas
+   - tree.model.ts (base model), template.model.ts, storynode.model.ts, user.model.ts, session.model.ts, verificationCode.model.ts
+7. **schemas/** - Zod schemas that define and validate shape of incoming/outgoing data
+8. **middleware/** - Chain of responsibilities; authenticate.ts validates JWT tokens, errorHandler.ts provides global error handling
+9. **config/** - Singleton configurations (database connection, Resend email client)
+10. **constants/** - Application constants (error codes, HTTP status codes, verification types, environment variables)
+11. **utils/** - Stateless helper functions (JWT, bcrypt, cookies, date formatting, assertions, error handling, email)
 
 ### Frontend Structure (JavaScript + React)
 
@@ -57,6 +71,26 @@ Component organization:
 - **config/** - DnD-Kit drag-and-drop configuration
 
 ## Key Architectural Patterns
+
+### Service Inheritance Pattern
+
+Services use an object-oriented inheritance pattern to share common functionality:
+
+- **TreeService\<T\>** - Base class with generic type parameter; provides common CRUD operations:
+  - `find(userId, query?)` - Get all elements for user with optional query
+  - `findById(userId, id)` - Get single element by ID
+  - `findChildren(userId, id)` - Get children of an element
+  - `upsert(userId, data)` - Create or update element
+  - `deleteById(userId, id)` - Delete element and all descendants
+- **TemplateService** - Extends TreeService\<TemplateDoc\>; inherits all base CRUD methods
+- **StorynodeService** - Extends TreeService\<StorynodeDoc\>; overrides `upsert()` to handle word count calculations
+
+All services are exported as singleton instances (e.g., `export default new TemplateService()`).
+
+**RecursiveService** provides utility functions for complex tree operations:
+- `recursiveUpdateWordLimits(node)` - Updates word limits throughout tree
+- `recursiveGetDescendants(tree, model)` - Gets all descendants iteratively
+- `recursiveStorynodeFromTemplate(userId, templateId, parentId?)` - Creates storynode tree from template
 
 ### Data Model: Tree Structure with Discriminators
 
@@ -156,11 +190,69 @@ RESEND_API_KEY=<resend-api-key>
 - DELETE /template/:id - Delete template
 - DELETE /storynode/:id - Delete storynode
 
-## Testing & Deployment
+## Testing Architecture
 
-Testing automation is not yet set up (see worklist.md tasks 003-004).
+### Testing Framework: Vitest
+
+The backend has a comprehensive test suite using Vitest with MongoDB Memory Server for integration tests.
+
+**Test Structure:**
+```
+tests/
+├── setup.ts                              # Global setup with MongoDB Memory Server
+├── README.md                             # 256-line comprehensive testing guide
+├── unit/
+│   ├── utils/                            # Unit tests for all utility functions (7 files)
+│   ├── services/                         # Unit tests for services (4 files)
+│   └── schemas/                          # Zod schema validation tests
+└── integration/
+    ├── helpers.ts                        # Test helper functions
+    └── controllers/                      # Integration tests for all controllers (5 files)
+```
+
+**Test Statistics:**
+- 17 test files covering ~6,177 lines of test code
+- Unit tests: 12 files (utils, services, schemas)
+- Integration tests: 5 files (all controllers fully tested)
+
+**Testing Commands:**
+```bash
+npm test              # Run all tests
+npm run test:watch    # Run tests in watch mode
+npm run test:ui       # Run tests with Vitest UI
+npm run test:coverage # Generate coverage report
+```
+
+**Key Testing Dependencies:**
+- **vitest** - Fast unit test framework
+- **@vitest/ui** - Interactive test UI
+- **@vitest/coverage-v8** - Code coverage
+- **mongodb-memory-server** - In-memory MongoDB for integration tests
+- **supertest** - HTTP assertion library for API testing
+
+**Test Configuration:**
+- **vitest.config.ts** - Vitest configuration with path aliases matching tsconfig
+- **tsconfig.test.json** - TypeScript config for test files
+- **tests/setup.ts** - Mocks environment variables, manages MongoDB Memory Server lifecycle
+
+**Test Helper Functions (tests/integration/helpers.ts):**
+- `createAuthenticatedUser()` - Creates user and returns auth cookies for authenticated requests
+- `createTemplateTree()` - Creates root→branch→leaf template structure
+- `createStorynodeTree()` - Creates root→branch→leaf storynode structure
+
+**Testing Patterns:**
+- Unit tests use Vitest's mocking (`vi.mock()`) to isolate dependencies
+- Integration tests use MongoDB Memory Server for real database operations
+- All controller tests use supertest for HTTP assertions
+- Authentication tests verify JWT token handling and refresh flow
+- Tree operation tests verify recursive creation and deletion
+
+For detailed testing guidelines, see `backend/tests/README.md`.
+
+## Deployment
 
 Planned deployment to Azure DEV environment with MongoDB Atlas (see worklist.md tasks 005-009).
 - When adding styling to the App.css file, always keep your additions to a minimum. Focus on reusing existing .css, and matching existing styles.
 - Add this command to memory as "start leaves". Run the same commands without asking for permissions whenever I enter the command "start leaves".
 - When I give you the command "shut down", close/kill any tasks/processes you are running in the background, then exit.
+- Use Context7 to check up-to-date docs when needed for implementing new libraries or frameworks, or adding features using them.
