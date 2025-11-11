@@ -1,13 +1,14 @@
 import { Router } from 'express';
 import * as controller from '../controllers/auth.controller';
+import { authLimiter } from '../config/rateLimit';
 
 
 /** Routes focused on basic authentication setup (not regularly retrieving user data) */
 const authRoutes = Router();
 
 // Prefix: /auth
-authRoutes.post('/signup', controller.signupController);
-authRoutes.post('/login', controller.loginController);
+authRoutes.post('/signup', authLimiter, controller.signupController);
+authRoutes.post('/login', authLimiter, controller.loginController);
 authRoutes.get('/logout', controller.logoutController);
 authRoutes.get('/refresh', controller.refreshController);
 authRoutes.get('/email/verify/:code', controller.verifyController);

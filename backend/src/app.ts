@@ -12,6 +12,8 @@ import sessionRoutes from './routes/session.route';
 import templateRoutes from './routes/template.route';
 import storynodeRoutes from './routes/storynode.route';
 import testRoutes from './routes/test.route';
+import { globalLimiter } from './config/rateLimit';
+
 
 // Create express server
 export const app = express();
@@ -34,10 +36,10 @@ app.use((req, res, next) => {
 
 /*==ROUTES==*/
 app.use('/auth', authRoutes);
-app.use('/user', authenticate, userRoutes);
-app.use('/session', authenticate, sessionRoutes);
-app.use('/template', authenticate, templateRoutes);
-app.use('/storynode', authenticate, storynodeRoutes);
+app.use('/user', authenticate, globalLimiter, userRoutes);
+app.use('/session', authenticate, globalLimiter, sessionRoutes);
+app.use('/template', authenticate, globalLimiter, templateRoutes);
+app.use('/storynode', authenticate, globalLimiter, storynodeRoutes);
 
 // Test routes (only available in test environment)
 if (NODE_ENV === 'test') {
