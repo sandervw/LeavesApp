@@ -86,14 +86,18 @@ export async function createTemplateTree(page, options = {}) {
   const rootInput = page.locator('aside.sidebar input[placeholder*="New"]');
   await rootInput.waitFor({ state: 'visible' });
   await rootInput.fill(rootName);
+  await page.waitForTimeout(100);
+
+  // Set up response listener BEFORE drag-and-drop
+  const rootResponsePromise = page.waitForResponse((resp) =>
+    resp.url().includes('/template') && resp.request().method() === 'POST'
+  );
 
   // Drag TemplateCreate to roots drop zone
   await dragAndDrop(page, 'aside.sidebar button.drag-handle', '.content .droppable.list');
 
   // Wait for API response and extract root ID
-  const rootResponse = await page.waitForResponse((resp) =>
-    resp.url().includes('/template') && resp.request().method() === 'POST'
-  );
+  const rootResponse = await rootResponsePromise;
   const rootData = await rootResponse.json();
   const rootId = rootData._id;
 
@@ -105,13 +109,16 @@ export async function createTemplateTree(page, options = {}) {
   const branchInput = page.locator('aside.sidebar input[placeholder*="New"]');
   await branchInput.waitFor({ state: 'visible' });
   await branchInput.fill(branchName);
+  await page.waitForTimeout(100);
+
+  const branchResponsePromise = page.waitForResponse((resp) =>
+    resp.url().includes('/template') && resp.request().method() === 'POST'
+  );
 
   await dragAndDrop(page, 'aside.sidebar button.drag-handle', '.content .droppable.list');
 
   // Wait for branch creation
-  const branchResponse = await page.waitForResponse((resp) =>
-    resp.url().includes('/template') && resp.request().method() === 'POST'
-  );
+  const branchResponse = await branchResponsePromise;
   const branchData = await branchResponse.json();
   const branchId = branchData._id;
 
@@ -123,13 +130,16 @@ export async function createTemplateTree(page, options = {}) {
   const leafInput = page.locator('aside.sidebar input[placeholder*="New"]');
   await leafInput.waitFor({ state: 'visible' });
   await leafInput.fill(leafName);
+  await page.waitForTimeout(100);
+
+  const leafResponsePromise = page.waitForResponse((resp) =>
+    resp.url().includes('/template') && resp.request().method() === 'POST'
+  );
 
   await dragAndDrop(page, 'aside.sidebar button.drag-handle', '.content .droppable.list');
 
   // Wait for leaf creation
-  const leafResponse = await page.waitForResponse((resp) =>
-    resp.url().includes('/template') && resp.request().method() === 'POST'
-  );
+  const leafResponse = await leafResponsePromise;
   const leafData = await leafResponse.json();
   const leafId = leafData._id;
 
@@ -169,14 +179,18 @@ export async function createStorynodeTree(page, options = {}) {
   const rootInput = page.locator('aside.sidebar input[placeholder*="New"]');
   await rootInput.waitFor({ state: 'visible' });
   await rootInput.fill(rootName);
+  await page.waitForTimeout(100);
+
+  // Set up response listener BEFORE drag-and-drop
+  const rootResponsePromise = page.waitForResponse((resp) =>
+    resp.url().includes('/storynode') && resp.request().method() === 'POST'
+  );
 
   // Drag StorynodeCreate to roots drop zone
   await dragAndDrop(page, 'aside.sidebar button.drag-handle', '.content .droppable.list');
 
   // Wait for API response and extract root ID
-  const rootResponse = await page.waitForResponse((resp) =>
-    resp.url().includes('/storynode') && resp.request().method() === 'POST'
-  );
+  const rootResponse = await rootResponsePromise;
   const rootData = await rootResponse.json();
   const rootId = rootData._id;
 
@@ -188,13 +202,16 @@ export async function createStorynodeTree(page, options = {}) {
   const branchInput = page.locator('aside.sidebar input[placeholder*="New"]');
   await branchInput.waitFor({ state: 'visible' });
   await branchInput.fill(branchName);
+  await page.waitForTimeout(100);
+
+  const branchResponsePromise = page.waitForResponse((resp) =>
+    resp.url().includes('/storynode') && resp.request().method() === 'POST'
+  );
 
   await dragAndDrop(page, 'aside.sidebar button.drag-handle', '.content .droppable.list');
 
   // Wait for branch creation
-  const branchResponse = await page.waitForResponse((resp) =>
-    resp.url().includes('/storynode') && resp.request().method() === 'POST'
-  );
+  const branchResponse = await branchResponsePromise;
   const branchData = await branchResponse.json();
   const branchId = branchData._id;
 
@@ -206,13 +223,16 @@ export async function createStorynodeTree(page, options = {}) {
   const leafInput = page.locator('aside.sidebar input[placeholder*="New"]');
   await leafInput.waitFor({ state: 'visible' });
   await leafInput.fill(leafName);
+  await page.waitForTimeout(100);
+
+  const leafResponsePromise = page.waitForResponse((resp) =>
+    resp.url().includes('/storynode') && resp.request().method() === 'POST'
+  );
 
   await dragAndDrop(page, 'aside.sidebar button.drag-handle', '.content .droppable.list');
 
   // Wait for leaf creation
-  const leafResponse = await page.waitForResponse((resp) =>
-    resp.url().includes('/storynode') && resp.request().method() === 'POST'
-  );
+  const leafResponse = await leafResponsePromise;
   const leafData = await leafResponse.json();
   const leafId = leafData._id;
 
@@ -246,13 +266,19 @@ export async function createTemplate(page, name, type, parentId = null) {
   await nameInput.waitFor({ state: 'visible' });
   await nameInput.fill(name);
 
+  // Wait for React to process the state update before dragging
+  await page.waitForTimeout(100);
+
+  // Set up response listener BEFORE drag-and-drop to catch immediate responses
+  const responsePromise = page.waitForResponse((resp) =>
+    resp.url().includes('/template') && resp.request().method() === 'POST'
+  );
+
   // Drag TemplateCreate to appropriate drop zone
   await dragAndDrop(page, 'aside.sidebar button.drag-handle', '.content .droppable.list');
 
   // Wait for API response and extract template ID
-  const response = await page.waitForResponse((resp) =>
-    resp.url().includes('/template') && resp.request().method() === 'POST'
-  );
+  const response = await responsePromise;
   const data = await response.json();
 
   return {
@@ -285,13 +311,19 @@ export async function createStorynode(page, name, type, parentId = null) {
   await nameInput.waitFor({ state: 'visible' });
   await nameInput.fill(name);
 
+  // Wait for React to process the state update before dragging
+  await page.waitForTimeout(100);
+
+  // Set up response listener BEFORE drag-and-drop to catch immediate responses
+  const responsePromise = page.waitForResponse((resp) =>
+    resp.url().includes('/storynode') && resp.request().method() === 'POST'
+  );
+
   // Drag StorynodeCreate to appropriate drop zone
   await dragAndDrop(page, 'aside.sidebar button.drag-handle', '.content .droppable.list');
 
   // Wait for API response and extract storynode ID
-  const response = await page.waitForResponse((resp) =>
-    resp.url().includes('/storynode') && resp.request().method() === 'POST'
-  );
+  const response = await responsePromise;
   const data = await response.json();
 
   return {

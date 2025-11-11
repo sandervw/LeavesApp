@@ -19,9 +19,9 @@ test.describe('Archive Operations', () => {
     // Create a root storynode
     const storynode = await createStorynode(page, 'Test Story to Archive', 'root');
 
-    // Navigate to storynode detail page
-    await page.goto(`/storydetail/${storynode.id}`);
-    await page.waitForURL(`/storydetail/${storynode.id}`);
+    // Navigate to storynode detail page by clicking on it
+    await page.click(`.draggable[id="${storynode.id}"] h3.clickable`);
+    await page.waitForURL('/storydetail/');
 
     // Verify archive button is visible
     const archiveButton = page.getByRole('button', { name: 'archive icon' });
@@ -49,8 +49,9 @@ test.describe('Archive Operations', () => {
     // Create and archive a root storynode
     const storynode = await createStorynode(page, 'Test Story to Unarchive', 'root');
 
-    // Navigate to detail page and archive it
-    await page.goto(`/storydetail/${storynode.id}`);
+    // Navigate to detail page and archive it by clicking on it
+    await page.click(`.draggable[id="${storynode.id}"] h3.clickable`);
+    await page.waitForURL('/storydetail/');
     const archiveButton = page.getByRole('button', { name: 'archive icon' });
     await archiveButton.click();
     await page.waitForURL('/');
@@ -64,8 +65,8 @@ test.describe('Archive Operations', () => {
     await expect(archivedStorynode).toBeVisible();
 
     // Click on the archived storynode to view it
-    await archivedStorynode.click();
-    await page.waitForURL(`/storydetail/${storynode.id}`);
+    await archivedStorynode.locator('h3.clickable').click();
+    await page.waitForURL('/storydetail/');
 
     // Verify unarchive button is visible
     const unarchiveButton = page.getByRole('button', { name: 'unarchive icon' });
@@ -92,8 +93,9 @@ test.describe('Archive Operations', () => {
     // Create a root storynode
     const storynode = await createStorynode(page, 'Story with Content', 'root');
 
-    // Navigate to detail page
-    await page.goto(`/storydetail/${storynode.id}`);
+    // Navigate to detail page by clicking on it
+    await page.click(`.draggable[id="${storynode.id}"] h3.clickable`);
+    await page.waitForURL('/storydetail/');
 
     // Add text content to the storynode
     const editor = page.locator('.ProseMirror');
@@ -112,8 +114,8 @@ test.describe('Archive Operations', () => {
     // Navigate to archive and open the archived storynode
     await page.goto('/archive');
     const archivedStorynode = page.locator(`.draggable[id="${storynode.id}"]`);
-    await archivedStorynode.click();
-    await page.waitForURL(`/storydetail/${storynode.id}`);
+    await archivedStorynode.locator('h3.clickable').click();
+    await page.waitForURL('/storydetail/');
 
     // Verify content is preserved
     await expect(editor).toContainText('This is my story content that should be preserved.');
@@ -123,8 +125,10 @@ test.describe('Archive Operations', () => {
     await unarchiveButton.click();
     await page.waitForURL('/');
 
-    // Navigate back to the storynode
-    await page.goto(`/storydetail/${storynode.id}`);
+    // Navigate back to the storynode by clicking on it
+    await page.goto('/stories');
+    await page.click(`.draggable[id="${storynode.id}"] h3.clickable`);
+    await page.waitForURL('/storydetail/');
 
     // Verify content is still preserved after unarchiving
     await expect(editor).toContainText('This is my story content that should be preserved.');
@@ -135,8 +139,9 @@ test.describe('Archive Operations', () => {
     const activeStory = await createStorynode(page, 'Active Story', 'root');
     const archivedStory = await createStorynode(page, 'Archived Story', 'root');
 
-    // Archive the second storynode
-    await page.goto(`/storydetail/${archivedStory.id}`);
+    // Archive the second storynode by clicking on it
+    await page.click(`.draggable[id="${archivedStory.id}"] h3.clickable`);
+    await page.waitForURL('/storydetail/');
     const archiveButton = page.getByRole('button', { name: 'archive icon' });
     await archiveButton.click();
     await page.waitForURL('/');
