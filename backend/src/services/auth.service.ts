@@ -10,6 +10,7 @@ import { sendMail } from '../utils/emailUtils';
 import { getPasswordResetTemplate, getVerifyEmailTemplate } from '../utils/emailUtils';
 import { APP_ORIGIN, NODE_ENV } from '../constants/env';
 import { mongoId } from '../schemas/mongo.schema';
+import { logger } from '../utils/logger';
 
 export type SignupUserParams = {
   email: string;
@@ -210,7 +211,7 @@ export const forgotPassword = async (email: string) => {
       emailId: data.id
     };
   } catch (error) {
-    console.log('Error in auth.service:', error);
+    logger.error('Error in forgotPassword:', error);
 
     return {};
   }

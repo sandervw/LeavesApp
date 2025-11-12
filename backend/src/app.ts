@@ -13,6 +13,7 @@ import templateRoutes from './routes/template.route';
 import storynodeRoutes from './routes/storynode.route';
 import testRoutes from './routes/test.route';
 import { globalLimiter } from './config/rateLimit';
+import { logger } from './utils/logger';
 
 
 // Create express server
@@ -30,7 +31,7 @@ app.use(
 app.use(cookieParser() as express.RequestHandler); // Parses cookies from request headers (for authentication)
 // ******Note: See cookies.ts - the refresh token is only sent on the auth/refresh path
 app.use((req, res, next) => {
-  console.log(req.path, req.method);
+  logger.info(`${req.method} ${req.path}`);
   next();
 });
 
