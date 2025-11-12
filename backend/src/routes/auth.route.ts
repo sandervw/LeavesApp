@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as controller from '../controllers/auth.controller';
-import { authLimiter } from '../config/rateLimit';
+import { authLimiter } from '../config/security';
 
 
 /** Routes focused on basic authentication setup (not regularly retrieving user data) */

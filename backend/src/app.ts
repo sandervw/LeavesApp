@@ -12,9 +12,9 @@ import sessionRoutes from './routes/session.route';
 import templateRoutes from './routes/template.route';
 import storynodeRoutes from './routes/storynode.route';
 import testRoutes from './routes/test.route';
-import { globalLimiter } from './config/rateLimit';
+import { globalLimiter } from './config/security';
 import { logger } from './utils/logger';
-
+import { helmetConfig } from './config/security';
 
 // Create express server
 export const app = express();
@@ -28,6 +28,7 @@ app.use(
     credentials: true, // Allows cookies to be sent with requests (for authentication)
   })
 );
+app.use(helmetConfig); // Sets various HTTP headers for security
 app.use(cookieParser() as express.RequestHandler); // Parses cookies from request headers (for authentication)
 // ******Note: See cookies.ts - the refresh token is only sent on the auth/refresh path
 app.use((req, res, next) => {

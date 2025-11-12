@@ -4,57 +4,11 @@
 
 **several critical gaps must be addressed before production deployment**
 
-- No proper logging infrastructure (critical for debugging production issues)
-- Missing security headers (moderate XSS/clickjacking risk)
 - No secrets management for Azure (critical for production)
 
 ---
 
 ## Critical Issues
-
-### 4. Missing Security Headers (helmet.js) ⚠️ MODERATE RISK
-
-**Problem:**
-
-- No Content-Security-Policy
-- No X-Content-Type-Options
-- No X-Frame-Options
-- No X-XSS-Protection
-- No Strict-Transport-Security (HSTS)
-
-**Fix:**
-
-```bash
-cd backend
-npm install helmet
-```
-
-```typescript
-// backend/src/app.ts
-import helmet from "helmet";
-
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        scriptSrc: ["'self'"],
-        imgSrc: ["'self'", "data:", "https:"],
-      },
-    },
-    hsts: {
-      maxAge: 31536000,
-      includeSubDomains: true,
-      preload: true,
-    },
-  })
-);
-```
-
-**Estimated Time:** 15 minutes
-
----
 
 ### 5. Health Check Doesn't Test Database ⚠️ CRITICAL FOR AZURE
 
