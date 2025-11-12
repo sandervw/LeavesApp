@@ -5,7 +5,6 @@ import cors from 'cors'; // Cross-Origin Resource Sharing: allows api calls from
 import { APP_ORIGIN, NODE_ENV } from './constants/env';
 import errorHandler from './middleware/errorHandler';
 import authenticate from './middleware/authenticate';
-import { OK } from './constants/http';
 import authRoutes from './routes/auth.route';
 import userRoutes from './routes/user.route';
 import sessionRoutes from './routes/session.route';
@@ -15,6 +14,7 @@ import testRoutes from './routes/test.route';
 import { globalLimiter } from './config/security';
 import { logger } from './utils/logger';
 import { helmetConfig } from './config/security';
+import mongoose from 'mongoose';
 
 // Create express server
 export const app = express();
@@ -42,9 +42,7 @@ app.use('/user', authenticate, globalLimiter, userRoutes);
 app.use('/session', authenticate, globalLimiter, sessionRoutes);
 app.use('/template', authenticate, globalLimiter, templateRoutes);
 app.use('/storynode', authenticate, globalLimiter, storynodeRoutes);
-
-// Test routes (only available in test environment)
-if (NODE_ENV === 'test') {
+if (NODE_ENV === 'test') { // Test routes (only available in test environment)
   app.use('/test', testRoutes);
 }
 
@@ -54,6 +52,19 @@ if (NODE_ENV === 'test') {
 app.use(errorHandler); // Catches all errors thrown in routes above
 
 /*==MAIN REQUESTS==*/
-app.get('/', (req, res) => {
-  res.status(OK).json({ status: 'healthy' });
+app.get('/', async (req, res) => {
+  try {
+    await mongoose.connection.db!.admin().ping();
+    res.json({
+      status: "healthy",
+      database: "connected",
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    logger.error("Health check failed:", error);
+    res.status(503).json({
+      status: "unhealthy",
+      database: "disconnected",
+    });
+  }
 });
