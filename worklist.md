@@ -9,7 +9,7 @@
 | 005 | Fix Overlay         | Fix overlay on Searchbar rendering below MarkdownText                       | ✅         |
 | 006 | Backend Testing     | Set up testing automation for backend API                                   | ✅         |
 | 007 | Frontend Testing    | Set up testing automation for frontend React app                            | ✅         |
-| 008 | Security Fixes      | Implement security patches and updates from TODO                            | ⬜         |
+| 008 | Security Fixes      | Implement security patches and updates from TODO                            | ✅         |
 | 009 | MongoDB Dev Setup   | Set up MongoDB instance in Azure DEV tenant                                 | ⬜         |
 | 010 | Backend Deployment  | Deploy Backend API to Azure DEV environment                                 | ⬜         |
 | 011 | Frontend Deployment | Deploy Frontend React app to Azure DEV environment                          | ⬜         |
