@@ -8,18 +8,15 @@ const getEnv = (key: string, defaultValue?: string): string => {
 };
 
 // List of secret names that should be loaded from Key Vault in production
-// (excludes non-secrets like NODE_ENV, PORT, MAX_TREE_DEPTH)
+// Only includes actual secrets (credentials, API keys, signing secrets)
+// Configuration values (NODE_ENV, PORT, MAX_TREE_DEPTH, KEY_VAULT_URL, APP_ORIGIN)
+//   should be set as environment variables in Azure App Service, not in Key Vault
 export const SECRET_NAMES = [
-  'NODE_ENV',
-  'APP_ORIGIN',
   'MONGO_URI',
-  'PORT',
   'JWT_SECRET',
   'JWT_REFRESH_SECRET',
   'EMAIL_SENDER',
   'RESEND_API_KEY',
-  'MAX_TREE_DEPTH',
-  'KEY_VAULT_URL',
 ] as const;
 
 export const NODE_ENV = getEnv("NODE_ENV", "development");

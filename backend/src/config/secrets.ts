@@ -2,6 +2,14 @@ import { SecretClient } from "@azure/keyvault-secrets";
 import { DefaultAzureCredential } from "@azure/identity"; // Managed Identity
 import { SECRET_NAMES } from "../constants/env";
 
+/**
+ * Converts environment variable names to Key Vault secret names.
+ * Node.js uses underscores (JWT_SECRET), Azure Key Vault uses hyphens (JWT-SECRET).
+ */
+const toKeyVaultName = (envName: string): string => {
+  return envName.replace(/_/g, '-');
+};
+
 const vaultName = process.env.KEY_VAULT_URL;
 let getSecret: (name: string) => Promise<string | undefined>;
 if (process.env.NODE_ENV === "production" && vaultName) {
@@ -11,7 +19,8 @@ if (process.env.NODE_ENV === "production" && vaultName) {
   );
 
   getSecret = async (name: string) => {
-    const secret = await client.getSecret(name);
+    // Convert underscore-based env var name to hyphen-based Key Vault name
+    const secret = await client.getSecret(toKeyVaultName(name));
     return secret.value;
   };
 } else {
