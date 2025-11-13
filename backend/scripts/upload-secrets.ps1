@@ -16,7 +16,7 @@ $secrets = @(
 )
 
 # Path to .env file
-$envFile = Join-Path $PSScriptRoot ".." ".env"
+$envFile = Join-Path (Join-Path $PSScriptRoot "..") ".env"
 
 if (-not (Test-Path $envFile)) {
     Write-Error ".env file not found at $envFile"
@@ -48,14 +48,15 @@ foreach ($secret in $secrets) {
         Write-Host "Uploading: $secret -> $vaultSecretName" -ForegroundColor Green
 
         try {
-            az keyvault secret set --vault-name $VaultName --name $vaultSecretName --value $value --output none
+            # Use single quotes to prevent PowerShell from interpreting special characters
+            az keyvault secret set --vault-name $VaultName --name $vaultSecretName --value "$value" --output none
             if ($LASTEXITCODE -eq 0) {
-                Write-Host "  ✓ Successfully uploaded $vaultSecretName" -ForegroundColor Green
+                Write-Host "  [OK] Successfully uploaded $vaultSecretName" -ForegroundColor Green
             } else {
-                Write-Host "  ✗ Failed to upload $vaultSecretName" -ForegroundColor Red
+                Write-Host "  [FAIL] Failed to upload $vaultSecretName" -ForegroundColor Red
             }
         } catch {
-            Write-Host "  ✗ Error uploading $vaultSecretName : $_" -ForegroundColor Red
+            Write-Host "  [ERROR] Error uploading $vaultSecretName : $_" -ForegroundColor Red
         }
     } else {
         Write-Host "Warning: $secret not found in .env file" -ForegroundColor Yellow
