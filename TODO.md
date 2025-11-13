@@ -1,56 +1,6 @@
 # Pre-Deployment Audit & TODO List
 
-## Executive Summary
-
-**several critical gaps must be addressed before production deployment**
-
-- No secrets management for Azure (critical for production)
-
 ## High Priority Issues ⚠️
-
-### 7. No Azure Key Vault Integration
-
-**Problem:**
-
-- Secrets stored in .env files (development only)
-- No integration with Azure Key Vault
-- JWT secrets loaded directly from process.env
-
-**Fix:**
-
-```bash
-cd backend
-npm install @azure/keyvault-secrets @azure/identity
-```
-
-```typescript
-// backend/src/config/secrets.ts
-import { SecretClient } from "@azure/keyvault-secrets";
-import { DefaultAzureCredential } from "@azure/identity";
-
-const vaultName = process.env.KEY_VAULT_NAME;
-
-if (process.env.NODE_ENV === "production" && vaultName) {
-  const client = new SecretClient(
-    `https://${vaultName}.vault.azure.net`,
-    new DefaultAzureCredential()
-  );
-
-  export const getSecret = async (name: string) => {
-    const secret = await client.getSecret(name);
-    return secret.value;
-  };
-} else {
-  // Development: use .env
-  export const getSecret = async (name: string) => {
-    return process.env[name];
-  };
-}
-```
-
-**Estimated Time:** 1 hour (after Azure account setup)
-
----
 
 ### 8. No Database Migration Strategy
 
