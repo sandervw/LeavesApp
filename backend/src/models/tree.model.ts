@@ -14,7 +14,9 @@ const treeSchema = new mongoose.Schema<TreeDoc>({
   discriminatorKey: 'kind', // Discriminators are a way to have inheritance in a mongoose schema
   collection: 'trees',
   timestamps: true
-});
+})
+  .index({ userId: 1, parent: 1 }) // For tree traversal
+  .index({ userId: 1, type: 1 }); // For filtering by type
 
 // Schema for Templates
 const templateSchema = new mongoose.Schema<TemplateDoc>({
@@ -28,7 +30,8 @@ const storynodeSchema = new mongoose.Schema<StorynodeDoc>({
   wordLimit: { type: Number },
   wordCount: { type: Number, default: 0 },
   archived: { type: Boolean, default: false },
-});
+})
+  .index({ userId: 1, archived: 1 }); // For filtering archived storynodes
 
 // Convert schema into model; a model is a constructor compiled from the schema definition
 // Models are responsible for creating/reading docs from MongoDB
