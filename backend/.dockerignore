@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+
+# Build output (will be created during Docker build)
+dist/
+
+# Environment files
+.env
+.env.*
+
+# Tests
+tests/
+**/*.test.ts
+**/*.spec.ts
+coverage/
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Misc
+*.md
+!package.json
+tsconfig.test.json
+vitest.config.ts
+eslint.config.js

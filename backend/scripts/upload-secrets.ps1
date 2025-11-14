@@ -16,7 +16,7 @@ $secrets = @(
 )
 
 # Path to .env file
-$envFile = Join-Path (Join-Path $PSScriptRoot "..") ".env"
+$envFile = Join-Path (Join-Path $PSScriptRoot "..") ".env.dev.local"
 
 if (-not (Test-Path $envFile)) {
     Write-Error ".env file not found at $envFile"
