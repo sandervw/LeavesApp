@@ -31,7 +31,4 @@ export const createFromTemplate = async (templateId, parentId) => API.post(`stor
 
 export const deleteElement = async (kind, id) => API.delete(`${kind}/${id}`);
 
-export const createFile = async (id) => {
-    //TODO
-    console.log('createFile', id);
-};
+export const downloadStory = async (id) => API.get(`storynode/getstoryfile/${id}`);

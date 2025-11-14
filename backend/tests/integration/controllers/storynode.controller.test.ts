@@ -214,6 +214,61 @@ describe('Storynode Controller Tests', () => {
     });
   });
 
+  describe('Get Story File', () => {
+    it('Should return all leaf text from a complete storynode tree', async () => {
+      const { cookies, userId } = await createAuthenticatedUser();
+      const { root, leaf } = await createStorynodeTree(userId);
+
+      const response = await request(app)
+        .get(`/storynode/getstoryfile/${root._id}`)
+        .set('Cookie', cookies)
+        .expect(200);
+
+      expect(response.body).toHaveProperty('storyText');
+      expect(response.body.storyText).toContain(leaf.text);
+    });
+
+    it('Should return empty string for a storynode tree with no leaves', async () => {
+      const { cookies, userId } = await createAuthenticatedUser();
+
+      // Create root
+      const rootResponse = await request(app)
+        .post('/storynode')
+        .set('Cookie', cookies)
+        .send({
+          name: 'Root',
+          type: 'root',
+          text: '',
+          isComplete: false,
+          archived: false
+        });
+
+      const rootId = rootResponse.body._id;
+
+      // Create branch (no leaves)
+      await request(app)
+        .post('/storynode')
+        .set('Cookie', cookies)
+        .send({
+          name: 'Branch',
+          type: 'branch',
+          text: '',
+          parent: rootId,
+          isComplete: false,
+          archived: false
+        });
+
+      // Get story file - should be empty since there are no leaves
+      const response = await request(app)
+        .get(`/storynode/getstoryfile/${rootId}`)
+        .set('Cookie', cookies)
+        .expect(200);
+
+      expect(response.body).toHaveProperty('storyText');
+      expect(response.body.storyText).toBe('');
+    });
+  });
+
   describe('Post From Template', () => {
     it('Should create a new storynode tree from a template without parentId', async () => {
       const { cookies, userId } = await createAuthenticatedUser();

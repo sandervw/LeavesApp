@@ -26,7 +26,7 @@ export const recursiveUpdateWordLimits = async (node: Readonly<StorynodeDoc>): P
 };
 
 /**
- * Given a template or storynode id, iteratively get all descendants of that tree.
+ * Given a template or storynode, iteratively get all descendants of that tree.
  * Uses queue-based approach to avoid recursion and array spreading overhead.
  * @param tree - the tree element
  * @param model - the mongoose model
@@ -45,6 +45,33 @@ export const recursiveGetDescendants = async <T extends TreeDoc>(tree: T, model:
   }
 
   return descendants;
+};
+
+/**
+ * Given a template or storynode, recursively get all leaf nodes of that tree in depth-first order.
+ * Uses recursion to maintain proper narrative sequence.
+ * @param tree - the tree element
+ * @param model - the mongoose model
+ * @returns - an array of all leaf nodes (nodes with type='leaf') in DFS order (not including the input node)
+ */
+export const recursiveGetLeaves = async <T extends TreeDoc>(tree: T, model: mongoose.Model<T>): Promise<T[]> => {
+  const leaves: T[] = [];
+
+  // Process children in order (depth-first)
+  for (const childId of tree.children) {
+    const child = await model.findById(childId);
+    if (!child) continue;
+
+    if (child.type === 'leaf') {
+      leaves.push(child);
+    } else {
+      // Recursively get leaves from this child
+      const childLeaves = await recursiveGetLeaves(child, model);
+      leaves.push(...childLeaves);
+    }
+  }
+
+  return leaves;
 };
 
 /**

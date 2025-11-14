@@ -97,7 +97,6 @@ function processItems(items) {
 
 #### Structure and File Reduction
 
-- **Modularize**: Move unrelated logic to other files.
 - **Use utility libraries**: Replace local helpers with standard library or framework utilities.
 
   ```python

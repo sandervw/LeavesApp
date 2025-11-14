@@ -76,6 +76,20 @@ describe('useAPI hook', () => {
       expect(result.current.error).toBeNull();
       expect(result.current.isPending).toBe(false);
     });
+
+    it('should handle downloadStory API call', async () => {
+      const { result } = renderHook(() => useAPI());
+
+      let response;
+      await waitFor(async () => {
+        response = await result.current.apiCall('downloadStory', 'storynode123');
+      });
+
+      expect(response).toBeDefined();
+      expect(response.storyText).toBe('This is the story text content from the storynode.');
+      expect(result.current.error).toBeNull();
+      expect(result.current.isPending).toBe(false);
+    });
   });
 
   describe('Error handling', () => {

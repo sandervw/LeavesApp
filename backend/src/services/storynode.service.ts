@@ -3,7 +3,7 @@ import { Storynode } from '../models/tree.model';
 import { StorynodeDoc, mongoId } from '../schemas/mongo.schema';
 import appAssert from '../utils/appAssert';
 import { NOT_FOUND } from '../constants/http';
-import { recursiveStorynodeFromTemplate, recursiveUpdateWordLimits } from './recursive.service';
+import { recursiveStorynodeFromTemplate, recursiveUpdateWordLimits, recursiveGetLeaves } from './recursive.service';
 
 class StorynodeService extends TreeService<StorynodeDoc> {
 
@@ -70,6 +70,23 @@ class StorynodeService extends TreeService<StorynodeDoc> {
     );
 
     return newChild;
+  }
+
+  /**
+   * Get the complete story text from a storynode tree.
+   * Collects all leaf nodes in depth-first order and joins their text.
+   * @param userId - the userId to filter by
+   * @param storynodeId - the id of the storynode (typically a root)
+   * @returns - the complete story as a single string
+   */
+  async getStoryFile(userId: mongoId, storynodeId: mongoId): Promise<string> {
+    const storynode = await Storynode.findOne({ _id: storynodeId, userId });
+    appAssert(storynode, NOT_FOUND, 'Storynode not found');
+
+    const leaves = await recursiveGetLeaves<StorynodeDoc>(storynode, Storynode);
+    const storyText = leaves.map(leaf => leaf.text).join('\n');
+
+    return storyText;
   }
 
   /**

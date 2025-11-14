@@ -57,16 +57,11 @@ export const postFromTemplateController = catchErrors(async (req, res) => {
   return res.status(CREATED).json(newTree);
 });
 
-// TODO: Implement the following controllers when needed.
-// export const patchDepthController = catchErrors(async (req, res) => {
-//   const result = await storynodeService.updateDepth(req.userId);
-//   return res.status(OK).json(result);
-// });
-
-// export const postToFileController = catchErrors(async (req, res) => {
-//     // TODO
-// });
-
-// export const postFromFileController = catchErrors(async (req, res) => {
-//     // TODO
-// });
+/**
+ * Retrieves the complete story file text from a storynode tree.
+ */
+export const getStoryFileController = catchErrors(async (req, res) => {
+  const storynodeId = mongoIdSchema.parse(req.params.id);
+  const storyText = await StorynodeService.getStoryFile(req.userId, storynodeId);
+  return res.status(OK).json({ storyText });
+});

@@ -8,6 +8,7 @@ const router = express.Router();
 router.get('/', controller.getStorynodesController);
 router.get('/:id', controller.getOneStorynodeController);
 router.get('/getchildren/:id', controller.getStorynodeChildrenController);
+router.get('/getstoryfile/:id', controller.getStoryFileController);
 router.post('/', controller.postStorynodeController);
 router.delete('/:id', controller.deleteStorynodeController);
 router.post('/postfromtemplate/', controller.postFromTemplateController);

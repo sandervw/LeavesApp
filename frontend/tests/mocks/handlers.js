@@ -241,4 +241,20 @@ export const handlers = [
       { status: 404 }
     );
   }),
+
+  http.get(`${BASE_URL}/storynode/getstoryfile/:id`, ({ params }) => {
+    const { id } = params;
+
+    if (id === 'storynode123') {
+      return HttpResponse.json(
+        { storyText: 'This is the story text content from the storynode.' },
+        { status: 200 }
+      );
+    }
+
+    return HttpResponse.json(
+      { message: 'Storynode not found', errorCode: 'NotFound' },
+      { status: 404 }
+    );
+  }),
 ];
