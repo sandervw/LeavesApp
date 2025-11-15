@@ -12,7 +12,7 @@ const toKeyVaultName = (envName: string): string => {
 
 const vaultName = process.env.KEY_VAULT_URL;
 let getSecret: (name: string) => Promise<string | undefined>;
-if (process.env.NODE_ENV === "production" && vaultName) {
+if (vaultName) {
   const client = new SecretClient(
     vaultName,
     new DefaultAzureCredential()

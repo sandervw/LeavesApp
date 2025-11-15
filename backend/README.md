@@ -194,8 +194,15 @@ Utility functions for complex tree operations:
 ```typescript
 class RecursiveService {
   async recursiveUpdateWordLimits(node: StorynodeDoc): Promise<void>;
-  async recursiveGetDescendants(tree: TreeDoc, model: Model<TreeDoc>): Promise<TreeDoc[]>;
-  async recursiveStorynodeFromTemplate(userId, templateId, parentId?): Promise<StorynodeDoc>;
+  async recursiveGetDescendants(
+    tree: TreeDoc,
+    model: Model<TreeDoc>
+  ): Promise<TreeDoc[]>;
+  async recursiveStorynodeFromTemplate(
+    userId,
+    templateId,
+    parentId?
+  ): Promise<StorynodeDoc>;
 }
 export default new RecursiveService();
 ```
@@ -264,6 +271,7 @@ interface StorynodeDoc extends TreeDoc {
 ### Tree Structure
 
 Tree maintained through:
+
 - **children**: Array of child IDs (preserves order)
 - **parent**: Parent ID (null for root)
 - **depth**: Tree depth (0 for root)
@@ -513,6 +521,7 @@ npm start        # Start production server
 ### Database Migrations
 
 No formal migration system. Schema changes:
+
 1. Update Mongoose models
 2. Test in development
 3. Document in commit messages
@@ -522,9 +531,8 @@ Write one-time migration scripts in `scripts/` for breaking changes.
 
 ### Environment Configuration
 
-- `.env.development` - Local development
+- `.env` - Local development
 - `.env.test` - Testing (auto-loaded by Vitest)
-- `.env.production` - Production (never commit)
 
 ## Troubleshooting
 
