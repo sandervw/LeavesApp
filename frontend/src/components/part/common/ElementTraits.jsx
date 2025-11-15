@@ -1,6 +1,6 @@
 import { DraggableButton } from "./Buttons";
 import { useContext } from 'react';
-import { DragHandlerContext } from "../../../context/DragHandlerContext";
+import { DragHandlerContext } from "../../../context/dragHandlerContext";
 
 const InputHeader = ({dragHandler, ...props}) => {
     const handler = useContext(DragHandlerContext);

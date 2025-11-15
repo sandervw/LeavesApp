@@ -1,5 +1,5 @@
 import { useDraggable } from '@dnd-kit/core';
-import { DragHandlerContext } from '../../context/DragHandlerContext';
+import { DragHandlerContext } from '../../context/dragHandlerContext';
 
 /**
  * Wrapper for elements that can be dragged
