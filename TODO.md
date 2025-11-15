@@ -24,11 +24,11 @@ Resources needed:
 
 ## Docker Deployment
 
-- cd backend
-- docker build -t leaves-backend:dev .
-- az acr login --name leavescr
-- docker tag leaves-backend:dev leavescr-bvhvdthwh4e8dddj.azurecr.io/leaves-backend:dev
-- docker push leavescr-bvhvdthwh4e8dddj.azurecr.io/leaves-backend:dev
+cd backend &&
+docker build -t leaves-backend:dev . &&
+az acr login --name leavescr &&
+docker tag leaves-backend:dev leavescr-bvhvdthwh4e8dddj.azurecr.io/leaves-backend:dev &&
+docker push leavescr-bvhvdthwh4e8dddj.azurecr.io/leaves-backend:dev
 
 az containerapp show \
  --name leaves-dev-ca \
