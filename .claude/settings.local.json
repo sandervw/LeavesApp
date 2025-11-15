@@ -14,7 +14,9 @@
       "Bash(az staticwebapp secrets:*)",
       "Bash(swa deploy:*)",
       "Bash(/bashes)",
-      "Bash(pkill:*)"
+      "Bash(pkill:*)",
+      "Bash(az containerapp list:*)",
+      "Bash(az monitor log-analytics workspace create:*)"
     ],
     "deny": [],
     "ask": []

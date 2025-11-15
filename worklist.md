@@ -19,3 +19,6 @@
 | 015 | CSS Improvements    | Organize/Improve CSS; fixed style subset; modular elements                  | ⬜         |
 | 016 | New Model Funcs     | Move service layer logic to model statics/methods                           | ⬜         |
 | 017 | Next App Stack      | Research options for new backend/front (fullstack? Hono? Express outdated?) | ⬜         |
+| 018 | Key Vault to EnvVars| Move Key Vault secrets to environment variables for faster startup          | ⬜         |
+| 019 | Health Check Tuning | Increase Docker health check start-period to 30s to prevent false failures  | ⬜         |
+| 020 | MongoDB Conn Optim  | Optimize MongoDB connection string with pooling settings for crash recovery | ⬜         |
