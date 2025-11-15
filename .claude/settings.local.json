@@ -3,7 +3,18 @@
     "allow": [
       "Bash(npm test:*)",
       "WebSearch",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "Bash(az containerapp logs show:*)",
+      "Bash(az containerapp env show:*)",
+      "Bash(az containerapp show:*)",
+      "WebFetch(domain:gist.github.com)",
+      "Bash(az staticwebapp list:*)",
+      "Bash(az staticwebapp secrets:*)",
+      "Bash(swa deploy:*)",
+      "Bash(/bashes)",
+      "Bash(pkill:*)"
     ],
     "deny": [],
     "ask": []

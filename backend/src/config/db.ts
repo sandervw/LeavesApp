@@ -1,9 +1,8 @@
 import mongoose from "mongoose";
 import { MONGO_URI, NODE_ENV } from "../constants/env";
-import { MongoMemoryServer } from "mongodb-memory-server";
 import { logger } from "../utils/logger";
 
-let mongoServer: MongoMemoryServer | null = null;
+let mongoServer: any = null;
 
 const connectToDatabase = async () => {
   try {
@@ -13,6 +12,8 @@ const connectToDatabase = async () => {
     // or if it's the default test URI from tests/setup.ts
     if (NODE_ENV === "test" && (!MONGO_URI || MONGO_URI === "mongodb://localhost:27017/test-db")) {
       logger.info("Starting MongoDB Memory Server for test environment...");
+      // Dynamically import mongodb-memory-server only in test environment
+      const { MongoMemoryServer } = await import("mongodb-memory-server");
       mongoServer = await MongoMemoryServer.create();
       uri = mongoServer.getUri();
       logger.info("MongoDB Memory Server started at:", uri);
