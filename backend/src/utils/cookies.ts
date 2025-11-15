@@ -6,7 +6,7 @@ const secure = process.env.NODE_ENV === 'production';
 export const REFRESH_PATH = '/auth/refresh'; // Only send the refresh token on this path
 
 const defaults: CookieOptions = {
-  sameSite: 'strict', // Helps prevent CSRF attacks
+  sameSite: secure ? 'none' : 'lax', // 'none' for cross-origin (Azure), 'lax' for localhost
   httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
   secure, // Ensures the cookie is only sent over HTTPS (not HTTP)
 };
