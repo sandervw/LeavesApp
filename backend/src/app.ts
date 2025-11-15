@@ -18,6 +18,9 @@ import mongoose from 'mongoose';
 
 // Create express server
 export const app = express();
+// Trust only the first proxy (Azure's load balancer) for rate limiting
+// See: https://express-rate-limit.github.io/ERR_ERL_PERMISSIVE_TRUST_PROXY/
+app.set('trust proxy', 1);
 
 /*==MIDDLEWARE==*/
 app.use(express.urlencoded({ extended: true })); // Parses URL-encoded request body (IE. name=John+Doe&age=25)
