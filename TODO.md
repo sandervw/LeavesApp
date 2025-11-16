@@ -23,35 +23,32 @@ Resources needed:
   - each container app connects to its respective key vault for secrets
 - (DONE) 1x domain name (wordleaves.com)
 
-  1. wordleaves.com → Static Web App (production frontend)
+  - Production Environment:
 
-  - Status: Ready with SSL
+    - Frontend: wordleaves.com (Static Web App production)
+    - Backend: api.wordleaves.com (Container App)
+    - CORS: Configured to allow https://wordleaves.com
 
-  2. dev.wordleaves.com → Static Web App (preview frontend)
+  - Dev/Preview Environment:
 
-  - Status: Ready with SSL
+    - Frontend: lemon-hill-0a60a3510-preview.centralus.3.azurestaticapps.net (auto-generated)
+    - Backend: api-dev.wordleaves.com (Container App)
+    - CORS: Configured to allow the preview URL
+    - GitHub: Feature branches automatically deploy to this preview environment
 
-  3. api-dev.wordleaves.com → Dev Container App (dev backend)
+  - CNAME Records (In cloudflare):
 
-  - SSL: SniEnabled ✓
+    - @ → lemon-hill-0a60a3510.3.azurestaticapps.net
+    - dev → lemon-hill-0a60a3510.3.azurestaticapps.net
+    - api-dev → leaves-dev-ca.bravedune-c58d044d.centralus.azurecontainerapps.io
+    - api → leaves-prd-ca.kindgrass-e7a2c625.centralus.azurecontainerapps.io
 
-  4. api.wordleaves.com → Production Container App (production backend)
+  - TXT Records (In cloudflare, for validation):
 
-  - SSL: SniEnabled ✓
-
-  CNAME Records (In cloudflare):
-
-  - @ → lemon-hill-0a60a3510.3.azurestaticapps.net
-  - dev → lemon-hill-0a60a3510.3.azurestaticapps.net
-  - api-dev → leaves-dev-ca.bravedune-c58d044d.centralus.azurecontainerapps.io
-  - api → leaves-prd-ca.kindgrass-e7a2c625.centralus.azurecontainerapps.io
-
-  TXT Records (for validation):
-
-  - \_dnsauth (for wordleaves.com)
-  - \_dnsauth.dev (for dev.wordleaves.com)
-  - asuid.api-dev (for api-dev.wordleaves.com)
-  - asuid.api (for api.wordleaves.com)
+    - \_dnsauth (for wordleaves.com)
+    - \_dnsauth.dev (for dev.wordleaves.com)
+    - asuid.api-dev (for api-dev.wordleaves.com)
+    - asuid.api (for api.wordleaves.com)
 
 ## Docker Deployment
 
