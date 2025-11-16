@@ -33,7 +33,7 @@ jobs:
           app_build_command: "npm run build"
           output_location: "dist"
         env:
-          VITE_BASEAPIURL: 'https://leaves-prd-ca.kindgrass-e7a2c625.centralus.azurecontainerapps.io/'
+          VITE_BASEAPIURL: 'https://api.wordleaves.com/'
 
   build_and_deploy_preview:
     if: (github.event_name == 'push' && github.ref != 'refs/heads/main') || (github.event_name == 'pull_request' && github.event.action != 'closed')
@@ -57,7 +57,7 @@ jobs:
           output_location: "dist"
           deployment_environment: "preview"
         env:
-          VITE_BASEAPIURL: 'https://leaves-dev-ca.bravedune-c58d044d.centralus.azurecontainerapps.io/'
+          VITE_BASEAPIURL: 'https://api-dev.wordleaves.com/'
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'

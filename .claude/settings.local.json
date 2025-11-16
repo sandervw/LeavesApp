@@ -16,7 +16,11 @@
       "Bash(/bashes)",
       "Bash(pkill:*)",
       "Bash(az containerapp list:*)",
-      "Bash(az monitor log-analytics workspace create:*)"
+      "Bash(az monitor log-analytics workspace create:*)",
+      "Bash(az staticwebapp show:*)",
+      "Bash(az staticwebapp hostname list:*)",
+      "Bash(az staticwebapp hostname show:*)",
+      "Bash(az staticwebapp hostname set:*)"
     ],
     "deny": [],
     "ask": []

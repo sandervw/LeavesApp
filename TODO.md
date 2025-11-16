@@ -15,12 +15,43 @@ Resources needed:
   - 100GB/month bandwidth
 - (DONE) 1x azure container registry
 - (DONE) 1x dockerfile for backend express app (deploy to container registry)
-- 2x azure container apps (leaves-dev-ca, leaves-prd-ca)
+- (DONE) 2x azure container apps (leaves-dev-ca, leaves-prd-ca)
   - probably "free" for low usage
   - package express app as docker container
   - two container apps in same resource group
   - each container app runs different docker image tag (dev vs prd)
   - each container app connects to its respective key vault for secrets
+- (DONE) 1x domain name (wordleaves.com)
+
+  1. wordleaves.com → Static Web App (production frontend)
+
+  - Status: Ready with SSL
+
+  2. dev.wordleaves.com → Static Web App (preview frontend)
+
+  - Status: Ready with SSL
+
+  3. api-dev.wordleaves.com → Dev Container App (dev backend)
+
+  - SSL: SniEnabled ✓
+
+  4. api.wordleaves.com → Production Container App (production backend)
+
+  - SSL: SniEnabled ✓
+
+  CNAME Records (In cloudflare):
+
+  - @ → lemon-hill-0a60a3510.3.azurestaticapps.net
+  - dev → lemon-hill-0a60a3510.3.azurestaticapps.net
+  - api-dev → leaves-dev-ca.bravedune-c58d044d.centralus.azurecontainerapps.io
+  - api → leaves-prd-ca.kindgrass-e7a2c625.centralus.azurecontainerapps.io
+
+  TXT Records (for validation):
+
+  - \_dnsauth (for wordleaves.com)
+  - \_dnsauth.dev (for dev.wordleaves.com)
+  - asuid.api-dev (for api-dev.wordleaves.com)
+  - asuid.api (for api.wordleaves.com)
 
 ## Docker Deployment
 
@@ -43,33 +74,3 @@ az containerapp logs show \
  --name leaves-dev-ca \
  --resource-group leaves-app-rg \
  --follow
-
-The Real Solution: Make Cookies First-Party
-
-The problem is your frontend (lemon-hill-0a60a3510-preview.centralus.3.azurestaticapps.net) and backend
-(leaves-dev-ca.bravedune-c58d044d.centralus.azurecontainerapps.io) are on different domains, so browsers treat backend cookies as "third-party."
-
-Best Option: Azure Static Web Apps API Proxy
-
-Azure Static Web Apps has a built-in feature to proxy API requests, making them appear as first-party requests from the same domain:
-
-How it works:
-
-1. Configure staticwebapp.config.json to proxy /api/\* requests to your container app
-2. Frontend calls https://your-static-app.net/api/auth/login instead of https://leaves-dev-ca.../auth/login
-3. Cookies are set as first-party because they appear to come from the static app domain
-
-Configuration:
-
-Create or update frontend/staticwebapp.config.json:
-
-{
-"routes": [
-{
-"route": "/api/*",
-"rewrite": "https://leaves-dev-ca.bravedune-c58d044d.centralus.azurecontainerapps.io/*"
-}
-]
-}
-
-Then update your frontend's VITE_BASEAPIURL to use /api instead of the full container app URL.
