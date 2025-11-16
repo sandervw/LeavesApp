@@ -32,6 +32,7 @@ jobs:
           app_location: "/frontend"
           app_build_command: "npm run build"
           output_location: "dist"
+          deployment_environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'preview' }}
         env:
           VITE_BASEAPIURL: ${{ github.ref == 'refs/heads/main' && 'https://leaves-prd-ca.kindgrass-e7a2c625.centralus.azurecontainerapps.io/' || 'https://leaves-dev-ca.bravedune-c58d044d.centralus.azurecontainerapps.io/' }}
 
