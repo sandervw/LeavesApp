@@ -43,3 +43,33 @@ az containerapp logs show \
  --name leaves-dev-ca \
  --resource-group leaves-app-rg \
  --follow
+
+The Real Solution: Make Cookies First-Party
+
+The problem is your frontend (lemon-hill-0a60a3510-preview.centralus.3.azurestaticapps.net) and backend
+(leaves-dev-ca.bravedune-c58d044d.centralus.azurecontainerapps.io) are on different domains, so browsers treat backend cookies as "third-party."
+
+Best Option: Azure Static Web Apps API Proxy
+
+Azure Static Web Apps has a built-in feature to proxy API requests, making them appear as first-party requests from the same domain:
+
+How it works:
+
+1. Configure staticwebapp.config.json to proxy /api/\* requests to your container app
+2. Frontend calls https://your-static-app.net/api/auth/login instead of https://leaves-dev-ca.../auth/login
+3. Cookies are set as first-party because they appear to come from the static app domain
+
+Configuration:
+
+Create or update frontend/staticwebapp.config.json:
+
+{
+"routes": [
+{
+"route": "/api/*",
+"rewrite": "https://leaves-dev-ca.bravedune-c58d044d.centralus.azurecontainerapps.io/*"
+}
+]
+}
+
+Then update your frontend's VITE_BASEAPIURL to use /api instead of the full container app URL.
