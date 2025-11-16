@@ -33,12 +33,12 @@ if (vaultName) {
 export const getSecretValue = getSecret;
 
 /**
- * Pre-loads all secrets from Key Vault (in production) into process.env
+ * Pre-loads all secrets from Key Vault into process.env
  * before the app starts. In development, secrets are already in process.env
  * from the .env file.
  */
 export const initializeSecrets = async (): Promise<void> => {
-  if (process.env.NODE_ENV === "production" && vaultName) {
+  if (vaultName) {
     // Fetch all secrets in parallel and populate process.env
     await Promise.all(
       SECRET_NAMES.map(async (name) => {

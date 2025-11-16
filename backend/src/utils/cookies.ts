@@ -1,12 +1,15 @@
 import { CookieOptions, Response } from "express";
 import { fifteenMinutesFromNow, thirtyDaysFromNow } from "./date";
+import { APP_ORIGIN } from "../constants/env";
 
-const secure = process.env.NODE_ENV === 'production';
+// Secure cookies required for Azure deployments (https) and production
+// Local development (http://localhost) can use insecure cookies
+const secure = APP_ORIGIN.startsWith('https://');
 
 export const REFRESH_PATH = '/auth/refresh'; // Only send the refresh token on this path
 
 const defaults: CookieOptions = {
-  sameSite: secure ? 'none' : 'lax', // 'none' for cross-origin (Azure), 'lax' for localhost
+  sameSite: 'none', // Allows cross-site cookies
   httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
   secure, // Ensures the cookie is only sent over HTTPS (not HTTP)
 };
