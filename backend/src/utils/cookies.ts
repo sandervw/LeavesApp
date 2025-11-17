@@ -4,7 +4,7 @@ import { APP_ORIGIN } from "../constants/env";
 
 // Secure cookies required for Azure deployments (https) and production
 // Local development (http://localhost) can use insecure cookies
-const secure = APP_ORIGIN.includes('wordleaves.com');
+const secure = APP_ORIGIN.startsWith('https://');
 
 /**
  * For custom domain setups, set cookie domain to allow sharing across subdomains
