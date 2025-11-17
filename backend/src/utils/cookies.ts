@@ -4,7 +4,7 @@ import { APP_ORIGIN } from "../constants/env";
 
 // Secure cookies required for Azure deployments (https) and production
 // Local development (http://localhost) can use insecure cookies
-const secure = APP_ORIGIN.startsWith('https://');
+const secure = APP_ORIGIN.includes('wordleaves.com');
 
 /**
  * For custom domain setups, set cookie domain to allow sharing across subdomains
@@ -17,7 +17,7 @@ const cookieDomain = isProduction ? '.wordleaves.com' : undefined;
 export const REFRESH_PATH = '/auth/refresh'; // Only send the refresh token on this path
 
 const defaults: CookieOptions = {
-  sameSite: 'lax',
+  sameSite: secure ? 'lax' : 'none',
   httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
   secure, // Ensures the cookie is only sent over HTTPS (not HTTP)
   domain: cookieDomain, // Share cookies across subdomains when using custom domain
@@ -39,7 +39,6 @@ type Params = {
   accessToken: string;
   refreshToken?: string;
 };
-
 /**
  * Sets the access (and optional refresh) token(s)a as cookies on the response object.
  */
