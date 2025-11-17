@@ -54,15 +54,27 @@ jobs:
             --image leavescr-bvhvdthwh4e8dddj.azurecr.io/leaves-backend:prd \
             --output none
 
-          # Force revision activation to ensure update takes effect
-          az containerapp revision list \
+          # Check if revision needs activation
+          LATEST_REVISION=$(az containerapp revision list \
             --name leaves-prd-ca \
             --resource-group leaves-app-rg \
-            --query "[0].name" -o tsv | \
-          xargs -I {} az containerapp revision activate \
+            --query "[0].name" -o tsv)
+
+          REVISION_ACTIVE=$(az containerapp revision show \
             --name leaves-prd-ca \
             --resource-group leaves-app-rg \
-            --revision {}
+            --revision $LATEST_REVISION \
+            --query "properties.active" -o tsv)
+
+          if [ "$REVISION_ACTIVE" = "true" ]; then
+            echo "✅ Revision $LATEST_REVISION is already active"
+          else
+            echo "🔄 Activating revision $LATEST_REVISION"
+            az containerapp revision activate \
+              --name leaves-prd-ca \
+              --resource-group leaves-app-rg \
+              --revision $LATEST_REVISION
+          fi
 
       - name: Verify deployment
         run: |
@@ -109,15 +121,27 @@ jobs:
             --image leavescr-bvhvdthwh4e8dddj.azurecr.io/leaves-backend:dev \
             --output none
 
-          # Force revision activation to ensure update takes effect
-          az containerapp revision list \
+          # Check if revision needs activation
+          LATEST_REVISION=$(az containerapp revision list \
             --name leaves-dev-ca \
             --resource-group leaves-app-rg \
-            --query "[0].name" -o tsv | \
-          xargs -I {} az containerapp revision activate \
+            --query "[0].name" -o tsv)
+
+          REVISION_ACTIVE=$(az containerapp revision show \
             --name leaves-dev-ca \
             --resource-group leaves-app-rg \
-            --revision {}
+            --revision $LATEST_REVISION \
+            --query "properties.active" -o tsv)
+
+          if [ "$REVISION_ACTIVE" = "true" ]; then
+            echo "✅ Revision $LATEST_REVISION is already active"
+          else
+            echo "🔄 Activating revision $LATEST_REVISION"
+            az containerapp revision activate \
+              --name leaves-dev-ca \
+              --resource-group leaves-app-rg \
+              --revision $LATEST_REVISION
+          fi
 
       - name: Verify deployment
         run: |
