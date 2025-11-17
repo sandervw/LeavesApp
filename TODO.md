@@ -10,3 +10,7 @@
 | 006 | CSS Improvements        | Organize/Improve CSS; fixed style subset; modular elements; make a test page | ⬜         |
 | 007 | New Model Funcs         | Move service layer logic to model statics/methods                            | ⬜         |
 | 008 | Next App Stack          | Research options for new backend/front (fullstack? Hono? Express outdated?)  | ⬜         |
+
+IDEAS:
+
+- App.use(configure security/deployment? - instead of redoing stuff in multiple files/locations?)

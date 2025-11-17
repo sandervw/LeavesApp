@@ -26,17 +26,4 @@ const connectToDatabase = async () => {
   }
 };
 
-// Cleanup function for graceful shutdown
-export const disconnectFromDatabase = async () => {
-  try {
-    await mongoose.disconnect();
-    if (mongoServer) {
-      await mongoServer.stop();
-      logger.info("MongoDB Memory Server stopped");
-    }
-  } catch (error) {
-    logger.info("Error disconnecting from MongoDB:", error);
-  }
-};
-
 export default connectToDatabase;

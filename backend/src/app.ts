@@ -49,9 +49,6 @@ if (NODE_ENV === 'test') { // Test routes (only available in test environment)
   app.use('/test', testRoutes);
 }
 
-// TODO: handle unknown routes (404)
-
-
 app.use(errorHandler); // Catches all errors thrown in routes above
 
 /*==MAIN REQUESTS==*/
