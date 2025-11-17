@@ -36,7 +36,7 @@ jobs:
           containerAppName: leaves-prd-ca
           resourceGroup: leaves-app-rg
           appSourcePath: backend
-          dockerfilePath: backend/Dockerfile
+          dockerfilePath: /Dockerfile
           acrName: leavescr-bvhvdthwh4e8dddj
           acrUsername: ${{ secrets.AZURE_REGISTRY_USERNAME }}
           acrPassword: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
@@ -68,7 +68,7 @@ jobs:
           containerAppName: leaves-dev-ca
           resourceGroup: leaves-app-rg
           appSourcePath: backend
-          dockerfilePath: backend/Dockerfile
+          dockerfilePath: /Dockerfile
           acrName: leavescr-bvhvdthwh4e8dddj
           acrUsername: ${{ secrets.AZURE_REGISTRY_USERNAME }}
           acrPassword: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
