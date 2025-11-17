@@ -6,16 +6,16 @@ on:
       - main
       - "feature/*"
     paths:
-      - 'backend/**'
-      - '.github/workflows/azure-backend-deploy.yml'
+      - "backend/**"
+      - ".github/workflows/azure-backend-deploy.yml"
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
       - main
       - "feature/*"
     paths:
-      - 'backend/**'
-      - '.github/workflows/azure-backend-deploy.yml'
+      - "backend/**"
+      - ".github/workflows/azure-backend-deploy.yml"
 
 jobs:
   deploy_backend_production:
@@ -39,7 +39,9 @@ jobs:
           push: true
           tags: |
             leavescr-bvhvdthwh4e8dddj.azurecr.io/leaves-backend:prd
-            leavescr-bvhvdthwh4e8dddj.azurecr.io/leaves-backend:prd-${{ github.sha }}
+
+      - name: Wait for image build propagation
+        run: sleep 30
 
       - name: Log in to Azure CLI
         uses: azure/login@v1
@@ -106,7 +108,9 @@ jobs:
           push: true
           tags: |
             leavescr-bvhvdthwh4e8dddj.azurecr.io/leaves-backend:dev
-            leavescr-bvhvdthwh4e8dddj.azurecr.io/leaves-backend:dev-${{ github.sha }}
+
+      - name: Wait for image build propagation
+        run: sleep 30
 
       - name: Log in to Azure CLI
         uses: azure/login@v1
