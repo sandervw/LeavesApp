@@ -2,22 +2,18 @@ import { CookieOptions, Response } from "express";
 import { fifteenMinutesFromNow, thirtyDaysFromNow } from "./date";
 import { APP_ORIGIN } from "../constants/env";
 
-// Secure cookies required for Azure deployments (https) and production
-// Local development (http://localhost) can use insecure cookies
+// What we NEED TO DO:
+// - PRD: secure=true, sameSite='lax', domain='.wordleaves.com' (for custom domain and subdomains)
+// - DEV: secure=false, sameSite='none', domain=undefined (for localhost and preview deployments)
+// - Localhost: secure=true, sameSite='lax', domain=undefined (if using https://localhost)
 const secure = APP_ORIGIN.startsWith('https://');
-
-/**
- * For custom domain setups, set cookie domain to allow sharing across subdomains
- * Production: wordleaves.com and api.wordleaves.com share cookies via .wordleaves.com
- * Local/dev: localhost shares cookies (no domain needed); dev doesn't, but oh well
- */
 const isProduction = APP_ORIGIN.includes('wordleaves.com');
 const cookieDomain = isProduction ? '.wordleaves.com' : undefined;
 
 export const REFRESH_PATH = '/auth/refresh'; // Only send the refresh token on this path
 
 const defaults: CookieOptions = {
-  sameSite: secure ? 'lax' : 'none',
+  sameSite: 'none', // lax for same-site (custom domain), none for cross-site (localhost/preview)
   httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
   secure, // Ensures the cookie is only sent over HTTPS (not HTTP)
   domain: cookieDomain, // Share cookies across subdomains when using custom domain
