@@ -1,22 +1,22 @@
 import { CookieOptions, Response } from "express";
 import { fifteenMinutesFromNow, thirtyDaysFromNow } from "./date";
-import { APP_ORIGIN } from "../constants/env";
+import { NODE_ENV } from "../constants/env";
 
 // What we NEED TO DO:
 // - PRD: secure=true, sameSite='lax', domain='.wordleaves.com' (for custom domain and subdomains)
 // - DEV: secure=false, sameSite='none', domain=undefined (for localhost and preview deployments)
-// - Localhost: secure=true, sameSite='lax', domain=undefined (if using https://localhost)
-const secure = APP_ORIGIN.startsWith('https://');
-const isProduction = APP_ORIGIN.includes('wordleaves.com');
-const cookieDomain = isProduction ? '.wordleaves.com' : undefined;
+// - Localhost: secure=false, sameSite='lax', domain=undefined (if using https://localhost)
+const secure = NODE_ENV === 'production';
+const sameSite = (NODE_ENV === 'production' || NODE_ENV === 'local') ? 'lax' : 'none';
+const domain = secure ? '.wordleaves.com' : undefined;
 
 export const REFRESH_PATH = '/auth/refresh'; // Only send the refresh token on this path
 
 const defaults: CookieOptions = {
-  sameSite: 'none', // lax for same-site (custom domain), none for cross-site (localhost/preview)
-  httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
-  secure, // Ensures the cookie is only sent over HTTPS (not HTTP)
-  domain: cookieDomain, // Share cookies across subdomains when using custom domain
+  sameSite,
+  httpOnly: true,
+  secure,
+  domain,
 };
 
 export const getAccessTokenCookieOptions = (): CookieOptions => ({
