@@ -16,7 +16,10 @@
       "Bash(az containerapp list:*)",
       "Bash(az staticwebapp show:*)",
       "Bash(az staticwebapp hostname list:*)",
-      "Bash(az staticwebapp hostname show:*)"
+      "Bash(az staticwebapp hostname show:*)",
+      "Bash(for file in *.d.ts)",
+      "Bash(do mv \"$file\" \"$file%.d.ts-folder.d.ts\")",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []
