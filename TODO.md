@@ -1,73 +1,12 @@
-# Pre-Deployment Audit & TODO List
+# Tasks, features, updates, and fixes
 
-## Azure Deployment Guide
-
-Resources needed:
-
-- (DONE) 1x azure resource group (leaves-app-rg)
-- (DONE) 2x azure key vaults (leaves-dev-keys, leaves-prd-keys)
-- (DONE) 2x azure mongo db atlas collections (leaves-dev-db, leaves-prd-db)
-  - dev and prd users with proper roles/permissions
-  - stored on same cluster:
-- (DONE) 1x azure static web apps
-  - free tier has 2 custom domains/app, 3 preview environments
-  - main branch = production, feature branches = preview
-  - 100GB/month bandwidth
-- (DONE) 1x azure container registry
-- (DONE) 1x dockerfile for backend express app (deploy to container registry)
-- (DONE) 2x azure container apps (leaves-dev-ca, leaves-prd-ca)
-  - probably "free" for low usage
-  - package express app as docker container
-  - two container apps in same resource group
-  - each container app runs different docker image tag (dev vs prd)
-  - each container app connects to its respective key vault for secrets
-- (DONE) 1x domain name (wordleaves.com)
-
-  - Production Environment:
-
-    - Frontend: wordleaves.com (Static Web App production)
-    - Backend: api.wordleaves.com (Container App)
-    - CORS: Configured to allow https://wordleaves.com
-
-  - Dev/Preview Environment:
-
-    - Frontend: lemon-hill-0a60a3510-preview.centralus.3.azurestaticapps.net (auto-generated)
-    - Backend: api-dev.wordleaves.com (Container App)
-    - CORS: Configured to allow the preview URL
-    - GitHub: Feature branches automatically deploy to this preview environment
-
-  - CNAME Records (In cloudflare):
-
-    - @ → lemon-hill-0a60a3510.3.azurestaticapps.net
-    - dev → lemon-hill-0a60a3510.3.azurestaticapps.net
-    - api-dev → leaves-dev-ca.bravedune-c58d044d.centralus.azurecontainerapps.io
-    - api → leaves-prd-ca.kindgrass-e7a2c625.centralus.azurecontainerapps.io
-
-  - TXT Records (In cloudflare, for validation):
-
-    - \_dnsauth (for wordleaves.com)
-    - \_dnsauth.dev (for dev.wordleaves.com)
-    - asuid.api-dev (for api-dev.wordleaves.com)
-    - asuid.api (for api.wordleaves.com)
-
-## Docker Deployment
-
-cd backend &&
-docker build -t leaves-backend:prd . &&
-az acr login --name leavescr &&
-docker tag leaves-backend:prd leavescr-bvhvdthwh4e8dddj.azurecr.io/leaves-backend:prd &&
-docker push leavescr-bvhvdthwh4e8dddj.azurecr.io/leaves-backend:prd &&
-az containerapp update \
- --name leaves-prd-ca \
- --resource-group leaves-app-rg \
- --image leavescr-bvhvdthwh4e8dddj.azurecr.io/leaves-backend:prd
-
-az containerapp show \
- --name leaves-dev-ca \
- --resource-group leaves-app-rg \
- --query "properties.outboundIpAddresses" -o json
-
-az containerapp logs show \
- --name leaves-dev-ca \
- --resource-group leaves-app-rg \
- --follow
+| ID  | Title                   | Description                                                                  | Completed? |
+| --- | ----------------------- | ---------------------------------------------------------------------------- | ---------- |
+| 001 | Production Leaves       | Finalize Leaves deployment to Production                                     | ✅         |
+| 002 | User Testing            | Invite Mom/Gerrit for application testing                                    | ✅         |
+| 003 | Automate Backend Deploy | Automate docker image build and deploy to container apps                     | ⬜         |
+| 004 | Azure CLI               | Create list of helpful Azure/Docker CLI commands for your deployments        | ⬜         |
+| 005 | Cleanup & Refactor      | Clean up codebase; remove unused code; fix Claude's trash                    | ⬜         |
+| 006 | CSS Improvements        | Organize/Improve CSS; fixed style subset; modular elements; make a test page | ⬜         |
+| 007 | New Model Funcs         | Move service layer logic to model statics/methods                            | ⬜         |
+| 008 | Next App Stack          | Research options for new backend/front (fullstack? Hono? Express outdated?)  | ⬜         |

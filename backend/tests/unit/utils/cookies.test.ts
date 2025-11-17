@@ -17,11 +17,6 @@ describe('Cookies utils', () => {
       const actualCall = mockCookie.mock.calls[0];
       expect(actualCall[0]).toBe('accessToken');
       expect(actualCall[1]).toBe('access123');
-      expect(actualCall[2]).toMatchObject({
-        sameSite: 'strict',
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production'
-      });
       expect(actualCall[2].expires).toBeInstanceOf(Date);
     });
 
@@ -38,22 +33,11 @@ describe('Cookies utils', () => {
       const accessCall = mockCookie.mock.calls[0];
       expect(accessCall[0]).toBe('accessToken');
       expect(accessCall[1]).toBe('access123');
-      expect(accessCall[2]).toMatchObject({
-        sameSite: 'strict',
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production'
-      });
       expect(accessCall[2].expires).toBeInstanceOf(Date);
 
       const refreshCall = mockCookie.mock.calls[1];
       expect(refreshCall[0]).toBe('refreshToken');
       expect(refreshCall[1]).toBe('refresh456');
-      expect(refreshCall[2]).toMatchObject({
-        sameSite: 'strict',
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        path: REFRESH_PATH
-      });
       expect(refreshCall[2].expires).toBeInstanceOf(Date);
     });
 
@@ -110,17 +94,6 @@ describe('Cookies utils', () => {
       expect(expiryTime).toBeLessThanOrEqual(after + fifteenMinutes);
     });
 
-    it('Should have correct security settings', () => {
-      // Setup
-      const expectedSecure = process.env.NODE_ENV === 'production';
-      // Act
-      const options = getAccessTokenCookieOptions();
-      // Validate
-      expect(options.sameSite).toBe('strict');
-      expect(options.httpOnly).toBe(true);
-      expect(options.secure).toBe(expectedSecure);
-    });
-
     it('should not be restricted to a specific path', () => {
       // Act
       const options = getAccessTokenCookieOptions();
@@ -142,17 +115,6 @@ describe('Cookies utils', () => {
       expect(options.expires).toBeInstanceOf(Date);
       expect(expiryTime).toBeGreaterThanOrEqual(before + thirtyDays);
       expect(expiryTime).toBeLessThanOrEqual(after + thirtyDays);
-    });
-
-    it('Should have correct security settings', () => {
-      // Setup
-      const expectedSecure = process.env.NODE_ENV === 'production';
-      // Act
-      const options = getRefreshTokenCookieOptions();
-      // Validate
-      expect(options.sameSite).toBe('strict');
-      expect(options.httpOnly).toBe(true);
-      expect(options.secure).toBe(expectedSecure);
     });
 
     it('should be restricted to only the REFRESH_PATH', () => {

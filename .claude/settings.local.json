@@ -11,16 +11,12 @@
       "Bash(az containerapp show:*)",
       "WebFetch(domain:gist.github.com)",
       "Bash(az staticwebapp list:*)",
-      "Bash(az staticwebapp secrets:*)",
-      "Bash(swa deploy:*)",
       "Bash(/bashes)",
       "Bash(pkill:*)",
       "Bash(az containerapp list:*)",
-      "Bash(az monitor log-analytics workspace create:*)",
       "Bash(az staticwebapp show:*)",
       "Bash(az staticwebapp hostname list:*)",
-      "Bash(az staticwebapp hostname show:*)",
-      "Bash(az staticwebapp hostname set:*)"
+      "Bash(az staticwebapp hostname show:*)"
     ],
     "deny": [],
     "ask": []

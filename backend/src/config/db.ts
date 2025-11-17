@@ -8,8 +8,7 @@ const connectToDatabase = async () => {
   try {
     let uri = MONGO_URI;
 
-    // Use MongoDB Memory Server for test environment if MONGO_URI is not explicitly set
-    // or if it's the default test URI from tests/setup.ts
+    // Use MongoDB Memory Server for test env if MONGO_URI not set or default test URI from tests/setup.ts
     if (NODE_ENV === "test" && (!MONGO_URI || MONGO_URI === "mongodb://localhost:27017/test-db")) {
       logger.info("Starting MongoDB Memory Server for test environment...");
       // Dynamically import mongodb-memory-server only in test environment
