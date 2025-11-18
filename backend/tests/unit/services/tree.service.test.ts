@@ -7,11 +7,6 @@ import { NOT_FOUND, INTERNAL_SERVER_ERROR } from '../../../src/constants/http';
 
 /* eslint-disable */ // Disabling eslint for this file as it's a test file.
 
-// Mock recursive service
-vi.mock('../../../src/services/recursive.service', () => ({
-  recursiveGetDescendants: vi.fn()
-}));
-
 // Mock environment constants
 vi.mock('../../../src/constants/env', () => ({
   MAX_TREE_DEPTH: 25
@@ -441,7 +436,6 @@ describe('Tree Service', () => {
   describe('deleteById', () => {
     it('should delete an element by ID', async () => {
       // Setup
-      const { recursiveGetDescendants } = await import('../../../src/services/recursive.service');
       const elementId = new mongoose.Types.ObjectId();
       const element = {
         _id: elementId,
@@ -451,7 +445,7 @@ describe('Tree Service', () => {
       };
       const deletedElement = { ...element };
       mockModel.findOne.mockResolvedValue(element);
-      vi.mocked(recursiveGetDescendants).mockResolvedValue([]);
+      mockModel.find.mockResolvedValue([]);
       mockModel.deleteMany.mockResolvedValue({ deletedCount: 0 } as any);
       mockModel.findByIdAndDelete.mockResolvedValue(deletedElement);
       // Act
@@ -464,7 +458,6 @@ describe('Tree Service', () => {
 
     it('should delete all descendants of the element', async () => {
       // Setup
-      const { recursiveGetDescendants } = await import('../../../src/services/recursive.service');
       const elementId = new mongoose.Types.ObjectId();
       const child1Id = new mongoose.Types.ObjectId();
       const child2Id = new mongoose.Types.ObjectId();
@@ -472,19 +465,22 @@ describe('Tree Service', () => {
         _id: elementId,
         userId,
         children: [child1Id, child2Id]
-      };
+      } as any;
       const descendants = [
-        { _id: child1Id, userId },
-        { _id: child2Id, userId }
+        { _id: child1Id, userId, children: [] },
+        { _id: child2Id, userId, children: [] }
       ];
       mockModel.findOne.mockResolvedValue(element);
-      vi.mocked(recursiveGetDescendants).mockResolvedValue(descendants as any);
+      // Mock find to return descendants when called with the children IDs
+      // The getDescendants method will call find with the children IDs
+      mockModel.find.mockResolvedValue(descendants);
       mockModel.deleteMany.mockResolvedValue({ deletedCount: 2 } as any);
       mockModel.findByIdAndDelete.mockResolvedValue(element);
       // Act
       await treeService.deleteById(userId, elementId);
       // Validate
-      expect(recursiveGetDescendants).toHaveBeenCalledWith(element, mockModel);
+      // Verify that descendants were retrieved and deleted
+      expect(mockModel.find).toHaveBeenCalled();
       expect(mockModel.deleteMany).toHaveBeenCalledWith({
         _id: { $in: [child1Id, child2Id] }
       });
@@ -492,14 +488,14 @@ describe('Tree Service', () => {
 
     it('should remove reference from parent element children array', async () => {
       // Setup
-      const { recursiveGetDescendants } = await import('../../../src/services/recursive.service');
       const parentId = new mongoose.Types.ObjectId();
       const elementId = new mongoose.Types.ObjectId();
       const siblingId = new mongoose.Types.ObjectId();
       const element = {
         _id: elementId,
         userId,
-        parent: parentId
+        parent: parentId,
+        children: []
       };
       const parent = {
         _id: parentId,
@@ -510,7 +506,7 @@ describe('Tree Service', () => {
       };
       mockModel.findOne.mockResolvedValueOnce(element);
       mockModel.findOne.mockResolvedValueOnce(parent);
-      vi.mocked(recursiveGetDescendants).mockResolvedValue([]);
+      mockModel.find.mockResolvedValue([]);
       mockModel.deleteMany.mockResolvedValue({ deletedCount: 0 } as any);
       mockModel.findByIdAndDelete.mockResolvedValue(element);
       // Act
@@ -522,13 +518,13 @@ describe('Tree Service', () => {
 
     it('should change parent type to "leaf" if it becomes childless (and not root)', async () => {
       // Setup
-      const { recursiveGetDescendants } = await import('../../../src/services/recursive.service');
       const parentId = new mongoose.Types.ObjectId();
       const elementId = new mongoose.Types.ObjectId();
       const element = {
         _id: elementId,
         userId,
-        parent: parentId
+        parent: parentId,
+        children: []
       };
       const parent = {
         _id: parentId,
@@ -539,7 +535,7 @@ describe('Tree Service', () => {
       };
       mockModel.findOne.mockResolvedValueOnce(element);
       mockModel.findOne.mockResolvedValueOnce(parent);
-      vi.mocked(recursiveGetDescendants).mockResolvedValue([]);
+      mockModel.find.mockResolvedValue([]);
       mockModel.deleteMany.mockResolvedValue({ deletedCount: 0 } as any);
       mockModel.findByIdAndDelete.mockResolvedValue(element);
       // Act
@@ -552,13 +548,13 @@ describe('Tree Service', () => {
 
     it('should not change parent type to "leaf" if parent is type "root"', async () => {
       // Setup
-      const { recursiveGetDescendants } = await import('../../../src/services/recursive.service');
       const parentId = new mongoose.Types.ObjectId();
       const elementId = new mongoose.Types.ObjectId();
       const element = {
         _id: elementId,
         userId,
-        parent: parentId
+        parent: parentId,
+        children: []
       };
       const parent = {
         _id: parentId,
@@ -569,7 +565,7 @@ describe('Tree Service', () => {
       };
       mockModel.findOne.mockResolvedValueOnce(element);
       mockModel.findOne.mockResolvedValueOnce(parent);
-      vi.mocked(recursiveGetDescendants).mockResolvedValue([]);
+      mockModel.find.mockResolvedValue([]);
       mockModel.deleteMany.mockResolvedValue({ deletedCount: 0 } as any);
       mockModel.findByIdAndDelete.mockResolvedValue(element);
       // Act
@@ -597,17 +593,17 @@ describe('Tree Service', () => {
 
     it('should throw NOT_FOUND error if parent element not found', async () => {
       // Setup
-      const { recursiveGetDescendants } = await import('../../../src/services/recursive.service');
       const parentId = new mongoose.Types.ObjectId();
       const elementId = new mongoose.Types.ObjectId();
       const element = {
         _id: elementId,
         userId,
-        parent: parentId
+        parent: parentId,
+        children: []
       };
       mockModel.findOne.mockResolvedValueOnce(element);
       mockModel.findOne.mockResolvedValueOnce(null);
-      vi.mocked(recursiveGetDescendants).mockResolvedValue([]);
+      mockModel.find.mockResolvedValue([]);
       // Act & Validate
       try {
         await treeService.deleteById(userId, elementId);
@@ -621,7 +617,6 @@ describe('Tree Service', () => {
 
     it('should filter by userId when finding element', async () => {
       // Setup
-      const { recursiveGetDescendants } = await import('../../../src/services/recursive.service');
       const elementId = new mongoose.Types.ObjectId();
       const element = {
         _id: elementId,
@@ -629,7 +624,7 @@ describe('Tree Service', () => {
         children: []
       };
       mockModel.findOne.mockResolvedValue(element);
-      vi.mocked(recursiveGetDescendants).mockResolvedValue([]);
+      mockModel.find.mockResolvedValue([]);
       mockModel.deleteMany.mockResolvedValue({ deletedCount: 0 } as any);
       mockModel.findByIdAndDelete.mockResolvedValue(element);
       // Act
@@ -640,13 +635,13 @@ describe('Tree Service', () => {
 
     it('should filter by userId when finding parent', async () => {
       // Setup
-      const { recursiveGetDescendants } = await import('../../../src/services/recursive.service');
       const parentId = new mongoose.Types.ObjectId();
       const elementId = new mongoose.Types.ObjectId();
       const element = {
         _id: elementId,
         userId,
-        parent: parentId
+        parent: parentId,
+        children: []
       };
       const parent = {
         _id: parentId,
@@ -657,7 +652,7 @@ describe('Tree Service', () => {
       };
       mockModel.findOne.mockResolvedValueOnce(element);
       mockModel.findOne.mockResolvedValueOnce(parent);
-      vi.mocked(recursiveGetDescendants).mockResolvedValue([]);
+      mockModel.find.mockResolvedValue([]);
       mockModel.deleteMany.mockResolvedValue({ deletedCount: 0 } as any);
       mockModel.findByIdAndDelete.mockResolvedValue(element);
       // Act
@@ -668,7 +663,6 @@ describe('Tree Service', () => {
 
     it('should handle element with no parent', async () => {
       // Setup
-      const { recursiveGetDescendants } = await import('../../../src/services/recursive.service');
       const elementId = new mongoose.Types.ObjectId();
       const element = {
         _id: elementId,
@@ -676,7 +670,7 @@ describe('Tree Service', () => {
         children: []
       };
       mockModel.findOne.mockResolvedValue(element);
-      vi.mocked(recursiveGetDescendants).mockResolvedValue([]);
+      mockModel.find.mockResolvedValue([]);
       mockModel.deleteMany.mockResolvedValue({ deletedCount: 0 } as any);
       mockModel.findByIdAndDelete.mockResolvedValue(element);
       // Act
@@ -688,7 +682,6 @@ describe('Tree Service', () => {
 
     it('should return deleted element', async () => {
       // Setup
-      const { recursiveGetDescendants } = await import('../../../src/services/recursive.service');
       const elementId = new mongoose.Types.ObjectId();
       const element = {
         _id: elementId,
@@ -697,7 +690,7 @@ describe('Tree Service', () => {
         children: []
       };
       mockModel.findOne.mockResolvedValue(element);
-      vi.mocked(recursiveGetDescendants).mockResolvedValue([]);
+      mockModel.find.mockResolvedValue([]);
       mockModel.deleteMany.mockResolvedValue({ deletedCount: 0 } as any);
       mockModel.findByIdAndDelete.mockResolvedValue(element);
       // Act

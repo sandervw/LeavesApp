@@ -2,18 +2,15 @@ import express from 'express';
 import * as controller from '../controllers/storynode.controller';
 
 /** Routes focused on CRUD for storynodes */
-const router = express.Router();
+const storynodeRoutes = express.Router();
 
 // Prefix: /storynode
-router.get('/', controller.getStorynodesController);
-router.get('/:id', controller.getOneStorynodeController);
-router.get('/getchildren/:id', controller.getStorynodeChildrenController);
-router.get('/getstoryfile/:id', controller.getStoryFileController);
-router.post('/', controller.postStorynodeController);
-router.delete('/:id', controller.deleteStorynodeController);
-router.post('/postfromtemplate/', controller.postFromTemplateController);
-// router.patch('/:id/depth', controller.patchDepthController);
-//router.post('/posttofile/', controller.postToFileController);
-//router.post('/postfromfile/', controller.postFromFileController);
+storynodeRoutes.get('/', controller.getStorynodesController);
+storynodeRoutes.get('/:id', controller.getOneStorynodeController);
+storynodeRoutes.get('/getchildren/:id', controller.getStorynodeChildrenController);
+storynodeRoutes.get('/getstoryfile/:id', controller.getStoryFileController);
+storynodeRoutes.post('/', controller.postStorynodeController);
+storynodeRoutes.delete('/:id', controller.deleteStorynodeController);
+storynodeRoutes.post('/postfromtemplate/', controller.postFromTemplateController);
 
-export default router;
+export default storynodeRoutes;

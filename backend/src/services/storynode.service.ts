@@ -1,9 +1,9 @@
 import TreeService from './tree.service';
-import { Storynode } from '../models/tree.model';
+import { Storynode, Template } from '../models/tree.model';
 import { StorynodeDoc, mongoId } from '../schemas/mongo.schema';
 import appAssert from '../utils/appAssert';
-import { NOT_FOUND } from '../constants/http';
-import { recursiveStorynodeFromTemplate, recursiveUpdateWordLimits, recursiveGetLeaves } from './recursive.service';
+import { INTERNAL_SERVER_ERROR, NOT_FOUND } from '../constants/http';
+import { MAX_TREE_DEPTH } from '../constants/env';
 
 class StorynodeService extends TreeService<StorynodeDoc> {
 
@@ -38,7 +38,7 @@ class StorynodeService extends TreeService<StorynodeDoc> {
     }
 
     if (storynode.type === 'root' && storynode.wordLimit) {
-      await recursiveUpdateWordLimits(storynode);
+      await this.updateWordLimits(storynode);
     }
 
     return storynode;
@@ -55,13 +55,13 @@ class StorynodeService extends TreeService<StorynodeDoc> {
    */
   async addFromTemplate(userId: mongoId, templateId: mongoId, parentId?: mongoId | null) {
     if (!parentId) {
-      return await recursiveStorynodeFromTemplate(userId, templateId);
+      return await this.createFromTemplate(userId, templateId);
     }
 
     const parent = await Storynode.findOne({ _id: parentId, userId });
     appAssert(parent, NOT_FOUND, 'Parent not found');
 
-    const newChild = await recursiveStorynodeFromTemplate(userId, templateId, parentId);
+    const newChild = await this.createFromTemplate(userId, templateId, parentId);
     parent.children.push(newChild._id);
     await Storynode.findOneAndUpdate(
       { _id: parent._id, userId },
@@ -83,7 +83,7 @@ class StorynodeService extends TreeService<StorynodeDoc> {
     const storynode = await Storynode.findOne({ _id: storynodeId, userId });
     appAssert(storynode, NOT_FOUND, 'Storynode not found');
 
-    const leaves = await recursiveGetLeaves<StorynodeDoc>(storynode, Storynode);
+    const leaves = await this.getLeaves(storynode);
     const storyText = leaves.map(leaf => leaf.text).join('\n');
 
     return storyText;
@@ -151,6 +151,65 @@ class StorynodeService extends TreeService<StorynodeDoc> {
         { wordCount: newWordCount }
       );
     }
+  }
+
+  /**
+   * Given a storynode, recursively update the word limits of all its children (based on their wordWeights).
+   * Uses bulkWrite for batch updates and Promise.all for parallel child processing.
+   * @param node - the storynode whose children will be updated
+   */
+  private async updateWordLimits(node: Readonly<StorynodeDoc>): Promise<void> {
+    if (!node.children?.length) return;
+
+    const children = await Storynode.find({ _id: { $in: node.children } });
+    const updates = children.map(child => {
+      // wordWeight is expressed as a percentage (0-100), so divide by 100 to calculate child's limit
+      const newLimit = child.wordWeight ? Math.floor(node.wordLimit * child.wordWeight / 100) : node.wordLimit;
+      child.wordLimit = newLimit; // Update in-place for recursive calls
+      return { updateOne: { filter: { _id: child._id }, update: { wordLimit: newLimit } } };
+    });
+
+    await Storynode.bulkWrite(updates);
+    await Promise.all(children.map(child => this.updateWordLimits(child)));
+  }
+
+  /**
+   * Given a templateId (and optionally a parentId), recursively create a storynode tree from the template tree.
+   * Uses Promise.all to create sibling nodes in parallel for better performance.
+   * @param userId - the userId to assign to the new storynodes
+   * @param templateId - the id of the template to create the storynode tree from
+   * @param parentId - the id of the parent storynode (if any)
+   * @returns - the new storynode tree
+   */
+  private async createFromTemplate(
+    userId: mongoId,
+    templateId: mongoId,
+    parentId?: mongoId
+  ): Promise<StorynodeDoc> {
+    const templateData = await Template.findOne({ _id: templateId, userId });
+    appAssert(templateData, NOT_FOUND, `Template not found (ID: ${templateId})`);
+
+    let depth = 0;
+    if (parentId) {
+      const parent = await Storynode.findOne({ _id: parentId, userId });
+      appAssert(parent, NOT_FOUND, 'Parent not found');
+      depth = parent.depth + 1;
+      appAssert(depth < MAX_TREE_DEPTH, INTERNAL_SERVER_ERROR, `Maximum tree depth exceeded (limit: ${MAX_TREE_DEPTH})`);
+    }
+
+    const storynode = await Storynode.create({
+      userId, parent: parentId, depth,
+      name: templateData.name, type: templateData.type, text: templateData.text, wordWeight: templateData.wordWeight
+    });
+
+    if (templateData.children?.length) {
+      const children = await Promise.all(templateData.children.map(id => this.createFromTemplate(userId, id, storynode._id)));
+      const updated = await Storynode.findOneAndUpdate({ _id: storynode._id, userId }, { children: children.map(c => c._id) }, { new: true });
+      appAssert(updated, NOT_FOUND, 'Storynode not found after update');
+      return updated;
+    }
+
+    return storynode;
   }
 
 }

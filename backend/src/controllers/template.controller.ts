@@ -1,48 +1,17 @@
-import { CREATED, OK } from '../constants/http';
 import TemplateService from '../services/template.service';
-import { catchErrors } from '../utils/errorUtils';
-import { mongoIdSchema, postSchema } from '../schemas/controller.schema';
+import { createCrudControllers } from './base.controller';
 
 /**
- * Retrieves all templates for the current user with optional query filters.
+ * Template CRUD controllers.
  */
-export const getTemplatesController = catchErrors(async (req, res) => {
-    const templates = await TemplateService.find(req.userId, req.query);
-    return res.status(OK).json(templates);
-});
+const crud = createCrudControllers(TemplateService);
 
-/**
- * Retrieves a single template by ID for the current user.
- */
-export const getOneTemplateController = catchErrors(async (req, res) => {
-    const templateId = mongoIdSchema.parse(req.params.id);
-    const template = await TemplateService.findById(req.userId, templateId);
-    return res.status(OK).json(template);
-});
+export const getTemplatesController = crud.getAll;
 
-/**
- * Retrieves all children of a specific template for the current user.
- */
-export const getTemplateChildrenController = catchErrors(async (req, res) => {
-    const templateId = mongoIdSchema.parse(req.params.id);
-    const children = await TemplateService.findChildren(req.userId, templateId);
-    return res.status(OK).json(children);
-});
+export const getOneTemplateController = crud.getOne;
 
-/**
- * Creates or updates a template for the current user.
- */
-export const postTemplateController = catchErrors(async (req, res) => {
-    postSchema.parse(req.body); // Validate the request.
-    const result = await TemplateService.upsert(req.userId, req.body);
-    return res.status(CREATED).json(result);
-});
+export const getTemplateChildrenController = crud.getChildren;
 
-/**
- * Deletes a template by ID for the current user.
- */
-export const deleteTemplateController = catchErrors(async (req, res) => {
-    const templateId = mongoIdSchema.parse(req.params.id);
-    const result = await TemplateService.deleteById(req.userId, templateId);
-    return res.status(OK).json(result);
-}); 
+export const postTemplateController = crud.create;
+
+export const deleteTemplateController = crud.delete; 

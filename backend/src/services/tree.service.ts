@@ -3,7 +3,6 @@ import { TreeDoc, mongoId } from '../schemas/mongo.schema';
 import appAssert from '../utils/appAssert';
 import { INTERNAL_SERVER_ERROR, NOT_FOUND } from '../constants/http';
 import { MAX_TREE_DEPTH } from '../constants/env';
-import { recursiveGetDescendants } from './recursive.service';
 
 type QueryParam = {
   [key: string]: undefined | string | QueryParam | (string | QueryParam)[];
@@ -102,6 +101,53 @@ export default class TreeService<T extends TreeDoc> {
   }
 
   /**
+   * Given a tree element, iteratively get all descendants of that tree.
+   * Uses queue-based approach to avoid recursion and array spreading overhead.
+   * @param tree - the tree element
+   * @returns - an array of all descendants of the element (not including the element itself)
+   */
+  protected async getDescendants(tree: T): Promise<T[]> {
+    const descendants: T[] = [];
+    // Initialize queue with tree's children (copy to avoid mutation)
+    const nodesToProcessQueue: mongoId[] = [...tree.children];
+
+    while (nodesToProcessQueue.length > 0) {
+      const currentLevel = await this.model.find({ _id: { $in: nodesToProcessQueue } });
+      descendants.push(...currentLevel);
+      nodesToProcessQueue.length = 0;
+      currentLevel.forEach(node => nodesToProcessQueue.push(...node.children));
+    }
+
+    return descendants;
+  }
+
+  /**
+   * Given a tree element, recursively get all leaf nodes of that tree in depth-first order.
+   * Uses recursion to maintain proper narrative sequence.
+   * @param tree - the tree element
+   * @returns - an array of all leaf nodes (nodes with type='leaf') in DFS order (not including the input node)
+   */
+  protected async getLeaves(tree: T): Promise<T[]> {
+    const leaves: T[] = [];
+
+    // Process children in order (depth-first)
+    for (const childId of tree.children) {
+      const child = await this.model.findById(childId);
+      if (!child) continue;
+
+      if (child.type === 'leaf') {
+        leaves.push(child);
+      } else {
+        // Recursively get leaves from this child
+        const childLeaves = await this.getLeaves(child);
+        leaves.push(...childLeaves);
+      }
+    }
+
+    return leaves;
+  }
+
+  /**
    * Deletes a tree element by ID, including all its children and references in the parent.
    * @param userId - the userId to filter by
    * @param id - the id of the element to delete
@@ -121,7 +167,7 @@ export default class TreeService<T extends TreeDoc> {
       await parent.save();
     }
     // Next, delete all descendants of this template
-    const descendants = await recursiveGetDescendants<T>(toDelete, this.model);
+    const descendants = await this.getDescendants(toDelete);
     await this.model.deleteMany({ _id: { $in: descendants.map((descendant) => descendant._id) } });
     // Finally, delete this template
     return { 'Deleted': await this.model.findByIdAndDelete(id) };

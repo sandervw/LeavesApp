@@ -1,25 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm test:*)",
-      "WebSearch",
-      "Bash(npm run build:*)",
-      "mcp__context7__resolve-library-id",
-      "mcp__context7__get-library-docs",
-      "Bash(az containerapp logs show:*)",
-      "Bash(az containerapp env show:*)",
-      "Bash(az containerapp show:*)",
-      "WebFetch(domain:gist.github.com)",
-      "Bash(az staticwebapp list:*)",
-      "Bash(/bashes)",
-      "Bash(pkill:*)",
-      "Bash(az containerapp list:*)",
-      "Bash(az staticwebapp show:*)",
-      "Bash(az staticwebapp hostname list:*)",
-      "Bash(az staticwebapp hostname show:*)",
-      "Bash(for file in *.d.ts)",
-      "Bash(do mv \"$file\" \"$file%.d.ts-folder.d.ts\")",
-      "Bash(done)"
+      "Bash(npm test)"
     ],
     "deny": [],
     "ask": []
