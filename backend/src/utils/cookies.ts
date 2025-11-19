@@ -4,10 +4,10 @@ import { NODE_ENV } from "../constants/env";
 
 // What we NEED TO DO:
 // - PRD: secure=true, sameSite='lax', domain='.wordleaves.com' (for custom domain and subdomains)
-// - DEV: secure=false, sameSite='none', domain=undefined (for localhost and preview deployments)
+// - DEV: secure=true, sameSite='none', domain=undefined (for localhost and preview deployments)
 // - Localhost: secure=false, sameSite='lax', domain=undefined (if using https://localhost)
-const secure = NODE_ENV === 'production';
-const sameSite = NODE_ENV !== 'development' ? 'lax' : 'none';
+const secure = (NODE_ENV === 'production' || NODE_ENV === 'development');
+const sameSite = (NODE_ENV === 'production' || NODE_ENV === 'local') ? 'lax' : 'none';
 const domain = secure ? '.wordleaves.com' : undefined;
 
 export const REFRESH_PATH = '/auth/refresh'; // Only send the refresh token on this path
