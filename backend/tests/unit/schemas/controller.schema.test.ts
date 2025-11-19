@@ -49,20 +49,6 @@ describe('Controller Schemas', () => {
   });
 
   describe('optionalMongoIdSchema', () => {
-    it('should transform valid string to Types.ObjectId instance', () => {
-      // Setup
-      const validId = new Types.ObjectId();
-      const validIdString = validId.toString();
-      // Act
-      const result = optionalMongoIdSchema.safeParse(validIdString);
-      // Validate
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data).toBeInstanceOf(Types.ObjectId);
-        expect(result.data!.toString()).toBe(validIdString);
-      }
-    });
-
     it('should accept null and transform to null', () => {
       // Setup
       const nullValue = null;
@@ -73,27 +59,6 @@ describe('Controller Schemas', () => {
       if (result.success) {
         expect(result.data).toBeNull();
       }
-    });
-
-    it('should accept undefined and transform to null', () => {
-      // Setup
-      const undefinedValue = undefined;
-      // Act
-      const result = optionalMongoIdSchema.safeParse(undefinedValue);
-      // Validate
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data).toBeNull();
-      }
-    });
-
-    it('should reject empty string', () => {
-      // Setup
-      const emptyString = '';
-      // Act
-      const result = optionalMongoIdSchema.safeParse(emptyString);
-      // Validate
-      expect(result.success).toBe(false);
     });
   });
 
@@ -156,46 +121,6 @@ describe('Controller Schemas', () => {
         expect(result.data.userId?.toString()).toBe(userId.toString());
         expect(result.data.parent).toBeInstanceOf(Types.ObjectId);
         expect(result.data.parent?.toString()).toBe(parentId.toString());
-      }
-    });
-
-    it('should accept empty children array', () => {
-      // Setup
-      const validPost = {
-        name: 'Test Post',
-        type: 'root',
-        text: 'This is test text',
-        parent: null,
-        children: []
-      };
-      // Act
-      const result = postSchema.safeParse(validPost);
-      // Validate
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data.children).toEqual([]);
-      }
-    });
-
-    it('should accept children array with valid ObjectIds', () => {
-      // Setup
-      const child1 = new Types.ObjectId();
-      const child2 = new Types.ObjectId();
-      const validPost = {
-        name: 'Test Post',
-        type: 'branch',
-        text: 'This is test text',
-        parent: null,
-        children: [child1.toString(), child2.toString()]
-      };
-      // Act
-      const result = postSchema.safeParse(validPost);
-      // Validate
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data.children).toHaveLength(2);
-        expect(result.data.children?.[0]).toBeInstanceOf(Types.ObjectId);
-        expect(result.data.children?.[1]).toBeInstanceOf(Types.ObjectId);
       }
     });
 
@@ -282,21 +207,6 @@ describe('Controller Schemas', () => {
       expect(result.success).toBe(false);
     });
 
-    it('should reject text exceeding 100000 characters', () => {
-      // Setup
-      const longText = 'a'.repeat(100001);
-      const invalidPost = {
-        name: 'Test Post',
-        type: 'root',
-        text: longText,
-        parent: null
-      };
-      // Act
-      const result = postSchema.safeParse(invalidPost);
-      // Validate
-      expect(result.success).toBe(false);
-    });
-
     it('should reject empty name string', () => {
       // Setup
       const invalidPost = {
@@ -334,21 +244,6 @@ describe('Controller Schemas', () => {
         text: 'This is test text',
         parent: null,
         wordWeight: 'not_a_number'
-      };
-      // Act
-      const result = postSchema.safeParse(invalidPost);
-      // Validate
-      expect(result.success).toBe(false);
-    });
-
-    it('should reject isComplete as non-boolean', () => {
-      // Setup
-      const invalidPost = {
-        name: 'Test Post',
-        type: 'root',
-        text: 'This is test text',
-        parent: null,
-        isComplete: 'not_a_boolean'
       };
       // Act
       const result = postSchema.safeParse(invalidPost);

@@ -8,43 +8,56 @@ TypeScript-Express REST API for Leaves content creation application. Provides tr
 - [Prerequisites](#prerequisites)
 - [Installation & Setup](#installation--setup)
 - [Architecture Overview](#architecture-overview)
-- [Service Inheritance Pattern](#service-inheritance-pattern)
-- [Data Models](#data-models)
 - [API Reference](#api-reference)
 - [Authentication Flow](#authentication-flow)
 - [Development Workflow](#development-workflow)
-- [Troubleshooting](#troubleshooting)
+- [Additional Resources](#additional-resources)
 
 ## Technology Stack
 
 ### Core Technologies
 
-- **Runtime**: Node.js
-- **Language**: TypeScript
-- **Framework**: Express.js
-- **Database**: MongoDB with Mongoose ODM
-- **Authentication**: JWT
-- **Validation**: Zod schemas
-- **Testing**: Vitest with MongoDB Memory Server
+- **Runtime**: Node.js 18+
+- **Language**: TypeScript 5.9.3
+- **Framework**: Express.js 5.1.0
+- **Database**: MongoDB with Mongoose 8.19.1 ODM
+- **Authentication**: JWT with bcrypt 6.0.0
+- **Validation**: Zod 4.1.12 schemas
+- **Testing**: Vitest 4.0.6 with MongoDB Memory Server 10.3.0
+- **Logging**: Winston 3.18.3
+- **Security**: Helmet 8.1.0, express-rate-limit 8.2.1
 
 ### Key Dependencies
 
-- **bcrypt** - Password hashing
-- **jsonwebtoken** - JWT token management
-- **cookie-parser** - Cookie parsing
-- **cors** - Cross-origin resource sharing
-- **resend** - Email service
-- **validator** - String validation
-- **zod** - Schema validation
+- **express** (5.1.0) - Web framework
+- **mongoose** (8.19.1) - MongoDB ODM
+- **bcrypt** (6.0.0) - Password hashing
+- **jsonwebtoken** (9.0.2) - JWT token management
+- **cookie-parser** (1.4.7) - Cookie parsing
+- **cors** (2.8.5) - Cross-origin resource sharing
+- **helmet** (8.1.0) - Security headers
+- **express-rate-limit** (8.2.1) - Rate limiting
+- **zod** (4.1.12) - Schema validation
+- **validator** (13.15.15) - String validation
+- **resend** (6.2.0) - Email service
+- **winston** (3.18.3) - Logging
+- **@azure/identity** (4.13.0) - Azure authentication
+- **@azure/keyvault-secrets** (4.10.0) - Azure Key Vault integration
+- **dotenv** (17.2.3) - Environment variables
 
 ### Development Dependencies
 
-- **ts-node-dev** - TypeScript hot reload
-- **vitest** - Test framework
-- **supertest** - HTTP assertion testing
-- **mongodb-memory-server** - In-memory MongoDB for tests
-- **eslint** - Code linting
-- **typescript-eslint** - TypeScript linting
+- **typescript** (5.9.3) - TypeScript compiler
+- **ts-node-dev** (2.0.0) - TypeScript hot reload
+- **vitest** (4.0.6) - Test framework
+- **@vitest/ui** (4.0.6) - Vitest UI
+- **@vitest/coverage-v8** (4.0.6) - Code coverage
+- **supertest** (7.1.4) - HTTP assertion testing
+- **mongodb-memory-server** (10.3.0) - In-memory MongoDB for tests
+- **eslint** (9.38.0) - Code linting
+- **typescript-eslint** (8.46.1) - TypeScript linting
+- **vite** (7.1.12) - Build tool
+- **@types/\*** - TypeScript type definitions for all major dependencies
 
 ## Prerequisites
 
@@ -82,6 +95,7 @@ Create `.env` file in `backend` directory:
 ```env
 NODE_ENV=development
 PORT=8080
+MAX_TREE_DEPTH=25
 MONGO_URI=mongodb://localhost:27017/leaves
 # For Atlas: mongodb+srv://<username>:<password>@cluster.mongodb.net/leaves
 JWT_SECRET=your-secret-key-min-32-chars
@@ -89,9 +103,15 @@ JWT_REFRESH_SECRET=your-refresh-secret-key-min-32-chars
 APP_ORIGIN=http://localhost:5173
 EMAIL_SENDER=noreply@yourdomain.com
 RESEND_API_KEY=your-resend-api-key
+
+# Production only (Azure):
+KEY_VAULT_URL=https://your-keyvault.vault.azure.net/
+APPLICATIONINSIGHTS_CONNECTION_STRING=your-connection-string
 ```
 
 **Security**: Never commit `.env`. Use strong random secrets (minimum 32 characters) for JWT keys.
+
+**Note**: In production, secrets (MONGO_URI, JWT_SECRET, JWT_REFRESH_SECRET, EMAIL_SENDER, RESEND_API_KEY) are loaded from Azure Key Vault automatically. KEY_VAULT_URL must be set to enable this feature.
 
 ### 4. Start MongoDB
 
@@ -115,8 +135,10 @@ Server starts at `http://localhost:8080` with hot reload.
 ### 6. Verify Installation
 
 ```bash
-curl http://localhost:8080/health
+curl http://localhost:8080/
 ```
+
+Server responds with health status and MongoDB connection verification.
 
 ## Architecture Overview
 
@@ -131,190 +153,23 @@ Layered architecture with separation of concerns:
 
 ### Layer Responsibilities
 
-1. **server.ts** - Entry point, starts HTTP server
+1. **server.ts** - Entry point; loads Azure Key Vault secrets in production, then starts HTTP server
 2. **app.ts** - Express configuration, middleware, CORS, routes, error handling
 3. **routes/** - Route grouping (auth, user, template, storynode, session)
 4. **middleware/** - authenticate.ts (JWT), errorHandler.ts (global errors)
 5. **controllers/** - Zod validation, service calls, HTTP responses
+   - base.controller.ts (factory pattern for CRUD operations)
+   - auth.controller.ts, user.controller.ts, session.controller.ts, template.controller.ts, storynode.controller.ts
 6. **services/** - Business logic, data transformations, database operations
-   - tree.service.ts (base CRUD)
+   - tree.service.ts (base CRUD with tree traversal utilities)
    - template.service.ts (extends TreeService)
-   - storynode.service.ts (extends TreeService with word count logic)
-   - auth.service.ts (authentication)
-   - recursive.service.ts (tree traversal)
+   - storynode.service.ts (extends TreeService with word count and story file logic)
+   - auth.service.ts (authentication and session management)
 7. **models/** - Mongoose schemas (tree, template, storynode, user, session, verificationCode)
 8. **schemas/** - Zod schemas (controller.schema.ts, mongo.schema.ts)
-9. **utils/** - Stateless helpers (jwt, bcrypt, cookies, errorUtils)
-10. **config/** - Singletons (db connection, resend email client)
-11. **constants/** - Error codes, HTTP status codes, environment variables
-
-## Service Inheritance Pattern
-
-Object-oriented inheritance for service code reuse:
-
-### TreeService<T> (Base Class)
-
-Generic base class providing common CRUD operations:
-
-```typescript
-class TreeService<T extends TreeDoc> {
-  async find(userId: Types.ObjectId, query?: any): Promise<T[]>;
-  async findById(userId: Types.ObjectId, id: Types.ObjectId): Promise<T>;
-  async findChildren(userId: Types.ObjectId, id: Types.ObjectId): Promise<T[]>;
-  async upsert(userId: Types.ObjectId, data: any): Promise<T>;
-  async deleteById(userId: Types.ObjectId, id: Types.ObjectId): Promise<any>;
-}
-```
-
-### TemplateService
-
-```typescript
-class TemplateService extends TreeService<TemplateDoc> {
-  // Inherits all CRUD methods without modification
-}
-export default new TemplateService();
-```
-
-### StorynodeService
-
-```typescript
-class StorynodeService extends TreeService<StorynodeDoc> {
-  async upsert(userId, data): Promise<StorynodeDoc>; // Overridden for word count
-  async addFromTemplate(userId, templateId, parentId?): Promise<StorynodeDoc>;
-}
-export default new StorynodeService();
-```
-
-Overrides `upsert()` for word count calculations. Adds `addFromTemplate()` for template-based tree creation.
-
-### RecursiveService
-
-Utility functions for complex tree operations:
-
-```typescript
-class RecursiveService {
-  async recursiveUpdateWordLimits(node: StorynodeDoc): Promise<void>;
-  async recursiveGetDescendants(
-    tree: TreeDoc,
-    model: Model<TreeDoc>
-  ): Promise<TreeDoc[]>;
-  async recursiveStorynodeFromTemplate(
-    userId,
-    templateId,
-    parentId?
-  ): Promise<StorynodeDoc>;
-}
-export default new RecursiveService();
-```
-
-### Service Singleton Pattern
-
-Services exported as singletons:
-
-```typescript
-// Correct
-import templateService from "../services/template.service";
-const templates = await templateService.find(userId);
-
-// Incorrect: Do not instantiate
-const service = new TemplateService();
-```
-
-## Data Models
-
-Mongoose discriminators implement tree-structured content inheritance:
-
-### Base Model: Tree
-
-```typescript
-interface TreeDoc {
-  _id: Types.ObjectId;
-  kind: "template" | "storynode"; // Discriminator
-  userId: Types.ObjectId;
-  name: string;
-  type: "root" | "branch" | "leaf";
-  text: string;
-  children: string[]; // Child IDs
-  parent: string | null;
-  depth: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
-```
-
-### Template Model
-
-Reusable content structures:
-
-```typescript
-interface TemplateDoc extends TreeDoc {
-  kind: "template";
-  wordWeight: number; // Proportional weight for word limit distribution (default 100)
-}
-```
-
-### Storynode Model
-
-Story content with tracking:
-
-```typescript
-interface StorynodeDoc extends TreeDoc {
-  kind: "storynode";
-  isComplete: boolean;
-  wordWeight?: number; // From template
-  wordLimit?: number; // Calculated from parent limit and sibling weights
-  wordCount: number; // Calculated from text field
-  archived: boolean;
-}
-```
-
-### Tree Structure
-
-Tree maintained through:
-
-- **children**: Array of child IDs (preserves order)
-- **parent**: Parent ID (null for root)
-- **depth**: Tree depth (0 for root)
-
-Templates and storynodes stored in single MongoDB collection (`trees`) distinguished by `kind` discriminator.
-
-### User Model
-
-```typescript
-interface UserDoc {
-  _id: Types.ObjectId;
-  email: string; // Unique, indexed
-  username: string;
-  password: string; // Bcrypt hashed
-  verified: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
-```
-
-### Session Model
-
-```typescript
-interface SessionDoc {
-  _id: Types.ObjectId;
-  userId: Types.ObjectId;
-  userAgent?: string;
-  createdAt: Date;
-  expiresAt: Date;
-}
-```
-
-### VerificationCode Model
-
-```typescript
-interface VerificationCodeDoc {
-  _id: Types.ObjectId;
-  userId: Types.ObjectId;
-  type: "email_verification" | "password_reset";
-  createdAt: Date;
-  expiresAt: Date;
-}
-```
+9. **utils/** - Stateless helpers (jwt, bcrypt, cookies, errorUtils, logger)
+10. **config/** - Singletons (db connection, resend email client, Azure Key Vault, security settings)
+11. **constants/** - Error codes, HTTP status codes, verification types, environment variables
 
 ## API Reference
 
@@ -430,6 +285,12 @@ Get single storynode by ID.
 
 Get all children of storynode ID.
 
+#### GET `/storynode/getstoryfile/:id`
+
+Get complete story text from all leaf nodes in narrative order. Returns plain text string with leaf content concatenated.
+
+**Response**: Complete story text as string
+
 #### POST `/storynode`
 
 Create new storynode or update existing (upsert). Include `_id` for update. `wordCount` automatically calculated from `text` field.
@@ -460,6 +321,18 @@ Delete specific session (logout from device).
 
 ---
 
+### Test Endpoints
+
+**Note**: Only available when `NODE_ENV=test`
+
+#### POST `/test/clear-database`
+
+Clears all collections in the database. **Dangerous** - only enabled in test environment for test cleanup.
+
+**Security**: Returns 403 Forbidden if not in test environment.
+
+---
+
 ## Authentication Flow
 
 JWT-based authentication with access and refresh tokens:
@@ -480,11 +353,11 @@ JWT-based authentication with access and refresh tokens:
 
 **Middleware**: `authenticate.ts` validates JWT and attaches `userId` to `req.userId`. Protects all routes except `/auth/*`.
 
-**Cookie Configuration**: httpOnly (no JavaScript access), secure (HTTPS only in production), sameSite strict (CSRF protection)
+**Cookie Configuration**: httpOnly (no JavaScript access), secure (HTTPS only in production), sameSite varies (lax in production, none in development for cross-origin), domain-scoped to `.wordleaves.com` in production
 
 **Passwords**: Bcrypt hashed with 10 rounds. Plain-text never stored or logged. Minimum 6 characters.
 
-**Email Verification**: MongoDB ObjectId codes in `verificationCode` collection. Expire after 24 hours. Sent via Resend service. Optional for app use.
+**Email Verification**: MongoDB ObjectId codes in `verificationCode` collection. Expire after 24 hours. Sent via Resend service with HTML email templates. Optional for app use.
 
 ## Development Workflow
 
@@ -493,7 +366,7 @@ JWT-based authentication with access and refresh tokens:
 1. Start MongoDB (local or Atlas)
 2. Configure `.env` file
 3. Run `npm run dev` for hot reload
-4. Test endpoints with Postman, Insomnia, or frontend
+4. Test endpoints with Postman or frontend
 
 ### Making Changes
 
@@ -511,74 +384,10 @@ npm test                  # Run tests
 npm run test:coverage     # Coverage report
 ```
 
-### Building for Production
-
-```bash
-npm run build    # Compile TypeScript to dist/
-npm start        # Start production server
-```
-
-### Database Migrations
-
-No formal migration system. Schema changes:
-
-1. Update Mongoose models
-2. Test in development
-3. Document in commit messages
-4. Apply manually in production
-
-Write one-time migration scripts in `scripts/` for breaking changes.
-
 ### Environment Configuration
 
 - `.env` - Local development
 - `.env.test` - Testing (auto-loaded by Vitest)
-
-## Troubleshooting
-
-### MongoDB Connection Issues
-
-**Problem**: `MongooseServerSelectionError: connect ECONNREFUSED`
-
-**Solutions**: Verify MongoDB running (`sudo systemctl status mongod` or Windows Services), check `MONGO_URI` in `.env`, verify Atlas IP whitelist and credentials, test connection with `mongosh`
-
-### JWT Token Errors
-
-**Problem**: `JsonWebTokenError: invalid signature`
-
-**Solutions**: Ensure `JWT_SECRET` and `JWT_REFRESH_SECRET` match between restarts, clear browser cookies, verify cookies sent (DevTools → Application → Cookies)
-
-### Email Not Sending
-
-**Problem**: Verification or reset emails not arriving
-
-**Solutions**: Verify `RESEND_API_KEY` valid and active, check `EMAIL_SENDER` domain verified in Resend dashboard, review console error logs, test Resend API directly
-
-### CORS Errors
-
-**Problem**: `Access-Control-Allow-Origin` errors
-
-**Solutions**: Verify `APP_ORIGIN` matches frontend URL exactly (include port), check CORS config in `app.ts` (origin and credentials true), ensure frontend sends credentials (`axios.defaults.withCredentials = true`)
-
-### Hot Reload Not Working
-
-**Problem**: Changes not reflected without restart
-
-**Solutions**: Verify `ts-node-dev` watching correct directories, check syntax errors, restart dev server (Ctrl+C then `npm run dev`), clear cache (`node_modules/.cache/`)
-
-### TypeScript Compilation Errors
-
-**Problem**: Type errors during build
-
-**Solutions**: Install type definitions (`npm install @types/<package> --save-dev`), verify `tsconfig.json` paths, match Mongoose types with TypeScript interfaces in `schemas/mongo.schema.ts`, delete `tsconfig.tsbuildinfo`
-
-### Performance Issues
-
-**Problem**: Slow API responses
-
-**Solutions**: Add database indexes (userId, parent), check N+1 query problems, enable MongoDB query logging, implement pagination, profile with `node --prof`
-
----
 
 ## Additional Resources
 

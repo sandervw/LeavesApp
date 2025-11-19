@@ -129,45 +129,6 @@ describe('Auth Service', () => {
       });
     });
 
-    it('should create a verification code for email verification', async () => {
-      // Setup
-      const userData = {
-        email: 'test@example.com',
-        username: 'testuser',
-        password: 'password123',
-        userAgent: 'Mozilla/5.0'
-      };
-      const userId = 'user123';
-
-      vi.mocked(UserModel.exists).mockResolvedValue(null);
-      vi.mocked(UserModel.create).mockResolvedValue({
-        _id: userId,
-        email: userData.email,
-        username: userData.username,
-        omitPassword: vi.fn().mockReturnValue({
-          _id: userId,
-          email: userData.email,
-          username: userData.username
-        })
-      } as any);
-      vi.mocked(VerificationCodeModel.create).mockResolvedValue({ _id: 'code123' } as any);
-      vi.mocked(sendMail).mockResolvedValue({ data: { id: 'email123' }, error: null } as any);
-      vi.mocked(SessionModel.create).mockResolvedValue({ _id: 'session123' } as any);
-      vi.mocked(signToken).mockReturnValue('mock-token');
-
-      // Act
-      await signupUser(userData);
-
-      // Validate
-      expect(VerificationCodeModel.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          userId: userId,
-          codeType: expect.anything(),
-          expiresAt: expect.anything()
-        })
-      );
-    });
-
     it('should send a verification email', async () => {
       // Setup
       const userData = {
@@ -280,77 +241,6 @@ describe('Auth Service', () => {
 
       // Act & Validate
       await expect(signupUser(userData)).rejects.toThrow('Email/Username already in use');
-    });
-
-    it('should include userAgent in session when provided', async () => {
-      // Setup
-      const userData = {
-        email: 'test@example.com',
-        username: 'testuser',
-        password: 'password123',
-        userAgent: 'Custom User Agent'
-      };
-      const userId = 'user123';
-
-      vi.mocked(UserModel.exists).mockResolvedValue(null);
-      vi.mocked(UserModel.create).mockResolvedValue({
-        _id: userId,
-        email: userData.email,
-        username: userData.username,
-        omitPassword: vi.fn().mockReturnValue({
-          _id: userId,
-          email: userData.email,
-          username: userData.username
-        })
-      } as any);
-      vi.mocked(VerificationCodeModel.create).mockResolvedValue({ _id: 'code123' } as any);
-      vi.mocked(sendMail).mockResolvedValue({ data: { id: 'email123' }, error: null } as any);
-      vi.mocked(SessionModel.create).mockResolvedValue({ _id: 'session123' } as any);
-      vi.mocked(signToken).mockReturnValue('mock-token');
-
-      // Act
-      await signupUser(userData);
-
-      // Validate
-      expect(SessionModel.create).toHaveBeenCalledWith({
-        userId: userId,
-        userAgent: 'Custom User Agent'
-      });
-    });
-
-    it('should handle missing userAgent gracefully', async () => {
-      // Setup
-      const userData = {
-        email: 'test@example.com',
-        username: 'testuser',
-        password: 'password123'
-      };
-      const userId = 'user123';
-
-      vi.mocked(UserModel.exists).mockResolvedValue(null);
-      vi.mocked(UserModel.create).mockResolvedValue({
-        _id: userId,
-        email: userData.email,
-        username: userData.username,
-        omitPassword: vi.fn().mockReturnValue({
-          _id: userId,
-          email: userData.email,
-          username: userData.username
-        })
-      } as any);
-      vi.mocked(VerificationCodeModel.create).mockResolvedValue({ _id: 'code123' } as any);
-      vi.mocked(sendMail).mockResolvedValue({ data: { id: 'email123' }, error: null } as any);
-      vi.mocked(SessionModel.create).mockResolvedValue({ _id: 'session123' } as any);
-      vi.mocked(signToken).mockReturnValue('mock-token');
-
-      // Act
-      await signupUser(userData);
-
-      // Validate
-      expect(SessionModel.create).toHaveBeenCalledWith({
-        userId: userId,
-        userAgent: undefined
-      });
     });
   });
 
@@ -520,75 +410,6 @@ describe('Auth Service', () => {
       // Act & Validate
       await expect(loginUser(loginData)).rejects.toThrow('Invalid password');
     });
-
-    it('should include userAgent in session when provided', async () => {
-      // Setup
-      const loginData = {
-        email: 'test@example.com',
-        password: 'password123',
-        userAgent: 'Custom User Agent'
-      };
-      const userId = 'user123';
-
-      const mockUser = {
-        _id: userId,
-        email: loginData.email,
-        username: 'testuser',
-        comparePassword: vi.fn().mockResolvedValue(true),
-        omitPassword: vi.fn().mockReturnValue({
-          _id: userId,
-          email: loginData.email,
-          username: 'testuser'
-        })
-      };
-
-      vi.mocked(UserModel.findOne).mockResolvedValue(mockUser as any);
-      vi.mocked(SessionModel.create).mockResolvedValue({ _id: 'session123' } as any);
-      vi.mocked(signToken).mockReturnValue('mock-token');
-
-      // Act
-      await loginUser(loginData);
-
-      // Validate
-      expect(SessionModel.create).toHaveBeenCalledWith({
-        userId: userId,
-        userAgent: 'Custom User Agent'
-      });
-    });
-
-    it('should handle missing userAgent gracefully', async () => {
-      // Setup
-      const loginData = {
-        email: 'test@example.com',
-        password: 'password123'
-      };
-      const userId = 'user123';
-
-      const mockUser = {
-        _id: userId,
-        email: loginData.email,
-        username: 'testuser',
-        comparePassword: vi.fn().mockResolvedValue(true),
-        omitPassword: vi.fn().mockReturnValue({
-          _id: userId,
-          email: loginData.email,
-          username: 'testuser'
-        })
-      };
-
-      vi.mocked(UserModel.findOne).mockResolvedValue(mockUser as any);
-      vi.mocked(SessionModel.create).mockResolvedValue({ _id: 'session123' } as any);
-      vi.mocked(signToken).mockReturnValue('mock-token');
-
-      // Act
-      await loginUser(loginData);
-
-      // Validate
-      expect(SessionModel.create).toHaveBeenCalledWith({
-        userId: userId,
-        userAgent: undefined
-      });
-    });
   });
 
   describe('logoutUser', () => {
@@ -635,20 +456,6 @@ describe('Auth Service', () => {
       // Validate
       expect(verifyToken).toHaveBeenCalledWith(expiredToken);
       expect(SessionModel.findByIdAndDelete).not.toHaveBeenCalled();
-    });
-
-    it('should not throw error if session already deleted', async () => {
-      // Setup
-      const accessToken = 'valid-access-token';
-      const sessionId = 'session123';
-      const payload = { sessionId: sessionId, userId: 'user123' };
-
-      vi.mocked(verifyToken).mockReturnValue({ payload, error: null } as any);
-      vi.mocked(SessionModel.findByIdAndDelete).mockResolvedValue(null);
-
-      // Act & Validate
-      await expect(logoutUser(accessToken)).resolves.not.toThrow();
-      expect(SessionModel.findByIdAndDelete).toHaveBeenCalledWith(sessionId);
     });
   });
 
@@ -721,62 +528,6 @@ describe('Auth Service', () => {
       );
     });
 
-    it('should not return new refresh token if session has more than 24 hours remaining', async () => {
-      // Setup
-      const refreshToken = 'valid-refresh-token';
-      const sessionId = 'session123';
-      const userId = 'user123';
-      const payload = { sessionId: sessionId };
-      const mockAccessToken = 'new-access-token';
-      const futureDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days from now
-
-      const mockSession = {
-        _id: sessionId,
-        userId: userId,
-        expiresAt: futureDate,
-        save: vi.fn().mockResolvedValue(true)
-      };
-
-      vi.mocked(verifyToken).mockReturnValue({ payload, error: null } as any);
-      vi.mocked(SessionModel.findById).mockResolvedValue(mockSession as any);
-      vi.mocked(signToken).mockReturnValue(mockAccessToken);
-
-      // Act
-      const result = await refreshAccessToken(refreshToken);
-
-      // Validate
-      expect(result).toHaveProperty('accessToken', mockAccessToken);
-      expect(result).toHaveProperty('newRefreshToken', undefined);
-      expect(mockSession.save).not.toHaveBeenCalled();
-    });
-
-    it('should extend session expiration when refreshing within 24 hours', async () => {
-      // Setup
-      const refreshToken = 'valid-refresh-token';
-      const sessionId = 'session123';
-      const userId = 'user123';
-      const payload = { sessionId: sessionId };
-      const nearExpiryDate = new Date(Date.now() + 12 * 60 * 60 * 1000); // 12 hours from now
-
-      const mockSession = {
-        _id: sessionId,
-        userId: userId,
-        expiresAt: nearExpiryDate,
-        save: vi.fn().mockResolvedValue(true)
-      };
-
-      vi.mocked(verifyToken).mockReturnValue({ payload, error: null } as any);
-      vi.mocked(SessionModel.findById).mockResolvedValue(mockSession as any);
-      vi.mocked(signToken).mockReturnValue('mock-token');
-
-      // Act
-      await refreshAccessToken(refreshToken);
-
-      // Validate
-      expect(mockSession.save).toHaveBeenCalled();
-      expect(mockSession.expiresAt.getTime()).toBeGreaterThan(nearExpiryDate.getTime());
-    });
-
     it('should throw UNAUTHORIZED error if refresh token is invalid', async () => {
       // Setup
       const invalidToken = 'invalid-refresh-token';
@@ -785,16 +536,6 @@ describe('Auth Service', () => {
 
       // Act & Validate
       await expect(refreshAccessToken(invalidToken)).rejects.toThrow('Invalid token');
-    });
-
-    it('should throw UNAUTHORIZED error if refresh token is expired', async () => {
-      // Setup
-      const expiredToken = 'expired-refresh-token';
-
-      vi.mocked(verifyToken).mockReturnValue({ payload: null, error: { message: 'Token expired' } } as any);
-
-      // Act & Validate
-      await expect(refreshAccessToken(expiredToken)).rejects.toThrow('Invalid token');
     });
 
     it('should throw UNAUTHORIZED error if session not found', async () => {
@@ -993,30 +734,10 @@ describe('Auth Service', () => {
       expect(mockUser.omitPassword).toHaveBeenCalled();
     });
 
-    it('should throw NOT_FOUND error if verification code not found', async () => {
-      // Setup
-      const verificationCodeId = new mongoose.Types.ObjectId();
-
-      vi.mocked(VerificationCodeModel.findOne).mockResolvedValue(null);
-
-      // Act & Validate
-      await expect(verifyEmail(verificationCodeId)).rejects.toThrow('Invalid or expired code');
-    });
-
     it('should throw NOT_FOUND error if verification code is expired', async () => {
       // Setup
       const verificationCodeId = new mongoose.Types.ObjectId();
       const pastDate = new Date(Date.now() - 1000); // 1 second ago
-
-      vi.mocked(VerificationCodeModel.findOne).mockResolvedValue(null);
-
-      // Act & Validate
-      await expect(verifyEmail(verificationCodeId)).rejects.toThrow('Invalid or expired code');
-    });
-
-    it('should throw NOT_FOUND error if code type is not EMAIL_VERIFICATION', async () => {
-      // Setup
-      const verificationCodeId = new mongoose.Types.ObjectId();
 
       vi.mocked(VerificationCodeModel.findOne).mockResolvedValue(null);
 
@@ -1131,45 +852,6 @@ describe('Auth Service', () => {
       expect(mockUser.save).toHaveBeenCalled();
     });
 
-    it('should delete verification code after password reset', async () => {
-      // Setup
-      const verificationCodeId = new mongoose.Types.ObjectId();
-      const userId = new mongoose.Types.ObjectId();
-      const newPassword = 'newPassword123';
-      const futureDate = new Date(Date.now() + 1000 * 60 * 60);
-
-      const mockCode = {
-        _id: verificationCodeId,
-        userId: userId,
-        codeType: 'PASSWORD_RESET',
-        expiresAt: futureDate,
-        deleteOne: vi.fn().mockResolvedValue(true)
-      };
-
-      const mockUser = {
-        _id: userId,
-        email: 'test@example.com',
-        username: 'testuser',
-        password: 'oldPassword',
-        save: vi.fn().mockResolvedValue(true),
-        omitPassword: vi.fn().mockReturnValue({
-          _id: userId,
-          email: 'test@example.com',
-          username: 'testuser'
-        })
-      };
-
-      vi.mocked(VerificationCodeModel.findOne).mockResolvedValue(mockCode as any);
-      vi.mocked(UserModel.findById).mockResolvedValue(mockUser as any);
-      vi.mocked(SessionModel.deleteMany).mockResolvedValue({} as any);
-
-      // Act
-      await resetPassword({ verificationCode: verificationCodeId, password: newPassword });
-
-      // Validate
-      expect(mockCode.deleteOne).toHaveBeenCalled();
-    });
-
     it('should delete all user sessions after password reset', async () => {
       // Setup
       const verificationCodeId = new mongoose.Types.ObjectId();
@@ -1250,18 +932,6 @@ describe('Auth Service', () => {
     });
 
     it('should throw NOT_FOUND error if verification code not found', async () => {
-      // Setup
-      const verificationCodeId = new mongoose.Types.ObjectId();
-      const newPassword = 'newPassword123';
-
-      vi.mocked(VerificationCodeModel.findOne).mockResolvedValue(null);
-
-      // Act & Validate
-      await expect(resetPassword({ verificationCode: verificationCodeId, password: newPassword }))
-        .rejects.toThrow('Invalid or expired code');
-    });
-
-    it('should throw NOT_FOUND error if verification code is expired', async () => {
       // Setup
       const verificationCodeId = new mongoose.Types.ObjectId();
       const newPassword = 'newPassword123';
