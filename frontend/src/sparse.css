@@ -1,0 +1,431 @@
+/* Poppins and Baskervville */
+@import url("https://fonts.googleapis.com/css2?family=Baskervville&family=Poppins:wght@200;400;500;600;800&family=VT323&display=swap");
+
+/*============================================
+  VARIABLES & RESET
+  ============================================*/
+:root {
+  /* The HTML element - used for defining global vars */
+  /* Color palette */
+  --c-white: #faf9f5;
+  --c-black: #262624;
+  --c-gray: #7b7b7b;
+  --c-copper: #b87333;
+  --c-accent: var(--c-copper);
+  --c-placeholder: var(--c-gray);
+  --c-txtPrimary: var(--c-black);
+  --c-bgPrimary: var(--c-white);
+  background-color: var(--c-bgPrimary);
+
+  /* Spacing scale */
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+
+  /* Border radius */
+  --radius: 1rem;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+}
+
+[data-theme="dark"] {
+  --c-txtPrimary: var(--c-white);
+  --c-bgPrimary: var(--c-black);
+}
+
+#root {
+  /* The actual id=root element */
+  max-width: 1600px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+*,
+*::before,
+*::after {
+  font-family: "poppins", arial, sans-serif;
+  color: var(--c-txtPrimary);
+  text-decoration: none;
+  user-select: none;
+  margin: 0;
+}
+
+/*============================================
+  LAYOUT UTILITIES
+  ============================================*/
+.flex {
+  display: flex;
+}
+.flex-col {
+  flex-direction: column;
+}
+.flex-between {
+  justify-content: space-between;
+}
+.flex-center {
+  justify-content: center;
+}
+.items-center {
+  align-items: center;
+}
+.grid {
+  display: grid;
+}
+.grid-3col {
+  grid-template-columns: 1fr 3fr 1fr;
+}
+.grid-full {
+  grid-column: 1 / -1;
+}
+
+/*============================================
+  SPACING UTILITIES
+  ============================================*/
+.gap-sm {
+  gap: var(--space-sm);
+}
+.gap-md {
+  gap: var(--space-md);
+}
+.p-sm {
+  padding: var(--space-sm);
+}
+.p-md {
+  padding: var(--space-md);
+}
+.p-lg {
+  padding: var(--space-lg);
+}
+.p-xl {
+  padding: var(--space-xl);
+}
+.pl-md {
+  padding-left: var(--space-md);
+}
+.pt-md {
+  padding-top: var(--space-md);
+}
+.pb-xl {
+  padding-bottom: var(--space-xl);
+}
+.m-sm {
+  margin: var(--space-sm);
+}
+.m-md {
+  margin: var(--space-md);
+}
+.my-md {
+  margin-top: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+.ml-md {
+  margin-left: var(--space-md);
+}
+
+/*============================================
+  SIZE UTILITIES
+  ============================================*/
+.w-full {
+  width: 100%;
+}
+.h-full {
+  height: 100%;
+}
+.max-w-sm {
+  max-width: 350px;
+}
+.max-w-md {
+  max-width: 600px;
+}
+.max-w-lg {
+  max-width: 1600px;
+}
+.max-w-20pct {
+  max-width: 20%;
+}
+.max-w-25pct {
+  max-width: 25%;
+}
+.max-w-40pct {
+  max-width: 40%;
+}
+.min-w-20pct {
+  min-width: 20%;
+}
+
+/*============================================
+  POSITIONING UTILITIES
+  ============================================*/
+.relative {
+  position: relative;
+}
+.absolute {
+  position: absolute;
+}
+.fixed {
+  position: fixed;
+}
+.absolute-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.fixed-bottom-left {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+
+/*============================================
+  TEXT UTILITIES
+  ============================================*/
+.text-left {
+  text-align: left;
+}
+.text-center {
+  text-align: center;
+}
+.text-accent {
+  color: var(--c-accent);
+}
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.line-height-2 {
+  line-height: 2;
+}
+
+/*============================================
+  BORDER & BACKGROUND UTILITIES
+  ============================================*/
+.border {
+  border: 2px solid var(--c-txtPrimary);
+}
+.border-dashed {
+  border: 2px dashed var(--c-txtPrimary);
+}
+.rounded {
+  border-radius: var(--radius);
+}
+.bg-primary {
+  background-color: var(--c-bgPrimary);
+}
+
+/*============================================
+  INTERACTION UTILITIES
+  ============================================*/
+.clickable {
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+.clickable:hover {
+  color: var(--c-accent);
+}
+.pointer {
+  cursor: pointer;
+}
+
+/*============================================
+  Z-INDEX LAYERS
+  ============================================*/
+.z-dropdown {
+  z-index: 100;
+}
+.z-drag-trash {
+  z-index: 800;
+}
+.z-dragging {
+  z-index: 900;
+}
+.z-modal {
+  z-index: 1000;
+}
+.z-top {
+  z-index: 10000;
+}
+
+/*============================================
+  COMPONENT CLASSES (Specific Behaviors)
+  ============================================*/
+
+/* Container - base bordered box */
+.container {
+  padding: var(--space-md);
+  border-radius: var(--radius);
+  margin: var(--space-md);
+  border: 2px solid var(--c-txtPrimary);
+}
+
+/* Draggable items */
+.draggable {
+  border-radius: var(--radius);
+  padding: var(--space-sm);
+  margin: var(--space-sm);
+  border: 2px solid var(--c-txtPrimary);
+  background-color: var(--c-bgPrimary);
+}
+
+/* Icon sizing */
+.icon {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  transition: transform var(--transition-fast);
+}
+.icon svg {
+  fill: var(--c-txtPrimary);
+  transition: fill var(--transition-fast);
+}
+.icon.expanded {
+  transform: rotate(90deg);
+}
+.icon-lg {
+  width: 72px;
+  height: 72px;
+}
+
+/* Drag handle reveal on hover */
+.drag-handle {
+  width: 0;
+  opacity: 0;
+  margin-right: 0;
+  transition: all var(--transition-fast);
+  overflow: hidden;
+}
+.has-drag-handle:hover .drag-handle {
+  width: 24px;
+  opacity: 1;
+  margin-right: 8px;
+}
+
+/* Rubbish pile active state */
+.rubbish-active {
+  width: 100%;
+  height: 100%;
+  max-width: 250px;
+  max-height: 100px;
+  border-radius: var(--radius);
+  padding: var(--space-md);
+  border: 2px dashed var(--c-txtPrimary);
+}
+.rubbish-active .icon svg {
+  fill: var(--c-accent);
+  width: 72px;
+  height: 72px;
+}
+
+/* Dropdown positioning */
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: var(--c-bgPrimary);
+  border-radius: var(--radius);
+  border: 1px solid var(--c-txtPrimary);
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/*============================================
+  ELEMENT DEFAULTS
+  ============================================*/
+
+/* Inputs */
+input {
+  font: inherit;
+  text-align: left;
+  border: 2px solid var(--c-txtPrimary);
+  width: 100%;
+  background-color: var(--c-bgPrimary);
+  border-radius: var(--radius);
+  padding: 0.5em 1em;
+  box-sizing: border-box;
+  max-width: 600px;
+}
+
+/* Buttons */
+button {
+  cursor: pointer;
+  border: none;
+  background-color: var(--c-bgPrimary);
+}
+button.text-button {
+  font-size: 1rem;
+  font-family: inherit;
+  padding: 0.75rem 1.5rem;
+  margin: var(--space-sm);
+  border-radius: var(--radius);
+  border: 2px solid var(--c-txtPrimary);
+}
+button.delete-button {
+  background-color: rgb(98, 0, 0);
+}
+
+/* Lists */
+ul,
+li {
+  list-style-position: outside;
+  text-align: left;
+  list-style-type: none;
+  padding-left: 0;
+  margin-left: 0;
+  cursor: pointer;
+}
+li {
+  display: flex;
+  align-items: center;
+}
+
+/* SVG hover */
+svg:hover {
+  fill: var(--c-accent);
+}
+
+/*============================================
+  MARKDOWN-EDITOR-SPECIFIC OVERRIDES
+  ============================================*/
+.ProseMirror ul,
+.ProseMirror ol {
+  list-style-position: inside;
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+}
+.ProseMirror ul li {
+  list-style-type: disc;
+  display: list-item;
+}
+.ProseMirror ol li {
+  list-style-type: decimal;
+  display: list-item;
+}
+
+/*============================================
+  PLACEHOLDER STYLES
+  ============================================*/
+[data-placeholder]:empty::before,
+.ProseMirror p.is-editor-empty:first-child::before,
+::placeholder {
+  color: var(--c-placeholder);
+  font-style: italic;
+  pointer-events: none;
+}
+[data-placeholder]:empty::before,
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+}
