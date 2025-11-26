@@ -1,4 +1,4 @@
-import './App.css';
+import './sparse.css';
 import { BrowserRouter as Router, Routes, Route, Navigate, Form } from 'react-router-dom';
 import { DndContext } from '@dnd-kit/core';
 import { PointerSensor, useSensor } from '@dnd-kit/core';
@@ -29,33 +29,35 @@ function App() {
   });
 
   return (
-    <div className='App'>
-      <Router>
-        <DndContext onDragEnd={handleDragEnd} sensors={[pointerSensor]} collisionDetection={customCollisionDetectionAlgorithm}>
+    <Router>
+      <DndContext onDragEnd={handleDragEnd} sensors={[pointerSensor]} collisionDetection={customCollisionDetectionAlgorithm}>
+        <div className="width-75 margin-center">
           <Navbar />
-          <LinkSidebar />
-          {/* Protected routes */}
-          <Routes>
-            <Route path='/' element={<AuthContainer />}>
-              <Route index element={<Stories />} />
-              <Route path='/stories' element={<Stories />} />
-              <Route path='/templates' element={<Templates />} />
-              <Route path='/archive' element={<Archive />} />
-              <Route path='/storydetail/' element={<StorynodeDetail />} />
-              <Route path='/templatedetail/' element={<TemplateDetail />} />
-            </Route>
-            {/* Unprotected routes */}
-            <Route path='/landing' element={<Landing />} />
-            <Route path='/signup' element={<FormPage formType='signup' />} />
-            <Route path='/login' element={<FormPage formType='login' />} />
-            <Route path='/password/forgot' element={<FormPage formType={'forgot'} />} />
-            <Route path='/password/reset' element={<FormPage formType='reset' />} />
-            <Route path='/email/verify/:code' element={<FormPage formType='verify' />} />
-          </Routes>
-          <AddSidebar />
-        </DndContext>
-      </Router>
-    </div>
+          <div className="display-flex">
+            <LinkSidebar />
+            {/* Protected routes */}
+            <Routes>
+              <Route path='/' element={<AuthContainer />}>
+                <Route index element={<Stories />} />
+                <Route path='/stories' element={<Stories />} />
+                <Route path='/templates' element={<Templates />} />
+                <Route path='/archive' element={<Archive />} />
+                <Route path='/storydetail/' element={<StorynodeDetail />} />
+                <Route path='/templatedetail/' element={<TemplateDetail />} />
+              </Route>
+              {/* Unprotected routes */}
+              <Route path='/landing' element={<Landing />} />
+              <Route path='/signup' element={<FormPage formType='signup' />} />
+              <Route path='/login' element={<FormPage formType='login' />} />
+              <Route path='/password/forgot' element={<FormPage formType={'forgot'} />} />
+              <Route path='/password/reset' element={<FormPage formType='reset' />} />
+              <Route path='/email/verify/:code' element={<FormPage formType='verify' />} />
+            </Routes>
+            <AddSidebar />
+          </div>
+        </div>
+      </DndContext>
+    </Router>
   );
 
 }

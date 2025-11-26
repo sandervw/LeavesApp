@@ -1,431 +1,588 @@
+/* ### The Laws of Sparse CSS
+*By Sander Vanwilligen*
+1. There are no more than 5 of any variable type. `No Exceptions.`
+2. There are no hardcoded numeric values - only CSS variables. `No Exceptions.`
+3. There are no ems - only rems. `No Exceptions.`
+4. There are no more than 3 distinct 'types' of a class. `No Exceptions.`
+5. There are 4 percentages: 25%, 50%, 75%, 100%. `No Exceptions.`
+6. There are 2 colors: 'copper' and 'danger'. `No Exceptions.`
+7. There may be no more than 2 classes applied to any element. `No Exceptions.`
+8. There is only one animation speed. `No Exceptions.`
+9. There is only one border radius. `No Exceptions.`
+10. No box shadows. `No Exceptions.`
+
+`No Exceptions.` */
+
 /* Poppins and Baskervville */
-@import url("https://fonts.googleapis.com/css2?family=Baskervville&family=Poppins:wght@200;400;500;600;800&family=VT323&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Baskervville&family=Poppins:wght@300;500;700&family=VT323&display=swap");
 
 /*============================================
-  VARIABLES & RESET
+  RESET
   ============================================*/
-:root {
-  /* The HTML element - used for defining global vars */
-  /* Color palette */
-  --c-white: #faf9f5;
-  --c-black: #262624;
-  --c-gray: #7b7b7b;
-  --c-copper: #b87333;
-  --c-accent: var(--c-copper);
-  --c-placeholder: var(--c-gray);
-  --c-txtPrimary: var(--c-black);
-  --c-bgPrimary: var(--c-white);
-  background-color: var(--c-bgPrimary);
-
-  /* Spacing scale */
-  --space-sm: 0.5rem;
-  --space-md: 1rem;
-  --space-lg: 1.5rem;
-  --space-xl: 2rem;
-
-  /* Border radius */
-  --radius: 1rem;
-
-  /* Transitions */
-  --transition-fast: 0.15s ease;
-}
-
-[data-theme="dark"] {
-  --c-txtPrimary: var(--c-white);
-  --c-bgPrimary: var(--c-black);
-}
-
-#root {
-  /* The actual id=root element */
-  max-width: 1600px;
-  margin: 0 auto;
-  text-align: left;
-}
-
 *,
 *::before,
 *::after {
   font-family: "poppins", arial, sans-serif;
-  color: var(--c-txtPrimary);
+  color: var(--color-text-primary);
   text-decoration: none;
   user-select: none;
   margin: 0;
 }
 
 /*============================================
-  LAYOUT UTILITIES
+  VARIABLES
   ============================================*/
-.flex {
-  display: flex;
+:root {
+  /* Color palette */
+  --color-white: #faf9f5;
+  --color-black: #262624;
+  --color-gray: #7b7b7b;
+  /* --color-copper-green: #4a7c59; */
+  --color-copper: #b87333;
+  --color-red: #c41e3a;
+  /* --color-copper-red: #7b3728; */
+  /* Color Usage */
+  --color-accent: var(--color-copper);
+  --color-placeholder: var(--color-gray);
+  --color-danger: var(--color-red);
+  --color-text-primary: var(--color-white);
+  --color-bg-primary: var(--color-black);
+  background-color: var(--color-bg-primary);
+  /* Sizes */
+  --xsmall: 0.25rem;
+  --small: 0.5rem;
+  --medium: 1rem;
+  --large: 1.5rem;
+  --xlarge: 2rem;
+  /* Percentages */
+  --percent-25: 25%;
+  --percent-50: 50%;
+  --percent-75: 75%;
+  --percent-100: 100%;
+  /* Font weights */
+  --weight-light: 300;
+  --weight-medium: 500;
+  --weight-bold: 700;
+  /* Line heights */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-loose: 1.8;
+  /* Borders */
+  --border-width: 1px;
+  /* Z-index layers */
+  --z-base: 0;
+  --z-overlay: 100;
+  --z-nav: 200;
+  --z-modal: 300;
+  --z-hoverable: 400;
+  /* Transitions */
+  --transition-fast: 0.15s ease;
 }
-.flex-col {
-  flex-direction: column;
+
+[data-theme="dark"] {
+  --color-text-primary: var(--color-white);
+  --color-bg-primary: var(--color-black);
 }
-.flex-between {
-  justify-content: space-between;
-}
-.flex-center {
-  justify-content: center;
-}
-.items-center {
-  align-items: center;
-}
-.grid {
-  display: grid;
-}
-.grid-3col {
-  grid-template-columns: 1fr 3fr 1fr;
-}
-.grid-full {
-  grid-column: 1 / -1;
+
+[data-theme="light"] {
+  --color-text-primary: var(--color-black);
+  --color-bg-primary: var(--color-white);
 }
 
 /*============================================
   SPACING UTILITIES
   ============================================*/
-.gap-sm {
-  gap: var(--space-sm);
+.gap-small {
+  gap: var(--small);
 }
-.gap-md {
-  gap: var(--space-md);
+.gap-medium {
+  gap: var(--medium);
 }
-.p-sm {
-  padding: var(--space-sm);
+.gap-large {
+  gap: var(--large);
 }
-.p-md {
-  padding: var(--space-md);
+.padding-small {
+  padding: var(--small);
 }
-.p-lg {
-  padding: var(--space-lg);
+.padding-medium {
+  padding: var(--medium);
 }
-.p-xl {
-  padding: var(--space-xl);
+.padding-large {
+  padding: var(--large);
 }
-.pl-md {
-  padding-left: var(--space-md);
+.margin-small {
+  margin: var(--small);
 }
-.pt-md {
-  padding-top: var(--space-md);
+.margin-medium {
+  margin: var(--medium);
 }
-.pb-xl {
-  padding-bottom: var(--space-xl);
+.margin-large {
+  margin: var(--large);
 }
-.m-sm {
-  margin: var(--space-sm);
-}
-.m-md {
-  margin: var(--space-md);
-}
-.my-md {
-  margin-top: var(--space-md);
-  margin-bottom: var(--space-md);
-}
-.ml-md {
-  margin-left: var(--space-md);
+.margin-center {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /*============================================
-  SIZE UTILITIES
+  FONT UTILITIES
   ============================================*/
-.w-full {
-  width: 100%;
+.font-small {
+  font-size: var(--small);
 }
-.h-full {
-  height: 100%;
+.font-medium {
+  font-size: var(--medium);
 }
-.max-w-sm {
-  max-width: 350px;
+.font-large {
+  font-size: var(--large);
 }
-.max-w-md {
-  max-width: 600px;
+.font-italic {
+  font-style: italic;
 }
-.max-w-lg {
-  max-width: 1600px;
-}
-.max-w-20pct {
-  max-width: 20%;
-}
-.max-w-25pct {
-  max-width: 25%;
-}
-.max-w-40pct {
-  max-width: 40%;
-}
-.min-w-20pct {
-  min-width: 20%;
-}
-
-/*============================================
-  POSITIONING UTILITIES
-  ============================================*/
-.relative {
-  position: relative;
-}
-.absolute {
-  position: absolute;
-}
-.fixed {
-  position: fixed;
-}
-.absolute-center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-.fixed-bottom-left {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-}
-
-/*============================================
-  TEXT UTILITIES
-  ============================================*/
 .text-left {
   text-align: left;
 }
 .text-center {
   text-align: center;
 }
-.text-accent {
-  color: var(--c-accent);
-}
-.truncate {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.line-height-2 {
-  line-height: 2;
+.text-right {
+  text-align: right;
 }
 
 /*============================================
-  BORDER & BACKGROUND UTILITIES
+  SIZE UTILITIES
   ============================================*/
-.border {
-  border: 2px solid var(--c-txtPrimary);
+.width-100 {
+  width: var(--percent-100);
 }
-.border-dashed {
-  border: 2px dashed var(--c-txtPrimary);
+.width-75 {
+  width: var(--percent-75);
 }
-.rounded {
-  border-radius: var(--radius);
+.width-50 {
+  width: var(--percent-50);
 }
-.bg-primary {
-  background-color: var(--c-bgPrimary);
+.width-25 {
+  width: var(--percent-25);
+}
+.height-100 {
+  height: var(--percent-100);
+}
+.height-75 {
+  height: var(--percent-75);
+}
+.height-50 {
+  height: var(--percent-50);
+}
+.height-25 {
+  height: var(--percent-25);
+}
+.max-width-100 {
+  max-width: var(--percent-100);
+}
+.max-width-75 {
+  max-width: var(--percent-75);
+}
+.max-width-50 {
+  max-width: var(--percent-50);
+}
+.max-width-25 {
+  max-width: var(--percent-25);
+}
+.min-width-100 {
+  min-width: var(--percent-100);
+}
+.min-width-75 {
+  min-width: var(--percent-75);
+}
+.min-width-50 {
+  min-width: var(--percent-50);
+}
+.min-width-25 {
+  min-width: var(--percent-25);
+}
+.max-height-100 {
+  max-height: var(--percent-100);
+}
+.max-height-75 {
+  max-height: var(--percent-75);
+}
+.max-height-50 {
+  max-height: var(--percent-50);
+}
+.max-height-25 {
+  max-height: var(--percent-25);
+}
+.min-height-100 {
+  min-height: var(--percent-100);
+}
+.min-height-75 {
+  min-height: var(--percent-75);
+}
+.min-height-50 {
+  min-height: var(--percent-50);
+}
+.min-height-25 {
+  min-height: var(--percent-25);
 }
 
 /*============================================
-  INTERACTION UTILITIES
+  LAYOUT UTILITIES
   ============================================*/
-.clickable {
-  cursor: pointer;
-  transition: color var(--transition-fast);
+.display-none {
+  display: none;
 }
-.clickable:hover {
-  color: var(--c-accent);
+.display-block {
+  display: block;
 }
-.pointer {
-  cursor: pointer;
+.display-inline {
+  display: inline;
 }
-
-/*============================================
-  Z-INDEX LAYERS
-  ============================================*/
-.z-dropdown {
-  z-index: 100;
-}
-.z-drag-trash {
-  z-index: 800;
-}
-.z-dragging {
-  z-index: 900;
-}
-.z-modal {
-  z-index: 1000;
-}
-.z-top {
-  z-index: 10000;
-}
-
-/*============================================
-  COMPONENT CLASSES (Specific Behaviors)
-  ============================================*/
-
-/* Container - base bordered box */
-.container {
-  padding: var(--space-md);
-  border-radius: var(--radius);
-  margin: var(--space-md);
-  border: 2px solid var(--c-txtPrimary);
-}
-
-/* Draggable items */
-.draggable {
-  border-radius: var(--radius);
-  padding: var(--space-sm);
-  margin: var(--space-sm);
-  border: 2px solid var(--c-txtPrimary);
-  background-color: var(--c-bgPrimary);
-}
-
-/* Icon sizing */
-.icon {
-  width: 24px;
-  height: 24px;
+.display-inline-block {
   display: inline-block;
-  transition: transform var(--transition-fast);
 }
-.icon svg {
-  fill: var(--c-txtPrimary);
-  transition: fill var(--transition-fast);
+.display-flex,
+.display-flex-column,
+.display-flex-between {
+  display: flex;
+}
+.display-flex-column {
+  flex-direction: column;
+}
+.display-flex-between {
+  justify-content: space-between;
+}
+.flex-child-grow {
+  flex: 1;
+}
+.flex-child-center {
+  align-self: center;
+}
+.display-grid,
+.display-grid-3-column,
+.display-grid-full {
+  display: grid;
+}
+.display-grid-3-column {
+  grid-template-columns: 1fr 3fr 1fr;
+}
+.display-grid-full {
+  grid-column: 1 / -1;
+}
+
+/*============================================
+  POSITION UTILITIES
+  ============================================*/
+.position-static {
+  position: static;
+}
+.position-relative {
+  position: relative;
+}
+.position-absolute {
+  position: absolute;
+}
+.position-fixed {
+  position: fixed;
+}
+.position-sticky {
+  position: sticky;
+}
+
+/*============================================
+  OFFSET UTILITIES
+  ============================================*/
+.top-0 {
+  top: 0;
+}
+.top-25 {
+  top: var(--percent-25);
+}
+.top-50 {
+  top: var(--percent-50);
+}
+.top-75 {
+  top: var(--percent-75);
+}
+.top-100 {
+  top: var(--percent-100);
+}
+.left-0 {
+  left: 0;
+}
+.left-25 {
+  left: var(--percent-25);
+}
+.left-50 {
+  left: var(--percent-50);
+}
+.left-75 {
+  left: var(--percent-75);
+}
+.left-100 {
+  left: var(--percent-100);
+}
+.right-0 {
+  right: 0;
+}
+.right-25 {
+  right: var(--percent-25);
+}
+.right-50 {
+  right: var(--percent-50);
+}
+.right-75 {
+  right: var(--percent-75);
+}
+.right-100 {
+  right: var(--percent-100);
+}
+.bottom-0 {
+  bottom: 0;
+}
+.bottom-25 {
+  bottom: var(--percent-25);
+}
+.bottom-50 {
+  bottom: var(--percent-50);
+}
+.bottom-75 {
+  bottom: var(--percent-75);
+}
+.bottom-100 {
+  bottom: var(--percent-100);
+}
+
+/*============================================
+  SVG-ICON STYLES
+  ============================================*/
+.icon {
+  width: var(--large);
+  height: var(--large);
+  padding: 0;
+  border: none;
+  background-color: transparent;
+}
+svg {
+  fill: var(--color-text-primary);
+  transition: var(--transition-fast);
 }
 .icon.expanded {
   transform: rotate(90deg);
 }
-.icon-lg {
-  width: 72px;
-  height: 72px;
+svg:hover {
+  fill: var(--color-accent);
 }
 
-/* Drag handle reveal on hover */
-.drag-handle {
-  width: 0;
-  opacity: 0;
-  margin-right: 0;
-  transition: all var(--transition-fast);
-  overflow: hidden;
+/*============================================
+  BUTTON UTILITIES
+  ============================================*/
+.btn,
+.btn-color,
+.btn-danger {
+  padding: var(--small) var(--medium);
+  border: var(--border-width) solid var(--color-gray);
+  border-radius: var(--medium);
+  background-color: transparent;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  font-size: var(--medium);
 }
-.has-drag-handle:hover .drag-handle {
-  width: 24px;
-  opacity: 1;
-  margin-right: 8px;
+.btn-color {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  transition: none;
 }
-
-/* Rubbish pile active state */
-.rubbish-active {
-  width: 100%;
-  height: 100%;
-  max-width: 250px;
-  max-height: 100px;
-  border-radius: var(--radius);
-  padding: var(--space-md);
-  border: 2px dashed var(--c-txtPrimary);
+.btn-danger {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+  transition: none;
 }
-.rubbish-active .icon svg {
-  fill: var(--c-accent);
-  width: 72px;
-  height: 72px;
-}
-
-/* Dropdown positioning */
-.dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  background-color: var(--c-bgPrimary);
-  border-radius: var(--radius);
-  border: 1px solid var(--c-txtPrimary);
+.btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
 }
 
-/* Modal */
-.modal-overlay {
+/*============================================
+  INPUT UTILITIES
+  - Note: all inputs have placeholders
+  ============================================*/
+.input,
+.input-center,
+.input-stretch {
+  padding: var(--small) var(--medium);
+  border: var(--border-width) solid var(--color-gray);
+  border-radius: var(--medium);
+  background-color: transparent;
+  transition: var(--transition-fast);
+  outline: none;
+
+  &::placeholder {
+    color: var(--color-placeholder);
+  }
+}
+.input-center {
+  text-align: center;
+}
+.input-stretch {
+  flex: 1;
+}
+.input:focus {
+  border-color: var(--color-accent);
+}
+
+/*============================================
+  LIST UTILITIES
+  ============================================*/
+.list {
+  list-style: none;
+  padding: 0;
+}
+.list-item {
+  padding: var(--small) var(--medium);
+}
+.list-link {
+  display: block;
+  transition: var(--transition-fast);
+}
+.list-link:hover {
+  color: var(--color-accent);
+}
+
+/*============================================
+  CONTAINER: A basic building block component in sparse
+  ============================================*/
+.container {
+  margin: var(--medium);
+  border: var(--border-width) solid var(--color-gray);
+  border-radius: var(--medium);
+  background-color: transparent;
+}
+
+/*============================================
+  CARD: A single item of content
+  - Text, image, title, etc. 
+  ============================================*/
+.card {
+  padding: var(--small);
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--small);
+}
+.card-description {
+  color: var(--color-gray);
+}
+
+/*============================================
+  MODAL UTILITIES
+  ============================================*/
+.modal {
+  position: fixed;
+  top: var(--percent-50);
+  left: var(--percent-50);
+  transform: translate(-50%, -50%);
+  z-index: var(--z-modal);
+  padding: var(--large);
+  border: var(--border-width) solid var(--color-gray);
+  border-radius: var(--medium);
+  background-color: var(--color-bg-primary);
+}
+.modal-backdrop {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: var(--percent-100);
+  height: var(--percent-100);
+  z-index: var(--z-overlay);
+  background-color: var(--color-black);
+  opacity: var(--percent-75);
 }
 
 /*============================================
-  ELEMENT DEFAULTS
+  EXPANDABLE UTILITIES
+  - Dropdowns, tooltips, accordions
+  - Two interaction methods: .expanded class or :hover
   ============================================*/
-
-/* Inputs */
-input {
-  font: inherit;
-  text-align: left;
-  border: 2px solid var(--c-txtPrimary);
-  width: 100%;
-  background-color: var(--c-bgPrimary);
-  border-radius: var(--radius);
-  padding: 0.5em 1em;
-  box-sizing: border-box;
-  max-width: 600px;
+.expandable,
+.tooltip,
+.hoverable {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: var(--transition-fast);
+}
+.tooltip {
+  position: absolute;
+}
+.expandable.expanded,
+/* .hoverable must be child of .hoverable-trigger */
+.hoverable-trigger:hover .hoverable {
+  opacity: 1;
+  max-height: var(--percent-100);
+}
+.tooltip-trigger:hover .tooltip {
+  opacity: 1;
+  max-height: var(--percent-100);
 }
 
-/* Buttons */
-button {
-  cursor: pointer;
-  border: none;
-  background-color: var(--c-bgPrimary);
+/*============================================
+  NAVBAR: A component that always spans the top of the page
+  - Use for website title, nav links, searchbar, notifications, etc.
+  ============================================*/
+.navbar {
+  padding: var(--medium) var(--large);
+  display: flex;
+  justify-content: space-between;
 }
-button.text-button {
-  font-size: 1rem;
-  font-family: inherit;
-  padding: 0.75rem 1.5rem;
-  margin: var(--space-sm);
-  border-radius: var(--radius);
-  border: 2px solid var(--c-txtPrimary);
-}
-button.delete-button {
-  background-color: rgb(98, 0, 0);
-}
-
-/* Lists */
-ul,
-li {
-  list-style-position: outside;
-  text-align: left;
-  list-style-type: none;
-  padding-left: 0;
-  margin-left: 0;
+.navbar-title {
+  font-weight: var(--weight-bold);
+  font-size: var(--xlarge);
+  color: var(--color-accent);
   cursor: pointer;
 }
-li {
-  display: flex;
-  align-items: center;
-}
 
-/* SVG hover */
-svg:hover {
-  fill: var(--c-accent);
+/*============================================
+  SIDEBAR: A component that spans the side of the page
+  - Use for navigation links, user profile, filters, etc.
+  ============================================*/
+.sidebar {
+  max-width: var(--percent-25);
 }
 
 /*============================================
-  MARKDOWN-EDITOR-SPECIFIC OVERRIDES
+  PAGE: A component that represents the main content area
+  - Articles, main writing area, feed, pictures, etc.
   ============================================*/
-.ProseMirror ul,
-.ProseMirror ol {
-  list-style-position: inside;
-  padding-left: 1.5rem;
-  margin: 0.5rem 0;
+.page {
+  flex: 1;
+  padding: var(--large);
 }
-.ProseMirror ul li {
-  list-style-type: disc;
-  display: list-item;
+.page-title {
+  font-size: var(--large);
+  font-weight: var(--weight-bold);
+  margin-bottom: var(--small);
 }
-.ProseMirror ol li {
-  list-style-type: decimal;
-  display: list-item;
+.page-meta {
+  color: var(--color-gray);
+  font-size: var(--medium);
+  margin-bottom: var(--large);
+}
+.page-text p {
+  margin-bottom: var(--medium);
+  line-height: var(--line-height-loose);
 }
 
 /*============================================
-  PLACEHOLDER STYLES
+  CUSTOM STYLES
+  - Library/module-specific sparse styling
   ============================================*/
-[data-placeholder]:empty::before,
+/* Common placeholder styling */
 .ProseMirror p.is-editor-empty:first-child::before,
 ::placeholder {
-  color: var(--c-placeholder);
-  font-style: italic;
+  color: var(--color-placeholder);
   pointer-events: none;
 }
-[data-placeholder]:empty::before,
 .ProseMirror p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
 }
