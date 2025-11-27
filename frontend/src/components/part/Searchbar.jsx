@@ -52,22 +52,25 @@ const Searchbar = () => {
 
   return (
     <>
-      <input
-        className="input font-large"
-        placeholder='Search...'
-        value={searchTerm}
-        onChange={handleSearch} />
+      <div className='z-nav'>
+        <input
+          className="input font-large"
+          placeholder='Search...'
+          value={searchTerm}
+          onChange={handleSearch} />
+      </div>
       {(user && filteredResults.length > 0) && (
-        <div className='expandable expanded'>
-          <ul>
+        <div className='floatable revealed'>
+          <ul className='list'>
             {filteredResults.map((result, index) => (
-              <li key={index}
+              <li className='list-item list-link' key={index}
                 onClick={() => goToResult(result)}
               >{result.name}</li>
             ))}
           </ul>
         </div>
       )}
+      <div className={filteredResults.length > 0 ? 'modal-backdrop' : ''}></div>
     </>
   );
 };

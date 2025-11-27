@@ -1,11 +1,27 @@
-import { MoonButton, SunButton } from "./common/Buttons";
+import { useEffect, useState } from "react";
+import SVG from "./common/SVG.jsx";
 
-export const ThemeToggle = ({ theme, setTheme }) => {
-    return (
-        <>
-            {theme==='light'
-            ? <MoonButton onClick={() => setTheme('dark')} />
-            : <SunButton onClick={() => setTheme('light')} />}
-        </>
-    );
+const ThemeToggle = () => {
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem("theme");
+    return saved || "dark";
+  });
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
+
+  return (
+    <SVG
+      name={theme === "dark" ? "sun" : "moon"}
+      className="flex-child-center"
+      props={{ onClick: toggleTheme }}
+    />
+  );
 };
+
+export default ThemeToggle;

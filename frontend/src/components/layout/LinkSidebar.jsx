@@ -4,38 +4,36 @@ import useTreelistContext from '../../hooks/useTreelistContext';
 import ExpandList from '../part/ExpandList';
 
 const LinkSidebar = () => {
-    const { user } = useAuthContext();
-    const { trees } = useTreelistContext();
-    const safeTrees = trees || [];
+  const { user } = useAuthContext();
+  const { trees } = useTreelistContext();
+  const safeTrees = trees || [];
 
-    return (
-        !user
-            ? <div></div>
-            : <aside className='sidebar container'>
-                <div className='site-links'>
-                    <ul className='links'>
-                        <ExpandList
-                            type="Story"
-                            title="Stories"
-                            items={safeTrees.filter((tree) => tree.kind === 'storynode' && !tree.archived)}
-                        />
-                        <ExpandList
-                            type="Template"
-                            title="Templates"
-                            items={safeTrees.filter((tree) => tree.kind === 'template')}
-                        />
-                        <ExpandList
-                            type="Story"
-                            title="Archive"
-                            items={safeTrees.filter((tree) => tree.archived)}
-                        />
-                    </ul>
-                </div>
-                <div className='rubbish-pile'>
-                    <RubbishPile />
-                </div>
-            </aside>
-    );
+  return (
+    !user
+      ? <div></div>
+      : <aside className='sidebar container'>
+        <ul className='list'>
+          <ExpandList
+            type="Story"
+            title="Stories"
+            items={safeTrees.filter((tree) => tree.kind === 'storynode' && !tree.archived)}
+          />
+          <ExpandList
+            type="Template"
+            title="Templates"
+            items={safeTrees.filter((tree) => tree.kind === 'template')}
+          />
+          <ExpandList
+            type="Story"
+            title="Archive"
+            items={safeTrees.filter((tree) => tree.archived)}
+          />
+        </ul>
+        <div className='rubbish-pile'>
+          <RubbishPile />
+        </div>
+      </aside>
+  );
 
 };
 

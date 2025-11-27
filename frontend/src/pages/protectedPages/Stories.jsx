@@ -7,15 +7,15 @@ import usePage from '../../hooks/usePage';
  */
 const Stories = () => {
 
-    const { error, isPending, children } = usePage({ page: 'stories' });
+  const { error, isPending, children } = usePage({ page: 'stories' });
 
-    return error
-        ? <div className='error container'>{error}</div>
-        : isPending
-            ? <div className='loading container'>Loading...</div>
-            : <div className='container content'>
-                <ElementList elements={children} kind='storynode' listType='roots' />
-            </div>;
+  return error
+    ? <div className='error container'>{error}</div>
+    : isPending
+      ? <div className='loading container'>Loading...</div>
+      : <div className='page container'>
+        <ElementList elements={children} kind='storynode' listType='roots' />
+      </div>;
 
 };
 

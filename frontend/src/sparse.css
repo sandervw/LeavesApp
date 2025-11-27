@@ -226,6 +226,30 @@
 }
 
 /*============================================
+  Z-INDEX UTILITIES
+  ============================================*/
+.z-base {
+  z-index: var(--z-base);
+  position: relative;
+}
+.z-overlay {
+  z-index: var(--z-overlay);
+  position: relative;
+}
+.z-nav {
+  z-index: var(--z-nav);
+  position: relative;
+}
+.z-modal {
+  z-index: var(--z-modal);
+  position: relative;
+}
+.z-hoverable {
+  z-index: var(--z-hoverable);
+  position: relative;
+}
+
+/*============================================
   LAYOUT UTILITIES
   ============================================*/
 .display-none {
@@ -502,26 +526,29 @@ svg:hover {
 /*============================================
   EXPANDABLE UTILITIES
   - Dropdowns, tooltips, accordions
-  - Two interaction methods: .expanded class or :hover
+  - Expandable = shifts content, Floatable = overlays content
+  . .revealed = click-based, .hover-trigger = hover-based
   ============================================*/
 .expandable,
-.tooltip,
-.hoverable {
+.floatable {
   opacity: 0;
   max-height: 0;
   overflow: hidden;
   transition: var(--transition-fast);
 }
-.tooltip {
+.floatable {
   position: absolute;
+  z-index: var(--z-hoverable);
+  background-color: var(--color-bg-primary);
 }
-.expandable.expanded,
-/* .hoverable must be child of .hoverable-trigger */
-.hoverable-trigger:hover .hoverable {
+.expandable.revealed,
+.floatable.revealed {
   opacity: 1;
   max-height: var(--percent-100);
 }
-.tooltip-trigger:hover .tooltip {
+/* .expandable and .floatable must be child of .hover-trigger */
+.hover-trigger:hover .expandable,
+.hover-trigger:hover .floatable {
   opacity: 1;
   max-height: var(--percent-100);
 }
