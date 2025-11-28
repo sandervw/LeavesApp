@@ -1,4 +1,3 @@
-import { DraggableButton } from "./Buttons";
 import { useContext } from 'react';
 import { DragHandlerContext } from "../../../context/dragHandlerContext";
 import SVG from "./SVG";
@@ -8,7 +7,7 @@ const InputHeader = ({ dragHandler, ...props }) => {
   return (
     <div className='card-header'>
       {dragHandler && <SVG name='drag' {...handler} cursor='grab' />}
-      <input{...props} />
+      <input {...props} />
     </div>
   );
 };

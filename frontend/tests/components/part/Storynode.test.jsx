@@ -21,7 +21,7 @@ vi.mock('../../../src/components/wrapper/Draggable', () => ({
 }));
 
 // Mock MarkdownText component
-vi.mock('../../../src/components/part/common/MarkdownText', () => ({
+vi.mock('../../../src/components/part/common/MarkdownText.tsx', () => ({
   default: ({ text, update, wordCount, wordLimit, locked }) => (
     <div data-testid="markdown-text">
       {text}

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import MarkdownText from './common/MarkdownText';
+import MarkdownText from './common/MarkdownText.tsx';
 import Draggable from '../wrapper/Draggable';
 import { Header3Trait } from './common/ElementTraits';
 

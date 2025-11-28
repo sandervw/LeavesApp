@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import useAuthContext from '../../hooks/useAuthContext';
 import { useNavigate } from 'react-router-dom';
 import usePage from '../../hooks/usePage';
-import MarkdownText from '../../components/part/common/MarkdownText';
+import MarkdownText from '../../components/part/common/MarkdownText.tsx';
 
 const landingContent = `
 # Leaves - a writing tool
@@ -31,21 +31,21 @@ Good luck.`;
  * Landing page for unauthenticated users
  */
 const Landing = () => {
-    const { user } = useAuthContext();
-    const navigate = useNavigate();
-    usePage({ page: 'landing' });
+  const { user } = useAuthContext();
+  const navigate = useNavigate();
+  usePage({ page: 'landing' });
 
-    useEffect(() => {
-        if (user) {
-            navigate('/'); // Redirect to home if user is authenticated
-        }
-    }, [user, navigate]);
+  useEffect(() => {
+    if (user) {
+      navigate('/'); // Redirect to home if user is authenticated
+    }
+  }, [user, navigate]);
 
-    return (
-        <div className='landing-page'>
-            <MarkdownText text={landingContent} />
-        </div>
-    );
+  return (
+    <div className='landing-page'>
+      <MarkdownText text={landingContent} />
+    </div>
+  );
 };
 
 export default Landing;
