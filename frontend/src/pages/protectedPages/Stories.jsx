@@ -10,9 +10,9 @@ const Stories = () => {
   const { error, isPending, children } = usePage({ page: 'stories' });
 
   return error
-    ? <div className='error container'>{error}</div>
+    ? <div className='page container'>{error}</div>
     : isPending
-      ? <div className='loading container'>Loading...</div>
+      ? <div className='page container'>Loading...</div>
       : <div className='page container'>
         <ElementList elements={children} kind='storynode' listType='roots' />
       </div>;

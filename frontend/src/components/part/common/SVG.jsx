@@ -1,6 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
+// Sanitize SVG; prevent XSS attacks (probably not needed here, but hey, thinking ahead)
+// Needed here since this component uses dangerouslySetInnerHTML
+import DOMPurify from 'dompurify';
 
-const SVG = ({ name, className, cursor = "pointer", props = {} }) => {
+const SVG = ({ name, className, cursor = "pointer", ...props }) => {
   const [svgContent, setSvgContent] = useState("");
   const SVGClass = className ? `icon ${className}` : `icon`;
 
@@ -19,12 +22,12 @@ const SVG = ({ name, className, cursor = "pointer", props = {} }) => {
 
   return (
     <button
-      role="img"
+      {...props}
+      role='img'
       aria-label={`${name} icon`}
-      dangerouslySetInnerHTML={{ __html: svgContent }}
+      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(svgContent) }}
       className={SVGClass}
       style={{ cursor }}
-      {...props}
     />
   );
 };

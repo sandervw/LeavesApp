@@ -14,7 +14,6 @@ import FormPage from './pages/publicPages/FormPage';
 import Navbar from './components/layout/Navbar';
 import AddSidebar from './components/layout/AddSidebar';
 import LinkSidebar from './components/layout/LinkSidebar';
-import RubbishPile from './components/part/RubbishPile';
 
 /**
  * Component that routes to different pages
