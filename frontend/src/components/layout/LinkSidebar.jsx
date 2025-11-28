@@ -11,28 +11,28 @@ const LinkSidebar = () => {
   return (
     !user
       ? <div></div>
-      : <aside className='sidebar container'>
-        <ul className='list'>
-          <ExpandList
-            type="Story"
-            title="Stories"
-            items={safeTrees.filter((tree) => tree.kind === 'storynode' && !tree.archived)}
-          />
-          <ExpandList
-            type="Template"
-            title="Templates"
-            items={safeTrees.filter((tree) => tree.kind === 'template')}
-          />
-          <ExpandList
-            type="Story"
-            title="Archive"
-            items={safeTrees.filter((tree) => tree.archived)}
-          />
-        </ul>
-        <div className='rubbish-pile'>
-          <RubbishPile />
-        </div>
-      </aside>
+      : <div className='display-flex-column'>
+        <aside className='container flex-child-grow'>
+          <ul className='list'>
+            <ExpandList
+              type="Story"
+              title="Stories"
+              items={safeTrees.filter((tree) => tree.kind === 'storynode' && !tree.archived)}
+            />
+            <ExpandList
+              type="Template"
+              title="Templates"
+              items={safeTrees.filter((tree) => tree.kind === 'template')}
+            />
+            <ExpandList
+              type="Story"
+              title="Archive"
+              items={safeTrees.filter((tree) => tree.archived)}
+            />
+          </ul>
+        </aside>
+        <RubbishPile />
+      </div>
   );
 
 };

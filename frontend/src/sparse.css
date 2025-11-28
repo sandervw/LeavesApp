@@ -37,10 +37,8 @@
   --color-white: #faf9f5;
   --color-black: #262624;
   --color-gray: #7b7b7b;
-  /* --color-copper-green: #4a7c59; */
   --color-copper: #b87333;
   --color-red: #c41e3a;
-  /* --color-copper-red: #7b3728; */
   /* Color Usage */
   --color-accent: var(--color-copper);
   --color-placeholder: var(--color-gray);
@@ -453,6 +451,11 @@ svg:hover {
 .input:focus {
   border-color: var(--color-accent);
 }
+/* Common placeholder styling */
+::placeholder {
+  color: var(--color-placeholder);
+  pointer-events: none;
+}
 
 /*============================================
   LIST UTILITIES
@@ -470,32 +473,6 @@ svg:hover {
 }
 .list-link:hover {
   color: var(--color-accent);
-}
-
-/*============================================
-  CONTAINER: A basic building block component in sparse
-  ============================================*/
-.container {
-  margin: var(--medium);
-  border: var(--border-width) solid var(--color-gray);
-  border-radius: var(--medium);
-  background-color: transparent;
-}
-
-/*============================================
-  CARD: A single item of content
-  - Text, image, title, etc. 
-  ============================================*/
-.card {
-  padding: var(--small);
-}
-.card-header {
-  display: flex;
-  align-items: center;
-  gap: var(--small);
-}
-.card-description {
-  color: var(--color-gray);
 }
 
 /*============================================
@@ -554,6 +531,32 @@ svg:hover {
 }
 
 /*============================================
+  CONTAINER: A basic building block component in sparse
+  ============================================*/
+.container {
+  margin: var(--medium);
+  border: var(--border-width) solid var(--color-gray);
+  border-radius: var(--medium);
+  background-color: transparent;
+}
+
+/*============================================
+  CARD: A single item of content
+  - Text, image, title, etc. 
+  ============================================*/
+.card {
+  padding: var(--small);
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--small);
+}
+.card-description {
+  color: var(--color-gray);
+}
+
+/*============================================
   NAVBAR: A component that always spans the top of the page
   - Use for website title, nav links, searchbar, notifications, etc.
   ============================================*/
@@ -575,6 +578,20 @@ svg:hover {
   ============================================*/
 .sidebar {
   max-width: var(--percent-25);
+}
+/* Trash Zone only shows when dragging a draggable */
+.trash-zone {
+  padding: var(--large);
+  transition: var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--percent-25);
+  border-color: var(--color-danger);
+}
+.trash-zone svg {
+  fill: var(--color-danger);
 }
 
 /*============================================
@@ -604,7 +621,7 @@ svg:hover {
   CUSTOM STYLES
   - Library/module-specific sparse styling
   ============================================*/
-/* Common placeholder styling */
+/* Placeholder styling */
 .ProseMirror p.is-editor-empty:first-child::before,
 ::placeholder {
   color: var(--color-placeholder);
