@@ -45,12 +45,12 @@ const Storynode = (props) => {
       id={storynodeData._id}
       source={source}
       data={storynodeData}
-      className='container'>
+      className='card container'>
       <Header3Trait
         trait="name"
         value={storynodeData.name}
         dragHandler={true}
-        className=''
+        className='card-header'
         onClick={() => handleDetail()} />
       <div>
         {storynodeData.type !== 'leaf'

@@ -41,13 +41,14 @@ const RubbishPile = () => {
   };
 
   return (
-    <Droppable id='trash' className={className} function={checkConfirmation}>
-      <SVG
-        name='trashcan'
-      />
+    <>
+      <Droppable id='trash' className={className} function={checkConfirmation}>
+        <SVG
+          name='trashcan'
+        />
+      </Droppable>
       {showModal && <DeleteConfirmation hideModal={() => setShowModal(false)} confirmModal={() => confirmDelete()} />}
-    </Droppable>
-
+    </>
   );
 };
 

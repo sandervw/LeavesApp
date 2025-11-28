@@ -6,7 +6,7 @@ import SVG from "./SVG";
 const InputHeader = ({ dragHandler, ...props }) => {
   const handler = useContext(DragHandlerContext);
   return (
-    <div className='inline-trait'>
+    <div className='card-header'>
       {dragHandler && <SVG name='drag' {...handler} cursor='grab' />}
       <input{...props} />
     </div>
@@ -16,7 +16,7 @@ const InputHeader = ({ dragHandler, ...props }) => {
 const Header2Trait = ({ trait, value, label, dragHandler, ...props }) => {
   const handler = useContext(DragHandlerContext);
   return (
-    <div className='inline-trait'>
+    <div className='card-header'>
       {dragHandler && <SVG name='drag' {...handler} cursor='grab' />}
       {label && <pre>{label}</pre>}
       <h2
@@ -31,7 +31,7 @@ const Header2Trait = ({ trait, value, label, dragHandler, ...props }) => {
 const Header3Trait = ({ trait, value, label, dragHandler, ...props }) => {
   const handler = useContext(DragHandlerContext);
   return (
-    <div className='inline-trait'>
+    <div className='card-header'>
       {dragHandler && <SVG name='drag' {...handler} cursor='grab' />}
       {label && <pre>{label}</pre>}
       <h3
@@ -46,7 +46,7 @@ const Header3Trait = ({ trait, value, label, dragHandler, ...props }) => {
 const ParagraphTrait = ({ trait, value, label, dragHandler, ...props }) => {
   const handler = useContext(DragHandlerContext);
   return (
-    <div className='inline-trait subtrait'>
+    <div className='card-header'>
       {dragHandler && <SVG name='drag' {...handler} cursor='grab' />}
       {label && <pre>{label}</pre>}
       <div
