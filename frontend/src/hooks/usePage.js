@@ -32,8 +32,11 @@ const usePage = ({ page, elementID } = {}) => {
         pageDispatch({ type: 'SET_PAGE', payload: page });
         const configs = pageConfigs[page];
         const [elements, children, addables] = configs.detail
-          ? [await apiService.fetchElement(configs.kind, elementID) ?? null, await apiService.fetchChildren(configs.kind, elementID) ?? [], configs.addQuery ? await apiService.fetchElements(configs.addKind, configs.addQuery) ?? [] : []]
-          : ['', await apiService.fetchElements(configs.kind, configs.query) ?? [], configs.addQuery ? await apiService.fetchElements(configs.addKind, configs.addQuery) ?? [] : []];
+          ? [await apiService.fetchElement(configs.kind, elementID) ?? null,
+          await apiService.fetchChildren(configs.kind, elementID) ?? [],
+          configs.addQuery ? await apiService.fetchElements(configs.addKind, configs.addQuery) ?? [] : []]
+          : ['', await apiService.fetchElements(configs.kind, configs.query) ?? [],
+            configs.addQuery ? await apiService.fetchElements(configs.addKind, configs.addQuery) ?? [] : []];
         elementDispatch({ type: 'SET_ELEMENT', payload: elements });
         elementDispatch({ type: 'SET_CHILDREN', payload: children });
         addablesDispatch({ type: 'SET_ADDABLES', payload: addables });

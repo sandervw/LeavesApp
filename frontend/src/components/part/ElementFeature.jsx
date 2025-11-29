@@ -11,7 +11,7 @@ const ElementFeature = ({ element, onUpdate }) => {
 
   return (
     <>
-      <div className='box traits'>
+      <div className='display-flex-column padding-small'>
         <Header2Trait
           trait="name"
           value={name}
@@ -46,7 +46,7 @@ const ElementFeature = ({ element, onUpdate }) => {
               contentEditable={false} />
           </>}
       </div>
-      <div className='box'>
+      <div className='padding-medium'>
         <MarkdownText
           text={element.text}
           update={(val) => onUpdate('text', val)}

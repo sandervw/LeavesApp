@@ -13,32 +13,32 @@ import useAPI from '../../hooks/useAPI';
  */
 const TemplateDetail = () => {
 
-    const location = useLocation(); // Grab the element from location state
-    const { error, isPending, children, element } = usePage({ page: 'templateDetail', elementID: location.state });
-    const { dispatch: elementDispatch } = useElementContext();
-    const { apiCall } = useAPI();
+  const location = useLocation(); // Grab the element from location state
+  const { error, isPending, children, element } = usePage({ page: 'templateDetail', elementID: location.state });
+  const { dispatch: elementDispatch } = useElementContext();
+  const { apiCall } = useAPI();
 
-    // Updates for name, text, and wordWeight
-    const updateTemplate = async (attr, val) => {
-        if (attr === 'wordWeight') val = parseInt(val);
-        const updatedTemplate = await apiCall('upsertElement', element.kind, { ...element, [attr]: val });
-        elementDispatch({ type: 'SET_ELEMENT', payload: updatedTemplate });
-    };
+  // Updates for name, text, and wordWeight
+  const updateTemplate = async (attr, val) => {
+    if (attr === 'wordWeight') val = parseInt(val);
+    const updatedTemplate = await apiCall('upsertElement', element.kind, { ...element, [attr]: val });
+    elementDispatch({ type: 'SET_ELEMENT', payload: updatedTemplate });
+  };
 
-    return error
-        ? <div className='error container'>{error}</div>
-        : isPending
-            ? <div className='loading container'>Loading...</div>
-            : <div className='content container'>
-                <Draggable
-                    id={element._id}
-                    source='detail'
-                    data={element}
-                    className='element detail'>
-                    <ElementFeature element={element} onUpdate={updateTemplate} />
-                </Draggable>
-                <ElementList elements={children} kind='template' listType='children' />
-            </div>
+  return error
+    ? <div className='page container'>{error}</div>
+    : isPending
+      ? <div className='page container'>Loading...</div>
+      : <div className='page container'>
+        <Draggable
+          id={element._id}
+          source='detail'
+          data={element}
+          className='display-flex'>
+          <ElementFeature element={element} onUpdate={updateTemplate} />
+        </Draggable>
+        <ElementList elements={children} kind='template' listType='children' />
+      </div>;
 };
 
 export default TemplateDetail;

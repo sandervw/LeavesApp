@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArchiveButton, DownloadButton, ReturnButton, UnarchiveButton } from '../../components/part/common/Buttons';
+import SVG from '../../components/part/common/SVG.jsx';
 import ElementList from '../../components/part/ElementList';
 import ElementFeature from '../../components/part/ElementFeature';
 import Draggable from '../../components/wrapper/Draggable';
@@ -56,22 +56,22 @@ const StorynodeDetail = () => {
   };
 
   return error
-    ? <div className='error container'>{error}</div>
+    ? <div className='page container'>{error}</div>
     : isPending
-      ? <div className='loading container'>Loading...</div>
-      : <div className='content container'>
+      ? <div className='page container'>Loading...</div>
+      : <div className='page container'>
         <Draggable
           id={element._id}
           source='detail'
           data={element}
-          className='element detail'>
-          <div className='box-buttons'>
-            <ReturnButton onClick={navigateParent} />
-            <DownloadButton onClick={downloadStory} />
+          className='display-flex'>
+          <div className='display-flex-column padding-small'>
+            <SVG name='return' onClick={navigateParent} />
+            <SVG name='download' onClick={downloadStory} />
             {(element.type === 'root' && !element.archived)
-              && <ArchiveButton onClick={toggleArchive} />}
+              && <SVG name='archive' onClick={toggleArchive} />}
             {(element.type === 'root' && element.archived)
-              && <UnarchiveButton onClick={toggleArchive} />}
+              && <SVG name='unarchive' onClick={toggleArchive} />}
           </div>
           <ElementFeature element={element} onUpdate={updateElement} />
         </Draggable>

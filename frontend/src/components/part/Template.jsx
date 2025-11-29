@@ -19,12 +19,12 @@ const Template = (props) => {
       id={templateData._id}
       source={source}
       data={templateData}
-      className='draggable'>
+      className='card container'>
       <Header3Trait
         trait="name"
         value={templateData.name}
         dragHandler={true}
-        className='clickable'
+        className='list-link'
         onClick={() => handleDetail()} />
       <div>
         <MarkdownText text={templateData.text} update={(val) => listFunction('text', val, templateData)} />

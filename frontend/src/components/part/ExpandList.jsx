@@ -18,7 +18,7 @@ const ExpandList = ({ type, title, items }) => {
         <SVG
           name='chevron'
           className='flex-child-center'
-          props={{ onClick: () => toggleExpand(type) }}
+          onClick={() => toggleExpand(type)}
         />
         <Link to={`/${title.toLowerCase()}`} className='list-link'>{title}</Link>
       </li>

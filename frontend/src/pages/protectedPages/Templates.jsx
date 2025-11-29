@@ -7,15 +7,15 @@ import usePage from '../../hooks/usePage';
  */
 const Templates = () => {
 
-    const { error, isPending, children } = usePage({ page: 'templates' });
+  const { error, isPending, children } = usePage({ page: 'templates' });
 
-    return error
-        ? <div className='error container'>{error}</div>
-        : isPending
-            ? <div className='loading container'>Loading...</div>
-            : <div className='container content'>
-                <ElementList elements={children} kind='template' listType='roots' />
-            </div>;
+  return error
+    ? <div className='page container'>{error}</div>
+    : isPending
+      ? <div className='page container'>Loading...</div>
+      : <div className='page container'>
+        <ElementList elements={children} kind='template' listType='roots' />
+      </div>;
 };
 
 export default Templates;

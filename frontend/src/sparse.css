@@ -470,6 +470,7 @@ svg:hover {
 .list-link {
   display: block;
   transition: var(--transition-fast);
+  cursor: pointer;
 }
 .list-link:hover {
   color: var(--color-accent);
@@ -551,6 +552,10 @@ svg:hover {
   display: flex;
   align-items: center;
   gap: var(--small);
+  transition: var(--transition-fast);
+}
+.card-header:hover {
+  color: var(--color-accent);
 }
 .card-description {
   color: var(--color-gray);

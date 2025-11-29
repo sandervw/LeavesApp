@@ -7,15 +7,15 @@ import usePage from '../../hooks/usePage';
  */
 const Archive = () => {
 
-    const { error, isPending, children } = usePage({ page: 'archive' });
+  const { error, isPending, children } = usePage({ page: 'archive' });
 
-    return error
-        ? <div className='error container'>{error}</div>
-        : isPending
-            ? <div className='loading container'>Loading...</div>
-            : <div className='container content'>
-                <ElementList elements={children} kind='storynode' listType='roots' />
-            </div>;
+  return error
+    ? <div className='page container'>{error}</div>
+    : isPending
+      ? <div className='page container'>Loading...</div>
+      : <div className='page container'>
+        <ElementList elements={children} kind='storynode' listType='roots' />
+      </div>;
 };
 
 export default Archive;
