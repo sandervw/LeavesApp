@@ -20,14 +20,14 @@ const ExpandList = ({ type, title, items }) => {
           className='flex-child-center'
           onClick={() => toggleExpand(type)}
         />
-        <Link to={`/${title.toLowerCase()}`} className='list-link'>{title}</Link>
+        <Link to={`/${title.toLowerCase()}`} className='link'>{title}</Link>
       </li>
       {expand === type && items && items.length > 0 && (
         <ul className='list'>
           {items.map((item) => (
             <li key={item._id} className='list-item display-flex'>
               <SVG src='' className='flex-child-center' />
-              <Link to={`/${type.toLowerCase()}detail`} state={item._id} className='list-link'>{item.name}</Link>
+              <Link to={`/${type.toLowerCase()}detail`} state={item._id} className='link'>{item.name}</Link>
             </li>
           ))}
         </ul>

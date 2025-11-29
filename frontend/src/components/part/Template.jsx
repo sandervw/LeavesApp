@@ -24,7 +24,7 @@ const Template = (props) => {
         trait="name"
         value={templateData.name}
         dragHandler={true}
-        className='list-link'
+        className='link'
         onClick={() => handleDetail()} />
       <div>
         <MarkdownText text={templateData.text} update={(val) => listFunction('text', val, templateData)} />

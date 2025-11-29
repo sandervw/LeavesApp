@@ -467,12 +467,12 @@ svg:hover {
 .list-item {
   padding: var(--small) var(--medium);
 }
-.list-link {
+.link {
   display: block;
   transition: var(--transition-fast);
   cursor: pointer;
 }
-.list-link:hover {
+.link:hover {
   color: var(--color-accent);
 }
 

@@ -19,6 +19,7 @@ const StorynodeDetail = () => {
   const { error, isPending, children, element } = usePage({ page: 'storynodeDetail', elementID: location.state });
   const { dispatch: elementDispatch } = useElementContext();
   const { apiCall } = useAPI();
+  const showNoChildren = element.type !== 'leaf' && (!children || children.length === 0);
 
   // Updates the element - wordCount updates locally only, other attributes trigger API call
   const updateElement = async (attr, val) => {
@@ -75,7 +76,8 @@ const StorynodeDetail = () => {
           </div>
           <ElementFeature element={element} onUpdate={updateElement} />
         </Draggable>
-        <ElementList elements={children} kind='storynode' listType='children' />
+        {!showNoChildren ? <ElementList elements={children} kind='storynode' listType='children' />
+          : <div className='card-description padding-small'>This limb has no branches or leaves.</div>}
       </div>;
 };
 

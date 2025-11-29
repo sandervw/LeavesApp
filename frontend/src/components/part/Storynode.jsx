@@ -50,7 +50,7 @@ const Storynode = (props) => {
         trait="name"
         value={storynodeData.name}
         dragHandler={true}
-        className='list-link'
+        className='link'
         onClick={() => handleDetail()} />
       <div>
         {storynodeData.type !== 'leaf'

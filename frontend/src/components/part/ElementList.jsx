@@ -37,7 +37,7 @@ const ElementList = ({ elements, kind, listType }) => {
 
   return (
     <Droppable id={listType} function={handleAdd}>
-      {elements ? elements.map((child) => (
+      {elements.map((child) => (
         kind === 'storynode'
           ? <StoryNode
             key={child._id}
@@ -47,7 +47,7 @@ const ElementList = ({ elements, kind, listType }) => {
             parentWordLimit={parentWordLimit}
             totalWordCount={totalWordCount} />
           : <Template key={child._id} templateData={child} source={listType} listFunction={updateElement} />
-      )) : <div className='card-description'>No elements to display.</div>}
+      ))}
     </Droppable>
   );
 };

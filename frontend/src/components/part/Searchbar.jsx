@@ -63,7 +63,7 @@ const Searchbar = () => {
         <div className='floatable revealed'>
           <ul className='list'>
             {filteredResults.map((result, index) => (
-              <li className='list-item list-link' key={index}
+              <li className='list-item link' key={index}
                 onClick={() => goToResult(result)}
               >{result.name}</li>
             ))}
