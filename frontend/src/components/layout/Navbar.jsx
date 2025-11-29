@@ -30,8 +30,8 @@ const Navbar = () => {
         <div className="center-header">
           <Searchbar />
         </div>
-        <div className="display-flex gap-medium">
-          <span className='flex-child-center'>Welcome, {user.username}</span>
+        <div className="display-flex-center gap-medium">
+          <span className=''>Welcome, {user.username}</span>
           <button className='btn' onClick={() => handleLogout()}>Log Out</button>
           <ThemeToggle />
         </div>
@@ -43,7 +43,7 @@ const Navbar = () => {
         <div className="center-header">
           <h2>Login or Signup to Begin</h2>
         </div>
-        <div className="display-flex gap-medium">
+        <div className="display-flex-center gap-medium">
           <button className='btn' onClick={() => Navigate('/login')}>Log In</button>
           <button className='btn' onClick={() => Navigate('/signup')}>Sign Up</button>
           <ThemeToggle />

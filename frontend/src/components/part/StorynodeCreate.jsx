@@ -31,7 +31,7 @@ const StorynodeCreate = () => {
         <InputHeader
           dragHandler={true}
           placeholder={'New ' + type}
-          className='input font-medium'
+          className='input-stretch font-medium'
           required
           value={newCreate.name}
           onChange={(e) => setNewCreate({ ...newCreate, name: e.target.value })}

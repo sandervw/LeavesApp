@@ -6,7 +6,7 @@ const DeleteConfirmation = ({ hideModal, confirmModal }) => {
       <div className='modal'>
         <div className='display-flex-column gap-medium'>
           <p>Are you sure you want to delete this item?</p>
-          <div className="display-flex-between">
+          <div className="display-flex-center">
             <button className='btn-danger' onClick={confirmModal}>Delete</button>
             <button className='btn' onClick={hideModal}>Cancel</button>
           </div>

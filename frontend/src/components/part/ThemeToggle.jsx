@@ -18,7 +18,6 @@ const ThemeToggle = () => {
   return (
     <SVG
       name={theme === "dark" ? "sun" : "moon"}
-      className="flex-child-center"
       onClick={toggleTheme}
     />
   );
