@@ -11,7 +11,7 @@ const LinkSidebar = () => {
   return (
     !user
       ? <div></div>
-      : <div className='display-flex-column'>
+      : <div className='display-flex-column sidebar'>
         <aside className='container flex-child-grow'>
           <ul className='list'>
             <ExpandList

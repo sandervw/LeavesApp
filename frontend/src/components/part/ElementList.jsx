@@ -37,7 +37,7 @@ const ElementList = ({ elements, kind, listType }) => {
 
   return (
     <Droppable id={listType} function={handleAdd}>
-      {elements.map((child) => (
+      {elements && elements.map((child) => (
         kind === 'storynode'
           ? <StoryNode
             key={child._id}

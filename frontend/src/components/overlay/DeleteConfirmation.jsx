@@ -2,7 +2,7 @@ import React from 'react';
 
 const DeleteConfirmation = ({ hideModal, confirmModal }) => {
   return (
-    <div>
+    <>
       <div className='modal'>
         <div className='display-flex-column gap-medium'>
           <p>Are you sure you want to delete this item?</p>
@@ -13,7 +13,7 @@ const DeleteConfirmation = ({ hideModal, confirmModal }) => {
         </div>
       </div>
       <div className='modal-backdrop' onClick={hideModal}></div>
-    </div>
+    </>
   );
 };
 
