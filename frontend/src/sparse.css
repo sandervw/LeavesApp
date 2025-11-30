@@ -585,6 +585,25 @@ svg:hover {
   ============================================*/
 .sidebar {
   max-width: var(--percent-25);
+  /* max-height: 75vh; */
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
+}
+
+/* Hide scrollbar by default */
+.sidebar::-webkit-scrollbar {
+  width: var(--small);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: var(--medium);
+}
+
+/* Show on hover */
+.sidebar:hover::-webkit-scrollbar-thumb {
+  background-color: var(--color-placeholder);
 }
 /* Trash Zone only shows when dragging a draggable */
 .trash-zone {
