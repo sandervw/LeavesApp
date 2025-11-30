@@ -1,6 +1,7 @@
 import './sparse.css';
-import { BrowserRouter as Router, Routes, Route, Navigate, Form } from 'react-router-dom';
-import { DndContext } from '@dnd-kit/core';
+import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { DndContext, DragOverlay } from '@dnd-kit/core';
 import { PointerSensor, useSensor } from '@dnd-kit/core';
 import { customCollisionDetectionAlgorithm, handleDragEnd } from './config/dndConfig';
 import AuthContainer from './components/wrapper/AuthContainer';
@@ -21,6 +22,7 @@ import LinkSidebar from './components/layout/LinkSidebar';
  * Wraps protected pages in an authentication container
  */
 function App() {
+  const [activeItem, setActiveItem] = useState(null);
 
   const pointerSensor = useSensor(PointerSensor, {
     activationConstraint: {
@@ -28,12 +30,21 @@ function App() {
     },
   });
 
+  const handleDragStart = (event) => {
+    setActiveItem(event.active.data.current?.element);
+  };
+
+  const onDragEnd = (event) => {
+    handleDragEnd(event);
+    setActiveItem(null);
+  };
+
   return (
     <Router>
-      <DndContext onDragEnd={handleDragEnd} sensors={[pointerSensor]} collisionDetection={customCollisionDetectionAlgorithm}>
-        <div className="width-75 margin-center">
+      <DndContext onDragStart={handleDragStart} onDragEnd={onDragEnd} sensors={[pointerSensor]} collisionDetection={customCollisionDetectionAlgorithm}>
+        <div className="app-layout">
           <Navbar />
-          <div className="display-flex">
+          <div className="app-content">
             <LinkSidebar />
             {/* Protected routes */}
             <Routes>
@@ -56,6 +67,9 @@ function App() {
             <AddSidebar />
           </div>
         </div>
+        <DragOverlay>
+          {activeItem ? <div className="card container">{activeItem.name}</div> : null}
+        </DragOverlay>
       </DndContext>
     </Router>
   );

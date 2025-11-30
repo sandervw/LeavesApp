@@ -29,6 +29,12 @@
   margin: 0;
 }
 
+html,
+body,
+#root {
+  height: var(--percent-100);
+}
+
 /*============================================
   VARIABLES
   ============================================*/
@@ -585,9 +591,6 @@ svg:hover {
   ============================================*/
 .sidebar {
   max-width: var(--percent-25);
-  /* max-height: 75vh; */
-  position: sticky;
-  top: 0;
   overflow-y: auto;
 }
 
@@ -627,6 +630,7 @@ svg:hover {
 .page {
   flex: 1;
   padding: var(--large);
+  overflow-y: auto;
 }
 .page-title {
   font-size: var(--large);
@@ -641,6 +645,24 @@ svg:hover {
 .page-text p {
   margin-bottom: var(--medium);
   line-height: var(--line-height-loose);
+}
+
+/*============================================
+  APP LAYOUT: The main app container and content area
+  - Uses flex to constrain height and enable sidebar scrolling
+  ============================================*/
+.app-layout {
+  width: var(--percent-75);
+  height: var(--percent-100);
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+}
+.app-content {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
 }
 
 /*============================================

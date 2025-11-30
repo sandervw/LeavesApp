@@ -11,16 +11,14 @@ import { DragHandlerContext } from '../../context/dragHandlerContext';
  * @returns {JSX.Element} Wrapped draggable element
  */
 const Draggable = (props) => {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: props.id,
     data: {
       element: props.data,
       source: props.source
     }
   });
-  const style = transform ? {
-    transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-  } : undefined;
+  const style = isDragging ? { opacity: 0.5 } : undefined;
 
   // If the element is being dragged, add a css class for styling
   const className = transform ? `${props.className} dragging` : props.className;
