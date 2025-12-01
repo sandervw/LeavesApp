@@ -20,6 +20,7 @@ const ElementList = ({ elements, kind, listType }) => {
   const { dispatch: addableDispatch } = useAddableContext();
   const { apiCall } = useAPI();
   const { handleAdd } = useDropHandler(listType);
+  const showNoChildren = listType === 'children' && element?.type !== 'leaf' && (!elements || elements.length === 0);
 
   // Updates one of the child elements - wordCount updates locally only, other attributes trigger API call
   const updateElement = async (attr, val, data) => {
@@ -37,17 +38,19 @@ const ElementList = ({ elements, kind, listType }) => {
 
   return (
     <Droppable id={listType} className='list' function={handleAdd}>
-      {elements && elements.map((child) => (
-        kind === 'storynode'
-          ? <StoryNode
-            key={child._id}
-            storynodeData={child}
-            source={listType}
-            listFunction={updateElement}
-            parentWordLimit={parentWordLimit}
-            totalWordCount={totalWordCount} />
-          : <Template key={child._id} templateData={child} source={listType} listFunction={updateElement} />
-      ))}
+      {!showNoChildren
+        ? elements && elements.map((child) => (
+          kind === 'storynode'
+            ? <StoryNode
+              key={child._id}
+              storynodeData={child}
+              source={listType}
+              listFunction={updateElement}
+              parentWordLimit={parentWordLimit}
+              totalWordCount={totalWordCount} />
+            : <Template key={child._id} templateData={child} source={listType} listFunction={updateElement} />
+        ))
+        : <div className='card-description padding-small'>This limb has no branches or leaves.</div>}
     </Droppable>
   );
 };

@@ -17,7 +17,6 @@ const TemplateDetail = () => {
   const { error, isPending, children, element } = usePage({ page: 'templateDetail', elementID: location.state });
   const { dispatch: elementDispatch } = useElementContext();
   const { apiCall } = useAPI();
-  const showNoChildren = element.type !== 'leaf' && (!children || children.length === 0);
 
   // Updates for name, text, and wordWeight
   const updateTemplate = async (attr, val) => {
@@ -38,8 +37,7 @@ const TemplateDetail = () => {
           className='display-flex'>
           <ElementFeature element={element} onUpdate={updateTemplate} />
         </Draggable>
-        {!showNoChildren ? <ElementList elements={children} kind='template' listType='children' />
-          : <div className='card-description padding-small'>This limb has no branches.</div>}
+        {children && <ElementList elements={children} kind='template' listType='children' />}
       </div>;
 };
 
