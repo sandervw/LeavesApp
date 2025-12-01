@@ -28,7 +28,6 @@
   user-select: none;
   margin: 0;
 }
-
 html,
 body,
 #root {
@@ -390,6 +389,7 @@ body,
   padding: 0;
   border: none;
   background-color: transparent;
+  transition: var(--transition-fast);
 }
 svg {
   fill: var(--color-text-primary);
@@ -445,7 +445,6 @@ svg:hover {
   background-color: transparent;
   transition: var(--transition-fast);
   outline: none;
-
   &::placeholder {
     color: var(--color-placeholder);
   }

@@ -17,7 +17,7 @@ const ExpandList = ({ type, title, items }) => {
       <li className='list-item display-flex'>
         <SVG
           name='chevron'
-          className='flex-child-center'
+          className={`flex-child-center ${expand === type ? 'expanded' : ''}`}
           onClick={() => toggleExpand(type)}
         />
         <Link to={`/${title.toLowerCase()}`} className='link'>{title}</Link>
