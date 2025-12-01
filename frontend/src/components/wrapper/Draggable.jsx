@@ -3,7 +3,7 @@ import { DragHandlerContext } from '../../context/dragHandlerContext';
 
 /**
  * Wrapper for elements that can be dragged
- * Needs to use a DragHandlerContext in order to attack the drag handler to a nested element
+ * Needs to use a DragHandlerContext in order to attach the drag handler to a nested element
  * 
  * @param {string} props.id ID of the draggable element
  * @param {string} props.source (IE. 'static', 'children', 'roots', 'storynodeCreate', 'templateCreate')

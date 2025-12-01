@@ -24,16 +24,17 @@ import LinkSidebar from './components/layout/LinkSidebar';
 function App() {
   const [activeItem, setActiveItem] = useState(null);
 
+  // Only start drag after pointer has moved 10 pixels (prevents accidental drags from clicks)
   const pointerSensor = useSensor(PointerSensor, {
     activationConstraint: {
       distance: 10,
     },
   });
 
+  // Used to create a copy of an item (ActiveItem) when dragging starts, for display
   const handleDragStart = (event) => {
     setActiveItem(event.active.data.current?.element);
   };
-
   const onDragEnd = (event) => {
     handleDragEnd(event);
     setActiveItem(null);
@@ -67,6 +68,7 @@ function App() {
             <AddSidebar />
           </div>
         </div>
+        {/* Active drag item displays here, over everything else */}
         <DragOverlay>
           {activeItem ? <div className="card container">{activeItem.name}</div> : null}
         </DragOverlay>

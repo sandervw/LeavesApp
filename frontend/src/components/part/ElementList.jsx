@@ -36,7 +36,7 @@ const ElementList = ({ elements, kind, listType }) => {
   const parentWordLimit = element?.wordLimit;
 
   return (
-    <Droppable id={listType} function={handleAdd}>
+    <Droppable id={listType} className='list' function={handleAdd}>
       {elements && elements.map((child) => (
         kind === 'storynode'
           ? <StoryNode

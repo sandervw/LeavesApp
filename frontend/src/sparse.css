@@ -471,6 +471,11 @@ svg:hover {
 .list {
   list-style: none;
   padding: 0;
+  overflow-y: auto;
+  scrollbar-color: transparent transparent;
+}
+.list:hover {
+  scrollbar-color: var(--color-placeholder) transparent;
 }
 .list-item {
   padding: var(--small) var(--medium);
@@ -555,6 +560,7 @@ svg:hover {
   ============================================*/
 .card {
   padding: var(--small);
+  background-color: var(--color-bg-primary);
 }
 .card-header {
   display: flex;
@@ -591,29 +597,15 @@ svg:hover {
   ============================================*/
 .sidebar {
   max-width: var(--percent-25);
-  overflow-y: auto;
-}
-
-/* Hide scrollbar by default */
-.sidebar::-webkit-scrollbar {
-  width: var(--small);
-}
-
-.sidebar::-webkit-scrollbar-thumb {
-  background-color: transparent;
-  border-radius: var(--medium);
-}
-
-/* Show on hover */
-.sidebar:hover::-webkit-scrollbar-thumb {
-  background-color: var(--color-placeholder);
+  display: flex;
+  flex-direction: column;
 }
 /* Trash Zone only shows when dragging a draggable */
 .trash-zone {
   padding: var(--large);
   transition: var(--transition-fast);
   display: flex;
-  flex-direction: column;
+  flex: 1;
   align-items: center;
   justify-content: center;
   min-height: var(--percent-25);
@@ -628,9 +620,10 @@ svg:hover {
   - Articles, main writing area, feed, pictures, etc.
   ============================================*/
 .page {
-  flex: 1;
   padding: var(--large);
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 .page-title {
   font-size: var(--large);
