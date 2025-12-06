@@ -12,7 +12,6 @@ on:
     types: [opened, synchronize, reopened]
     branches:
       - main
-      - "feature/*"
     paths:
       - "backend/**"
       - ".github/workflows/azure-backend-deploy.yml"
@@ -46,38 +45,6 @@ jobs:
           echo "✅ Production deployment completed at $(date)"
           az containerapp show \
             --name leaves-prd-ca \
-            --resource-group leaves-app-rg \
-            --query "{name:name,fqdn:properties.configuration.ingress.fqdn,latestRevision:properties.latestRevisionName}" \
-            -o json
-
-  deploy_backend_dev:
-    if: (github.event_name == 'push' && github.ref != 'refs/heads/main') || github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    name: Deploy Backend to Dev
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Log in to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Build and Deploy to Azure Container Apps
-        uses: azure/container-apps-deploy-action@v1
-        with:
-          containerAppName: leaves-dev-ca
-          resourceGroup: leaves-app-rg
-          appSourcePath: backend
-          dockerfilePath: /Dockerfile
-          acrName: leavescr-bvhvdthwh4e8dddj
-          acrUsername: ${{ secrets.AZURE_REGISTRY_USERNAME }}
-          acrPassword: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
-
-      - name: Verify deployment
-        run: |
-          echo "✅ Dev deployment completed at $(date)"
-          az containerapp show \
-            --name leaves-dev-ca \
             --resource-group leaves-app-rg \
             --query "{name:name,fqdn:properties.configuration.ingress.fqdn,latestRevision:properties.latestRevisionName}" \
             -o json

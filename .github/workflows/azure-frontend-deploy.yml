@@ -4,12 +4,10 @@ on:
   push:
     branches:
       - main
-      - "feature/*"
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
       - main
-      - "feature/*"
 
 jobs:
   build_and_deploy_production:
@@ -34,30 +32,6 @@ jobs:
           output_location: "dist"
         env:
           VITE_BASEAPIURL: "https://api.wordleaves.com/"
-
-  build_and_deploy_preview:
-    if: (github.event_name == 'push' && github.ref != 'refs/heads/main') || (github.event_name == 'pull_request' && github.event.action != 'closed')
-    runs-on: ubuntu-latest
-    name: Build and Deploy Preview
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: true
-          lfs: false
-
-      - name: Build And Deploy
-        id: builddeploy
-        uses: Azure/static-web-apps-deploy@v1
-        with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          action: "upload"
-          app_location: "/frontend"
-          app_build_command: "npm run build"
-          output_location: "dist"
-          deployment_environment: "preview"
-        env:
-          VITE_BASEAPIURL: "https://api-dev.wordleaves.com/"
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
