@@ -2,8 +2,6 @@
 
 A content creation and storytelling tool that helps users build reusable templates in a tree structure (root, branches, leaves), then drag-and-drop those templates to start new writing projects. Features include word limits, markdown editing, dark/light theming, and file downloads.
 
-**Live at [wordleaves.com](https://wordleaves.com)**
-
 ## How It Works
 
 Think of it like a set of nesting boxes for your writing:
